@@ -122,6 +122,7 @@ Use a compact information panel beside the form on desktop and above the form on
 - **WhatsApp Enquiry**
 
 ### Interaction
+- Phone → `tel:` click-to-call
 - Email → `mailto:` click-to-email
 - WhatsApp → verified WhatsApp enquiry link
 - Address → map/location
@@ -355,8 +356,25 @@ After successful submission:
 ### Production security
 - Server-side validation
 - Spam protection
+- Server-side rate limiting for the form submission endpoint
 - Secure form submission
 - Analytics event for form start, step completion and final submission
+
+### Rate Limiting & Abuse Protection
+
+The Contact Us form submission endpoint must be protected against excessive, automated, or repeated submission attempts.
+
+#### Requirements
+- Apply server-side rate limiting to the form submission endpoint.
+- Rate limiting should help prevent spam, automated submissions, email abuse and unnecessary database requests.
+- The rate limit should be based on an appropriate server-side identifier such as IP address, session, user identifier, or another suitable mechanism.
+- The exact request limit and time window should be configurable and finalized during technical implementation.
+- Do not permanently block legitimate users solely because they exceed a temporary rate limit.
+- When the rate limit is exceeded, the server should return an appropriate response such as HTTP `429 Too Many Requests`.
+- The frontend should display a clear, user-friendly retry message, for example: `Too many submission attempts. Please wait a few minutes and try again.`
+- Rate-limited requests must not create a new enquiry in the database.
+- Rate-limited requests must not trigger a user acknowledgement email or administrator notification email.
+- Rate limiting should work alongside server-side validation and other spam-protection mechanisms.
 
 ---
 
@@ -372,6 +390,8 @@ User submits Step 4
 Client-side validation
         ↓
 Send enquiry to backend API
+        ↓
+Server-side rate-limit check
         ↓
 Server-side validation
         ↓
@@ -472,7 +492,18 @@ Email delivery service
        ↙       ↘
 User email   Admin email
 ```
-  
+
+### Security Requirements
+
+- SMTP usernames/passwords and email-provider API keys must remain server-side.
+- Secrets must be stored in environment variables or the deployment platform's secret-management mechanism.
+- Email credentials/API keys must never be included in client-side JavaScript or exposed to the browser.
+- Secrets must not be committed to the public source-code repository.
+- Admin recipient addresses must come from verified server-side configuration.
+
+### Delivery Behavior
+
+Email delivery is a notification step and must not be the source of truth for the enquiry. The database record is the authoritative record. If email delivery fails after a successful database save, the enquiry must remain stored and the email failure should be logged for retry or administrative follow-up.
 
 ## Email Delivery Rule
 
@@ -521,7 +552,8 @@ Recommended events:
 - `contact_form_submit`
 - `contact_form_success`
 - `contact_form_error`
- 
+
+Do not send personal form values such as name, phone number, email address or DOB to analytics platforms.
 
 ---
 
@@ -718,6 +750,9 @@ The Contact Us page is ready for development handoff when:
 - [ ] Client-side validation is implemented
 - [ ] Server-side validation is planned/implemented
 - [ ] Spam protection is included for production
+- [ ] Form submission endpoint includes server-side rate limiting
+- [ ] Rate-limited requests do not create enquiries or trigger emails
+- [ ] Users receive a clear retry-later message when the rate limit is exceeded
 - [ ] Success message is implemented
 - [ ] Google Maps uses verified SPRINT location
 - [ ] Directions action works
