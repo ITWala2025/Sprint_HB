@@ -122,7 +122,6 @@ Use a compact information panel beside the form on desktop and above the form on
 - **WhatsApp Enquiry**
 
 ### Interaction
-- Phone → `tel:` click-to-call
 - Email → `mailto:` click-to-email
 - WhatsApp → verified WhatsApp enquiry link
 - Address → map/location
@@ -148,12 +147,13 @@ Step 3: Program & Course Selection
 Step 4: Geographic Address & Final Submit
 ```
 
-The UI uses a **3-step visual progress indicator**:
+The UI uses a **4-step visual progress indicator** that matches the form architecture:
 1. Personal
 2. Background
-3. Course Choice
+3. Program & Course
+4. Location & Submit
 
-The geographic address fields are treated as the final confirmation/submission area.
+The geographic address fields are the fourth and final step of the form. This keeps the form architecture, progress indicator, navigation, validation and submission behavior consistent.
 
 The supplied form specification states that the process should feel like it can be completed in **under two minutes**.
 
@@ -165,7 +165,7 @@ The supplied form specification states that the process should feel like it can 
 
 **Full Name**
 - Standard text input
-- Placeholder: `Ravi Kumar`
+- Placeholder: `John Doe`
 
 **Date of Birth (DOB)**
 - HTML5 datepicker
@@ -303,7 +303,6 @@ The grid should be responsive and easy to scan.
   - Ranchi
   - Bokaro
   - Dhanbad
-  - Jamshedpur
 
 **City / Village / Local Address**
 - Short text input
@@ -324,7 +323,7 @@ This is the primary conversion CTA and should use the master requirement's speci
 Show at the top of the form:
 
 ```text
-● Personal  ───  ○ Background  ───  ○ Course Choice
+● Personal  ───  ○ Background  ───  ○ Program  ───  ○ Location
 ```
 
 The active step should be visually prominent.
@@ -332,7 +331,7 @@ The active step should be visually prominent.
 ### Navigation
 - `Continue` on intermediate steps
 - `Back` available after Step 1
-- Final submission only on Step 4
+- Final submission only on Step 4 (Location & Submit)
 - Preserve previously entered values when navigating back
 
 ### Conditional logic
@@ -361,7 +360,172 @@ After successful submission:
 
 ---
 
-# 11. Location Section
+# 11. Post-Submission Workflow
+
+After the user completes Step 4 and selects **Complete Registration & Book Counseling**, the application should follow the workflow below.
+
+## Submission Flow
+
+```text
+User submits Step 4
+        ↓
+Client-side validation
+        ↓
+Send enquiry to backend API
+        ↓
+Server-side validation
+        ↓
+Save enquiry in database
+        ↓
+Generate enquiry/reference ID
+        ↓
+Trigger acknowledgement email to user
+        ↓
+Trigger new-enquiry notification email to SPRINT admin/team
+        ↓
+Return success response to frontend
+        ↓
+Show success confirmation
+```
+
+## Database / Lead Creation
+
+A valid submission should be saved before email delivery is treated as complete. The enquiry should include the submitted form data together with system fields such as:
+
+- Unique enquiry/reference ID
+- Lead status, initially `NEW`
+- Created timestamp
+- Updated timestamp
+
+Recommended lead lifecycle:
+
+```text
+NEW → CONTACTED → COUNSELLING SCHEDULED → CONVERTED / CLOSED
+```
+
+The exact database schema and backend technology may be defined during implementation.
+
+## User Acknowledgement Email
+
+After a successful database save, send an acknowledgement email to the email address submitted by the user.
+
+The email should contain:
+- User's name
+- Confirmation that the enquiry was received
+- Enquiry/reference ID
+- Selected program/course summary where appropriate
+- Clear statement that the SPRINT counselling team will follow up
+- SPRINT contact/signature information
+
+The acknowledgement must not claim that admission or a counselling appointment is confirmed unless the system actually performs such booking.
+
+Example subject:
+
+`We received your SPRINT enquiry`
+
+## Admin / SPRINT Team Notification Email
+
+After a successful database save, send a notification email to the verified SPRINT admin/team email address.
+
+The notification should contain the information required for follow-up, including:
+- Enquiry/reference ID
+- Full name
+- Mobile number
+- Email address
+- Student / Working Professional selection
+- Relevant qualification or working details
+- Program type
+- Selected modular courses, when applicable
+- State and district
+- Lead status: `NEW`
+
+Example subject:
+
+`New SPRINT Enquiry - {Enquiry ID}`
+
+Admin recipient addresses must come from verified server-side configuration and must not be hard-coded into public frontend code.
+
+## Email Delivery Service / Integration
+
+Email notifications must be triggered from the **server-side application**, not directly from browser/frontend code. The backend/server-side implementation should trigger email delivery only after the enquiry has been validated and stored successfully.
+
+The implementation may use either of the following approaches:
+
+- **SMTP-based delivery** using a server-side library such as **Nodemailer** with a verified SMTP provider.
+- **Transactional email API/SDK** using a provider such as **Resend, SendGrid, Brevo, Amazon SES, Mailgun, or an equivalent approved service**.
+
+The requirement does not mandate a specific provider. The development team may choose the email-delivery mechanism based on deployment, reliability, cost and SPRINT infrastructure requirements.
+
+Recommended architecture:
+
+```text
+Contact Us Form
+        ↓
+Backend / Server-side API
+        ↓
+Validate enquiry
+        ↓
+Save enquiry in database
+        ↓
+Email delivery service
+   (SMTP or Email API)
+       ↙       ↘
+User email   Admin email
+```
+  
+
+## Email Delivery Rule
+
+The enquiry must not be lost because an email service is temporarily unavailable. The required order is:
+
+```text
+Validate → Save Database → Attempt Notifications → Return Result
+```
+
+If the database save succeeds but one or both emails fail, preserve the enquiry and log the email failure for retry or administrative follow-up. Email credentials, SMTP passwords and API keys must remain on the server and must never be exposed in frontend code or committed to the repository.
+
+## Frontend Submission States
+
+The form should support the following states:
+- Idle
+- Submitting
+- Success
+- Validation error
+- Server/network error
+
+While submitting:
+- Disable the final submit button to prevent duplicate submissions
+- Show a clear loading/submitting state
+
+On success:
+- Show a concise confirmation
+- Display the enquiry/reference ID when available
+- Inform the user that the counselling team will follow up
+- Clear/reset the form only after confirmed successful submission
+
+Suggested confirmation:
+
+> **Thank you! Your enquiry has been submitted successfully.**  
+> Our SPRINT counselling team will contact you regarding your enquiry.  
+> Reference ID: `{Enquiry ID}`
+
+On failure:
+- Keep the user's entered form values
+- Show an actionable error message
+- Allow the user to retry
+- Where appropriate, offer verified phone or WhatsApp contact as an alternative
+
+## Submission Analytics
+
+Recommended events:
+- `contact_form_submit`
+- `contact_form_success`
+- `contact_form_error`
+ 
+
+---
+
+# 12. Location Section
 
 ### Heading
 **Find Us**
@@ -380,7 +544,7 @@ The current design uses a visual placeholder only. Before development/launch, re
 
 ---
 
-# 12. FAQ Section
+# 13. FAQ Section
 
 ### Heading
 **Frequently Asked Questions**
@@ -398,7 +562,7 @@ Only publish approved/final FAQ answers.
 
 ---
 
-# 13. Trust Section — Optional
+# 14. Trust Section — Optional
 
 The master requirements allow trust-building content on the Contact page.
 
@@ -411,7 +575,7 @@ Do not use placeholder company logos, fake testimonials, or stock imagery presen
 
 ---
 
-# 14. Footer
+# 15. Footer
 
 Use the same global footer as the rest of the SPRINT website.
 
@@ -424,7 +588,7 @@ Include relevant:
 
 ---
 
-# 15. Responsive Design
+# 16. Responsive Design
 
 ## Desktop
 Two-column primary layout:
@@ -475,7 +639,7 @@ Mobile phone/email/WhatsApp actions should be easy to tap.
 
 ---
 
-# 16. Visual Design Direction
+# 17. Visual Design Direction
 
 ### Style
 - Professional
@@ -507,7 +671,7 @@ Utility:
 
 ---
 
-# 17. Content Decisions
+# 18. Content Decisions
 
 ### Added
 - Contact information block
@@ -530,7 +694,7 @@ This keeps the page aligned specifically with the **Contact Us** scope.
 
 ---
 
-# 18. Acceptance Criteria
+# 19. Acceptance Criteria
 
 The Contact Us page is ready for development handoff when:
 
@@ -542,7 +706,7 @@ The Contact Us page is ready for development handoff when:
 - [ ] Email is clickable
 - [ ] WhatsApp CTA is present with verified number
 - [ ] Form follows the supplied final content
-- [ ] 3-step progress indicator is visible
+- [ ] 4-step progress indicator is visible and matches Personal → Background → Program → Location
 - [ ] Professional/Student conditional branching works
 - [ ] `Other` fields appear dynamically
 - [ ] Expert Track locked modules display correctly
@@ -560,6 +724,14 @@ The Contact Us page is ready for development handoff when:
 - [ ] FAQ accordion works
 - [ ] Desktop/tablet/mobile layouts are tested
 - [ ] Accessibility and keyboard interaction are tested
+- [ ] Successful submissions are saved to the database before notification email delivery is considered
+- [ ] A unique enquiry/reference ID is generated and returned after successful submission
+- [ ] User acknowledgement email is sent using verified server-side email configuration
+- [ ] Admin/team notification email is sent using verified server-side email configuration
+- [ ] Email failure does not delete or lose an already-saved enquiry
+- [ ] Submit button prevents duplicate submissions while a request is in progress
+- [ ] Failed submissions preserve entered form data and allow retry
+- [ ] Email/SMTP/API credentials are never exposed in frontend code
 
 ---
 
