@@ -1,780 +1,950 @@
-# SPRINT — Contact Us Page
-## Final Page Requirement & Web Design Specification
+# SPRINT Contact Us Page --- Final  Requirements
 
-> **Scope:** Contact Us page only.  
-> **Source of truth:** SPRINT Website Master Requirements V2 + final Contact Us Form content.  
-> **Note:** Phone, email, address, timings, WhatsApp number, map coordinates and approved imagery are intentionally not invented and must be replaced with verified SPRINT data before launch.
+**Document Status:** Final Design & Development Requirement\
+**Project:** SPRINT Website\
+**Page:** Contact Us\
+**Quality Target:** Enterprise-grade, production-ready\
+**Reference:** Approved visual direction and generated UI mockup
 
----
+------------------------------------------------------------------------
 
-## 1. Page Objective
+## 1. Project Objective
 
-The Contact Us page should provide a clear path for visitors to contact SPRINT, submit a qualified enquiry, understand the available programs/courses, and locate the SPRINT office.
+Design and develop a **premium, modern, professional, enterprise-grade
+Contact Us page** for the SPRINT website.
 
-The page should prioritize:
-- Contact information
-- Smart enquiry/registration form
-- Easy mobile contact actions
-- Accurate location
-- Contact/admission FAQ
-- Trust-building content where verified assets are available
+The page should feel like a real production website for an established
+education and professional-skills organization. The design must
+prioritize:
 
----
+-   Clear user journeys
+-   Professional visual hierarchy
+-   Responsive/mobile-first behavior
+-   Accessibility
+-   Performance
+-   Security readiness
+-   Maintainable component architecture
+-   Robust form UX
+-   Production-quality error and success states
+-   Consistent SPRINT branding
 
-# 2. Master Requirement Mapping
+The implementation should use the provided UI references as inspiration
+while making independent professional UX decisions where necessary.
 
-### Global requirements applied
-- Consistent header/navigation across public pages
-- Mobile-first responsive design
-- Consistent typography, spacing, buttons, cards and UI components
-- Clear primary CTA hierarchy
-- Accessible contrast and readable typography
-- Keyboard-accessible interactive elements
-- Click-to-call phone number on mobile
-- Clickable email address
-- WhatsApp enquiry/contact CTA
-- Analytics/event tracking for important CTAs and forms
+------------------------------------------------------------------------
 
-### Contact page requirements applied
+# 2. Page Structure
 
-| ID | Requirement | Design Treatment |
-|---|---|---|
-| CT-01 | Clear contact page introduction | Hero section with concise introduction |
-| CT-02 | SPRINT office address | Contact information card + map |
-| CT-03 | Phone numbers | Contact card with click-to-call |
-| CT-04 | Email address | Contact card with click-to-email |
-| CT-05 | Click-to-call | Mobile-friendly phone CTA |
-| CT-06 | Click-to-email | Email CTA |
-| CT-07 | WhatsApp CTA | Secondary contact action |
-| CT-08 | Office/walk-in timings | Contact information card |
-| CT-09 | Genuine SPRINT office/campus imagery | Optional verified image area |
-| CT-10 | Name field | Included in final form |
-| CT-11 | Mobile field | Included in final form |
-| CT-12 | Email field | Included in final form |
-| CT-13 | Course/program enquiry dropdown | Included through Program Type and course selection |
-| CT-14 | Message field | Included in final form |
-| CT-15 | Persistent field labels | Labels remain visible above inputs |
-| CT-16 | Client-side validation | Required fields + format validation |
-| CT-17 | Server-side validation | Required for production implementation |
-| CT-18 | Submission success message | Success state included |
-| CT-19 | Spam protection | Required for production implementation |
-| CT-20 | Correct Google Maps integration | Map area reserved for verified integration |
-| CT-21 | Accurate SPRINT location pin | Must use verified address/coordinates |
-| CT-22 | Appropriate zoom level | Configure after verified location |
-| CT-23 | Mobile-friendly map | Responsive map container |
-| CT-24 | Directions action | Included as secondary map action |
-| CT-25 | Trust-building content | Optional verified content section |
-| CT-26 | Hiring partner logos | Optional; only verified logos |
-| CT-27 | Student testimonial | Optional; only verified testimonial |
-| CT-28 | Contact/admission FAQ | FAQ accordion included |
+The final Contact Us page should follow this structure:
 
----
+1.  Header / Navigation
+2.  Hero Section
+3.  Contact & Enquiry Section
+4.  Location / Map Section
+5.  FAQ Section
+6.  Final CTA Section
+7.  Footer
 
-# 3. Final Page Structure
+Overall flow:
+
+**Header → Hero → Enquiry → Map → FAQs → CTA → Footer**
+
+
+### 2.1 Final page order
 
 ```text
 Header
-   ↓
-Contact Us Hero
-   ↓
-Contact Information + Primary Enquiry Form
-   ↓
-Location / Google Maps
-   ↓
-Contact & Admission FAQ
-   ↓
-Trust / Verification Content (optional)
-   ↓
+  ↓
+Minimal Hero
+  ↓
+Reach Us                    Enquiry Form
+(left on desktop)           (right on desktop)
+  ↓
+Find Us / Map
+  ↓
+FAQ
+  ↓
 Footer
 ```
 
-### Important
-The page should remain focused on **Contact Us**. Do not add unrelated homepage sections such as course marketing grids, alumni carousels, or generic product sections.
-
----
-
-# 4. Hero Section
-
-### Heading
-**Get in Touch**
-
-### Supporting copy
-Use a short, direct introduction explaining that visitors can contact SPRINT for course, admission, program or support enquiries.
-
-### UI
-- Breadcrumb: `Home / Contact Us`
-- Strong but compact heading
-- Supporting text
-- Optional genuine SPRINT office/campus visual
-- No unnecessary promotional content
-
----
-
-# 5. Contact Information Section
-
-Use a compact information panel beside the form on desktop and above the form on mobile.
-
-### Required information
-- **Office Address**
-- **Phone Number**
-- **Email Address**
-- **Office / Walk-in Timings**
-- **WhatsApp Enquiry**
-
-### Interaction
-- Phone → `tel:` click-to-call
-- Email → `mailto:` click-to-email
-- WhatsApp → verified WhatsApp enquiry link
-- Address → map/location
-
-### Content rule
-Do not use dummy contact details in production. The master requirement explicitly depends on verified SPRINT contact information.
-
----
-
-# 6. Final Contact / Registration Form
-
-The form content is based on the supplied final **Contact Us Form content** document.
-
-## Form Architecture
+### 2.2 Desktop primary section
 
 ```text
-Step 1: Personal & Contact Info
-        ↓
-Step 2: Professional / Educational Profile
-        ↓
-Step 3: Program & Course Selection
-        ↓
-Step 4: Geographic Address & Final Submit
+┌──────────────────────────┬──────────────────────────────────┐
+│ Reach Us                 │ Enquiry Form                     │
+│                          │                                  │
+│ Call Us                  │ Full Name                        │
+│ Email Us                 │ Email Address                    │
+│ WhatsApp                 │ Phone Number                     │
+│ Visit Us                 │ Profession                       │
+│ Office Timings           │ Interested Course(s)             │
+│                          │ Message / Query                  │
+│                          │ Submit Enquiry                   │
+└──────────────────────────┴──────────────────────────────────┘
 ```
 
-The UI uses a **4-step visual progress indicator** that matches the form architecture:
-1. Personal
-2. Background
-3. Program & Course
-4. Location & Submit
+Recommended desktop balance:
 
-The geographic address fields are the fourth and final step of the form. This keeps the form architecture, progress indicator, navigation, validation and submission behavior consistent.
+- Reach Us: approximately **35–40%**
+- Enquiry Form: approximately **60–65%**
 
-The supplied form specification states that the process should feel like it can be completed in **under two minutes**.
-
----
-
-## Step 1 — Personal & Primary Contact
-
-### Fields
-
-**Full Name**
-- Standard text input
-- Placeholder: `John Doe`
-
-**Date of Birth (DOB)**
-- HTML5 datepicker
-- Display format: `DD / MM / YYYY`
-
-**Gender**
-- Radio pill toggle or dropdown
-- Options:
-  - Male
-  - Female
-  - Other
-
-**Mobile Number**
-- Phone input
-- Regional country code: `+91`
-- Country-code validation
-
-**Email Address**
-- Email input
-- Real-time format validation
-
----
-
-# 7. Step 2 — Background & Qualification
-
-### Profession Selector
-
-Dropdown options:
-- Working Professional
-- Student
-
-The selected profession controls the next fields.
-
-## Branch A — Working Professional
-
-### Current Working Position
-Dropdown:
-- Junior Developer
-- Manager
-- Other
-
-If `Other` is selected:
-- Show text input
-- Label/placeholder: `Write your working position`
-
-### Company Name & Location
-Text input
-
-Placeholder:
-`e.g., TCS, Ranchi / Bengaluru`
-
----
-
-## Branch B — Student
-
-### Current Study / Qualification
-Dropdown:
-- Below 10th / 10th
-- 11th / 12th
-- BA
-- B.Sc
-- BCA
-- B.Tech / MCA
-- Other
-
-If `Other` is selected:
-- Show text input
-- Label/placeholder: `Write your current qualification`
-
-### School / College Name & Location
-Text input
-
-Placeholder:
-`e.g., St. Columba's College, Hazaribagh`
-
----
-
-# 8. Step 3 — Program & Course Selection
-
-### Program Type
-
-Options:
-- **Expert Track (Full Specialization)**
-- **Individual Modular Courses**
-
-## Expert Track State
-
-When Expert Track is selected, show a locked/read-only module container.
-
-### Bundled Modules
-- Cloud Architecture
-- Containers & K8s
-- Machine Learning
-- Deep Learning
-- GenAI & RAG
-- Agentic AI
-- CI/CD & Terraform
-
-### Helper Text
-**The Expert Track covers the full 24-week end-to-end industrial curriculum.**
-
-The bundled modules should not behave like editable checkboxes.
-
----
-
-## Individual Modular Courses State
-
-Show a multi-select checkbox grid.
-
-### Final course options
-
-- Cloud Infrastructure & AWS — **4 Weeks**
-- Containers, Kubernetes & CI/CD — **6 Weeks**
-- Generative AI, Prompt Engineering & RAG — **6 Weeks**
-- Full-Stack MERN Development — **6 Weeks**
-- Data Analytics & Business Intelligence — **4 Weeks**
-- Corporate Personality Development — **4 Weeks**
-
-The grid should be responsive and easy to scan.
-
----
-
-# 9. Step 4 — Geographic Address & Final Confirmation
-
-### Fields
-
-**State**
-- Dropdown
-- Default: `Jharkhand`
-
-**District**
-- Dynamic dropdown based on selected state
-- Example districts:
-  - Hazaribagh
-  - Ranchi
-  - Bokaro
-  - Dhanbad
-
-**City / Village / Local Address**
-- Short text input
-- Use for street/locality information
-
-### Final CTA
-
-**Complete Registration & Book Counseling**
-
-This is the primary conversion CTA and should use the master requirement's specified **high-contrast Crimson/Red** treatment.
-
----
-
-# 10. Form UX Rules
-
-### Progress Indicator
-
-Show at the top of the form:
+### 2.3 Mobile order
 
 ```text
-● Personal  ───  ○ Background  ───  ○ Program  ───  ○ Location
-```
-
-The active step should be visually prominent.
-
-### Navigation
-- `Continue` on intermediate steps
-- `Back` available after Step 1
-- Final submission only on Step 4 (Location & Submit)
-- Preserve previously entered values when navigating back
-
-### Conditional logic
-- Profession controls Professional/Student branch
-- `Other` reveals a custom text field
-- Program Type controls Expert Track / Individual Courses
-- State controls District options
-
-### Validation
-- Validate before allowing the next step
-- Show inline errors close to the relevant field
-- Keep labels persistent
-- Do not rely on placeholder text as the only label
-
-### Success
-After successful submission:
-- Show clear success confirmation
-- Confirm that the enquiry/registration was received
-- Keep the confirmation concise
-
-### Production security
-- Server-side validation
-- Spam protection
-- Server-side rate limiting for the form submission endpoint
-- Secure form submission
-- Analytics event for form start, step completion and final submission
-
-### Rate Limiting & Abuse Protection
-
-The Contact Us form submission endpoint must be protected against excessive, automated, or repeated submission attempts.
-
-#### Requirements
-- Apply server-side rate limiting to the form submission endpoint.
-- Rate limiting should help prevent spam, automated submissions, email abuse and unnecessary database requests.
-- The rate limit should be based on an appropriate server-side identifier such as IP address, session, user identifier, or another suitable mechanism.
-- The exact request limit and time window should be configurable and finalized during technical implementation.
-- Do not permanently block legitimate users solely because they exceed a temporary rate limit.
-- When the rate limit is exceeded, the server should return an appropriate response such as HTTP `429 Too Many Requests`.
-- The frontend should display a clear, user-friendly retry message, for example: `Too many submission attempts. Please wait a few minutes and try again.`
-- Rate-limited requests must not create a new enquiry in the database.
-- Rate-limited requests must not trigger a user acknowledgement email or administrator notification email.
-- Rate limiting should work alongside server-side validation and other spam-protection mechanisms.
-
----
-
-# 11. Post-Submission Workflow
-
-After the user completes Step 4 and selects **Complete Registration & Book Counseling**, the application should follow the workflow below.
-
-## Submission Flow
-
-```text
-User submits Step 4
-        ↓
-Client-side validation
-        ↓
-Send enquiry to backend API
-        ↓
-Server-side rate-limit check
-        ↓
-Server-side validation
-        ↓
-Save enquiry in database
-        ↓
-Generate enquiry/reference ID
-        ↓
-Trigger acknowledgement email to user
-        ↓
-Trigger new-enquiry notification email to SPRINT admin/team
-        ↓
-Return success response to frontend
-        ↓
-Show success confirmation
-```
-
-## Database / Lead Creation
-
-A valid submission should be saved before email delivery is treated as complete. The enquiry should include the submitted form data together with system fields such as:
-
-- Unique enquiry/reference ID
-- Lead status, initially `NEW`
-- Created timestamp
-- Updated timestamp
-
-Recommended lead lifecycle:
-
-```text
-NEW → CONTACTED → COUNSELLING SCHEDULED → CONVERTED / CLOSED
-```
-
-The exact database schema and backend technology may be defined during implementation.
-
-## User Acknowledgement Email
-
-After a successful database save, send an acknowledgement email to the email address submitted by the user.
-
-The email should contain:
-- User's name
-- Confirmation that the enquiry was received
-- Enquiry/reference ID
-- Selected program/course summary where appropriate
-- Clear statement that the SPRINT counselling team will follow up
-- SPRINT contact/signature information
-
-The acknowledgement must not claim that admission or a counselling appointment is confirmed unless the system actually performs such booking.
-
-Example subject:
-
-`We received your SPRINT enquiry`
-
-## Admin / SPRINT Team Notification Email
-
-After a successful database save, send a notification email to the verified SPRINT admin/team email address.
-
-The notification should contain the information required for follow-up, including:
-- Enquiry/reference ID
-- Full name
-- Mobile number
-- Email address
-- Student / Working Professional selection
-- Relevant qualification or working details
-- Program type
-- Selected modular courses, when applicable
-- State and district
-- Lead status: `NEW`
-
-Example subject:
-
-`New SPRINT Enquiry - {Enquiry ID}`
-
-Admin recipient addresses must come from verified server-side configuration and must not be hard-coded into public frontend code.
-
-## Email Delivery Service / Integration
-
-Email notifications must be triggered from the **server-side application**, not directly from browser/frontend code. The backend/server-side implementation should trigger email delivery only after the enquiry has been validated and stored successfully.
-
-The implementation may use either of the following approaches:
-
-- **SMTP-based delivery** using a server-side library such as **Nodemailer** with a verified SMTP provider.
-- **Transactional email API/SDK** using a provider such as **Resend, SendGrid, Brevo, Amazon SES, Mailgun, or an equivalent approved service**.
-
-The requirement does not mandate a specific provider. The development team may choose the email-delivery mechanism based on deployment, reliability, cost and SPRINT infrastructure requirements.
-
-Recommended architecture:
-
-```text
-Contact Us Form
-        ↓
-Backend / Server-side API
-        ↓
-Validate enquiry
-        ↓
-Save enquiry in database
-        ↓
-Email delivery service
-   (SMTP or Email API)
-       ↙       ↘
-User email   Admin email
-```
-
-### Security Requirements
-
-- SMTP usernames/passwords and email-provider API keys must remain server-side.
-- Secrets must be stored in environment variables or the deployment platform's secret-management mechanism.
-- Email credentials/API keys must never be included in client-side JavaScript or exposed to the browser.
-- Secrets must not be committed to the public source-code repository.
-- Admin recipient addresses must come from verified server-side configuration.
-
-### Delivery Behavior
-
-Email delivery is a notification step and must not be the source of truth for the enquiry. The database record is the authoritative record. If email delivery fails after a successful database save, the enquiry must remain stored and the email failure should be logged for retry or administrative follow-up.
-
-## Email Delivery Rule
-
-The enquiry must not be lost because an email service is temporarily unavailable. The required order is:
-
-```text
-Validate → Save Database → Attempt Notifications → Return Result
-```
-
-If the database save succeeds but one or both emails fail, preserve the enquiry and log the email failure for retry or administrative follow-up. Email credentials, SMTP passwords and API keys must remain on the server and must never be exposed in frontend code or committed to the repository.
-
-## Frontend Submission States
-
-The form should support the following states:
-- Idle
-- Submitting
-- Success
-- Validation error
-- Server/network error
-
-While submitting:
-- Disable the final submit button to prevent duplicate submissions
-- Show a clear loading/submitting state
-
-On success:
-- Show a concise confirmation
-- Display the enquiry/reference ID when available
-- Inform the user that the counselling team will follow up
-- Clear/reset the form only after confirmed successful submission
-
-Suggested confirmation:
-
-> **Thank you! Your enquiry has been submitted successfully.**  
-> Our SPRINT counselling team will contact you regarding your enquiry.  
-> Reference ID: `{Enquiry ID}`
-
-On failure:
-- Keep the user's entered form values
-- Show an actionable error message
-- Allow the user to retry
-- Where appropriate, offer verified phone or WhatsApp contact as an alternative
-
-## Submission Analytics
-
-Recommended events:
-- `contact_form_submit`
-- `contact_form_success`
-- `contact_form_error`
-
-Do not send personal form values such as name, phone number, email address or DOB to analytics platforms.
-
----
-
-# 12. Location Section
-
-### Heading
-**Find Us**
-
-Use the verified SPRINT office/campus location.
-
-### Requirements
-- Correct Google Maps integration
-- Accurate SPRINT location pin
-- Appropriate zoom
-- Mobile-friendly interaction
-- Directions action
-
-### Important
-The current design uses a visual placeholder only. Before development/launch, replace it with the verified Google Maps embed/API and verified coordinates.
-
----
-
-# 13. FAQ Section
-
-### Heading
-**Frequently Asked Questions**
-
-Use accordion interaction.
-
-Recommended contact/admission questions:
-- How can I contact SPRINT?
-- How can I enquire about a program?
-- How can I book counseling?
-- What information is required for registration?
-- How can I get admission support?
-
-Only publish approved/final FAQ answers.
-
----
-
-# 14. Trust Section — Optional
-
-The master requirements allow trust-building content on the Contact page.
-
-Use only if verified assets/content are available:
-- Genuine SPRINT office/campus imagery
-- Verified hiring partner logos
-- Verified student testimonial
-
-Do not use placeholder company logos, fake testimonials, or stock imagery presented as SPRINT's actual campus.
-
----
-
-# 15. Footer
-
-Use the same global footer as the rest of the SPRINT website.
-
-Include relevant:
-- Quick links
-- Contact information
-- Social media links
-- Privacy Policy
-- Terms & Conditions
-
----
-
-# 16. Responsive Design
-
-## Desktop
-Two-column primary layout:
-
-```text
-┌─────────────────────────┬─────────────────────────────┐
-│ Contact Information     │ Registration / Enquiry Form │
-│                         │                             │
-│ Phone                   │ Step 1                      │
-│ Email                   │ Step 2                      │
-│ WhatsApp                │ Step 3                      │
-│ Address                 │ Step 4                      │
-│ Timings                 │                             │
-└─────────────────────────┴─────────────────────────────┘
-```
-
-## Tablet
-- Reduce column gap
-- Maintain readable form widths
-- Allow course checkbox grid to wrap
-
-## Mobile
-Stack in this order:
-
-```text
+Header
+↓
 Hero
 ↓
-Contact Information
+Reach Us
 ↓
-Form / Step 1
-↓
-Step 2
-↓
-Step 3
-↓
-Step 4
+Enquiry Form
 ↓
 Map
 ↓
 FAQ
 ↓
-Trust (if used)
-↓
 Footer
 ```
 
-Mobile phone/email/WhatsApp actions should be easy to tap.
-
 ---
 
-# 17. Visual Design Direction
+------------------------------------------------------------------------
 
-### Style
-- Professional
-- Modern
-- Education / career focused
-- Clean
-- Conversion-oriented
-- Minimal visual clutter
+# 3. Header / Navigation
 
-### Components
-- Rounded input fields
-- Persistent labels
-- Clear section headings
-- Compact information cards
-- Step indicator
-- Responsive checkbox grid
-- High-contrast primary CTA
-- Accessible focus states
 
-### CTA hierarchy
-Primary:
-**Complete Registration & Book Counseling**
+- The page MUST use the same approved global header/navigation .
+- Contact Us MUST be identifiable as the current page where the global navigation supports active-state indication.
+- Header behavior MUST remain responsive and keyboard accessible.
 
-Secondary:
-**WhatsApp Enquiry**
+------------------------------------------------------------------------
 
-Utility:
-**Call Us / Email Us / Get Directions**
+# 4. Hero Section
 
----
+The existing hero design should remain essentially the same.
 
-# 18. Content Decisions
+### Hero Content
 
-### Added
-- Contact information block
-- WhatsApp action
-- Location section
-- Contact/admission FAQ
-- Success state
-- Responsive/mobile interaction states
-- Trust section as optional, based on verified assets
+**Label:** \> CONTACT US
 
-### Not added
-- Generic course marketing sections
-- Alumni section
-- Large promotional course cards
-- Unrelated homepage content
-- Fake testimonials/logos
-- Unverified contact details
+**Headline:** \> Let's Build Your Future Together
 
-This keeps the page aligned specifically with the **Contact Us** scope.
+**Supporting Text:** \> Have questions about our programs, admissions or
+anything else? We're here to help.
 
----
+### Hero Image
 
-# 19. Acceptance Criteria
+Retain the existing professional education/collaboration imagery and
+visual treatment.
 
-The Contact Us page is ready for development handoff when:
+### Social Media Addition
 
-- [ ] Header matches the global SPRINT design
-- [ ] Contact Us is clearly identified as the current page
-- [ ] Hero introduction is present
-- [ ] Verified address, phone, email and timings are available
-- [ ] Phone is clickable on mobile
-- [ ] Email is clickable
-- [ ] WhatsApp CTA is present with verified number
-- [ ] Form follows the supplied final content
-- [ ] 4-step progress indicator is visible and matches Personal → Background → Program → Location
-- [ ] Professional/Student conditional branching works
-- [ ] `Other` fields appear dynamically
-- [ ] Expert Track locked modules display correctly
-- [ ] Individual course checkbox grid works
-- [ ] Jharkhand is the default state
-- [ ] District changes according to state
-- [ ] Final CTA text is exactly:
-  **Complete Registration & Book Counseling**
-- [ ] Client-side validation is implemented
-- [ ] Server-side validation is planned/implemented
-- [ ] Spam protection is included for production
-- [ ] Form submission endpoint includes server-side rate limiting
-- [ ] Rate-limited requests do not create enquiries or trigger emails
-- [ ] Users receive a clear retry-later message when the rate limit is exceeded
-- [ ] Success message is implemented
-- [ ] Google Maps uses verified SPRINT location
-- [ ] Directions action works
-- [ ] FAQ accordion works
-- [ ] Desktop/tablet/mobile layouts are tested
-- [ ] Accessibility and keyboard interaction are tested
-- [ ] Successful submissions are saved to the database before notification email delivery is considered
-- [ ] A unique enquiry/reference ID is generated and returned after successful submission
-- [ ] User acknowledgement email is sent using verified server-side email configuration
-- [ ] Admin/team notification email is sent using verified server-side email configuration
-- [ ] Email failure does not delete or lose an already-saved enquiry
-- [ ] Submit button prevents duplicate submissions while a request is in progress
-- [ ] Failed submissions preserve entered form data and allow retry
-- [ ] Email/SMTP/API credentials are never exposed in frontend code
+Add social media links/icons to the hero:
 
----
+-   LinkedIn
+-   Facebook
+-   YouTube
+-   Instagram
 
-## Source References
+### Social UX
 
-### Final form content
-The supplied document defines the 4-step form architecture, conditional professional/student branches, Expert Track vs Individual Courses logic, course list, geographic fields, final CTA, progress indicator, and smart defaults.
+The icons should:
 
-### Master requirements
-The SPRINT Website Master Requirements V2 defines the Contact page requirements CT-01 through CT-28 and global requirements such as responsive design, accessibility, click-to-call, clickable email, WhatsApp CTA, analytics, and consistent design system.
+-   Be visually consistent
+-   Have accessible labels
+-   Have hover/focus states
+-   Link to the appropriate official SPRINT social profiles
+-   Work correctly on mobile
+-   Avoid distracting from the hero CTA/content
 
+### Important
+
+**Do not redesign the hero unnecessarily.**
+
+The existing hero layout is approved. The main requested enhancement is
+the addition of the social media links.
+
+------------------------------------------------------------------------
+
+# 5. Contact & Enquiry Section
+
+This is the primary interaction area of the Contact Us page.
+
+Use the **third provided reference image** as the primary inspiration
+for the enquiry form.
+
+## Layout
+
+Desktop:
+
+**Contact Information \| Dynamic Enquiry Form**
+
+Mobile:
+
+**Contact Information → Enquiry Form**
+
+------------------------------------------------------------------------
+
+# 6. Contact Information
+
+Use a clean set of actionable contact cards.
+
+The Reach Us panel MUST contain verified SPRINT contact information and direct actions for:
+
+1. **Call Us**
+   - verified SPRINT phone number;
+   - click-to-call behavior using an appropriate phone link.
+
+
+2. **Email Us**
+   - verified official SPRINT email address;
+   - click-to-email behavior.
+
+   Action: `mailto:`
+
+3. **WhatsApp**
+   - verified SPRINT WhatsApp number/link;
+   - clearly labelled action such as `Chat on WhatsApp`.
+
+    Action: Open WhatsApp conversation.
+
+4. **Visit Us** 
+   - verified office/company address;
+   - verified office/walk-in timings;
+   - `Get Directions` action pointing to the verified SPRINT location.
+
+   Action: Open directions/map.
+
+
+The Reach Us panel SHOULD use compact cards or clearly separated contact items. Contact actions MUST remain easy to tap on mobile.
+
+Dummy contact information MUST NOT be used in production.
+ 
+### UX Requirement
+
+These are not static cards only. Where applicable, the cards should be
+**interactive and actionable**.
+
+------------------------------------------------------------------------
+
+# 7. Dynamic Enquiry Form
+
+The form must support four user audiences:
+
+1.  Student
+2.  Working Professional
+3.  Institute
+4.  Company / Enterprise
+
+Use a prominent audience selector:
+
+``` text
+[ Student ]
+[ Working Professional ]
+[ Institute ]
+[ Company ]
+```
+
+Selecting an audience should dynamically display the appropriate form
+fields.
+
+------------------------------------------------------------------------
+
+# 8. Student Enquiry Form
+
+Suggested fields:
+
+-   Full Name \*
+-   Email Address \*
+-   Phone Number \*
+-   Interested Course(s) \*
+-   Message / Query
+-   Privacy Consent \*
+
+Submit button:
+
+> Submit Enquiry →
+
+The form should be simple and focused on student requirements.
+
+------------------------------------------------------------------------
+
+# 9. Working Professional Enquiry Form
+
+Suggested fields:
+
+-   Full Name \*
+-   Current Company 
+-   Current Designation \*
+-   Total Experience 
+-   Email Address \*
+-   Phone Number \*
+-   Interested Program / Course \*
+-   Message / Query
+-   Privacy Consent \*
+
+The UX should support professionals looking for:
+
+-   Upskilling
+-   Reskilling
+-   Career development
+-   Professional training
+-   Flexible learning
+
+------------------------------------------------------------------------
+
+# 10. Institute Enquiry Form
+
+Suggested fields:
+
+-   Institute Name \*
+-   Contact Person Name \*
+-   Designation / Role 
+-   Official Email Address \*
+-   Phone Number \*
+-   Institute Website
+-   Service(s) Interested In \*
+    -   Training
+    -   Workshop
+    -   Course
+-   Preferred Contact Time \*
+-   Training / Requirement Message
+-   Privacy Consent \*
+
+The form should support partnership and institutional training
+enquiries.
+
+------------------------------------------------------------------------
+
+# 11. Company / Enterprise Enquiry Form
+
+Suggested fields:
+
+-   Company Name \*
+-   Domain of Company 
+-   Contact Person Name \*
+-   Role / Designation 
+-   Official Email Address \*
+-   Phone Number \*
+-   Company Website
+-   Available Time for Contact \*
+-   Purpose Type \*
+    -   Partnership
+    -   Hiring
+    -   Internships
+    -   Personality Development
+    -   SME / Skill Development
+-   Message / Requirement
+-   Privacy Consent \*
+
+The company flow should feel appropriate for **B2B / enterprise
+communication**.
+
+------------------------------------------------------------------------
+
+# 12. Form UX & Validation
+
+The enquiry form must be production-quality.
+
+### Required UX states
+
+-   Default
+-   Focus
+-   Hover
+-   Error
+-   Disabled
+-   Loading
+-   Success
+-   API/network failure
+
+### Validation
+
+Implement:
+
+-   Required field validation
+-   Email validation
+-   Phone validation
+-   Appropriate field length limits
+-   Message character counter
+-   Select/dropdown validation
+-   Consent validation
+
+### Error Messages
+
+Errors should be specific and actionable.
+
+Example:
+
+> Please enter a valid email address.
+
+Avoid generic messages such as:
+
+> Something went wrong.
+
+### Submission
+
+Prevent:
+
+-   Duplicate submissions
+-   Invalid submission
+-   Accidental multiple clicks
+
+The architecture should be ready for backend/API integration.
+
+------------------------------------------------------------------------
+
+
+
+# 12A. Intelligent Course-to-Message Prefill
+
+When a user selects an **Interested Course / Program**, the Message / Query field should automatically generate a professional enquiry message based on the selected course.
+
+### Example
+
+If the user selects:
+
+> Artificial Intelligence
+
+The Message / Query field should automatically contain:
+
+> I'm interested in the Artificial Intelligence course. I would like to know more about the course details, eligibility, fees and upcoming batches.
+
+### Multiple Course Selection
+
+If multiple courses are selected, the message should dynamically mention all selected courses.
+
+Example:
+
+> I'm interested in Artificial Intelligence and Full Stack Development. I would like to know more about the course details, eligibility, fees and upcoming batches.
+
+### Audience-Aware Message
+
+The generated message should adapt to the selected audience.
+
+#### Student
+
+> I'm interested in the Artificial Intelligence program. I would like to know more about the course details, eligibility, fees and upcoming batches.
+
+#### Working Professional
+
+> I'm interested in the Artificial Intelligence program as a working professional. I would like to know about the curriculum, duration, schedule and learning options.
+
+#### Institute
+
+> We are interested in Artificial Intelligence training for our institute. Please share details about customized training options, duration and requirements.
+
+#### Company / Enterprise
+
+> We are interested in Artificial Intelligence training for our organization. Please share details about customized corporate training, duration and available programs.
+
+### UX Rules
+
+- The generated message must be **fully editable** by the user.
+- Selecting or removing a course should update the generated content intelligently.
+- Do not overwrite text that the user has substantially edited without an appropriate UX safeguard.
+- The message should remain concise and professional.
+- The feature should work for both single and multiple course selections.
+- The generated text should be accessible and compatible with keyboard navigation.
+- The implementation should keep course/message templates data-driven so new programs can be added without rewriting the form component.
+
+### Example Interaction
+
+```text
+Interested Course(s) *
+
+[ ✓ Artificial Intelligence ]
+
+Message / Query
+
+┌────────────────────────────────────────────┐
+│ I'm interested in the Artificial           │
+│ Intelligence course. I would like to know  │
+│ more about the course details, eligibility,│
+│ fees and upcoming batches.                 │
+└────────────────────────────────────────────┘
+
+The user can edit this message before submitting.
+```
+
+This is a **confirmed final UX requirement** for the SPRINT enquiry form.
+
+# 13. Privacy & Security Readiness
+
+The form should include:
+
+> By submitting this form, you agree that SPRINT may contact you
+> regarding your enquiry. Please read our Privacy Policy.
+
+Requirements:
+
+-   Do not expose API keys in frontend code.
+-   Treat client-side validation as UX, not security.
+-   Server-side validation should be expected when backend is connected.
+-   Sanitize and validate submitted data.
+-   Provide safe error handling.
+-   Avoid exposing sensitive technical information to users.
+
+------------------------------------------------------------------------
+
+# 14. Location / Map Section
+
+After the enquiry section, include a location section.
+
+### Heading
+
+> Find Us Here
+
+### Supporting Text
+
+> Visit our campus for a guided tour, counselling session or any other
+> assistance.
+
+### CTA
+
+> Get Directions →
+
+### Map
+
+Use a clean map card with:
+
+-   SPRINT location marker
+-   Zoom controls where applicable
+-   Responsive layout
+-   Accessible fallback/location information
+-   External directions link
+
+Desktop layout:
+
+**Location Information \| Map**
+
+Mobile:
+
+**Location Information → Map**
+
+------------------------------------------------------------------------
+
+# 15. FAQ Section
+
+The FAQ section should appear after the map.
+
+### Heading
+
+> Frequently Asked Questions
+
+### Audience Categories
+
+Organize questions by:
+
+-   Students
+-   Working Professionals
+-   Institutes
+-   Companies / Enterprise
+
+The initial Contact Us page should show **8 questions total**:
+
+  Audience                  Visible Questions
+  ----------------------- -------------------
+  Students                                  2
+  Working Professionals                     2
+  Institutes                                2
+  Companies                                 2
+
+Use an accordion interaction.
+
+------------------------------------------------------------------------
+
+# 16. Initial FAQ Content
+
+## Students
+
+1.  How can I enquire about a course at SPRINT?
+2.  Can I get counselling or guidance to choose the right course?
+
+## Working Professionals
+
+Add two professionally relevant questions, for example:
+
+1.  Can working professionals join SPRINT programs?
+2.  Does SPRINT offer flexible learning options for working
+    professionals?
+
+## Institutes
+
+1.  How can an institute partner with SPRINT for training programs?
+2.  Does SPRINT offer customized training programs for institutes?
+
+## Companies / Enterprise
+
+1.  Does SPRINT provide corporate training programs for companies?
+2.  How can a company discuss its training or skill-development
+    requirements with SPRINT?
+
+------------------------------------------------------------------------
+
+# 17. Complete FAQ Requirement
+
+The **View All FAQs** action should provide a complete set of **30
+FAQs**.
+
+The FAQ library should cover:
+
+-   Student enquiries
+-   Course selection
+-   Counselling
+-   Programs
+-   Learning modes
+-   Professional development
+-   Institute partnerships
+-   Customized institutional training
+-   Workshops
+-   Corporate training
+-   Skill-development requirements
+-   Partnership proposals
+-   Hiring/internship related enquiries
+-   Contact information
+-   Response timelines
+-   General support
+
+------------------------------------------------------------------------
+
+# 18. Existing FAQ Content
+
+## Student FAQs --- 7
+
+1.  How can I enquire about a course at SPRINT?
+2.  How can I choose the right course for my career goals?
+3.  Can I get counselling or guidance before enrolling in a course?
+4.  What training programs are available for students?
+5.  Can working professionals join SPRINT programs?
+6.  Do you offer online or flexible learning options?
+7.  How will I know what happens after I submit an enquiry?
+
+## Institute FAQs --- 6
+
+8.  How can an institute partner with SPRINT?
+9.  Does SPRINT provide customized training programs for institutes?
+10. Can SPRINT conduct training programs at our institute?
+11. Can institutes discuss their specific skill-development requirements
+    with SPRINT?
+12. How can an institute request a training or partnership proposal?
+13. Who can institutes contact for partnership-related enquiries?
+
+## Company FAQs --- 5
+
+14. Does SPRINT provide corporate training programs for companies?
+15. Can SPRINT create customized training programs for our company?
+16. Can companies discuss their employee skill-development requirements
+    with SPRINT?
+17. How can a company request a corporate training proposal?
+18. Who can companies contact for corporate training enquiries?
+
+## General FAQs --- 2
+
+19. How can I contact SPRINT?
+20. How soon will the SPRINT team respond to my enquiry?
+
+------------------------------------------------------------------------
+
+# 19. Additional FAQs --- Add 10
+
+The remaining 10 FAQs should be professionally written to reach a total
+of 30.
+
+Recommended additions:
+
+21. What information should I include when submitting an enquiry?
+
+22. Can I request a counselling session before selecting a program?
+
+23. Can SPRINT recommend a program based on my current skills and career
+    goals?
+
+24. Are customized workshops available for professional teams?
+
+25. Can organizations request a training program for a specific group of
+    employees?
+
+26. Can institutes request a campus-based workshop or seminar?
+
+27. How can an organization discuss a long-term training partnership
+    with SPRINT?
+
+28. Can companies request training based on specific business or
+    workforce requirements?
+
+29. Can I update my enquiry after submitting the form?
+
+30. What should I do if I do not receive a response after submitting an
+    enquiry?
+
+------------------------------------------------------------------------
+
+# 20. FAQ Interaction
+
+Each FAQ should support:
+
+-   Expand
+-   Collapse
+-   Keyboard navigation
+-   Visible focus state
+-   Smooth but restrained animation
+-   Accessible accordion semantics
+
+Do not display all 30 FAQs directly on the Contact Us page.
+
+The Contact Us page should remain concise.
+
+ 
+------------------------------------------------------------------------
+
+# 22. Footer
+ 
+The page MUST use the same approved global footer as the rest of the SPRINT website.
+
+The footer SHOULD include relevant:
+
+- quick links;
+- contact information;
+- social media links;
+- Privacy Policy; and
+- Terms & Conditions.
+
+Social media links SHOULD primarily live in the footer rather than compete with the enquiry CTA in the Hero.
+
+------------------------------------------------------------------------
+
+# 23. Responsive Design
+
+The website must be mobile-first.
+
+Test and optimize for:
+
+-   Large desktop
+-   Standard desktop
+-   Laptop
+-   Tablet
+-   Large mobile
+-   Standard mobile
+-   Small mobile
+
+Avoid:
+
+-   Horizontal scrolling
+-   Overlapping elements
+-   Tiny touch targets
+-   Desktop-only interactions
+-   Broken form layouts
+
+------------------------------------------------------------------------
+
+# 24. Accessibility
+
+Accessibility must be built into the implementation.
+
+Requirements:
+
+-   Semantic HTML
+-   Correct heading hierarchy
+-   Accessible labels
+-   Keyboard navigation
+-   Visible focus indicators
+-   Accessible form errors
+-   Accessible accordion
+-   Appropriate color contrast
+-   Screen-reader-friendly controls
+-   Meaningful alt text
+-   Reduced-motion consideration
+-   Accessible mobile menu
+
+------------------------------------------------------------------------
+
+# 25. Performance
+
+Optimize for real-world performance.
+
+Requirements:
+
+-   Optimized images
+-   Responsive image loading
+-   Lazy loading where appropriate
+-   Avoid unnecessary JavaScript
+-   Minimize dependencies
+-   Optimize fonts
+-   Avoid layout shifts
+-   Efficient animations
+-   Production build optimization
+
+The page should feel fast even on average mobile devices.
+
+------------------------------------------------------------------------
+
+# 26. Component Architecture
+
+Use reusable components instead of creating one large page component.
+
+Suggested architecture:
+
+``` text
+ContactUs/
+│
+├── ContactHero/
+├── SocialLinks/
+├── ContactMethods/
+├── EnquirySection/
+│   ├── AudienceSelector/
+│   ├── StudentForm/
+│   ├── WorkingProfessionalForm/
+│   ├── InstituteForm/
+│   └── CompanyForm/
+│
+├── LocationSection/
+├── FAQSection/
+├── FAQAccordion/
+└── Footer/
+```
+
+Form configuration and FAQ data should be structured so that future
+updates do not require rewriting large amounts of UI code.
+
+------------------------------------------------------------------------
+
+# 27. Engineering Quality
+
+The implementation should maintain:
+
+-   Clean component architecture
+-   Reusable UI patterns
+-   Clear naming
+-   Separation of UI and data
+-   Maintainable CSS/design tokens
+-   Minimal duplication
+-   Predictable state management
+-   Robust error handling
+-   API-ready form architecture
+-   Clean imports
+-   No unnecessary packages
+-   No console errors
+
+------------------------------------------------------------------------
+
+# 28. SEO
+
+Implement appropriate:
+
+-   Page title
+-   Meta description
+-   Semantic headings
+-   Open Graph metadata
+-   Descriptive image alt text
+-   Crawlable links
+-   Canonical URL readiness
+-   Structured data where appropriate
+
+------------------------------------------------------------------------
+
+# 29. Visual Design Principles
+
+The final design should feel:
+
+**Professional + Premium + Modern + Trustworthy + Human**
+
+Avoid:
+
+-   Excessive glassmorphism
+-   Excessive animations
+-   Overuse of gradients
+-   Random shadows
+-   Inconsistent corner radii
+-   Inconsistent icon styles
+-   Excessive content density
+-   Generic AI-looking layouts
+
+The design should look like a **real institutional/enterprise product**,
+not a template.
+
+------------------------------------------------------------------------
+
+# 30. Quality Assurance Checklist
+
+Before final delivery, verify:
+
+### UI
+
+-   [ ] Header
+-   [ ] Hero
+-   [ ] Social links
+-   [ ] Contact cards
+-   [ ] Dynamic enquiry forms
+-   [ ] Map
+-   [ ] FAQ
+-   [ ] Footer
+
+### Functionality
+
+-   [ ] Navigation works
+-   [ ] Social links work
+-   [ ] Phone link works
+-   [ ] Email link works
+-   [ ] WhatsApp link works
+-   [ ] Directions link works
+-   [ ] Audience selector works
+-   [ ] Form validation works
+-   [ ] FAQ accordion works
+-   [ ] View All FAQs works
+
+### Technical
+
+-   [ ] No console errors
+-   [ ] No broken imports
+-   [ ] No broken assets
+-   [ ] No horizontal overflow
+-   [ ] Production build passes
+-   [ ] Responsive layouts verified
+-   [ ] API failure handling considered
+
+### Accessibility
+
+-   [ ] Keyboard navigation
+-   [ ] Focus states
+-   [ ] Accessible labels
+-   [ ] Accessible errors
+-   [ ] Contrast checked
+-   [ ] Semantic structure
+
+### Performance
+
+-   [ ] Images optimized
+-   [ ] Lazy loading where appropriate
+-   [ ] Animations optimized
+-   [ ] Unnecessary dependencies removed
+-   [ ] Layout shifts minimized
+
+------------------------------------------------------------------------
+
+# 31. Final Design Direction
+
+The final Contact Us page should combine:
+
+**Existing SPRINT Branding** + **Approved Reference Layouts** +
+**Improved UX** + **Enterprise-level Engineering** + **Responsive
+Design** + **Accessibility** + **Performance** + **Security
+Readiness** + **Production QA**
+
+### Final Experience
+
+> **Header → Existing Hero + Social Links → Smart Enquiry Experience →
+> Location → Audience-based FAQs → 30-FAQ Library  →
+> Institutional Footer**
+
+------------------------------------------------------------------------
+
+## Approval Standard
+
+The page should only be considered **final** when it meets this
+standard:
+
+> **A real organization should be able to ship this page to production
+> without the user immediately noticing amateur UX, inconsistent design,
+> accessibility problems, or weak engineering decisions.**
+
+**Status:** Final requirements baseline for SPRINT Contact Us page.
