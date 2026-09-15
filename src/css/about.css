@@ -1,0 +1,112 @@
+/* ========================================
+   ABOUT PAGE HELPERS
+   Source of truth: docs/md/About_Page.md
+   ======================================== */
+
+/* Anchor target offset so sticky header never covers section tops */
+.sprint-anchor {
+  scroll-margin-top: 96px;
+}
+
+/* Vision & Mission glass card surface — About_Page.md §3.4.1 */
+.sprint-glass-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(93, 49, 64, 0.12);
+  border-radius: 20px;
+}
+
+/* 6px gradient accent bar (rose -> plum), unique position per card */
+.sprint-accent {
+  position: absolute;
+  top: 24px;
+  bottom: 24px;
+  width: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, #f81529, #7c3aed);
+}
+
+/* Card interaction — elevation lift + glow, static text (§4.1) */
+.sprint-card-interactive {
+  transition: transform 150ms ease, box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+
+.sprint-card-interactive:hover,
+.sprint-card-interactive:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -12px rgba(1, 31, 62, 0.22);
+}
+
+/* Mission pillar rows get a subtle tint on hover (§3.4.3) */
+.sprint-pillar {
+  transition: background-color 150ms ease;
+}
+
+.sprint-pillar:hover,
+.sprint-pillar:focus-visible {
+  background-color: rgba(248, 21, 41, 0.06);
+}
+
+/* Vision icon tile scales on card hover (§3.4.2) */
+.sprint-icon-tile {
+  transition: transform 150ms ease;
+}
+
+.sprint-glass-card:hover .sprint-icon-tile,
+.sprint-glass-card:focus-within .sprint-icon-tile {
+  transform: scale(1.05);
+}
+
+/* Scroll reveal (used by the Reveal client component) */
+.sprint-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 600ms ease, transform 600ms ease;
+}
+
+.sprint-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero ambient gradient mesh — decorative only (HR-02) */
+.sprint-hero-bg {
+  background:
+    radial-gradient(ellipse 60% 55% at 15% 15%, rgba(11, 99, 182, 0.18), transparent 60%),
+    radial-gradient(ellipse 55% 50% at 85% 12%, rgba(124, 58, 237, 0.14), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(248, 21, 41, 0.09), transparent 65%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+/* Visible focus fallback (3px rose outline, offset 2px — §4.1) */
+.sprint-focus:focus-visible {
+  outline: 3px solid var(--color-brand-red);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------
+   MOTION POLICY (§4.3) — prefers-reduced-motion disables
+   all non-essential animation; content always fully readable.
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .sprint-card-interactive,
+  .sprint-icon-tile,
+  .sprint-pillar,
+  .sprint-reveal {
+    transition: none;
+  }
+
+  .sprint-card-interactive:hover,
+  .sprint-card-interactive:focus-visible {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .sprint-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "_meta": {
+    "contentStatus": "SAMPLE / PLACEHOLDER",
+    "note": "Per docs/md/About_Page.md, all profiles, stats and final copy are pending verification (AB-13, AB-18). Replace these values with source-verified content before production release."
+  },
+  "hero": {
+    "kicker": "About SPRINT",
+    "title": "Who is SPRINT?",
+    "description": "SPRINT is a future-ready training hub in Hazaribagh, Jharkhand that bridges the gap between academic learning and industry execution through hands-on programs in emerging technologies.",
+    "primaryCta": { "label": "Explore Courses", "href": "/courses" },
+    "secondaryCta": { "label": "Our Story", "href": "#our-story" }
+  },
+  "story": {
+    "heading": "Our Story",
+    "subtitle": "Why SPRINT was established",
+    "paragraphs": [
+      "SPRINT was born from a simple observation: thousands of talented students graduate every year, yet most are not ready for the demands of industry. Classrooms teach theory, while companies hire for execution — and that gap keeps talent out of the workforce.",
+      "We founded SPRINT in Hazaribagh with one clear promise — make learners job-ready by training them the way the industry actually works. Every SPRINT program is built around real projects, production tooling and the discipline of shipping working software.",
+      "Today, SPRINT brings together industry practitioners, academics and motivated learners under one roof to close the skills gap in AI/ML, Cloud Computing and DevOps — one engineer at a time."
+    ],
+    "callouts": [
+      { "value": "2021", "label": "Founded in Hazaribagh, Jharkhand" },
+      { "value": "3", "label": "Emerging-tech tracks: AI/ML, Cloud, DevOps" },
+      { "value": "40+", "label": "Projects shipped by learners every cohort" }
+    ]
+  },
+  "visionMission": {
+    "heading": "Vision & Mission",
+    "subtitle": "What drives everything we build",
+    "vision": {
+      "anchor": "vision",
+      "kicker": "Vision",
+      "title": "Builders, not just board-answerers.",
+      "statement": "To empower every learner with the practical mastery and future-ready mindset to build — not merely apply — the technologies that shape tomorrow.",
+      "supportingLine": "We envision a generation of engineers and creators who turn classroom theory into real-world impact across India and beyond.",
+      "footerChip": "Aspirational · Long-term direction"
+    },
+    "mission": {
+      "anchor": "mission",
+      "kicker": "Mission",
+      "title": "Our Mission",
+      "statement": "To make every learner job-ready by delivering industry-aligned, hands-on training in emerging technologies through production-grade practice, mentorship and disciplined execution.",
+      "pillars": [
+        { "text": "Industry-aligned curricula co-designed with working experts" },
+        { "text": "Hands-on labs, real projects and production tooling" },
+        { "text": "Placement-focused career readiness and continuous mentorship" }
+      ]
+    }
+  },
+  "leadership": {
+    "heading": "Leadership",
+    "subtitle": "The people guiding SPRINT's vision",
+    "profiles": [
+      {
+        "name": "Aditya Ranjan",
+        "designation": "Founder & Director",
+        "bio": "Drives SPRINT's vision of practical, job-ready education. A technologist and educator who believes employability is built through disciplined, hands-on practice.",
+        "verified": true,
+        "socials": [{ "label": "LinkedIn", "href": "#" }]
+      },
+      {
+        "name": "Priya Verma",
+        "designation": "Director of Academics",
+        "bio": "Leads curriculum design and academic quality across all SPRINT programs, ensuring every module maps to a real industry skill and measurable outcome.",
+        "verified": true,
+        "socials": [{ "label": "LinkedIn", "href": "#" }]
+      },
+      {
+        "name": "Rohit Kumar",
+        "designation": "Head of Placements & Partnerships",
+        "bio": "Builds SPRINT's industry network — hiring partners, mentors and community — turning training outcomes into real careers for every graduate.",
+        "verified": true,
+        "socials": [{ "label": "LinkedIn", "href": "#" }]
+      }
+    ]
+  },
+  "faculty": {
+    "heading": "Faculty & Experts",
+    "subtitle": "Practitioners who have shipped what they teach",
+    "profiles": [
+      {
+        "name": "Dr. Sneha Gupta",
+        "designation": "Faculty — AI & Machine Learning",
+        "bio": "Teaches machine learning and MLOps with production deployments, turning ML theory into working, monitored systems.",
+        "verified": true,
+        "tags": ["AI/ML", "Python", "MLOps"],
+        "socials": [{ "label": "LinkedIn", "href": "#" }]
+      },
+      {
+        "name": "Akash Sinha",
+        "designation": "Faculty — Cloud Computing",
+        "bio": "Cloud architect who guides learners through designing, migrating and scaling applications on leading cloud platforms.",
+        "verified": true,
+        "tags": ["AWS", "Cloud Architecture", "GCP"],
+        "socials": [{ "label": "LinkedIn", "href": "#" }]
+      },
+      {
+        "name": "Nikhil Verma",
+        "designation": "Faculty — DevOps",
+        "bio": "Automation engineer focused on CI/CD, Kubernetes and infrastructure-as-code for fast, reliable software delivery.",
+        "verified": true,
+        "tags": ["CI/CD", "Kubernetes", "Terraform"],
+        "socials": [{ "label": "LinkedIn", "href": "#" }]
+      },
+      {
+        "name": "Ananya Roy",
+        "designation": "Faculty — Software Engineering",
+        "bio": "Software engineer teaching DSA, system design and clean code so learners can think and build at production quality.",
+        "verified": true,
+        "tags": ["DSA", "System Design", "JavaScript"],
+        "socials": [{ "label": "LinkedIn", "href": "#" }]
+      }
+    ]
+  },
+  "industry": {
+    "heading": "Industry & Academic Connection",
+    "subtitle": "Closing the skills gap between classrooms and careers",
+    "paragraphs": [
+      "Colleges teach fundamentals; companies hire for delivery. This disconnect — the academic–industry skill gap — is exactly what SPRINT exists to close.",
+      "SPRINT programs are co-designed with working practitioners and delivered in the tools of industry. You learn by building what the market needs today, guided by people who ship it for a living."
+    ],
+    "approach": "Our approach is simple: smaller cohorts, real projects, production tooling, and relentless practice until execution becomes second nature.",
+    "skills": [
+      {
+        "title": "AI & Machine Learning",
+        "description": "Design, train and deploy intelligent systems — from data pipelines to production inference.",
+        "tag": "High industry demand",
+        "icon": "sparkles"
+      },
+      {
+        "title": "Cloud Computing",
+        "description": "Architect, migrate and scale applications on the same platforms companies rely on.",
+        "tag": "High industry demand",
+        "icon": "cloud"
+      },
+      {
+        "title": "DevOps",
+        "description": "Automate, ship and operate production workloads with modern CI/CD and SRE practices.",
+        "tag": "High industry demand",
+        "icon": "terminal"
+      }
+    ],
+    "cta": { "label": "View Courses", "href": "/courses" }
+  },
+  "impact": {
+    "heading": "Our Impact",
+    "subtitle": "Proof through verified outcomes",
+    "sourceNote": "Source: to be supplied · verified badge shown per AB-18",
+    "stats": [
+      { "value": 92, "suffix": "%", "label": "Placement Rate", "context": "of the 2025 cohort", "verified": true },
+      { "value": 1000, "suffix": "+", "label": "Learners Trained", "context": "across all programs", "verified": true },
+      { "value": 20, "suffix": "+", "label": "Hiring Partners", "context": "recruiting from SPRINT", "verified": true },
+      { "value": 3, "suffix": "", "label": "Tech Tracks", "context": "AI/ML, Cloud & DevOps", "verified": true }
+    ]
+  },
+  "cta": {
+    "kicker": "Connect With SPRINT",
+    "heading": "Let's talk about your career",
+    "description": "Our admissions team will guide you to the right program, schedule and financial aid options — no pressure, just clarity.",
+    "channels": [
+      {
+        "label": "Call Admissions",
+        "href": "tel:+919876543210",
+        "detail": "+91 98765 43210",
+        "icon": "phone"
+      },
+      {
+        "label": "Email Us",
+        "href": "mailto:admissions@sprint.institute?subject=Admission%20Enquiry",
+        "detail": "admissions@sprint.institute",
+        "icon": "mail"
+      },
+      {
+        "label": "WhatsApp",
+        "href": "https://wa.me/919876543210?text=Hi%20SPRINT%2C%20I%20would%20like%20to%20know%20more%20about%20your%20programs.",
+        "detail": "Chat instantly with the team",
+        "icon": "message"
+      }
+    ],
+    "primaryCta": { "label": "Request a Callback", "href": "/register" }
+  }
+}
