@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Mail, MessageCircle, Phone } from "lucide-react";
-
 import about from "@/data/about.json";
 import siteConfig from "@/config/site.config.json";
-
 import VisionMissionCard from "@/components/cards/VisionMissionCard";
 import ProfileCard from "@/components/cards/ProfileCard";
 import SkillCard from "@/components/cards/SkillCard";
@@ -101,7 +99,7 @@ export default function AboutPage() {
             <Link
               href={about.hero.primaryCta.href}
               data-track="hero_cta_click"
-              className="sprint-focus group inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-lg shadow-brand-red/25 transition-colors hover:bg-brand-red-dark"
+              className="sprint-focus group inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
             >
               {about.hero.primaryCta.label}
               <ArrowRight
@@ -303,7 +301,7 @@ export default function AboutPage() {
           <Link
             href={about.cta.primaryCta.href}
             data-track="cta_register"
-            className="sprint-focus group mt-10 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-8 py-3 text-base font-semibold text-white shadow-lg shadow-brand-red/25 transition-colors hover:bg-brand-red-dark"
+            className="sprint-focus group mt-10 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-8 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
           >
             {about.cta.primaryCta.label}
             <ArrowRight

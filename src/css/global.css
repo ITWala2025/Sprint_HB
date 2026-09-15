@@ -35,6 +35,10 @@
   --color-brand-success: #22c55e;
   --color-brand-warning: #f97316;
   --color-brand-purple: #7c3aed;
+
+  /* Shadows */
+  --shadow-brand-card: 0 16px 32px -12px rgba(1, 31, 62, 0.22);
+  --shadow-brand-cta: 0 10px 25px -5px rgba(248, 21, 41, 0.25);
 }
 
 /* ========================================
@@ -77,6 +81,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
 /* ========================================
@@ -86,4 +91,19 @@ body {
 ::selection {
   background: var(--color-brand-red);
   color: #ffffff;
+}
+
+/* ========================================
+   COMMON UTILITIES & ACCESSIBILITY
+   ======================================== */
+
+/* Anchor target offset so sticky header never covers section tops */
+.sprint-anchor {
+  scroll-margin-top: 96px;
+}
+
+/* Visible focus fallback (3px red outline, offset 2px — GL-09, §4.1) */
+.sprint-focus:focus-visible {
+  outline: 3px solid var(--color-brand-red);
+  outline-offset: 2px;
 }

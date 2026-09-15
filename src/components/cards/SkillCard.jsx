@@ -15,7 +15,7 @@ export default function SkillCard({ skill }) {
   const Icon = iconMap[skill.icon] ?? Sparkles;
 
   return (
-    <article className="sprint-card-interactive flex h-full flex-col rounded-3xl border border-brand-border bg-white p-6 shadow-sm hover:shadow-[0_16px_32px_-12px_rgba(1,31,62,0.22)]">
+    <article className="sprint-card-interactive flex h-full flex-col rounded-3xl border border-brand-border bg-white p-6 shadow-sm hover:shadow-brand-card">
       <span
         aria-hidden="true"
         className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-blue to-brand-purple text-white"

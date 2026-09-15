@@ -15,7 +15,7 @@ export default function ProfileCard({ profile, showTags = false }) {
     .toUpperCase();
 
   return (
-    <article className="sprint-card-interactive flex h-full flex-col rounded-3xl border border-brand-border bg-white p-6 shadow-sm hover:shadow-[0_16px_32px_-12px_rgba(1,31,62,0.22)]">
+    <article className="sprint-card-interactive flex h-full flex-col rounded-3xl border border-brand-border bg-white p-6 shadow-sm hover:shadow-brand-card">
       <div className="flex items-start justify-between gap-3">
         {/* Photo / initials avatar — reserved aspect box prevents CLS (LDR-05) */}
         {profile.image ? (
