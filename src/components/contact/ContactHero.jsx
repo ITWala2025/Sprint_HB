@@ -70,7 +70,54 @@ export default function ContactHero() {
               </div>
             ))}
           </div>
+          {/* Social Media Links */}
+          <div className="contact-hero__socials">
+            <span className="contact-hero__socials-label">
+              Connect with us
+            </span>
 
+            <div className="contact-hero__socials-list">
+              {/* LinkedIn */}
+              <a
+                href="https://www.linkedin.com/company/sprint-school-of-professional-studies-information-technology"
+                className="contact-hero__social-link"
+                aria-label="SPRINT on LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                in
+              </a>
+
+              {/* Facebook */}
+              <a
+                href="#"
+                className="contact-hero__social-link"
+                aria-label="SPRINT on Facebook"
+              >
+                f
+              </a>
+
+              {/* YouTube */}
+              <a
+                href="#"
+                className="contact-hero__social-link"
+                aria-label="SPRINT on YouTube"
+              >
+                ▶
+              </a>
+
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/sprint_natural_elements?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw=="
+                className="contact-hero__social-link"
+                aria-label="SPRINT on Instagram"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ◎
+              </a>
+            </div>
+          </div>
           <Link className="contact-hero__cta" href="#enquiry">
             Start an Enquiry
             <ArrowRight aria-hidden="true" />
@@ -80,3 +127,4 @@ export default function ContactHero() {
     </main>
   );
 }
+

@@ -242,3 +242,88 @@
     transition: none;
   }
 }
+/* =========================================
+   Contact Hero - Social Media Links
+   ========================================= */
+
+.contact-hero__socials {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.contact-hero__socials-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.contact-hero__socials-list {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.contact-hero__social-link {
+  width: 2.35rem;
+  height: 2.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-brand-white);
+
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.contact-hero__social-link:hover {
+  background: var(--color-brand-red);
+  border-color: var(--color-brand-red);
+  color: var(--color-brand-white);
+  transform: translateY(-3px);
+}
+
+.contact-hero__social-link:focus-visible {
+  outline: 3px solid var(--color-brand-white);
+  outline-offset: 3px;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .contact-hero__socials {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin-top: 1rem;
+  }
+
+  .contact-hero__socials-label {
+    font-size: 0.8rem;
+  }
+
+  .contact-hero__socials-list {
+    gap: 0.5rem;
+  }
+
+  .contact-hero__social-link {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
