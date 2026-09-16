@@ -1,0 +1,35 @@
+/* Shared header states and mobile drawer behavior. */
+.sprint-site-header {
+	border-bottom: 1px solid color-mix(in srgb, var(--color-brand-border) 80%, transparent);
+	background: rgba(255, 255, 255, 0.92);
+	backdrop-filter: blur(12px);
+	transition: box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.sprint-site-header.is-scrolled {
+	background: rgba(255, 255, 255, 0.82);
+	box-shadow: 0 12px 30px -22px rgba(1, 31, 62, 0.7);
+}
+
+.sprint-mobile-drawer {
+	animation: sprint-drawer-in 180ms ease-out both;
+}
+
+@keyframes sprint-drawer-in {
+	from {
+		opacity: 0;
+		transform: translateY(-8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sprint-site-header,
+	.sprint-mobile-drawer {
+		transition: none;
+		animation: none;
+	}
+}

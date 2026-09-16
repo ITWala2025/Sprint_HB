@@ -85,40 +85,63 @@ export default function AboutPage() {
         id="who-is-sprint"
         className="sprint-hero-bg sprint-anchor relative overflow-hidden"
       >
-        <div className="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
-          <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
-            {about.hero.kicker}
-          </p>
-          <h1 className="mt-6 max-w-3xl text-4xl font-black leading-tight tracking-tight text-brand-navy sm:text-5xl md:text-6xl">
-            {about.hero.title}
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-brand-text-secondary">
-            {about.hero.description}
-          </p>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Link
-              href={about.hero.primaryCta.href}
-              data-track="hero_cta_click"
-              className="sprint-focus group inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
-            >
-              {about.hero.primaryCta.label}
-              <ArrowRight
-                className="size-5 transition-transform group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </Link>
-            <a
-              href={about.hero.secondaryCta.href}
-              className="sprint-focus inline-flex min-h-[48px] items-center rounded-full border border-brand-border bg-white px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:border-brand-navy"
-            >
-              {about.hero.secondaryCta.label}
-            </a>
+        <div className="sprint-hero-grid mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+          <div className="relative z-10">
+            <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+              {about.hero.kicker}
+            </p>
+            <h1 className="mt-6 max-w-3xl text-4xl font-black leading-tight tracking-tight text-brand-navy sm:text-5xl md:text-6xl">
+              {about.hero.title}
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-brand-text-secondary">
+              {about.hero.description}
+            </p>
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Link
+                href={about.hero.primaryCta.href}
+                data-track="hero_cta_click"
+                className="sprint-focus group inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
+              >
+                {about.hero.primaryCta.label}
+                <ArrowRight
+                  className="size-5 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </Link>
+              <a
+                href={about.hero.secondaryCta.href}
+                className="sprint-focus inline-flex min-h-[48px] items-center rounded-full border border-brand-border bg-white px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:border-brand-navy"
+              >
+                {about.hero.secondaryCta.label}
+              </a>
+            </div>
+          </div>
+
+          <div className="sprint-hero-proof relative z-10" aria-label="SPRINT at a glance">
+            <span className="sprint-hero-proof-line" aria-hidden="true" />
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+              At a glance
+            </p>
+            <p className="mt-5 text-7xl font-black tracking-tight text-brand-navy">3</p>
+            <p className="max-w-[14rem] text-lg font-semibold leading-tight text-brand-navy">
+              emerging technology tracks built for execution
+            </p>
+            <div className="mt-8 grid grid-cols-2 gap-3 border-t border-brand-border pt-5">
+              <div>
+                <p className="text-2xl font-black text-brand-navy">2021</p>
+                <p className="mt-1 text-xs text-brand-text-muted">Founded in Hazaribagh</p>
+              </div>
+              <div>
+                <p className="text-2xl font-black text-brand-navy">40+</p>
+                <p className="mt-1 text-xs text-brand-text-muted">Projects per cohort</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ============ 3. OUR STORY — Why SPRINT was established (§3.3) ============ */}
-      <section id="our-story" className="sprint-anchor bg-brand-off-white">
+      <section id="our-story" className="sprint-section sprint-anchor bg-brand-off-white">
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
             heading={about.story.heading}
@@ -155,7 +178,7 @@ export default function AboutPage() {
       <section
         id="vision-mission"
         aria-labelledby="vision-mission-heading"
-        className="sprint-anchor bg-white"
+        className="sprint-section sprint-anchor bg-white"
       >
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
@@ -172,7 +195,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 5. LEADERSHIP / FOUNDERS (§3.5) ============ */}
-      <section id="leadership" className="sprint-anchor bg-brand-off-white">
+      <section id="leadership" className="sprint-section sprint-anchor bg-brand-off-white">
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
             heading={about.leadership.heading}
@@ -187,7 +210,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 6. FACULTY / EXPERTS (§3.6) ============ */}
-      <section id="faculty" className="sprint-anchor bg-white">
+      <section id="faculty" className="sprint-section sprint-anchor bg-white">
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
             heading={about.faculty.heading}
@@ -202,7 +225,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 7. INDUSTRY / ACADEMIC CONNECTION (§3.7) ============ */}
-      <section id="industry-connection" className="sprint-anchor bg-brand-surface">
+      <section id="industry-connection" className="sprint-section sprint-anchor bg-brand-surface">
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
             {/* Left: narrative on the academic–industry skill gap */}
@@ -243,7 +266,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 8. OUR IMPACT / VERIFIED STATS (§3.8) ============ */}
-      <section id="impact" className="sprint-anchor bg-white">
+      <section id="impact" className="sprint-section sprint-anchor bg-white">
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
             heading={about.impact.heading}

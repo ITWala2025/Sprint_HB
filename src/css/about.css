@@ -3,6 +3,42 @@
    Source of truth: docs/md/About_Page.md
    ======================================== */
 
+.sprint-section {
+  position: relative;
+}
+
+.sprint-section:nth-of-type(even) {
+  background-image: linear-gradient(90deg, rgba(11, 99, 182, 0.025), transparent 30%);
+}
+
+.sprint-hero-grid {
+  display: grid;
+  align-items: center;
+  gap: 3rem;
+  min-height: min(680px, calc(100vh - 5rem));
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+}
+
+.sprint-hero-proof {
+  justify-self: end;
+  width: min(100%, 320px);
+  padding: 2rem;
+  border: 1px solid rgba(1, 31, 62, 0.12);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-brand-card);
+  backdrop-filter: blur(12px);
+}
+
+.sprint-hero-proof-line {
+  display: block;
+  width: 5rem;
+  height: 0.35rem;
+  margin-bottom: 1.5rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-brand-red), var(--color-brand-purple));
+}
+
 /* Vision & Mission glass card surface — About_Page.md §3.4.1 */
 .sprint-glass-card {
   position: relative;
@@ -69,11 +105,36 @@
 
 /* Hero ambient gradient mesh — decorative only (HR-02) */
 .sprint-hero-bg {
+  isolation: isolate;
   background:
     radial-gradient(ellipse 60% 55% at 15% 15%, rgba(11, 99, 182, 0.18), transparent 60%),
     radial-gradient(ellipse 55% 50% at 85% 12%, rgba(124, 58, 237, 0.14), transparent 60%),
     radial-gradient(ellipse 70% 60% at 50% 100%, rgba(248, 21, 41, 0.09), transparent 65%),
     linear-gradient(180deg, var(--color-brand-off-white, #f8fafc) 0%, var(--color-brand-white, #ffffff) 100%);
+}
+
+.sprint-hero-bg::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.25;
+  background-image: linear-gradient(rgba(1, 31, 62, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(1, 31, 62, 0.06) 1px, transparent 1px);
+  background-size: 42px 42px;
+  content: "";
+  mask-image: linear-gradient(to bottom, black, transparent 75%);
+}
+
+@media (max-width: 767px) {
+  .sprint-hero-grid {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .sprint-hero-proof {
+    justify-self: stretch;
+    width: 100%;
+  }
 }
 
 /* ------------------------------------------------------------

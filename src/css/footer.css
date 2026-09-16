@@ -1,0 +1,39 @@
+.sprint-footer {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+}
+
+.sprint-footer::before {
+	position: absolute;
+	top: 0;
+	right: 8%;
+	width: 22rem;
+	height: 22rem;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 50%;
+	box-shadow: 0 0 0 2rem rgba(255, 255, 255, 0.025), 0 0 0 4rem rgba(255, 255, 255, 0.02);
+	content: "";
+	pointer-events: none;
+	transform: translateY(-45%);
+}
+
+.sprint-footer > * {
+	position: relative;
+	z-index: 1;
+}
+
+.sprint-footer a {
+	transition: color 160ms ease, transform 160ms ease;
+}
+
+.sprint-footer nav a:hover,
+.sprint-footer li > a:hover {
+	transform: translateX(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sprint-footer a {
+		transition: none;
+	}
+}

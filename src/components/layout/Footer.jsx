@@ -49,7 +49,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-brand-navy text-brand-off-white">
+    <footer className="sprint-footer bg-brand-navy text-brand-off-white">
       <div className="mx-auto grid max-w-[1200px] gap-10 px-6 py-16 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1.4fr]">
         {/* Brand identity & mission (columns 1 & 2) */}
         <div className="sm:col-span-2 lg:col-span-1">
