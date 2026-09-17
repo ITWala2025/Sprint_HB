@@ -1,4 +1,3 @@
-import Header from "@/components/header/Header";
 import Hero from "@/components/Home/Hero";
 import WhatWeGive from "@/components/Home/WhatWeGive";
 import PartnerCarousel from "@/components/Home/PartnerCarousel";
@@ -8,7 +7,7 @@ import Instructors from "@/components/Home/Instructors";
 import Testimonials from "@/components/Home/Testimonials";
 import FAQSection from "@/components/Home/FAQSection";
 import ContactCTA from "@/components/Home/ContactCTA";
-import Footer from "@/components/footer/Footer";
+
 
 /**
  * Home Page — assembled in the exact section order from Section 4 of the
@@ -20,7 +19,7 @@ import Footer from "@/components/footer/Footer";
 export default function HomePage() {
   return (
     <>
-      <Header />
+      
       <main>
         <Hero />
         <WhatWeGive />
@@ -32,7 +31,7 @@ export default function HomePage() {
         <FAQSection />
         <ContactCTA />
       </main>
-      <Footer />
+      
     </>
   );
 }

@@ -1,8 +1,10 @@
 import "@/css/global.css";
+import "@/css/header.css";
+import "@/css/footer.css";
 import "@/css/about.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import { Space_Grotesk, Inter } from "next/font/google";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -41,7 +43,7 @@ export default function RootLayout({ children }) {
         {/* Skip link — first item in tab order (GL-08, GL-09) */}
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-brand-navy focus:px-5 focus:py-2.5 focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-100 focus:rounded-full focus:bg-brand-navy focus:px-5 focus:py-2.5 focus:text-white"
         >
           Skip to main content
         </a>

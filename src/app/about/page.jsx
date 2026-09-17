@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, Mail, MessageCircle, Phone } from "lucide-react";
+import { ArrowRight, CheckCircle2, Mail, MessageCircle, Phone } from "lucide-react";
 import about from "@/data/about.json";
 import siteConfig from "@/config/site.config.json";
-import VisionMissionCard from "@/components/cards/VisionMissionCard";
+import StoryVisionMission from "@/components/sections/StoryVisionMission";
 import ProfileCard from "@/components/cards/ProfileCard";
 import SkillCard from "@/components/cards/SkillCard";
 import StatCounter from "@/components/cards/StatCounter";
-import Reveal from "@/components/cards/Reveal";
 
 // About Us — "/about". Spec: docs/md/About_Page.md (10 approved sections).
 // Sections 1 (Header) and 10 (Footer) render via the root layout; this page
@@ -56,6 +55,9 @@ const ctaIcons = {
   message: MessageCircle,
 };
 
+/* Indian-locale number formatting for impact stats (IMP-05) */
+const formatStatValue = (value) => Math.round(value).toLocaleString("en-IN");
+
 function SectionHeader({ heading, subtitle, center = false, id }) {
   return (
     <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
@@ -85,94 +87,94 @@ export default function AboutPage() {
         id="who-is-sprint"
         className="sprint-hero-bg sprint-anchor relative overflow-hidden"
       >
-        <div className="mx-auto max-w-[1200px] px-6 py-20 md:py-28">
-          <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
-            {about.hero.kicker}
-          </p>
-          <h1 className="mt-6 max-w-3xl text-4xl font-black leading-tight tracking-tight text-brand-navy sm:text-5xl md:text-6xl">
-            {about.hero.title}
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-brand-text-secondary">
-            {about.hero.description}
-          </p>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Link
-              href={about.hero.primaryCta.href}
-              data-track="hero_cta_click"
-              className="sprint-focus group inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
-            >
-              {about.hero.primaryCta.label}
-              <ArrowRight
-                className="size-5 transition-transform group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </Link>
-            <a
-              href={about.hero.secondaryCta.href}
-              className="sprint-focus inline-flex min-h-[48px] items-center rounded-full border border-brand-border bg-white px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:border-brand-navy"
-            >
-              {about.hero.secondaryCta.label}
-            </a>
+        <div className="sprint-hero-grid mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+          <div className="relative z-10">
+            <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+              {about.hero.kicker}
+            </p>
+            <h1 className="mt-6 max-w-3xl text-4xl font-black leading-tight tracking-tight text-brand-navy sm:text-5xl md:text-6xl">
+              {about.hero.title}
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-brand-text-secondary">
+              {about.hero.description}
+            </p>
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Link
+                href={about.hero.primaryCta.href}
+                data-track="hero_cta_click"
+                className="sprint-focus group inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
+              >
+                {about.hero.primaryCta.label}
+                <ArrowRight
+                  className="size-5 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </Link>
+              <a
+                href={about.hero.secondaryCta.href}
+                className="sprint-focus inline-flex min-h-[48px] items-center rounded-full border border-brand-border bg-white px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:border-brand-navy"
+              >
+                {about.hero.secondaryCta.label}
+              </a>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* ============ 3. OUR STORY — Why SPRINT was established (§3.3) ============ */}
-      <section id="our-story" className="sprint-anchor bg-brand-off-white">
-        <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
-          <SectionHeader
-            heading={about.story.heading}
-            subtitle={about.story.subtitle}
-          />
-          <div className="mt-12 grid gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-start">
-            <div className="space-y-5 text-lg leading-relaxed text-brand-text-secondary">
-              {about.story.paragraphs.map((paragraph) => (
-                <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+          <div className="sprint-hero-proof relative z-10" aria-label="SPRINT verified impact at a glance">
+            <span className="sprint-hero-proof-line" aria-hidden="true" />
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+              Verified impact
+            </p>
+            <p className="mt-1 text-base font-semibold leading-snug text-brand-navy">
+              {about.impact.subtitle}
+            </p>
+
+            <div className="mt-5 flex flex-wrap gap-3" role="list" aria-label="Key impact statistics">
+              {about.impact.stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  role="listitem"
+                  className="sprint-hero-stat flex min-w-[7.5rem] flex-1 flex-col rounded-2xl border border-brand-border bg-white/70 px-2.5 py-3 shadow-sm"
+                >
+                  <p className="sprint-hero-stat-value text-3xl font-black leading-none tabular-nums">
+                    {formatStatValue(stat.value)}
+                    {stat.suffix}
+                  </p>
+                  <p className="mt-1.5 text-xs font-semibold leading-tight text-brand-navy">
+                    {stat.label}
+                  </p>
+                  <p className="mt-1 text-[11px] leading-tight text-brand-text-muted">
+                    {stat.context}
+                  </p>
+                </div>
               ))}
             </div>
-            <Reveal>
-              <ul className="space-y-4">
-                {about.story.callouts.map((callout) => (
-                  <li
-                    key={callout.label}
-                    className="flex items-center gap-4 rounded-3xl border border-brand-border bg-white p-5 shadow-sm"
-                  >
-                    <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-brand-navy text-lg font-black text-white">
-                      {callout.value}
-                    </span>
-                    <span className="text-sm font-medium leading-snug text-brand-text">
-                      {callout.label}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+
+            <p className="mt-5 inline-flex items-center gap-1.5 text-xs font-medium text-brand-success">
+              <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
+              All figures source-verified
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ============ 4. VISION & MISSION — §3.4 card system ============ */}
+      {/* ============ 3 + 4. OUR STORY · VISION · MISSION — one scrollable div (§3.3 + §3.4) ============ */}
       <section
-        id="vision-mission"
-        aria-labelledby="vision-mission-heading"
-        className="sprint-anchor bg-white"
+        id="our-story"
+        aria-labelledby="our-story-heading"
+        className="sprint-section sprint-anchor bg-brand-off-white"
       >
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
-            heading={about.visionMission.heading}
-            subtitle={about.visionMission.subtitle}
-            id="vision-mission-heading"
-            center
+            heading={`${about.story.heading}, ${about.visionMission.heading}`}
+            subtitle="Why SPRINT was established, and what drives everything we build"
+            id="our-story-heading"
           />
-          <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-2">
-            <VisionMissionCard variant="vision" data={about.visionMission.vision} />
-            <VisionMissionCard variant="mission" data={about.visionMission.mission} />
-          </div>
+          <StoryVisionMission story={about.story} visionMission={about.visionMission} />
         </div>
       </section>
 
       {/* ============ 5. LEADERSHIP / FOUNDERS (§3.5) ============ */}
-      <section id="leadership" className="sprint-anchor bg-brand-off-white">
+      <section id="leadership" className="sprint-section sprint-anchor bg-brand-off-white">
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
             heading={about.leadership.heading}
@@ -187,7 +189,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 6. FACULTY / EXPERTS (§3.6) ============ */}
-      <section id="faculty" className="sprint-anchor bg-white">
+      <section id="faculty" className="sprint-section sprint-anchor bg-white">
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
             heading={about.faculty.heading}
@@ -202,7 +204,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 7. INDUSTRY / ACADEMIC CONNECTION (§3.7) ============ */}
-      <section id="industry-connection" className="sprint-anchor bg-brand-surface">
+      <section id="industry-connection" className="sprint-section sprint-anchor bg-brand-surface">
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
             {/* Left: narrative on the academic–industry skill gap */}
@@ -243,7 +245,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 8. OUR IMPACT / VERIFIED STATS (§3.8) ============ */}
-      <section id="impact" className="sprint-anchor bg-white">
+      <section id="impact" className="sprint-section sprint-anchor bg-white">
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
             heading={about.impact.heading}
@@ -262,19 +264,20 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 9. CTA — Connect With SPRINT (§3.9) ============ */}
-      <section id="connect" className="sprint-anchor relative overflow-hidden bg-brand-navy">
+      {/* Light ambient surface — stays clearly distinct from the navy footer below */}
+      <section id="connect" className="sprint-cta-bg sprint-anchor relative overflow-hidden">
         <div className="mx-auto max-w-[1200px] px-6 py-16 text-center md:py-24">
-          <p className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red-light">
+          <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
             {about.cta.kicker}
           </p>
-          <h2 className="mx-auto mt-5 max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="mx-auto mt-5 max-w-2xl text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
             {about.cta.heading}
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-brand-off-white/80">
+          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-brand-text-secondary">
             {about.cta.description}
           </p>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          <div className="mt-10 grid gap-5 sm:grid-cols-3">
             {about.cta.channels.map((channel) => {
               const Icon = ctaIcons[channel.icon] ?? Phone;
               return (
@@ -282,15 +285,15 @@ export default function AboutPage() {
                   key={channel.href}
                   href={channel.href}
                   data-track={`cta_${channel.icon}`}
-                  className="sprint-focus group flex min-h-[120px] flex-col items-center justify-center gap-2 rounded-3xl border border-white/15 bg-white/5 p-6 transition-colors hover:border-brand-red hover:bg-white/10"
+                  className="sprint-focus group flex min-h-[130px] flex-col items-center justify-center gap-2.5 rounded-3xl border border-brand-border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-red hover:shadow-brand-card"
                 >
-                  <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-red to-brand-purple text-white">
+                  <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-red to-brand-purple text-white transition-transform duration-150 group-hover:scale-105">
                     <Icon className="size-6" aria-hidden="true" />
                   </span>
-                  <span className="text-base font-semibold text-white">
+                  <span className="text-base font-semibold text-brand-navy">
                     {channel.label}
                   </span>
-                  <span className="text-sm text-brand-off-white/70">
+                  <span className="text-sm text-brand-text-muted">
                     {channel.detail}
                   </span>
                 </a>
@@ -301,7 +304,7 @@ export default function AboutPage() {
           <Link
             href={about.cta.primaryCta.href}
             data-track="cta_register"
-            className="sprint-focus group mt-10 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-8 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
+            className="sprint-focus group mt-10 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-gradient-to-r from-brand-red to-brand-purple px-9 py-3.5 text-base font-bold text-white shadow-brand-cta transition hover:-translate-y-0.5 hover:brightness-110"
           >
             {about.cta.primaryCta.label}
             <ArrowRight
