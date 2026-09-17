@@ -15,7 +15,7 @@ export default function VisionMissionCard({ variant, data }) {
     <section
       id={data.anchor}
       aria-labelledby={`${data.anchor}-heading`}
-      className="sprint-glass-card sprint-card-interactive flex flex-col p-6 sm:p-8"
+      className="sprint-glass-card sprint-card-interactive flex h-full flex-col p-6 sm:p-8"
     >
       {/* Unique gradient accent bar (rose -> plum), edge differs per card */}
       <span
