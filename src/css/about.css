@@ -272,3 +272,19 @@
     transition: none;
   }
 }
+
+/* ------------------------------------------------------------
+   FINAL CTA (Connect With SPRINT) — §3.9 light surface.
+   Sits directly above the navy footer, so it uses a light
+   ambient gradient instead of the footer's navy to avoid the
+   "double footer" look.
+   ------------------------------------------------------------ */
+
+.sprint-cta-bg {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 50% 45% at 10% 30%, rgba(248, 21, 41, 0.07), transparent 60%),
+    radial-gradient(ellipse 45% 40% at 90% 25%, rgba(124, 58, 237, 0.07), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 105%, rgba(11, 99, 182, 0.1), transparent 65%),
+    linear-gradient(180deg, var(--color-brand-white, #ffffff) 0%, var(--color-brand-surface, #f1f5f9) 100%);
+}
