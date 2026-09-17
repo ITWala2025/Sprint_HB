@@ -11,7 +11,6 @@ import { FcElectronics, FcSettings, FcSimCard } from "react-icons/fc";
 import { BiLogoLinkedin } from "react-icons/bi";
 import { SiInstagram, SiYoutube } from "react-icons/si";
 
-import sprintLogo from "@/assets/images/sprintlogo1.jpeg";
 import siteConfig from "@/config/site.config.json";
 
 /**
@@ -54,7 +53,7 @@ export default function Footer() {
     <footer
       className="sprint-footer text-brand-off-white"
       style={{
-        backgroundImage: "url('/images/footer_background_img.png')",
+        backgroundImage: "url('/images/header&footer/footer_background_img.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -66,7 +65,7 @@ export default function Footer() {
         <div className="col-span-2 lg:col-span-1">
           <div className="flex items-center gap-2.5">
             <Image
-              src={sprintLogo}
+              src="/images/header&footer/sprintlogo1.jpeg"
               alt="Sprint Institutional Hub logo"
               width={96}
               height={96}
