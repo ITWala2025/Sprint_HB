@@ -5,6 +5,10 @@
    ======================================== */
 
 @theme {
+ /* Typography (fonts loaded via next/font in app/layout.tsx) */
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+
   /* Brand */
   --color-brand-navy: #011f3e;
   --color-brand-navy-dark: #001831;
@@ -106,6 +110,52 @@ a {
   color: #ffffff;
 }
 
+/* ========================================
+   PARTNER CAROUSEL — continuous marquee
+   Section 6.3: right-to-left, seamless, no
+   layout jump. Implemented in pure CSS so it
+   never blocks on JS and costs ~nothing on
+   the main thread (transform-only animation).
+   ======================================== */
+
+@keyframes marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* The track is duplicated once in the markup, so shifting by exactly
+       -50% lines the second copy up perfectly where the first started. */
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee-rtl var(--marquee-duration, 32s) linear infinite;
+}
+
+/* Desktop-only pause-on-hover, per spec (6.3 Desktop). Not applied on touch
+   devices so a stray tap doesn't freeze the carousel on mobile. */
+@media (hover: hover) {
+  .marquee-track:hover .animate-marquee {
+    animation-play-state: paused;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY — respect reduced motion
+   Section 9.1 / 15: animations must not be
+   required to access content.
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-marquee {
+    animation: none;
+  }
+}
 /* ========================================
    COMMON UTILITIES & ACCESSIBILITY
    ======================================== */
