@@ -13,7 +13,9 @@
 
 ## 2. Purpose
 
-The Home Page should introduce users to the Training/EdTech platform, have an appealing look and feel, highlight available learning opportunities, build trust, and direct users toward course discovery and enrollment.
+## Purpose
+
+The Home Page should serve as the primary introduction to the SPRINT Training Platform, creating a modern, premium, and enterprise-grade digital experience that establishes a strong first impression. The page should have a polished and visually appealing look and feel, communicate professionalism and reliability, and build user trust through strong branding, partner associations, credible instructors, testimonials, statistics, and relevant learning outcomes. It should present the platform and its offerings in a clear, structured, and engaging manner while guiding users naturally toward course discovery, exploration, and enrollment.
 
 ---
 
@@ -34,7 +36,7 @@ The Home Page shall contain the following sections:
 1. Header / Navigation
 2. Hero Section
 3. What We Give (Trust & Statistics)
-4. Differentiator
+4. Partner Associations
 5. Featured Course / Program
 6. Learning Paths / More Courses
 7. Instructor Section (from MNCs)
@@ -178,7 +180,10 @@ Each statistical item may contain:
 It has not yet been decided whether the statistics will be:
 
 - Static values maintained in the frontend, or
-- Dynamically retrieved from an API/backend/CMS.
+- Dynamically retrieved from an API/backend/CMS
+- Learn from professionals working in leading companies
+- Live Connects with SMEs and Industry Leaders from around the World
+- Internships for well-performing students
 
 **Status:** TBD.
 
@@ -189,45 +194,55 @@ It has not yet been decided whether the statistics will be:
 - Supporting descriptions shall be concise and easy to understand.
 - Icons, if used, shall follow the approved SPRINT visual design system.
 
----
 
-## 6.3 Differentiator
+## 6.3 Partner Associations
 
 ### Objective
 
-The Differentiator section should communicate the key reasons students should consider SPRINT over other training/EdTech platforms.
+Showcase the universities and companies associated with SPRINT to establish credibility, strengthen trust, and highlight the platform’s academic and industry connections.
 
-### Differentiators
+### Requirements
+Display the logos and names of partner universities and companies.
+Maintain a clean and consistent visual layout for all partner logos.
+Logos should be displayed without distortion and maintain their original aspect ratios.
+The name of each university/company should be clearly readable.
+Partner logos and names should not be clickable.
+Display the partner logos and names in a horizontal carousel.
+The carousel should move continuously from right to left.
+The movement should be smooth and seamless, without noticeable jumps or abrupt resets.
+The carousel should remain contained within the section and must not cause horizontal scrolling of the overall webpage.
+The section and carousel should be responsive across desktop, tablet, and mobile layouts.
+Responsive Behavior
 
-The section shall highlight the following three differentiators:
+### Desktop:
 
-#### MNC Trainers
+Display multiple partner logos and names simultaneously, based on the available screen width.
+Logos should maintain consistent sizing and spacing.
+Carousel moves continuously from right to left.
+The carousel may pause on hover to allow users to view a particular partner.
 
-> **Learn from professionals working in leading companies.**
+### Tablet:
 
-This differentiator should communicate the industry experience of SPRINT's trainers.
+Reduce the number of simultaneously visible logos based on available screen width.
+Maintain appropriate logo sizing, spacing, and readability.
+Carousel continues to move continuously from right to left.
+Ensure the carousel remains contained within the viewport.
 
-#### Practical Learning
+### Mobile:
 
-> **Work on real-world projects.**
+Display approximately 2–3 partner logos/names at a time, depending on screen width and final design.
+Logos and names should be appropriately sized for readability on smaller screens.
+Carousel continues to move automatically from right to left.
+Movement should remain smooth and seamless.
+The carousel must remain contained within the section and must not introduce horizontal page scrolling.
+Hover-based interactions should not be required on mobile devices.
+Touch interaction, such as pausing the carousel while the user presses/touches it, may be considered during UI/UX implementation. TBD.
 
-This differentiator should emphasize hands-on and practical learning.
+### Data / Content:
+Final list of partner universities and companies: TBD
+Final logo assets/URLs: TBD
+Number of partners to be displayed: TBD
 
-#### Career Focused
-
-> **Internships for well-performing students.**
-
-This differentiator should communicate the opportunity for internships based on student performance.
-
-### UI Requirements
-
-- Each differentiator shall have a clearly identifiable title.
-- Each differentiator shall have supporting descriptive text.
-- The three differentiators shall follow a consistent visual design.
-- Icons or supporting visual elements may be used, subject to final UI design.
-- The section should visually distinguish the three differentiators from one another.
-
----
 
 ## 6.4 Featured Course / Program
 
