@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Mail, MessageCircle, Phone } from "lucide-react";
+import { ArrowRight, CheckCircle2, Mail, MessageCircle, Phone } from "lucide-react";
 import about from "@/data/about.json";
 import siteConfig from "@/config/site.config.json";
 import StoryVisionMission from "@/components/sections/StoryVisionMission";
@@ -54,6 +54,9 @@ const ctaIcons = {
   mail: Mail,
   message: MessageCircle,
 };
+
+/* Indian-locale number formatting for impact stats (IMP-05) */
+const formatStatValue = (value) => Math.round(value).toLocaleString("en-IN");
 
 function SectionHeader({ heading, subtitle, center = false, id }) {
   return (
@@ -116,25 +119,40 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="sprint-hero-proof relative z-10" aria-label="SPRINT at a glance">
+          <div className="sprint-hero-proof relative z-10" aria-label="SPRINT verified impact at a glance">
             <span className="sprint-hero-proof-line" aria-hidden="true" />
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
-              At a glance
+              Verified impact
             </p>
-            <p className="mt-5 text-7xl font-black tracking-tight text-brand-navy">3</p>
-            <p className="max-w-[14rem] text-lg font-semibold leading-tight text-brand-navy">
-              emerging technology tracks built for execution
+            <p className="mt-1 text-base font-semibold leading-snug text-brand-navy">
+              {about.impact.subtitle}
             </p>
-            <div className="mt-8 grid grid-cols-2 gap-3 border-t border-brand-border pt-5">
-              <div>
-                <p className="text-2xl font-black text-brand-navy">2021</p>
-                <p className="mt-1 text-xs text-brand-text-muted">Founded in Hazaribagh</p>
-              </div>
-              <div>
-                <p className="text-2xl font-black text-brand-navy">40+</p>
-                <p className="mt-1 text-xs text-brand-text-muted">Projects per cohort</p>
-              </div>
+
+            <div className="mt-5 flex flex-wrap gap-3" role="list" aria-label="Key impact statistics">
+              {about.impact.stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  role="listitem"
+                  className="sprint-hero-stat flex min-w-[7.5rem] flex-1 flex-col rounded-2xl border border-brand-border bg-white/70 px-2.5 py-3 shadow-sm"
+                >
+                  <p className="sprint-hero-stat-value text-3xl font-black leading-none tabular-nums">
+                    {formatStatValue(stat.value)}
+                    {stat.suffix}
+                  </p>
+                  <p className="mt-1.5 text-xs font-semibold leading-tight text-brand-navy">
+                    {stat.label}
+                  </p>
+                  <p className="mt-1 text-[11px] leading-tight text-brand-text-muted">
+                    {stat.context}
+                  </p>
+                </div>
+              ))}
             </div>
+
+            <p className="mt-5 inline-flex items-center gap-1.5 text-xs font-medium text-brand-success">
+              <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
+              All figures source-verified
+            </p>
           </div>
         </div>
       </section>

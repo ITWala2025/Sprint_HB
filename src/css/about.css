@@ -271,6 +271,16 @@
   .sprint-story-arrow {
     transition: none;
   }
+
+  .sprint-hero-stat {
+    transition: none;
+  }
+
+  .sprint-hero-stat:hover,
+  .sprint-hero-stat:focus-visible {
+    transform: none;
+    box-shadow: none;
+  }
 }
 
 /* ------------------------------------------------------------
@@ -287,4 +297,34 @@
     radial-gradient(ellipse 45% 40% at 90% 25%, rgba(124, 58, 237, 0.07), transparent 60%),
     radial-gradient(ellipse 60% 50% at 50% 105%, rgba(11, 99, 182, 0.1), transparent 65%),
     linear-gradient(180deg, var(--color-brand-white, #ffffff) 0%, var(--color-brand-surface, #f1f5f9) 100%);
+}
+
+/* ------------------------------------------------------------
+   HERO IMPACT STATS — §3.2 hero proof card (§3.8 stats).
+   The impact figures live in the hero's right panel so the
+   page's strongest proof is visible above the fold.
+   ------------------------------------------------------------ */
+
+/* Stat tile surface (white/60 glass on top of the hero proof) */
+.sprint-hero-stat {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.sprint-hero-stat:hover,
+.sprint-hero-stat:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-brand-card);
+}
+
+/* Gradient-filled stat numbers — brand red -> purple fill */
+.sprint-hero-stat-value {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-red, #f81529),
+    var(--color-brand-purple, #7c3aed)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
