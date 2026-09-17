@@ -2,11 +2,10 @@ import Link from "next/link";
 import { ArrowRight, Mail, MessageCircle, Phone } from "lucide-react";
 import about from "@/data/about.json";
 import siteConfig from "@/config/site.config.json";
-import VisionMissionCard from "@/components/cards/VisionMissionCard";
+import StoryVisionMission from "@/components/sections/StoryVisionMission";
 import ProfileCard from "@/components/cards/ProfileCard";
 import SkillCard from "@/components/cards/SkillCard";
 import StatCounter from "@/components/cards/StatCounter";
-import Reveal from "@/components/cards/Reveal";
 
 // About Us — "/about". Spec: docs/md/About_Page.md (10 approved sections).
 // Sections 1 (Header) and 10 (Footer) render via the root layout; this page
@@ -140,57 +139,19 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ============ 3. OUR STORY — Why SPRINT was established (§3.3) ============ */}
-      <section id="our-story" className="sprint-section sprint-anchor bg-brand-off-white">
-        <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
-          <SectionHeader
-            heading={about.story.heading}
-            subtitle={about.story.subtitle}
-          />
-          <div className="mt-12 grid gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-start">
-            <div className="space-y-5 text-lg leading-relaxed text-brand-text-secondary">
-              {about.story.paragraphs.map((paragraph) => (
-                <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-              ))}
-            </div>
-            <Reveal>
-              <ul className="space-y-4">
-                {about.story.callouts.map((callout) => (
-                  <li
-                    key={callout.label}
-                    className="flex items-center gap-4 rounded-3xl border border-brand-border bg-white p-5 shadow-sm"
-                  >
-                    <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-brand-navy text-lg font-black text-white">
-                      {callout.value}
-                    </span>
-                    <span className="text-sm font-medium leading-snug text-brand-text">
-                      {callout.label}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ 4. VISION & MISSION — §3.4 card system ============ */}
+      {/* ============ 3 + 4. OUR STORY · VISION · MISSION — one scrollable div (§3.3 + §3.4) ============ */}
       <section
-        id="vision-mission"
-        aria-labelledby="vision-mission-heading"
-        className="sprint-section sprint-anchor bg-white"
+        id="our-story"
+        aria-labelledby="our-story-heading"
+        className="sprint-section sprint-anchor bg-brand-off-white"
       >
         <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <SectionHeader
-            heading={about.visionMission.heading}
-            subtitle={about.visionMission.subtitle}
-            id="vision-mission-heading"
-            center
+            heading={`${about.story.heading}, ${about.visionMission.heading}`}
+            subtitle="Why SPRINT was established, and what drives everything we build"
+            id="our-story-heading"
           />
-          <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-2">
-            <VisionMissionCard variant="vision" data={about.visionMission.vision} />
-            <VisionMissionCard variant="mission" data={about.visionMission.mission} />
-          </div>
+          <StoryVisionMission story={about.story} visionMission={about.visionMission} />
         </div>
       </section>
 
