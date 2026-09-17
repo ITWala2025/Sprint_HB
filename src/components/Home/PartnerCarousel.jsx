@@ -17,7 +17,7 @@ export default function PartnerCarousel() {
   const track = [...partners, ...partners];
 
   return (
-    <section className="overflow-hidden border-y border-brand-border bg-brand-white py-14">
+    <section className="overflow-hidden border-y border-brand-border bg-brand-white py-24">
       <div className="mx-auto max-w-7xl px-6">
         <h2 className="text-center text-sm font-semibold uppercase tracking-wide text-brand-text-muted">
           Trusted by universities and industry partners

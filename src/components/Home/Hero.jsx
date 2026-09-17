@@ -39,9 +39,9 @@ export default function Hero() {
       />
 
       <div className="relative z-10 mx-auto flex flex-1 w-full max-w-7xl px-6 py-24 flex-col justify-between">
-        <div className="max-w-xl text-left">
+        <div className="max-w-3xl text-left">
           {/* Primary H1 (Section 14: exactly one per page) */}
-          <h1 className="font-display text-5xl font-bold leading-[1.05] text-brand-white sm:text-6xl">
+          <h1 className="font-display text-5xl font-bold leading-[1.05] text-brand-white sm:text-6xl lg:text-7xl tracking-tight">
             Skill Up. Get Ahead
           </h1>
 
@@ -51,7 +51,7 @@ export default function Hero() {
             learn the skills that get you hired, not just certified.
           </p>
 
-          <div className="mt-10">
+          <div className="mt-10 max-w-md">
             <Link
               href="/programs"
               className="inline-flex items-center justify-center rounded-full bg-brand-red px-8 py-4 text-base font-semibold text-brand-white transition-colors hover:bg-brand-red-dark"
@@ -62,7 +62,7 @@ export default function Hero() {
         </div>
 
         {/* Statistics row — anchored to bottom of hero */}
-        <div className="mt-16 w-full" aria-label="SPRINT impact statistics">
+        <div className="w-full" aria-label="SPRINT impact statistics">
           <dl className="grid grid-cols-2 gap-6 lg:grid-cols-4">
             {stats.map((stat, index) => (
               <div
