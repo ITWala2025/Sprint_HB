@@ -246,19 +246,20 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 9. CTA — Connect With SPRINT (§3.9) ============ */}
-      <section id="connect" className="sprint-anchor relative overflow-hidden bg-brand-navy">
+      {/* Light ambient surface — stays clearly distinct from the navy footer below */}
+      <section id="connect" className="sprint-cta-bg sprint-anchor relative overflow-hidden">
         <div className="mx-auto max-w-[1200px] px-6 py-16 text-center md:py-24">
-          <p className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red-light">
+          <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
             {about.cta.kicker}
           </p>
-          <h2 className="mx-auto mt-5 max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="mx-auto mt-5 max-w-2xl text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
             {about.cta.heading}
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-brand-off-white/80">
+          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-brand-text-secondary">
             {about.cta.description}
           </p>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          <div className="mt-10 grid gap-5 sm:grid-cols-3">
             {about.cta.channels.map((channel) => {
               const Icon = ctaIcons[channel.icon] ?? Phone;
               return (
@@ -266,15 +267,15 @@ export default function AboutPage() {
                   key={channel.href}
                   href={channel.href}
                   data-track={`cta_${channel.icon}`}
-                  className="sprint-focus group flex min-h-[120px] flex-col items-center justify-center gap-2 rounded-3xl border border-white/15 bg-white/5 p-6 transition-colors hover:border-brand-red hover:bg-white/10"
+                  className="sprint-focus group flex min-h-[130px] flex-col items-center justify-center gap-2.5 rounded-3xl border border-brand-border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-red hover:shadow-brand-card"
                 >
-                  <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-red to-brand-purple text-white">
+                  <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-red to-brand-purple text-white transition-transform duration-150 group-hover:scale-105">
                     <Icon className="size-6" aria-hidden="true" />
                   </span>
-                  <span className="text-base font-semibold text-white">
+                  <span className="text-base font-semibold text-brand-navy">
                     {channel.label}
                   </span>
-                  <span className="text-sm text-brand-off-white/70">
+                  <span className="text-sm text-brand-text-muted">
                     {channel.detail}
                   </span>
                 </a>
@@ -285,7 +286,7 @@ export default function AboutPage() {
           <Link
             href={about.cta.primaryCta.href}
             data-track="cta_register"
-            className="sprint-focus group mt-10 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-8 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
+            className="sprint-focus group mt-10 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-gradient-to-r from-brand-red to-brand-purple px-9 py-3.5 text-base font-bold text-white shadow-brand-cta transition hover:-translate-y-0.5 hover:brightness-110"
           >
             {about.cta.primaryCta.label}
             <ArrowRight
