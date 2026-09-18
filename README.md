@@ -41,10 +41,9 @@ src/
 │   ├── navigation.json           # Header navigation (single source)
 │   └── site.config.json          # Brand + contact details (tel:, mailto:, wa.me)
 ├── css/
-│   ├── global.css                # Tailwind v4 + SPRINT brand theme  (DO NOT EDIT casually)
+│   ├── global.css                # Tailwind v4 + SPRINT brand theme + shared page helpers (glass cards, carousel)
 │   ├── header.css                # Reserved for header-level CSS
-│   ├── footer.css                # Reserved for footer-level CSS
-│   └── about.css                 # About-page helpers (glass cards, accents)
+│   └── footer.css                # Reserved for footer-level CSS
 ├── data/
 │   ├── about.json                # About page content (swap-in verified data here)
 │   └── courses.json              # Course catalogue data

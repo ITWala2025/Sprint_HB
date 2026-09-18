@@ -1,7 +1,6 @@
 import "@/css/global.css";
 import "@/css/header.css";
 import "@/css/footer.css";
-import "@/css/about.css";
 import { Space_Grotesk, Inter } from "next/font/google";
 import Header from "@/components/header/Header";
 import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";

@@ -5,11 +5,10 @@ import siteConfig from "@/config/site.config.json";
 import StoryVisionMission from "@/components/sections/StoryVisionMission";
 import ProfileCard from "@/components/cards/ProfileCard";
 import SkillCard from "@/components/cards/SkillCard";
-import StatCounter from "@/components/cards/StatCounter";
 
 // About Us — "/about". Spec: docs/md/About_Page.md (10 approved sections).
 // Sections 1 (Header) and 10 (Footer) render via the root layout; this page
-// implements sections 2–9 in the approved stacking order.
+// implements sections 2–7 and the final CTA in the approved stacking order.
 
 export const metadata = {
   title: "About Us",
@@ -157,7 +156,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ============ 3 + 4. OUR STORY · VISION · MISSION — one scrollable div (§3.3 + §3.4) ============ */}
+      {/* ============ 3 + 4. OUR STORY · VISION · MISSION — two-part grid (§3.3 + §3.4) ============ */}
       <section
         id="our-story"
         aria-labelledby="our-story-heading"
@@ -244,26 +243,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ============ 8. OUR IMPACT / VERIFIED STATS (§3.8) ============ */}
-      <section id="impact" className="sprint-section sprint-anchor bg-white">
-        <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
-          <SectionHeader
-            heading={about.impact.heading}
-            subtitle={about.impact.subtitle}
-            center
-          />
-          <div className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4">
-            {about.impact.stats.map((stat) => (
-              <StatCounter key={stat.label} stat={stat} />
-            ))}
-          </div>
-          <p className="mt-8 text-center text-sm text-brand-text-muted">
-            {about.impact.sourceNote}
-          </p>
-        </div>
-      </section>
-
-      {/* ============ 9. CTA — Connect With SPRINT (§3.9) ============ */}
+      {/* ============ 8. CTA — Connect With SPRINT (§3.9) ============ */}
       {/* Light ambient surface — stays clearly distinct from the navy footer below */}
       <section id="connect" className="sprint-cta-bg sprint-anchor relative overflow-hidden">
         <div className="mx-auto max-w-[1200px] px-6 py-16 text-center md:py-24">
