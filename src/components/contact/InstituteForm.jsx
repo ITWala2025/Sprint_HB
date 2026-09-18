@@ -307,7 +307,7 @@ export default function InstituteForm() {
         <textarea
           id="institute-message"
           name="message"
-          rows="5"
+          rows="3"
           maxLength="1000"
           placeholder="Tell us about your training or institutional requirements..."
           value={formData.message}

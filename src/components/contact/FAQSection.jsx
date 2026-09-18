@@ -298,22 +298,15 @@ const CATEGORY_CONFIG = {
 export default function FAQSection() {
   const [activeId, setActiveId] = useState(null);
   const [showAll, setShowAll] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("all");
+  const [activeCategory, setActiveCategory] = useState("student");
 
   const visibleFAQs = useMemo(() => {
-    const filteredFAQs =
-      activeCategory === "all"
-        ? FAQ_DATA
-        : FAQ_DATA.filter(
-            (faq) => faq.category === activeCategory
-          );
+    const filteredFAQs = FAQ_DATA.filter(
+      (faq) => faq.category === activeCategory
+    );
 
     if (showAll) {
       return filteredFAQs;
-    }
-
-    if (activeCategory === "all") {
-      return filteredFAQs.slice(0, 8);
     }
 
     return filteredFAQs.slice(
@@ -340,18 +333,10 @@ export default function FAQSection() {
   };
 
   const getCTA = () => {
-    if (activeCategory === "all") {
-      return "View All FAQs";
-    }
-
     return CATEGORY_CONFIG[activeCategory].cta;
   };
 
   const getDescription = () => {
-    if (activeCategory === "all") {
-      return "Explore answers across students, professionals, institutes and enterprise enquiries.";
-    }
-
     return `Explore more frequently asked questions for ${CATEGORY_CONFIG[activeCategory].label.toLowerCase()}.`;
   };
 
@@ -368,16 +353,14 @@ export default function FAQSection() {
             ========================= */}
         <div className="faq-section__header">
 
-          <p className="faq-section__eyebrow">
-            <span aria-hidden="true">—</span>
+          <h2 className="faq-section__eyebrow">
             FREQUENTLY ASKED QUESTIONS
-            <span aria-hidden="true">—</span>
-          </p>
+          </h2>
 
-          <h2 id="faq-title">
+          {/* <h2 id="faq-title">
             Got Questions?{" "}
             <span>We&apos;re Here to Help.</span>
-          </h2>
+          </h2> */}
 
           <p>
             Find answers to common questions about SPRINT programs,
@@ -394,20 +377,6 @@ export default function FAQSection() {
           role="tablist"
           aria-label="FAQ categories"
         >
-
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeCategory === "all"}
-            className={`faq-category ${
-              activeCategory === "all"
-                ? "faq-category--active"
-                : ""
-            }`}
-            onClick={() => handleCategoryChange("all")}
-          >
-            <span>All Questions</span>
-          </button>
 
           {Object.entries(CATEGORY_CONFIG).map(
             ([category, config]) => {
@@ -460,10 +429,6 @@ export default function FAQSection() {
                   aria-expanded={isOpen}
                   aria-controls={`faq-answer-${faq.id}`}
                 >
-                  <span className="faq-question__number">
-                    {String(faq.id).padStart(2, "0")}
-                  </span>
-
                   <span className="faq-question__text">
                     {faq.question}
                   </span>

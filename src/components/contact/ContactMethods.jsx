@@ -3,7 +3,6 @@
 import {
   Clock3,
   Mail,
-  MapPin,
   Phone,
 } from "lucide-react";
 
@@ -25,15 +24,6 @@ const contactMethods = [
     description: "We reply within 24 hours",
     href: "mailto:info@sprintedu.in",
     action: "Send Email",
-  },
-  {
-    id: "visit",
-    icon: MapPin,
-    title: "Visit Us",
-    value: "SPRINT, Hazaribagh, Jharkhand",
-    description: "India – 825301",
-    href: "https://www.google.com/maps/search/?api=1&query=SPRINT%20School%20of%20Professional%20Studies%20%26%20Information%20Technology%2C%20Hazaribagh%2C%20Jharkhand%2C%20India",
-    action: "Get Directions",
   },
 ];
 
@@ -88,8 +78,6 @@ export default function ContactMethods() {
                 <a
                   href={href}
                   className="contact-method__action"
-                  target={id === "visit" ? "_blank" : undefined}
-                  rel={id === "visit" ? "noopener noreferrer" : undefined}
                 >
                   {action}
                   <span aria-hidden="true">→</span>

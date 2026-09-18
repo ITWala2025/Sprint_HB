@@ -221,7 +221,7 @@ export default function StudentForm() {
         <textarea
           id="student-message"
           name="message"
-          rows="5"
+          rows="3"
           maxLength="1000"
           placeholder="Tell us how we can help you..."
           value={formData.message}

@@ -327,7 +327,7 @@ export default function CompanyForm() {
         <textarea
           id="company-message"
           name="message"
-          rows="5"
+          rows="3"
           maxLength="1000"
           placeholder="Tell us about your business requirement..."
           value={formData.message}

@@ -279,7 +279,7 @@ export default function WorkingProfessionalForm() {
         <textarea
           id="professional-message"
           name="message"
-          rows="5"
+          rows="3"
           maxLength="1000"
           placeholder="Tell us about your learning or career goals..."
           value={formData.message}
