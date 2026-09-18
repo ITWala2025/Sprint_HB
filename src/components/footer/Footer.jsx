@@ -72,11 +72,10 @@ export default function Footer() {
               className="size-20 shrink-0 rounded-full bg-white p-2 object-contain sm:size-24"
               priority
             />
-          </div>
+</div>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-brand-off-white/80">
-           Hands-on, production-level education in Cloud, AI, and Software Systems —
-           bridging the academic industry gap with job-ready, execution-first training.
-
+             Hands-on, production-level education in Cloud, AI, and Software Systems —
+             bridging the academic-industry gap with job-ready, execution-first training.
           </p>
           <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-brand-off-white/90">
             <FcSettings className="size-4" aria-hidden="true" />
