@@ -4,6 +4,7 @@ import "@/css/footer.css";
 import "@/css/about.css";
 import { Space_Grotesk, Inter } from "next/font/google";
 import Header from "@/components/header/Header";
+import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";
 import Footer from "@/components/footer/Footer";
 
 const spaceGrotesk = Space_Grotesk({
@@ -48,6 +49,7 @@ export default function RootLayout({ children }) {
           Skip to main content
         </a>
         <Header />
+        <ConditionalCampusNewsTicker />
         <main id="main">{children}</main>
         <Footer />
       </body>

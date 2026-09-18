@@ -22,7 +22,6 @@ const exploreLinks = [
   { label: "Home", href: "/" },
   { label: "All Courses", href: "/courses" },
   { label: "About Us & Faculty", href: "/about" },
-  { label: "Updates & Workshops", href: "/updates" },
   { label: "Careers & Internships", href: "/careers" },
   { label: "Contact & Directions", href: "/contact" },
 ];
@@ -30,14 +29,12 @@ const exploreLinks = [
 const portalLinks = [
   { label: "Student Login", href: "/student/login", outbound: true },
   { label: "New Enrollment", href: "/register" },
-  { label: "Admin Dashboard", href: "/admin/login", outbound: true },
   { label: "Scholarship Aid", href: "/courses#scholarship" },
 ];
 
 const legalLinks = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms & Conditions", href: "/terms" },
-  { label: "Center Support", href: "/contact" },
 ];
 
 const socialIcons = {
@@ -63,7 +60,7 @@ export default function Footer() {
       <div className="mx-auto grid grid-cols-2 gap-x-10 gap-y-8 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 lg:max-w-300 lg:grid-cols-[2fr_1fr_1fr_1.4fr]">
         {/* Brand identity & mission (columns 1 & 2) */}
         <div className="col-span-2 lg:col-span-1">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-4">
             <Image
               src="/images/header&footer/sprintlogo1.jpeg"
               alt="Sprint Institutional Hub logo"
@@ -72,10 +69,23 @@ export default function Footer() {
               className="size-20 shrink-0 rounded-full bg-white p-2 object-contain sm:size-24"
               priority
             />
-</div>
+            <div className="flex flex-col gap-0.5">
+              <span
+                className="text-2xl font-black uppercase tracking-[0.3em] text-white"
+                style={{ fontFamily: "'Trebuchet MS', 'Segoe UI', sans-serif", letterSpacing: "0.35em" }}
+              >
+                SPRINT
+              </span>
+              <span className="text-[10px] uppercase tracking-[0.18em] text-brand-off-white/50 font-medium">
+                Institutional Hub
+              </span>
+              <div className="mt-1 h-[2px] w-10 rounded-full bg-brand-red" />
+            </div>
+          </div>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-brand-off-white/80">
-             Hands-on, production-level education in Cloud, AI, and Software Systems —
-             bridging the academic-industry gap with job-ready, execution-first training.
+           Hands-on, production-level education in Cloud, AI, and Software Systems —
+           bridging the academic industry gap with job-ready, execution-first training.
+
           </p>
           <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-brand-off-white/90">
             <FcSettings className="size-4" aria-hidden="true" />
@@ -95,7 +105,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="sprint-focus  grid size-11 shrink-0 place-items-center rounded-full border border-white/15 bg-white text-brand-off-white/80 transition-colors hover:border-brand-red hover:text-brand-red"
+                    className="sprint-focus  grid size-10 shrink-0 place-items-center rounded-full border border-white/15 bg-white text-brand-off-white/80 transition-colors hover:border-brand-blue hover:text-brand-blue"
                   >
                     <Icon
                       className="size-8"

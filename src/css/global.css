@@ -133,12 +133,8 @@ a {
   animation: marquee-rtl var(--marquee-duration, 32s) linear infinite;
 }
 
-/* Desktop-only pause-on-hover, per spec (6.3 Desktop). Not applied on touch
-   devices so a stray tap doesn't freeze the carousel on mobile. */
-@media (hover: hover) {
-  .marquee-track:hover .animate-marquee {
-    animation-play-state: paused;
-  }
+.marquee-track:hover .animate-marquee {
+  animation-play-state: paused;
 }
 
 /* ========================================

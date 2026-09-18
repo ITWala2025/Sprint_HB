@@ -14,12 +14,20 @@ export default function HeaderLogo() {
         width={56}
         height={56}
         priority
-        className="h-14 w-auto object-contain"
-        style={{ width: "auto" }}
+        className="size-14 object-contain"
       />
-      <p className="text-lg font-bold uppercase tracking-[0.2em] text-brand-red">
-        SPRINT 
-      </p>
+      <div className="flex flex-col gap-0.5">
+        <span
+          className="text-xl font-black uppercase text-brand-navy"
+          style={{ fontFamily: "'Trebuchet MS', 'Segoe UI', sans-serif", letterSpacing: "0.32em" }}
+        >
+          SPRINT
+        </span>
+        <span className="text-[9px] uppercase font-medium text-brand-text-muted" style={{ letterSpacing: "0.18em" }}>
+          Institutional Hub
+        </span>
+        <div className="mt-0.5 h-[2px] w-8 rounded-full bg-brand-red" />
+      </div>
     </Link>
   );
 }

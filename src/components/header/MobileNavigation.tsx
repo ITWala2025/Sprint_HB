@@ -14,7 +14,6 @@ const navigation = [
   { label: "Home", href: "/" },
   { label: "Courses", href: "/courses" },
   { label: "About Us", href: "/about" },
-  { label: "Updates", href: "/updates" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -84,9 +83,6 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
             <div className="mt-4 border-t border-brand-border pt-4">
               <Link href="/student/login" onClick={() => setIsOpen(false)} className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-surface">
                 Student Login
-              </Link>
-              <Link href="/admin" onClick={() => setIsOpen(false)} className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-surface">
-                Admin Console
               </Link>
               <Link href="/register" onClick={() => setIsOpen(false)} className="mt-2 block rounded-lg bg-brand-red px-4 py-3 text-center text-sm font-semibold text-white">
                 Enroll Now

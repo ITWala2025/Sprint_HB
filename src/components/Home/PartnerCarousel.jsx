@@ -38,7 +38,7 @@ export default function PartnerCarousel() {
                 alt={partner.name}
                 width={40}
                 height={40}
-                className="h-10 w-auto object-contain"
+                className="size-10 object-contain"
               />
               <span className="whitespace-nowrap text-sm font-medium text-brand-text-secondary">
                 {partner.name}
