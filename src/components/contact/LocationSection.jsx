@@ -9,21 +9,6 @@ import {
 const GOOGLE_MAPS_URL =
   "https://maps.app.goo.gl/AYdTXi8gNagSVJss7?g_st=aw";
 
-const locationFeatures = [
-  {
-    title: "SPRINT Campus",
-    text: "Professional Learning Space",
-  },
-  {
-    title: "Easy to Find",
-    text: "Convenient Location",
-  },
-  {
-    title: "Student Friendly",
-    text: "Welcoming Environment",
-  },
-];
-
 export default function LocationSection() {
   return (
     <section
@@ -226,38 +211,6 @@ export default function LocationSection() {
 
             </div>
           </article>
-
-        </div>
-
-        {/* =========================
-            FEATURE STRIP
-            ========================= */}
-        <div className="location-features">
-
-          {locationFeatures.map((feature) => (
-            <div
-              className="location-feature"
-              key={feature.title}
-            >
-
-              <div className="location-feature__dot">
-                <span aria-hidden="true">
-                  ✓
-                </span>
-              </div>
-
-              <div>
-                <strong>
-                  {feature.title}
-                </strong>
-
-                <span>
-                  {feature.text}
-                </span>
-              </div>
-
-            </div>
-          ))}
 
         </div>
 

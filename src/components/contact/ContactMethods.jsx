@@ -4,7 +4,6 @@ import {
   Clock3,
   Mail,
   MapPin,
-  MessageCircle,
   Phone,
 } from "lucide-react";
 
@@ -26,15 +25,6 @@ const contactMethods = [
     description: "We reply within 24 hours",
     href: "mailto:info@sprintedu.in",
     action: "Send Email",
-  },
-  {
-    id: "whatsapp",
-    icon: MessageCircle,
-    title: "WhatsApp",
-    value: "Chat with our team",
-    description: "Quick assistance for your enquiry",
-    href: "https://wa.me/918521283183",
-    action: "Chat on WhatsApp",
   },
   {
     id: "visit",
@@ -98,16 +88,8 @@ export default function ContactMethods() {
                 <a
                   href={href}
                   className="contact-method__action"
-                  target={
-                    id === "whatsapp" || id === "visit"
-                      ? "_blank"
-                      : undefined
-                  }
-                  rel={
-                    id === "whatsapp" || id === "visit"
-                      ? "noopener noreferrer"
-                      : undefined
-                  }
+                  target={id === "visit" ? "_blank" : undefined}
+                  rel={id === "visit" ? "noopener noreferrer" : undefined}
                 >
                   {action}
                   <span aria-hidden="true">→</span>
