@@ -88,11 +88,11 @@ function UpdateSet({ hidden = false }: { hidden?: boolean }) {
 }
 
 export default function CampusNewsTicker() {
-	return (
-		<section
-			className="relative z-10 overflow-hidden border-b border-brand-navy-light bg-brand-navy-dark shadow-[0_8px_20px_-18px_rgba(1,31,62,0.8)]"
-			aria-label="SPRINT campus news and updates"
-		>
+  return (
+    <section
+      className="relative z-10 overflow-hidden border-b border-brand-navy-light bg-brand-navy-dark shadow-[0_8px_20px_-18px_rgba(1,31,62,0.8)] covers-watermark"
+      aria-label="SPRINT campus news and updates"
+    >
 			<div className="mx-auto flex min-h-12 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
 				<div className="hidden shrink-0 items-center gap-2 border-r border-white/10 pr-5 sm:flex">
 					<span className="grid size-8 place-items-center rounded-full bg-brand-red text-white">

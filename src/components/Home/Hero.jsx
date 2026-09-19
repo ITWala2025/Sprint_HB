@@ -15,7 +15,7 @@ import { stats } from "@/data/data";
  */
 export default function Hero() {
   return (
-    <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-brand-navy">
+    <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-brand-navy covers-watermark">
       {/* Background video. autoPlay+muted+playsInline is required for
           browsers to allow autoplay; poster covers slow connections and
           the (TBD) case where video is dropped in favor of a static image. */}

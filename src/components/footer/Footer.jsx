@@ -48,7 +48,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="sprint-footer text-brand-off-white"
+      className="sprint-footer text-brand-off-white covers-watermark"
       style={{
         backgroundImage: "url('/images/header&footer/footer_background_img.png')",
         backgroundSize: "cover",
