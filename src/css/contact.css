@@ -1045,7 +1045,7 @@
 }
 
 .student-course-selector__option:hover {
-  background: var(--color-brand-red-light);
+  background: var(--color-brand-blue-light);
   color: var(--color-brand-navy);
 }
 
@@ -1066,8 +1066,8 @@
 }
 
 .student-course-selector__option input[type="checkbox"]:checked {
-  border-color: var(--color-brand-red);
-  background: var(--color-brand-red);
+  border-color: var(--color-brand-blue);
+  background: var(--color-brand-blue);
 }
 
 .student-course-selector__option input[type="checkbox"]:checked::after {
@@ -1083,7 +1083,7 @@
 }
 
 .student-course-selector__option input[type="checkbox"]:focus-visible {
-  outline: 3px solid rgba(248, 21, 41, 0.15);
+  outline: 3px solid rgba(11, 99, 182, 0.18);
   outline-offset: 2px;
 }
 
@@ -1406,7 +1406,7 @@
 }
 
 .professional-program-selector__option:hover {
-  background: var(--color-brand-red-light);
+  background: var(--color-brand-blue-light);
   color: var(--color-brand-navy);
 }
 
@@ -1433,8 +1433,8 @@
 
 .professional-program-selector__option
   input[type="checkbox"]:checked {
-  border-color: var(--color-brand-red);
-  background: var(--color-brand-red);
+  border-color: var(--color-brand-blue);
+  background: var(--color-brand-blue);
 }
 
 .professional-program-selector__option
@@ -1457,7 +1457,7 @@
 
 .professional-program-selector__option
   input[type="checkbox"]:focus-visible {
-  outline: 3px solid rgba(248, 21, 41, 0.15);
+  outline: 3px solid rgba(11, 99, 182, 0.18);
   outline-offset: 2px;
 }
 
