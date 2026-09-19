@@ -160,14 +160,14 @@
     "channels": [
       {
         "label": "Call Admissions",
-        "href": "tel:+919876543210",
-        "detail": "+91 98765 43210",
+        "href": "tel:+918521283184/85",
+        "detail": "+91 85212 83184/85",
         "icon": "phone"
       },
       {
         "label": "Email Us",
-        "href": "mailto:admissions@sprint.institute?subject=Admission%20Enquiry",
-        "detail": "admissions@sprint.institute",
+        "href": "mailto:info@sprint.naturalelements.co.in?subject=Admission%20Enquiry",
+        "detail": "info@sprint.naturalelements.co.in",
         "icon": "mail"
       },
       {
