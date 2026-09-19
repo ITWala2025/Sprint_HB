@@ -7,8 +7,14 @@
     "kicker": "About SPRINT",
     "title": "Who is SPRINT?",
     "description": "SPRINT is a future-ready training hub in Hazaribagh, Jharkhand that bridges the gap between academic learning and industry execution through hands-on programs in emerging technologies.",
-    "primaryCta": { "label": "Explore Courses", "href": "/courses" },
-    "secondaryCta": { "label": "Our Story", "href": "#our-story" }
+    "primaryCta": {
+      "label": "Explore Courses",
+      "href": "/courses"
+    },
+    "secondaryCta": {
+      "label": "Our Story",
+      "href": "#our-story"
+    }
   },
   "story": {
     "heading": "Our Story",
@@ -19,9 +25,18 @@
       "Today, SPRINT brings together industry practitioners, academics and motivated learners under one roof to close the skills gap in AI/ML, Cloud Computing and DevOps — one engineer at a time."
     ],
     "callouts": [
-      { "value": "2021", "label": "Founded in Hazaribagh, Jharkhand" },
-      { "value": "3", "label": "Emerging-tech tracks: AI/ML, Cloud, DevOps" },
-      { "value": "40+", "label": "Projects shipped by learners every cohort" }
+      {
+        "value": "2021",
+        "label": "Founded in Hazaribagh, Jharkhand"
+      },
+      {
+        "value": "3",
+        "label": "Emerging-tech tracks: AI/ML, Cloud, DevOps"
+      },
+      {
+        "value": "40+",
+        "label": "Projects shipped by learners every cohort"
+      }
     ]
   },
   "visionMission": {
@@ -41,9 +56,15 @@
       "title": "Our Mission",
       "statement": "To make every learner job-ready by delivering industry-aligned, hands-on training in emerging technologies through production-grade practice, mentorship and disciplined execution.",
       "pillars": [
-        { "text": "Industry-aligned curricula co-designed with working experts" },
-        { "text": "Hands-on labs, real projects and production tooling" },
-        { "text": "Placement-focused career readiness and continuous mentorship" }
+        {
+          "text": "Industry-aligned curricula co-designed with working experts"
+        },
+        {
+          "text": "Hands-on labs, real projects and production tooling"
+        },
+        {
+          "text": "Placement-focused career readiness and continuous mentorship"
+        }
       ]
     }
   },
@@ -56,21 +77,36 @@
         "designation": "Founder & Director",
         "bio": "Drives SPRINT's vision of practical, job-ready education. A technologist and educator who believes employability is built through disciplined, hands-on practice.",
         "verified": true,
-        "socials": [{ "label": "LinkedIn", "href": "#" }]
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
       },
       {
         "name": "Priya Verma",
         "designation": "Director of Academics",
         "bio": "Leads curriculum design and academic quality across all SPRINT programs, ensuring every module maps to a real industry skill and measurable outcome.",
         "verified": true,
-        "socials": [{ "label": "LinkedIn", "href": "#" }]
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
       },
       {
         "name": "Rohit Kumar",
         "designation": "Head of Placements & Partnerships",
         "bio": "Builds SPRINT's industry network — hiring partners, mentors and community — turning training outcomes into real careers for every graduate.",
         "verified": true,
-        "socials": [{ "label": "LinkedIn", "href": "#" }]
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
       }
     ]
   },
@@ -83,32 +119,68 @@
         "designation": "Faculty — AI & Machine Learning",
         "bio": "Teaches machine learning and MLOps with production deployments, turning ML theory into working, monitored systems.",
         "verified": true,
-        "tags": ["AI/ML", "Python", "MLOps"],
-        "socials": [{ "label": "LinkedIn", "href": "#" }]
+        "tags": [
+          "AI/ML",
+          "Python",
+          "MLOps"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
       },
       {
         "name": "Akash Sinha",
         "designation": "Faculty — Cloud Computing",
         "bio": "Cloud architect who guides learners through designing, migrating and scaling applications on leading cloud platforms.",
         "verified": true,
-        "tags": ["AWS", "Cloud Architecture", "GCP"],
-        "socials": [{ "label": "LinkedIn", "href": "#" }]
+        "tags": [
+          "AWS",
+          "Cloud Architecture",
+          "GCP"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
       },
       {
         "name": "Nikhil Verma",
         "designation": "Faculty — DevOps",
         "bio": "Automation engineer focused on CI/CD, Kubernetes and infrastructure-as-code for fast, reliable software delivery.",
         "verified": true,
-        "tags": ["CI/CD", "Kubernetes", "Terraform"],
-        "socials": [{ "label": "LinkedIn", "href": "#" }]
+        "tags": [
+          "CI/CD",
+          "Kubernetes",
+          "Terraform"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
       },
       {
         "name": "Ananya Roy",
         "designation": "Faculty — Software Engineering",
         "bio": "Software engineer teaching DSA, system design and clean code so learners can think and build at production quality.",
         "verified": true,
-        "tags": ["DSA", "System Design", "JavaScript"],
-        "socials": [{ "label": "LinkedIn", "href": "#" }]
+        "tags": [
+          "DSA",
+          "System Design",
+          "JavaScript"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
       }
     ]
   },
@@ -140,17 +212,44 @@
         "icon": "terminal"
       }
     ],
-    "cta": { "label": "View Courses", "href": "/courses" }
+    "cta": {
+      "label": "View Courses",
+      "href": "/courses"
+    }
   },
   "impact": {
     "heading": "Our Impact",
     "subtitle": "Proof through verified outcomes",
     "sourceNote": "Source: to be supplied · verified badge shown per AB-18",
     "stats": [
-      { "value": 92, "suffix": "%", "label": "Placement Rate", "context": "of the 2025 cohort", "verified": true },
-      { "value": 1000, "suffix": "+", "label": "Learners Trained", "context": "across all programs", "verified": true },
-      { "value": 20, "suffix": "+", "label": "Hiring Partners", "context": "recruiting from SPRINT", "verified": true },
-      { "value": 3, "suffix": "", "label": "Tech Tracks", "context": "AI/ML, Cloud & DevOps", "verified": true }
+      {
+        "value": 92,
+        "suffix": "%",
+        "label": "Placement Rate",
+        "context": "of the 2025 cohort",
+        "verified": true
+      },
+      {
+        "value": 1000,
+        "suffix": "+",
+        "label": "Learners Trained",
+        "context": "across all programs",
+        "verified": true
+      },
+      {
+        "value": 20,
+        "suffix": "+",
+        "label": "Hiring Partners",
+        "context": "recruiting from SPRINT",
+        "verified": true
+      },
+      {
+        "value": 3,
+        "suffix": "",
+        "label": "Tech Tracks",
+        "context": "AI/ML, Cloud & DevOps",
+        "verified": true
+      }
     ]
   },
   "cta": {
@@ -177,6 +276,9 @@
         "icon": "message"
       }
     ],
-    "primaryCta": { "label": "Request a Callback", "href": "/register" }
+    "primaryCta": {
+      "label": "Request a Callback",
+      "href": "/register"
+    }
   }
 }

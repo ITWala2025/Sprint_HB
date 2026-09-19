@@ -203,26 +203,37 @@ export default function InstituteForm() {
 
       {/* SERVICES */}
       <div className="institute-form__field institute-form__field--full">
-        <label>
+        <label id="institute-service-label">
           Services <span aria-hidden="true">*</span>
         </label>
 
-        <div className="institute-service-selector">
+        <div className="contact-multiselect">
           <button
             type="button"
-            className="institute-service-selector__trigger"
+            className={`contact-multiselect__trigger ${
+              serviceOpen ? "contact-multiselect__trigger--open" : ""
+            }`}
             onClick={() =>
               setServiceOpen((previous) => !previous)
             }
             aria-expanded={serviceOpen}
             aria-haspopup="listbox"
+            aria-labelledby="institute-service-label"
           >
-            <span>{selectedServiceText}</span>
+            <span
+              className={`contact-multiselect__selected ${
+                formData.services.length > 0
+                  ? "contact-multiselect__selected--active"
+                  : ""
+              }`}
+            >
+              {selectedServiceText}
+            </span>
 
             <span
-              className={`institute-service-selector__arrow ${
+              className={`contact-multiselect__arrow ${
                 serviceOpen
-                  ? "institute-service-selector__arrow--open"
+                  ? "contact-multiselect__arrow--open"
                   : ""
               }`}
               aria-hidden="true"
@@ -233,7 +244,7 @@ export default function InstituteForm() {
 
           {serviceOpen && (
             <div
-              className="institute-service-selector__menu"
+              className="contact-multiselect__menu"
               role="listbox"
               aria-multiselectable="true"
             >
@@ -244,7 +255,11 @@ export default function InstituteForm() {
                 return (
                   <label
                     key={service}
-                    className="institute-service-selector__option"
+                    className={`contact-multiselect__option ${
+                      selected
+                        ? "contact-multiselect__option--selected"
+                        : ""
+                    }`}
                   >
                     <input
                       type="checkbox"
@@ -252,9 +267,23 @@ export default function InstituteForm() {
                       onChange={() =>
                         handleServiceChange(service)
                       }
+                      className="contact-multiselect__checkbox"
                     />
 
-                    <span>{service}</span>
+                    <span
+                      className={`contact-multiselect__checkmark ${
+                        selected
+                          ? "contact-multiselect__checkmark--checked"
+                          : ""
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {selected ? "✓" : ""}
+                    </span>
+
+                    <span className="contact-multiselect__option-text">
+                      {service}
+                    </span>
                   </label>
                 );
               })}

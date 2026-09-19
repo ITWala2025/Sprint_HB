@@ -43,7 +43,7 @@ export default function FeaturedProgram() {
   }, []);
 
   return (
-    <section className="bg-brand-navy py-24 text-brand-white">
+    <section className="bg-brand-navy py-24 text-brand-white covers-watermark">
       <div className="mx-auto max-w-7xl px-6">
         <div className="max-w-2xl">
           <p className="text-sm font-semibold text-brand-red">Featured Program</p>

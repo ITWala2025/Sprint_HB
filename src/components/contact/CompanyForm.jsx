@@ -258,26 +258,37 @@ export default function CompanyForm() {
 
       {/* PURPOSE TYPE */}
       <div className="company-form__field company-form__field--full">
-        <label>
+        <label id="company-purpose-label">
           Purpose Type <span aria-hidden="true">*</span>
         </label>
 
-        <div className="company-purpose-selector">
+        <div className="contact-multiselect">
           <button
             type="button"
-            className="company-purpose-selector__trigger"
+            className={`contact-multiselect__trigger ${
+              purposeOpen ? "contact-multiselect__trigger--open" : ""
+            }`}
             onClick={() =>
               setPurposeOpen((previous) => !previous)
             }
             aria-expanded={purposeOpen}
             aria-haspopup="listbox"
+            aria-labelledby="company-purpose-label"
           >
-            <span>{selectedPurposeText}</span>
+            <span
+              className={`contact-multiselect__selected ${
+                formData.purposes.length > 0
+                  ? "contact-multiselect__selected--active"
+                  : ""
+              }`}
+            >
+              {selectedPurposeText}
+            </span>
 
             <span
-              className={`company-purpose-selector__arrow ${
+              className={`contact-multiselect__arrow ${
                 purposeOpen
-                  ? "company-purpose-selector__arrow--open"
+                  ? "contact-multiselect__arrow--open"
                   : ""
               }`}
               aria-hidden="true"
@@ -288,7 +299,7 @@ export default function CompanyForm() {
 
           {purposeOpen && (
             <div
-              className="company-purpose-selector__menu"
+              className="contact-multiselect__menu"
               role="listbox"
               aria-multiselectable="true"
             >
@@ -299,7 +310,11 @@ export default function CompanyForm() {
                 return (
                   <label
                     key={purpose}
-                    className="company-purpose-selector__option"
+                    className={`contact-multiselect__option ${
+                      selected
+                        ? "contact-multiselect__option--selected"
+                        : ""
+                    }`}
                   >
                     <input
                       type="checkbox"
@@ -307,9 +322,23 @@ export default function CompanyForm() {
                       onChange={() =>
                         handlePurposeChange(purpose)
                       }
+                      className="contact-multiselect__checkbox"
                     />
 
-                    <span>{purpose}</span>
+                    <span
+                      className={`contact-multiselect__checkmark ${
+                        selected
+                          ? "contact-multiselect__checkmark--checked"
+                          : ""
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {selected ? "✓" : ""}
+                    </span>
+
+                    <span className="contact-multiselect__option-text">
+                      {purpose}
+                    </span>
                   </label>
                 );
               })}

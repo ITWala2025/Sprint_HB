@@ -43,8 +43,6 @@ export default function StudentForm() {
   });
 
   const [courseOpen, setCourseOpen] = useState(false);
-
-  // Tracks whether the user has manually edited the message
   const [messageEdited, setMessageEdited] = useState(false);
 
   const handleChange = (event) => {
@@ -69,9 +67,6 @@ export default function StudentForm() {
       return {
         ...previous,
         courses: updatedCourses,
-
-        // Only update automatically if the user has
-        // not manually edited the message.
         message: messageEdited
           ? previous.message
           : generatedMessage,
@@ -103,7 +98,6 @@ export default function StudentForm() {
 
   return (
     <form className="student-form" onSubmit={handleSubmit}>
-
       {/* Full Name */}
       <div className="student-form__field">
         <label htmlFor="student-full-name">
@@ -157,25 +151,34 @@ export default function StudentForm() {
 
       {/* Interested Courses */}
       <div className="student-form__field student-form__course-field">
-        <label>
+        <label id="student-course-label">
           Interested Course(s) <span aria-hidden="true">*</span>
         </label>
 
-        <div className="student-course-selector">
+        <div className="contact-multiselect">
           <button
             type="button"
-            className="student-course-selector__trigger"
+            className={`contact-multiselect__trigger ${
+              courseOpen ? "contact-multiselect__trigger--open" : ""
+            }`}
             onClick={() => setCourseOpen((previous) => !previous)}
             aria-expanded={courseOpen}
             aria-haspopup="listbox"
+            aria-labelledby="student-course-label"
           >
-            <span>{selectedCourseText}</span>
+            <span
+              className={`contact-multiselect__selected ${
+                formData.courses.length > 0
+                  ? "contact-multiselect__selected--active"
+                  : ""
+              }`}
+            >
+              {selectedCourseText}
+            </span>
 
             <span
-              className={`student-course-selector__arrow ${
-                courseOpen
-                  ? "student-course-selector__arrow--open"
-                  : ""
+              className={`contact-multiselect__arrow ${
+                courseOpen ? "contact-multiselect__arrow--open" : ""
               }`}
               aria-hidden="true"
             >
@@ -185,7 +188,7 @@ export default function StudentForm() {
 
           {courseOpen && (
             <div
-              className="student-course-selector__menu"
+              className="contact-multiselect__menu"
               role="listbox"
               aria-multiselectable="true"
             >
@@ -195,15 +198,33 @@ export default function StudentForm() {
                 return (
                   <label
                     key={course}
-                    className="student-course-selector__option"
+                    className={`contact-multiselect__option ${
+                      selected
+                        ? "contact-multiselect__option--selected"
+                        : ""
+                    }`}
                   >
                     <input
                       type="checkbox"
                       checked={selected}
                       onChange={() => handleCourseChange(course)}
+                      className="contact-multiselect__checkbox"
                     />
 
-                    <span>{course}</span>
+                    <span
+                      className={`contact-multiselect__checkmark ${
+                        selected
+                          ? "contact-multiselect__checkmark--checked"
+                          : ""
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {selected ? "✓" : ""}
+                    </span>
+
+                    <span className="contact-multiselect__option-text">
+                      {course}
+                    </span>
                   </label>
                 );
               })}
@@ -257,7 +278,6 @@ export default function StudentForm() {
       >
         Submit Enquiry →
       </button>
-
     </form>
   );
 }
