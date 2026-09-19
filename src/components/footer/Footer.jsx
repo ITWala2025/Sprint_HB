@@ -87,12 +87,12 @@ export default function Footer() {
            bridging the academic industry gap with job-ready, execution-first training.
 
           </p>
-          /*
+          
           <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-brand-off-white/90">
             <FcSettings className="size-4" aria-hidden="true" />
             Verified Institutional Education Model
           </p>
-          */
+          
           <ul className="mt-6 flex flex-wrap items-center gap-3">
             {siteConfig.socials.map((social) => {
               const socialIcon = socialIcons[social.icon] ?? {
@@ -196,7 +196,7 @@ export default function Footer() {
       </div>
 
       {/* Compliance bar (FTR-02) — dynamic year, falls back to static markup */}
-      <div className="border-t border-white/10 hover:backdrop-blur-xs bg-white/1   ">
+      <div className="border-t border-white/10    ">
         <div className="mx-auto flex max-w-300 flex-col items-center justify-between gap-4 px-4 py-5 text-center sm:px-6 sm:py-6 md:flex-row md:text-left ">
           <p className="text-xs leading-relaxed text-brand-off-white/60 sm:text-sm">
             © {year} SPRINT. All rights reserved

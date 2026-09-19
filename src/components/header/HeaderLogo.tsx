@@ -26,7 +26,7 @@ export default function HeaderLogo() {
         <span className="text-[9px] uppercase font-medium text-brand-text-muted" style={{ letterSpacing: "0.18em" }}>
           Institutional Hub
         </span>
-        <div className="mt-0.5 h-[2px] w-8 rounded-full bg-brand-red" />
+        <div className="mt-0.5 h-0.5 w-8 rounded-full bg-brand-red" />
       </div>
     </Link>
   );
