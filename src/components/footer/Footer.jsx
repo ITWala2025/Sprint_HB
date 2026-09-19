@@ -87,12 +87,12 @@ export default function Footer() {
            bridging the academic industry gap with job-ready, execution-first training.
 
           </p>
-          /*
+          {/*
           <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-brand-off-white/90">
             <FcSettings className="size-4" aria-hidden="true" />
             Verified Institutional Education Model
           </p>
-          */
+          */}
           <ul className="mt-6 flex flex-wrap items-center gap-3">
             {siteConfig.socials.map((social) => {
               const socialIcon = socialIcons[social.icon] ?? {

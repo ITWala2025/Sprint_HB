@@ -5,15 +5,15 @@
   "description": "Hands-on, production-level training in AI/ML, Cloud and DevOps for students, graduates and professionals.",
   "url": "https://sprint.institute",
   "logo": "/images/logo.svg",
-  "address": "SPRINT Institutional Training Center, Hazaribagh, Jharkhand, India",
+  "address": "SPRINT Centre, Hazaribagh, Jharkhand - 825301, India",
   "contact": {
-    "phoneDisplay": "+91 98765 43210",
-    "phone": "+919876543210",
-    "telHref": "tel:+919876543210",
-    "email": "admissions@sprint.institute",
-    "emailHref": "mailto:admissions@sprint.institute",
-    "whatsappNumber": "919876543210",
-    "whatsappHref": "https://wa.me/919876543210?text=Hi%20SPRINT%2C%20I%20would%20like%20to%20know%20more%20about%20your%20programs."
+    "phoneDisplay": "+91 85212 83184/85",
+    "phone": "+918521283184/85",
+    "telHref": "tel:+918521283184/85",
+    "email": "info@sprint.naturalelements.co.in",
+    "emailHref": "mailto:info@sprint.naturalelements.co.in",
+    "whatsappNumber": "+918521283184/85",
+    "whatsappHref": "https://wa.me/+918521283184/85?text=Hi%20SPRINT%2C%20I%20would%20like%20to%20know%20more%20about%20your%20programs."
   },
   "socials": [
     { "label": "LinkedIn", "href": "https://www.linkedin.com/company/sprint-institute", "icon": "linkedin" },
