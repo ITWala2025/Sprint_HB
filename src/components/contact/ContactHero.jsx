@@ -8,12 +8,22 @@ import {
   ShieldCheck,
   UsersRound,
 } from "lucide-react";
+import { BiLogoLinkedin } from "react-icons/bi";
+import { SiInstagram, SiYoutube } from "react-icons/si";
+
+import siteConfig from "@/config/site.config.json";
 
 const trustPoints = [
   { icon: MessageCircle, label: "Quick Response" },
   { icon: UsersRound, label: "Expert Guidance" },
   { icon: ShieldCheck, label: "Trusted by Thousands" },
 ];
+
+const socialIcons = {
+  linkedin: { component: BiLogoLinkedin, color: "#0a66c2" },
+  instagram: { component: SiInstagram, color: "#e4405f" },
+  youtube: { component: SiYoutube, color: "#ff0000" },
+};
 
 export default function ContactHero() {
   return (
@@ -48,8 +58,7 @@ export default function ContactHero() {
           </p>
 
           <h1 id="contact-hero-title">
-            Let&apos;s Build Your{" "}
-            <span>Future</span> Together
+            Let&apos;s Build Your <span>Future</span> Together
           </h1>
 
           <p className="contact-hero__description">
@@ -70,54 +79,37 @@ export default function ContactHero() {
               </div>
             ))}
           </div>
-          {/* Social Media Links */}
+
           <div className="contact-hero__socials">
-            <span className="contact-hero__socials-label">
-              Connect with us
-            </span>
-
+            <span className="contact-hero__socials-label">Connect with us</span>
             <div className="contact-hero__socials-list">
-              {/* LinkedIn */}
-              <a
-                href="https://www.linkedin.com/company/sprint-school-of-professional-studies-information-technology"
-                className="contact-hero__social-link"
-                aria-label="SPRINT on LinkedIn"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                in
-              </a>
+              {siteConfig.socials.map((social) => {
+                const socialIcon = socialIcons[social.icon];
 
-              {/* Facebook */}
-              <a
-                href="#"
-                className="contact-hero__social-link"
-                aria-label="SPRINT on Facebook"
-              >
-                f
-              </a>
+                if (!socialIcon) return null;
 
-              {/* YouTube */}
-              <a
-                href="#"
-                className="contact-hero__social-link"
-                aria-label="SPRINT on YouTube"
-              >
-                ▶
-              </a>
+                const Icon = socialIcon.component;
 
-              {/* Instagram */}
-              <a
-                href="https://www.instagram.com/sprint_natural_elements?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw=="
-                className="contact-hero__social-link"
-                aria-label="SPRINT on Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ◎
-              </a>
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    className="contact-hero__social-link"
+                    aria-label={`SPRINT on ${social.label}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon
+                      className="contact-hero__social-icon"
+                      color={socialIcon.color}
+                      aria-hidden="true"
+                    />
+                  </a>
+                );
+              })}
             </div>
           </div>
+
           <Link className="contact-hero__cta" href="#enquiry">
             Start an Enquiry
             <ArrowRight aria-hidden="true" />
