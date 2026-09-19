@@ -152,6 +152,29 @@ a {
     animation: none;
   }
 }
+
+/* ========================================
+   WATERMARK COVERAGE UTILITY
+   ========================================
+   Apply .covers-watermark to any section with a dark/solid background
+   that should visually sit ABOVE the global fixed-position watermark.
+   This creates a stacking context that masks the watermark (which uses
+   mix-blend-mode: multiply and sits at z-40).
+   The class provides:
+   - position: relative (establishes stacking context)
+   - z-index: 45 (above watermark's z-40, below header/modals at z-50+)
+   - Solid opaque background to prevent watermark bleed-through
+   - isolation: isolate (prevents blend mode from affecting content above)
+   ======================================== */
+
+.covers-watermark {
+  position: relative;
+  z-index: 45;
+  isolation: isolate;
+  /* Ensures solid background — sections using this class should also
+     have an explicit bg-* class (e.g., bg-brand-navy, bg-brand-navy-dark) */
+}
+
 /* ========================================
    COMMON UTILITIES & ACCESSIBILITY
    ======================================== */
