@@ -1,0 +1,13 @@
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, Award, CheckCircle2, Clock3, GraduationCap, Route } from "lucide-react";
+import CourseCurriculum from "./CourseDetail";
+
+export default function DetailPage({ item }) {
+  const label = item.kind === "bundle" ? "Learning package" : "Course";
+  return <div className="course-detail">
+    <nav className="course-breadcrumb" aria-label="Breadcrumb"><Link href="/courses">Courses</Link><span>/</span><span>{label}</span></nav>
+    <section className="course-detail-hero"><div className="course-detail-hero__copy"><p className="courses-eyebrow">{label} · {item.category}</p><h1>{item.title}</h1><p>{item.longDescription}</p><div className="course-detail-hero__facts"><span><Clock3 size={18} />{item.duration}</span><span><GraduationCap size={18} />{item.level}</span>{item.certificate ? <span><Award size={18} />Certificate included</span> : null}</div><Link className="course-detail-hero__cta" href="/register">Sign up for this {item.kind === "bundle" ? "package" : "course"}<ArrowRight size={18} /></Link></div><div className="course-detail-hero__art"><Image src={item.image} alt="" fill priority className="object-cover" /></div></section>
+    <div className="course-detail-layout"><main><section className="course-detail-section"><p className="courses-eyebrow">Overview</p><h2>Learn with purpose and practical context.</h2><p>{item.description}</p></section><section className="course-detail-section"><p className="courses-eyebrow">Course pathway</p><h2>{item.pathway}</h2><p>This learning route is designed to give you a clear next step at every stage.</p></section><section className="course-detail-section"><p className="courses-eyebrow">Curriculum</p><h2>What you will work through</h2><CourseCurriculum curriculum={item.curriculum} /></section><section className="course-detail-section"><p className="courses-eyebrow">Outcomes</p><h2>What you can take forward</h2><ul className="course-outcomes">{item.outcomes.map((outcome) => <li key={outcome}><CheckCircle2 size={19} />{outcome}</li>)}</ul></section></main><aside className="course-detail-aside"><div><h2>At a glance</h2><dl><div><dt>Format</dt><dd>Guided learning</dd></div><div><dt>Duration</dt><dd>{item.duration}</dd></div><div><dt>Prerequisites</dt><dd>{item.prerequisites}</dd></div><div><dt>Price</dt><dd>{item.price}</dd></div></dl><Link href="/register">Sign up <ArrowRight size={16} /></Link></div><div className="course-detail-aside__next"><Route size={22} /><h3>Explore the full pathway</h3><p>Use this course as a focused next step in your learning journey.</p></div></aside></div>
+  </div>;
+}
