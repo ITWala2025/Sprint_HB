@@ -6,7 +6,7 @@ import Link from "next/link";
  */
 export default function ContactCTA() {
   return (
-    <section className="bg-brand-navy py-24 text-brand-white">
+    <section className="bg-brand-navy py-24 text-brand-white covers-watermark">
       <div className="mx-auto max-w-5xl px-6 text-center">
         <h2 className="font-display text-3xl font-bold sm:text-4xl lg:text-5xl">
           Ready to Take the Next Step?

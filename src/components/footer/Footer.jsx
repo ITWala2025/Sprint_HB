@@ -48,7 +48,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="sprint-footer text-brand-off-white"
+      className="sprint-footer text-brand-off-white covers-watermark"
       style={{
         backgroundImage: "url('/images/header&footer/footer_background_img.png')",
         backgroundSize: "cover",
@@ -196,7 +196,7 @@ export default function Footer() {
       </div>
 
       {/* Compliance bar (FTR-02) — dynamic year, falls back to static markup */}
-      <div className="border-t border-white/10 hover:backdrop-blur-xs bg-white/1   ">
+      <div className="border-t border-white/10    ">
         <div className="mx-auto flex max-w-300 flex-col items-center justify-between gap-4 px-4 py-5 text-center sm:px-6 sm:py-6 md:flex-row md:text-left ">
           <p className="text-xs leading-relaxed text-brand-off-white/60 sm:text-sm">
             © {year} SPRINT. All rights reserved

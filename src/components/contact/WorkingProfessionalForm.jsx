@@ -209,27 +209,38 @@ export default function WorkingProfessionalForm() {
 
       {/* INTERESTED PROGRAMS */}
       <div className="professional-form__field professional-form__field--full">
-        <label>
+        <label id="professional-program-label">
           Interested Program / Course{" "}
           <span aria-hidden="true">*</span>
         </label>
 
-        <div className="professional-program-selector">
+        <div className="contact-multiselect">
           <button
             type="button"
-            className="professional-program-selector__trigger"
+            className={`contact-multiselect__trigger ${
+              programOpen ? "contact-multiselect__trigger--open" : ""
+            }`}
             onClick={() =>
               setProgramOpen((previous) => !previous)
             }
             aria-expanded={programOpen}
             aria-haspopup="listbox"
+            aria-labelledby="professional-program-label"
           >
-            <span>{selectedProgramText}</span>
+            <span
+              className={`contact-multiselect__selected ${
+                formData.programs.length > 0
+                  ? "contact-multiselect__selected--active"
+                  : ""
+              }`}
+            >
+              {selectedProgramText}
+            </span>
 
             <span
-              className={`professional-program-selector__arrow ${
+              className={`contact-multiselect__arrow ${
                 programOpen
-                  ? "professional-program-selector__arrow--open"
+                  ? "contact-multiselect__arrow--open"
                   : ""
               }`}
               aria-hidden="true"
@@ -240,7 +251,7 @@ export default function WorkingProfessionalForm() {
 
           {programOpen && (
             <div
-              className="professional-program-selector__menu"
+              className="contact-multiselect__menu"
               role="listbox"
               aria-multiselectable="true"
             >
@@ -251,7 +262,11 @@ export default function WorkingProfessionalForm() {
                 return (
                   <label
                     key={program}
-                    className="professional-program-selector__option"
+                    className={`contact-multiselect__option ${
+                      selected
+                        ? "contact-multiselect__option--selected"
+                        : ""
+                    }`}
                   >
                     <input
                       type="checkbox"
@@ -259,9 +274,23 @@ export default function WorkingProfessionalForm() {
                       onChange={() =>
                         handleProgramChange(program)
                       }
+                      className="contact-multiselect__checkbox"
                     />
 
-                    <span>{program}</span>
+                    <span
+                      className={`contact-multiselect__checkmark ${
+                        selected
+                          ? "contact-multiselect__checkmark--checked"
+                          : ""
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {selected ? "✓" : ""}
+                    </span>
+
+                    <span className="contact-multiselect__option-text">
+                      {program}
+                    </span>
                   </label>
                 );
               })}

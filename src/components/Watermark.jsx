@@ -8,6 +8,12 @@ import Image from "next/image";
  * Visible on light backgrounds, naturally hidden on dark backgrounds.
  * Renders above page content but below header/modals/dropdowns.
  * Non-interactive, hidden from assistive tech, excluded from print.
+ *
+ * IMPORTANT: Dark sections must use the `.covers-watermark` utility class
+ * (defined in src/css/global.css) to visually sit above this watermark.
+ * Apply `.covers-watermark` to: Header, Footer, Hero, FeaturedProgram,
+ * ContactCTA, CampusNewsTicker, LegalLayout header, LegalTableOfContents,
+ * and any future dark-themed sections.
  */
 export default function Watermark() {
   return (

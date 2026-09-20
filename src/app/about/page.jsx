@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Mail, MessageCircle, Phone } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import about from "@/data/about.json";
 import siteConfig from "@/config/site.config.json";
 import StoryVisionMission from "@/components/sections/StoryVisionMission";
@@ -45,13 +45,6 @@ const organizationSchema = {
     availableLanguage: ["en", "hi"],
   },
   sameAs: siteConfig.socials.map((social) => social.href),
-};
-
-/* CTA channel trio icons (§3.9) */
-const ctaIcons = {
-  phone: Phone,
-  mail: Mail,
-  message: MessageCircle,
 };
 
 /* Indian-locale number formatting for impact stats (IMP-05) */
@@ -257,34 +250,10 @@ export default function AboutPage() {
             {about.cta.description}
           </p>
 
-          <div className="mt-10 grid gap-5 sm:grid-cols-3">
-            {about.cta.channels.map((channel) => {
-              const Icon = ctaIcons[channel.icon] ?? Phone;
-              return (
-                <a
-                  key={channel.href}
-                  href={channel.href}
-                  data-track={`cta_${channel.icon}`}
-                  className="sprint-focus group flex min-h-[130px] flex-col items-center justify-center gap-2.5 rounded-3xl border border-brand-border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-red hover:shadow-brand-card"
-                >
-                  <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-red to-brand-purple text-white transition-transform duration-150 group-hover:scale-105">
-                    <Icon className="size-6" aria-hidden="true" />
-                  </span>
-                  <span className="text-base font-semibold text-brand-navy">
-                    {channel.label}
-                  </span>
-                  <span className="text-sm text-brand-text-muted">
-                    {channel.detail}
-                  </span>
-                </a>
-              );
-            })}
-          </div>
-
           <Link
             href={about.cta.primaryCta.href}
             data-track="cta_register"
-            className="sprint-focus group mt-10 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-gradient-to-r from-brand-red to-brand-purple px-9 py-3.5 text-base font-bold text-white shadow-brand-cta transition hover:-translate-y-0.5 hover:brightness-110"
+            className="sprint-focus group mt-8 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-gradient-to-r from-brand-red to-brand-purple px-9 py-3.5 text-base font-bold text-white shadow-brand-cta transition hover:-translate-y-0.5 hover:brightness-110 sm:mt-9"
           >
             {about.cta.primaryCta.label}
             <ArrowRight
