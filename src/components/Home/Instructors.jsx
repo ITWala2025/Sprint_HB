@@ -8,14 +8,17 @@ import { instructors } from "@/data/data";
  */
 export default function Instructors() {
   return (
-    <section className="bg-brand-off-white py-24">
-      <div className="mx-auto max-w-7xl px-6">
-        <h2 className="font-display text-3xl font-bold text-brand-navy">
+    <section className="sprint-section bg-brand-off-white py-16 md:py-24">
+      <div className="mx-auto max-w-[1200px] px-6">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+          Meet the mentors
+        </p>
+        <h2 className="mt-2 text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
           Learn from people who do this for a living
         </h2>
-        <p className="mt-2 max-w-xl text-brand-text-secondary">
-          Every instructor is a working professional at a partner company,
-          not a full-time content creator.
+        <p className="mt-3 max-w-2xl text-lg leading-relaxed text-brand-text-secondary">
+          Every instructor is a working professional at a partner company, not a
+          full-time content creator.
         </p>
 
         <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4">
@@ -36,7 +39,9 @@ export default function Instructors() {
               <p className="text-sm text-brand-text-secondary">
                 {instructor.designation}
               </p>
-              <p className="text-sm text-brand-text-muted">{instructor.company}</p>
+              <p className="text-sm text-brand-text-muted">
+                {instructor.company}
+              </p>
             </div>
           ))}
         </div>

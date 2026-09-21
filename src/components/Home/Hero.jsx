@@ -38,23 +38,26 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto flex flex-1 w-full max-w-7xl px-6 py-24 flex-col justify-between">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-between px-6 py-20 md:py-28">
         <div className="max-w-3xl text-left">
+          <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red-light">
+            SPRINT Institutional Training Hub
+          </p>
           {/* Primary H1 (Section 14: exactly one per page) */}
-          <h1 className="font-display text-5xl font-bold leading-[1.05] text-brand-white sm:text-6xl lg:text-7xl tracking-tight">
+          <h1 className="mt-5 font-display text-4xl font-black leading-tight tracking-tight text-brand-white sm:text-5xl md:text-6xl">
             Skill Up. Get Ahead
           </h1>
 
           {/* Supporting description */}
           <p className="mt-6 max-w-md text-lg text-brand-white/85">
-            Mentor-led programs built with engineers from top companies —
-            learn the skills that get you hired, not just certified.
+            Mentor-led programs built with engineers from top companies — learn
+            the skills that get you hired, not just certified.
           </p>
 
           <div className="mt-10 max-w-md">
             <Link
-              href="/programs"
-              className="inline-flex items-center justify-center rounded-full bg-brand-red px-8 py-4 text-base font-semibold text-brand-white transition-colors hover:bg-brand-red-dark"
+              href="/courses"
+              className="sprint-focus inline-flex min-h-[48px] items-center justify-center rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-brand-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
             >
               Explore Programs
             </Link>

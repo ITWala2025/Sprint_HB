@@ -35,7 +35,7 @@ export default function FeaturedProgram() {
         // viewport, so "active" tracks scroll position naturally.
         rootMargin: "-45% 0px -45% 0px",
         threshold: 0,
-      }
+      },
     );
 
     stageRefs.current.forEach((el) => el && observer.observe(el));
@@ -43,14 +43,18 @@ export default function FeaturedProgram() {
   }, []);
 
   return (
-    <section className="bg-brand-navy py-24 text-brand-white">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="sprint-section bg-brand-navy py-16 text-brand-white md:py-24">
+      <div className="mx-auto max-w-[1200px] px-6">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-brand-red">Featured Program</p>
-          <h2 className="mt-2 font-display text-3xl font-bold sm:text-4xl">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-light">
+            Featured program
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
             {featuredCourse.title}
           </h2>
-          <p className="mt-4 text-brand-white/75">{featuredCourse.shortDescription}</p>
+          <p className="mt-4 text-brand-white/75">
+            {featuredCourse.shortDescription}
+          </p>
         </div>
 
         <div className="relative mt-16 grid gap-0 md:pl-4">
@@ -105,7 +109,9 @@ export default function FeaturedProgram() {
                 </h3>
                 <p
                   className={`mt-2 max-w-lg transition-opacity ${
-                    isActive ? "text-brand-white/85 opacity-100" : "text-brand-white/60 opacity-70"
+                    isActive
+                      ? "text-brand-white/85 opacity-100"
+                      : "text-brand-white/60 opacity-70"
                   }`}
                 >
                   {stage.description}

@@ -17,11 +17,11 @@ export default function PartnerCarousel() {
   const track = [...partners, ...partners];
 
   return (
-    <section className="overflow-hidden border-y border-brand-border bg-brand-white py-24">
-      <div className="mx-auto max-w-7xl px-6">
-        <h2 className="text-center text-sm font-semibold uppercase tracking-wide text-brand-text-muted">
+    <section className="sprint-section overflow-hidden border-y border-brand-border bg-brand-white py-16 md:py-20">
+      <div className="mx-auto max-w-[1200px] px-6">
+        <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Trusted by universities and industry partners
-        </h2>
+        </p>
       </div>
 
       {/* marquee-track wrapper enables the desktop hover-to-pause rule

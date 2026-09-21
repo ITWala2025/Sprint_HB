@@ -39,9 +39,12 @@ export default function Testimonials() {
   const active = testimonials[activeIndex];
 
   return (
-    <section className="bg-brand-white py-24">
+    <section className="sprint-section bg-brand-white py-16 md:py-24">
       <div className="mx-auto max-w-4xl px-6 text-center">
-        <h2 className="font-display text-3xl font-bold text-brand-navy">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+          Learner stories
+        </p>
+        <h2 className="mt-2 text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
           What our students say
         </h2>
 
@@ -79,7 +82,9 @@ export default function Testimonials() {
           <blockquote className="mt-6 text-xl font-medium text-brand-text">
             &ldquo;{active.quote}&rdquo;
           </blockquote>
-          <p className="mt-4 text-sm font-semibold text-brand-navy">{active.name}</p>
+          <p className="mt-4 text-sm font-semibold text-brand-navy">
+            {active.name}
+          </p>
           <p className="text-sm text-brand-text-secondary">{active.role}</p>
         </div>
 
@@ -89,7 +94,7 @@ export default function Testimonials() {
             type="button"
             onClick={() => goTo(activeIndex - 1)}
             aria-label="Previous testimonial"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border text-brand-navy hover:border-brand-navy"
+            className="sprint-focus flex h-10 w-10 items-center justify-center rounded-full border border-brand-border text-brand-navy hover:border-brand-navy"
           >
             ‹
           </button>
@@ -114,7 +119,7 @@ export default function Testimonials() {
             type="button"
             onClick={() => goTo(activeIndex + 1)}
             aria-label="Next testimonial"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-border text-brand-navy hover:border-brand-navy"
+            className="sprint-focus flex h-10 w-10 items-center justify-center rounded-full border border-brand-border text-brand-navy hover:border-brand-navy"
           >
             ›
           </button>

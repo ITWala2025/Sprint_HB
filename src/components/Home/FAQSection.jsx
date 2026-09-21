@@ -10,16 +10,19 @@ import { faqs } from "@/data/data";
  */
 export default function FAQSection() {
   return (
-    <section className="bg-brand-off-white py-24">
+    <section className="sprint-section bg-brand-off-white py-16 md:py-24">
       <div className="mx-auto max-w-3xl px-6">
-        <h2 className="font-display text-3xl font-bold text-brand-navy">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+          Need to know
+        </p>
+        <h2 className="mt-2 text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
           Frequently asked questions
         </h2>
 
         <div className="mt-10 divide-y divide-brand-border border-t border-brand-border">
           {faqs.map((faq) => (
             <details key={faq.id} className="group py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-brand-text marker:content-none">
+              <summary className="sprint-focus flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-brand-text marker:content-none">
                 {faq.question}
                 <span
                   className="shrink-0 text-brand-navy transition-transform duration-200 group-open:rotate-180"

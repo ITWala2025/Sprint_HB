@@ -9,14 +9,17 @@ import CourseCard from "../cards/CourseCard";
  */
 export default function MoreCourses() {
   return (
-    <section className="relative bg-brand-white py-24">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="sprint-section relative bg-brand-white py-16 md:py-24">
+      <div className="mx-auto max-w-[1200px] px-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <h2 className="font-display text-3xl font-bold text-brand-navy">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+              Learning pathways
+            </p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
               More learning paths
             </h2>
-            <p className="mt-2 text-brand-text-secondary">
+            <p className="mt-3 max-w-2xl text-lg leading-relaxed text-brand-text-secondary">
               Pick a track built around where you want to end up.
             </p>
           </div>
