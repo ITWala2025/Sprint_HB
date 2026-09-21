@@ -18,14 +18,14 @@ export const stats = [
 
 // Section 6.3 — Partner Associations
 export const partners = [
-  { id: "p1", name: "NexaTech", logoUrl: "/partners/nexatech.svg" },
-  { id: "p2", name: "IIT Alumni Network", logoUrl: "/partners/iit-alumni.svg" },
-  { id: "p3", name: "Orion Cloud", logoUrl: "/partners/orion-cloud.svg" },
-  { id: "p4", name: "Vertex Systems", logoUrl: "/partners/vertex.svg" },
-  { id: "p5", name: "Bluepeak University", logoUrl: "/partners/bluepeak-u.svg" },
-  { id: "p6", name: "Falcon Data Labs", logoUrl: "/partners/falcon-data.svg" },
-  { id: "p7", name: "Meridian Bank", logoUrl: "/partners/meridian.svg" },
-  { id: "p8", name: "Harbor Robotics", logoUrl: "/partners/harbor.svg" },
+  { id: "p1", name: "Accenture", logoUrl: "/images/home/accenture.webp" },
+  { id: "p2", name: "Amazon", logoUrl: "/images/home/amazon.webp" },
+  { id: "p3", name: "Google", logoUrl: "/images/home/google.webp" },
+  { id: "p4", name: "Microsoft", logoUrl: "/images/home/microsoft.webp" },
+  { id: "p5", name: "IBM", logoUrl: "/images/home/ibm.webp" },
+  { id: "p6", name: "TCS", logoUrl: "/images/home/tcs.webp" },
+  { id: "p7", name: "Infosys", logoUrl: "/images/home/infosys.webp" },
+  { id: "p8", name: "Capgemini", logoUrl: "/images/home/capgemini.webp" },
 ];
 
 // Section 6.4 — Featured Course / Program (one program, 3–4 stages)
@@ -66,7 +66,7 @@ export const featuredCourse = {
   title: "Full-Stack Engineering Program",
   shortDescription:
     "Go from fundamentals to a job-ready full-stack portfolio in 6 months, mentored by MNC engineers.",
-  thumbnailUrl: "/courses/full-stack.jpg",
+  thumbnailUrl: "/images/courses/abstract-code.svg",
   instructorName: "Ananya Rao",
   category: "Software Engineering",
   difficultyLevel: "Beginner",
@@ -83,8 +83,9 @@ export const moreCourses = [
   {
     courseId: "crs-002",
     title: "Data Science & Machine Learning",
-    shortDescription: "Statistics, Python, and ML fundamentals with real datasets.",
-    thumbnailUrl: "/courses/data-science.jpg",
+    shortDescription:
+      "Statistics, Python, and ML fundamentals with real datasets.",
+    thumbnailUrl: "/images/courses/abstract-data.svg",
     instructorName: "Karthik Iyer",
     category: "Data Science",
     difficultyLevel: "Intermediate",
@@ -99,8 +100,9 @@ export const moreCourses = [
   {
     courseId: "crs-003",
     title: "Cloud & DevOps Engineering",
-    shortDescription: "AWS, CI/CD, and infrastructure-as-code from an SRE mindset.",
-    thumbnailUrl: "/courses/cloud-devops.jpg",
+    shortDescription:
+      "AWS, CI/CD, and infrastructure-as-code from an SRE mindset.",
+    thumbnailUrl: "/images/courses/abstract-devops.svg",
     instructorName: "Priya Menon",
     category: "Cloud Computing",
     difficultyLevel: "Intermediate",
@@ -115,8 +117,9 @@ export const moreCourses = [
   {
     courseId: "crs-004",
     title: "Product Management Essentials",
-    shortDescription: "Discovery, roadmapping, and shipping with cross-functional teams.",
-    thumbnailUrl: "/courses/product-management.jpg",
+    shortDescription:
+      "Discovery, roadmapping, and shipping with cross-functional teams.",
+    thumbnailUrl: "/images/courses/abstract-people.svg",
     instructorName: "Rahul Sen",
     category: "Product",
     difficultyLevel: "Beginner",
@@ -137,28 +140,28 @@ export const instructors = [
     name: "Ananya Rao",
     designation: "Senior Software Engineer",
     company: "NexaTech",
-    photoUrl: "/instructors/ananya-rao.jpg",
+    photoUrl: "/images/home/Ananya.jpeg",
   },
   {
     id: "ins-2",
     name: "Karthik Iyer",
     designation: "Lead Data Scientist",
     company: "Orion Cloud",
-    photoUrl: "/instructors/karthik-iyer.jpg",
+    photoUrl: "/images/home/Karthik.jpeg",
   },
   {
     id: "ins-3",
     name: "Priya Menon",
     designation: "Staff DevOps Engineer",
     company: "Vertex Systems",
-    photoUrl: "/instructors/priya-menon.jpg",
+    photoUrl: "/images/home/Priya.jpeg",
   },
   {
     id: "ins-4",
     name: "Rahul Sen",
     designation: "Group Product Manager",
     company: "Meridian Bank",
-    photoUrl: "/instructors/rahul-sen.jpg",
+    photoUrl: "/images/home/Rahul.jpeg",
   },
 ];
 

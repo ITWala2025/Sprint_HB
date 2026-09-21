@@ -35,7 +35,7 @@ export default function FeaturedProgram() {
         // viewport, so "active" tracks scroll position naturally.
         rootMargin: "-45% 0px -45% 0px",
         threshold: 0,
-      }
+      },
     );
 
     stageRefs.current.forEach((el) => el && observer.observe(el));
@@ -43,17 +43,21 @@ export default function FeaturedProgram() {
   }, []);
 
   return (
-    <section className="bg-brand-navy py-24 text-brand-white">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="sprint-section bg-brand-navy py-12 text-brand-white md:py-16 lg:py-20">
+      <div className="mx-auto max-w-[1200px] px-6">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-brand-red">Featured Program</p>
-          <h2 className="mt-2 font-display text-3xl font-bold sm:text-4xl">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-light">
+            Featured program
+          </p>
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
             {featuredCourse.title}
           </h2>
-          <p className="mt-4 text-brand-white/75">{featuredCourse.shortDescription}</p>
+          <p className="mt-4 text-brand-white/75">
+            {featuredCourse.shortDescription}
+          </p>
         </div>
 
-        <div className="relative mt-16 grid gap-0 md:pl-4">
+        <div className="relative mt-10 grid gap-0 md:pl-4">
           {/* The vertical rail. The filled segment grows with scroll
               progress to visualize "a clear sense of progression". */}
           <div
@@ -77,7 +81,7 @@ export default function FeaturedProgram() {
                   stageRefs.current[index] = el;
                 }}
                 data-index={index}
-                className="relative py-10 pl-8 md:pl-12"
+                className="relative py-8 pl-8 md:pl-12"
               >
                 {/* Node on the rail, filled when active */}
                 <span
@@ -105,7 +109,9 @@ export default function FeaturedProgram() {
                 </h3>
                 <p
                   className={`mt-2 max-w-lg transition-opacity ${
-                    isActive ? "text-brand-white/85 opacity-100" : "text-brand-white/60 opacity-70"
+                    isActive
+                      ? "text-brand-white/85 opacity-100"
+                      : "text-brand-white/60 opacity-70"
                   }`}
                 >
                   {stage.description}

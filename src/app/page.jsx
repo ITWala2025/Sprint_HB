@@ -7,6 +7,12 @@ import Testimonials from "@/components/Home/Testimonials";
 import FAQSection from "@/components/Home/FAQSection";
 import ContactCTA from "@/components/Home/ContactCTA";
 
+export const metadata = {
+  title: "SPRINT Training Hub",
+  description:
+    "Mentor-led technology and digital skills programs built for students, professionals, and institutions.",
+  alternates: { canonical: "/" },
+};
 
 /**
  * Home Page — assembled in the exact section order from Section 4 of the
@@ -17,19 +23,15 @@ import ContactCTA from "@/components/Home/ContactCTA";
  */
 export default function HomePage() {
   return (
-    <>
-      
-      <main>
-        <Hero />
-        <PartnerCarousel />
-        <FeaturedProgram />
-        <MoreCourses />
-        <Instructors />
-        <Testimonials />
-        <FAQSection />
-        <ContactCTA />
-      </main>
-      
-    </>
+    <main>
+      <Hero />
+      <PartnerCarousel />
+      <FeaturedProgram />
+      <MoreCourses />
+      <Instructors />
+      <Testimonials />
+      <FAQSection />
+      <ContactCTA />
+    </main>
   );
 }

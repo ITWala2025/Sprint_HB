@@ -6,12 +6,15 @@ import Link from "next/link";
  */
 export default function ContactCTA() {
   return (
-    <section className="bg-brand-navy py-24 text-brand-white">
-      <div className="mx-auto max-w-5xl px-6 text-center">
-        <h2 className="font-display text-3xl font-bold sm:text-4xl lg:text-5xl">
+    <section className="sprint-cta-bg sprint-section relative overflow-hidden text-brand-navy">
+      <div className="mx-auto max-w-[1200px] px-6 py-12 text-center md:py-16 lg:py-20">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+          Start with a conversation
+        </p>
+        <h2 className="mx-auto mt-3 max-w-3xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
           Ready to Take the Next Step?
         </h2>
-        <p className="mt-4 max-w-2xl mx-auto text-lg text-brand-white/75">
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-brand-text-secondary">
           Have questions about our programs or need guidance on the right
           learning path? Our team is here to help you make the best choice for
           your career.
@@ -19,7 +22,7 @@ export default function ContactCTA() {
         <div className="mt-10">
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-red px-8 py-4 text-base font-semibold text-brand-white transition-colors hover:bg-brand-red-dark"
+            className="sprint-focus inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
           >
             Get in Touch
           </Link>

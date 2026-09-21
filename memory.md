@@ -24,18 +24,18 @@
 
 ## 2. Technical Stack
 
-| Layer | Technologies | Notes & Versions |
-|---|---|---|
-| **Framework** | Next.js (App Router), React 19, React-DOM 19 | Next.js ^16.3.5, React ^19.1.0 (modern Server & Client components) |
-| **Language & Type Safety** | TypeScript, JavaScript | TypeScript 7.0.2; `tsconfig.json` uses bundler module resolution and `react-jsx` |
-| **Styling** | Tailwind CSS v4, PostCSS, Custom CSS | Tailwind v4 with `@theme` directive; PostCSS `@tailwindcss/postcss` |
-| **Design Tokens** | Brand theme in [src/css/global.css](src/css/global.css) | Custom palette (`brand-navy`, `brand-red`, surfaces, typography) |
-| **Icons** | Lucide React, React Icons | `lucide-react` (^0.525.0), `react-icons` (^5.7.0) |
-| **Typography** | Space Grotesk (Headings), Inter (Body) | Configured via `next/font/google` in root layout |
-| **Database & Auth** | Supabase (PostgreSQL 15+) | Complete schema, enums, triggers, and RLS policies in [src/Supabase/.sql](src/Supabase/.sql) |
-| **Testing** | Vitest, React Testing Library, jsdom, happy-dom | Vitest ^5.0.1, `@testing-library/react` ^16.3.3, `@testing-library/jest-dom` ^7.0.1, `@testing-library/user-event` ^14.6.7 |
-| **Type Definitions** | `tests/vitest.d.ts` | Triple-slash references to `vitest/globals` and `@testing-library/jest-dom/vitest` so TypeScript picks up `afterEach`, `toBeInTheDocument`, `toHaveAttribute`, `toHaveClass`, etc. |
-| **Runtime & Node** | Node.js >= 20 (Node v24 tested), npm >= 10 | Target OS: macOS / Linux / Windows |
+| Layer                      | Technologies                                            | Notes & Versions                                                                                                                                                                   |
+| -------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Framework**              | Next.js (App Router), React 19, React-DOM 19            | Next.js ^16.3.5, React ^19.1.0 (modern Server & Client components)                                                                                                                 |
+| **Language & Type Safety** | TypeScript, JavaScript                                  | TypeScript 7.0.2; `tsconfig.json` uses bundler module resolution and `react-jsx`                                                                                                   |
+| **Styling**                | Tailwind CSS v4, PostCSS, Custom CSS                    | Tailwind v4 with `@theme` directive; PostCSS `@tailwindcss/postcss`                                                                                                                |
+| **Design Tokens**          | Brand theme in [src/css/global.css](src/css/global.css) | Custom palette (`brand-navy`, `brand-red`, surfaces, typography)                                                                                                                   |
+| **Icons**                  | Lucide React, React Icons                               | `lucide-react` (^0.525.0), `react-icons` (^5.7.0)                                                                                                                                  |
+| **Typography**             | Space Grotesk (Headings), Inter (Body)                  | Configured via `next/font/google` in root layout                                                                                                                                   |
+| **Database & Auth**        | Supabase (PostgreSQL 15+)                               | Complete schema, enums, triggers, and RLS policies in [src/Supabase/.sql](src/Supabase/.sql)                                                                                       |
+| **Testing**                | Vitest, React Testing Library, jsdom, happy-dom         | Vitest ^5.0.1, `@testing-library/react` ^16.3.3, `@testing-library/jest-dom` ^7.0.1, `@testing-library/user-event` ^14.6.7                                                         |
+| **Type Definitions**       | `tests/vitest.d.ts`                                     | Triple-slash references to `vitest/globals` and `@testing-library/jest-dom/vitest` so TypeScript picks up `afterEach`, `toBeInTheDocument`, `toHaveAttribute`, `toHaveClass`, etc. |
+| **Runtime & Node**         | Node.js >= 20 (Node v24 tested), npm >= 10              | Target OS: macOS / Linux / Windows                                                                                                                                                 |
 
 ---
 
@@ -176,6 +176,7 @@
 The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with strict Row Level Security (RLS), custom PostgreSQL enum types, and automated triggers.
 
 ### Custom PostgreSQL Enums
+
 - `user_role`: `'admin'`, `'instructor'`, `'student'`, `'staff'`
 - `audience_type`: `'student'`, `'working_professional'`, `'institute'`, `'company'`
 - `training_mode`: `'Online'`, `'Offline'`, `'Hybrid'`
@@ -188,6 +189,7 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - `application_status`: `'submitted'`, `'screening'`, `'interview'`, `'offered'`, `'rejected'`, `'archived'`
 
 ### Core Tables
+
 1. `profiles`: Extends `auth.users`, stores name, email, role, phone, avatar.
 2. `students`: Academic details, registration number, college, branch, semester.
 3. `courses`: Course titles, slug, category, difficulty, duration, pricing, curriculum (JSONB), tools, outcomes.
@@ -203,6 +205,7 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 13. `instructors`, `testimonials`, `partners`: Social proof entities displayed across the website.
 
 ### Row Level Security (RLS) & Helper Functions
+
 - `public.is_admin()`: Security definer checking if `auth.uid()` has `role = 'admin'`.
 - `public.is_staff()`: Security definer checking if `auth.uid()` has `admin`, `instructor`, or `staff` role.
 - Public read access is granted for active courses, active job openings, published updates, and public testimonials.
@@ -247,3 +250,10 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
    - Component tests live in `tests/unit/`.
    - Feature specifications live in [backlog_features.feature](backlog_features.feature).
    - Tests must run using `npm test` or `npx vitest run`.
+
+## 8. Homepage Spacing Update — 2026-09-22
+
+- Normalized homepage section rhythm to `py-12 md:py-16 lg:py-20` across the hero, partner carousel, featured program, course paths, instructors, testimonials, FAQs, and contact CTA.
+- Reduced the hero minimum height to `min-h-[80svh]` to remove dead space below the statistics while preserving a substantial image-led hero.
+- Tightened the partner marquee and featured-program timeline internal gaps.
+- Set the three-course desktop grid to three columns so the cards remain centered without an unused fourth column.
