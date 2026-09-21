@@ -4,7 +4,7 @@ export default function LegalTableOfContents({ sections }) {
   return (
     <nav
       aria-label="On this page"
-      className="h-fit overflow-hidden rounded-xl border border-brand-navy-light bg-brand-navy-dark shadow-[0_16px_32px_-12px_rgba(1,31,62,0.22)] lg:sticky lg:top-28 covers-watermark"
+      className="h-fit overflow-hidden rounded-xl border border-brand-navy-light bg-brand-navy-dark shadow-[0_16px_32px_-12px_rgba(1,31,62,0.22)] lg:sticky lg:top-28"
     >
       <div className="border-b border-white/10 px-4 py-4 sm:px-5">
         <div className="flex items-center justify-between gap-3">

@@ -90,7 +90,7 @@ function UpdateSet({ hidden = false }: { hidden?: boolean }) {
 export default function CampusNewsTicker() {
   return (
     <section
-      className="relative z-10 overflow-hidden border-b border-brand-navy-light bg-brand-navy-dark shadow-[0_8px_20px_-18px_rgba(1,31,62,0.8)] covers-watermark"
+      className="relative z-10 overflow-hidden border-b border-brand-navy-light bg-brand-navy-dark shadow-[0_8px_20px_-18px_rgba(1,31,62,0.8)]"
       aria-label="SPRINT campus news and updates"
     >
 			<div className="mx-auto flex min-h-12 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
