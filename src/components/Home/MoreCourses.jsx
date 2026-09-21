@@ -9,7 +9,7 @@ import CourseCard from "../cards/CourseCard";
  */
 export default function MoreCourses() {
   return (
-    <section className="sprint-section relative bg-brand-white py-16 md:py-24">
+    <section className="sprint-section relative bg-brand-white py-12 md:py-16 lg:py-20">
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
@@ -37,7 +37,7 @@ export default function MoreCourses() {
           </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {moreCourses.map((course) => (
             <CourseCard key={course.courseId} course={course} />
           ))}

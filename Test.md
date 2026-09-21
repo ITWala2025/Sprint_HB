@@ -6,15 +6,16 @@ This document is the official reference for testing architecture, test suites, e
 
 ## 1. Testing Architecture & Stack
 
-| Component | Library / Tool | Version | Purpose |
-|---|---|---|---|
-| **Test Runner** | Vitest | ^5.0.1 | Fast, Vite-native test runner with ESM and worker thread support |
-| **DOM Environment** | jsdom, happy-dom | ^29.1.1, ^20.14.5 | Browser DOM simulation for JSX and TSX component suites |
-| **Component Testing** | React Testing Library, `@testing-library/user-event` | ^16.3.3, ^14.6.7 | Testing user-centric React component behaviors and interactions |
-| **Custom Matchers** | `@testing-library/jest-dom` | ^7.0.1 | Semantic DOM assertions (`toBeInTheDocument`, `toHaveAttribute`, etc.) |
-| **BDD Specifications** | Gherkin | — | Acceptance criteria in [backlog_features.feature](backlog_features.feature) |
+| Component              | Library / Tool                                       | Version           | Purpose                                                                     |
+| ---------------------- | ---------------------------------------------------- | ----------------- | --------------------------------------------------------------------------- |
+| **Test Runner**        | Vitest                                               | ^5.0.1            | Fast, Vite-native test runner with ESM and worker thread support            |
+| **DOM Environment**    | jsdom, happy-dom                                     | ^29.1.1, ^20.14.5 | Browser DOM simulation for JSX and TSX component suites                     |
+| **Component Testing**  | React Testing Library, `@testing-library/user-event` | ^16.3.3, ^14.6.7  | Testing user-centric React component behaviors and interactions             |
+| **Custom Matchers**    | `@testing-library/jest-dom`                          | ^7.0.1            | Semantic DOM assertions (`toBeInTheDocument`, `toHaveAttribute`, etc.)      |
+| **BDD Specifications** | Gherkin                                              | —                 | Acceptance criteria in [backlog_features.feature](backlog_features.feature) |
 
 ### Configuration Files
+
 - **JSX Runner Configuration**: [vitest.config.js](vitest.config.js)
   - Configures the `jsdom` environment for the existing JSX component suites.
   - Registers global test functions (`describe`, `it`, `expect`, `beforeEach`, `afterEach`).
@@ -35,31 +36,41 @@ This document is the official reference for testing architecture, test suites, e
 ## 2. Test Execution Commands
 
 ### Prerequisites
+
 Before running tests for the first time or in a fresh container/clone:
+
 ```bash
 npm install
 ```
-*Note: This ensures all devDependencies (`vitest`, `jsdom`, `@testing-library/*`) are properly linked in `node_modules/.bin`.*
+
+_Note: This ensures all devDependencies (`vitest`, `jsdom`, `@testing-library/_`) are properly linked in `node_modules/.bin`.\*
 
 ### Running Tests
 
-| Task | Command | Description |
-|---|---|---|
-| **Run All Unit Tests** | `npm test` | Runs all Vitest suites using single-worker thread pool (`--pool=threads --maxWorkers=1`) |
-| **Watch Mode** | `npx vitest` | Re-runs tests on file change during active development |
-| **Single Test File** | `npx vitest run tests/unit/contact/StudentForm.test.jsx` | Runs only the specified test file |
-| **Pattern Matching** | `npx vitest run tests/unit/contact/` | Runs all tests inside a matching folder |
-| **Coverage Report** | `npx vitest run --coverage` | Generates detailed coverage statistics |
+| Task                   | Command                                                  | Description                                                                              |
+| ---------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Run All Unit Tests** | `npm test`                                               | Runs all Vitest suites using single-worker thread pool (`--pool=threads --maxWorkers=1`) |
+| **Watch Mode**         | `npx vitest`                                             | Re-runs tests on file change during active development                                   |
+| **Single Test File**   | `npx vitest run tests/unit/contact/StudentForm.test.jsx` | Runs only the specified test file                                                        |
+| **Pattern Matching**   | `npx vitest run tests/unit/contact/`                     | Runs all tests inside a matching folder                                                  |
+| **Coverage Report**    | `npx vitest run --coverage`                              | Generates detailed coverage statistics                                                   |
 
 ### Current Validation Results — 2026-09-21
 
-| Check | Command | Result |
-|---|---|---|
-| Unit and component tests | `npm test` | **Passed** — 14 test files, 72 tests |
-| Production build | `npm run build` | **Passed** — Next.js production build and static generation completed |
-| Lint | `npm run lint` | **Not available** — `next lint` is unsupported by the installed Next.js 16.3.5 project; ESLint is not installed |
+| Check                    | Command         | Result                                                                                                          |
+| ------------------------ | --------------- | --------------------------------------------------------------------------------------------------------------- |
+| Unit and component tests | `npm test`      | **Passed** — 14 test files, 72 tests                                                                            |
+| Production build         | `npm run build` | **Passed** — Next.js production build and static generation completed                                           |
+| Lint                     | `npm run lint`  | **Not available** — `next lint` is unsupported by the installed Next.js 16.3.5 project; ESLint is not installed |
 
 The merged dependency set includes both `jsdom` and `happy-dom`; install dependencies with `npm install` before running tests in a fresh clone.
+
+### Homepage spacing validation — 2026-09-22
+
+- Editor diagnostics: passed for all eight modified Home components.
+- Browser validation: passed at 1440px, 1024px, 768px, and 390px; adjacent sections have no added gaps, the hero remains 80svh, the course cards are centered at desktop widths, and the document has no horizontal overflow.
+- Browser console note: existing 400 responses remain for missing instructor image paths under `/instructors/`; no new spacing-related runtime errors were introduced.
+- `npm test`: blocked because the local `vitest` executable and Testing Library packages are not installed in `node_modules`.
 
 ---
 
@@ -69,17 +80,17 @@ The merged dependency set includes both `jsdom` and `happy-dom`; install depende
 
 The contact section implements the specifications from [docs/md/Contact_Us.md](docs/md/Contact_Us.md) and [backlog_features.feature](backlog_features.feature).
 
-| Test Suite | File Path | Focus & Assertions |
-|---|---|---|
-| **ContactHero** | [tests/unit/contact/ContactHero.test.jsx](tests/unit/contact/ContactHero.test.jsx) | Renders hero headline, subtext, social links (LinkedIn, Instagram, YouTube), accessible `aria-label` attributes, and external link security (`rel="noopener noreferrer"`). |
-| **ContactMethods** | [tests/unit/contact/ContactMethods.test.jsx](tests/unit/contact/ContactMethods.test.jsx) | Actionable contact cards (Call Now `tel:`, Email Us `mailto:`, WhatsApp `https://wa.me/`), physical address, and office operating hours. |
-| **EnquirySection** | [tests/unit/contact/EnquirySection.test.jsx](tests/unit/contact/EnquirySection.test.jsx) | Dynamic tab switching between audiences (Student, Working Professional, Institute, Company), active tab visual indication, and rendering matching form. |
-| **StudentForm** | [tests/unit/contact/StudentForm.test.jsx](tests/unit/contact/StudentForm.test.jsx) | Student form field rendering, multi-select course trigger, intelligent course-to-message prefill logic, validation handling, and submit button state. |
-| **WorkingProfessionalForm** | [tests/unit/contact/WorkingProfessionalForm.test.jsx](tests/unit/contact/WorkingProfessionalForm.test.jsx) | Professional form fields (Company Name, Designation, Experience, Target Program), required field validation, and consent toggle. |
-| **InstituteForm** | [tests/unit/contact/InstituteForm.test.jsx](tests/unit/contact/InstituteForm.test.jsx) | Institutional representative fields (Institute Name, Contact Person, Official Email, Website, Service Interest), form validation. |
-| **CompanyForm** | [tests/unit/contact/CompanyForm.test.jsx](tests/unit/contact/CompanyForm.test.jsx) | Corporate enquiry fields (Company Name, Domain, Role, Purpose Type, Preferred Contact Time), form submission handling. |
-| **LocationSection** | [tests/unit/contact/LocationSection.test.jsx](tests/unit/contact/LocationSection.test.jsx) | SPRINT Hazaribagh center physical location card, landmark notes, embedded Google Maps iframe, and external directions link. |
-| **FAQSection** | [tests/unit/contact/FAQSection.test.jsx](tests/unit/contact/FAQSection.test.jsx) | Interactive accordion behavior, expanding/collapsing answers, keyboard accessibility, and `aria-expanded` attributes. |
+| Test Suite                  | File Path                                                                                                  | Focus & Assertions                                                                                                                                                         |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ContactHero**             | [tests/unit/contact/ContactHero.test.jsx](tests/unit/contact/ContactHero.test.jsx)                         | Renders hero headline, subtext, social links (LinkedIn, Instagram, YouTube), accessible `aria-label` attributes, and external link security (`rel="noopener noreferrer"`). |
+| **ContactMethods**          | [tests/unit/contact/ContactMethods.test.jsx](tests/unit/contact/ContactMethods.test.jsx)                   | Actionable contact cards (Call Now `tel:`, Email Us `mailto:`, WhatsApp `https://wa.me/`), physical address, and office operating hours.                                   |
+| **EnquirySection**          | [tests/unit/contact/EnquirySection.test.jsx](tests/unit/contact/EnquirySection.test.jsx)                   | Dynamic tab switching between audiences (Student, Working Professional, Institute, Company), active tab visual indication, and rendering matching form.                    |
+| **StudentForm**             | [tests/unit/contact/StudentForm.test.jsx](tests/unit/contact/StudentForm.test.jsx)                         | Student form field rendering, multi-select course trigger, intelligent course-to-message prefill logic, validation handling, and submit button state.                      |
+| **WorkingProfessionalForm** | [tests/unit/contact/WorkingProfessionalForm.test.jsx](tests/unit/contact/WorkingProfessionalForm.test.jsx) | Professional form fields (Company Name, Designation, Experience, Target Program), required field validation, and consent toggle.                                           |
+| **InstituteForm**           | [tests/unit/contact/InstituteForm.test.jsx](tests/unit/contact/InstituteForm.test.jsx)                     | Institutional representative fields (Institute Name, Contact Person, Official Email, Website, Service Interest), form validation.                                          |
+| **CompanyForm**             | [tests/unit/contact/CompanyForm.test.jsx](tests/unit/contact/CompanyForm.test.jsx)                         | Corporate enquiry fields (Company Name, Domain, Role, Purpose Type, Preferred Contact Time), form submission handling.                                                     |
+| **LocationSection**         | [tests/unit/contact/LocationSection.test.jsx](tests/unit/contact/LocationSection.test.jsx)                 | SPRINT Hazaribagh center physical location card, landmark notes, embedded Google Maps iframe, and external directions link.                                                |
+| **FAQSection**              | [tests/unit/contact/FAQSection.test.jsx](tests/unit/contact/FAQSection.test.jsx)                           | Interactive accordion behavior, expanding/collapsing answers, keyboard accessibility, and `aria-expanded` attributes.                                                      |
 
 ---
 
@@ -105,17 +116,17 @@ To maintain comprehensive test coverage across the entire platform, the followin
    - Hero headline and CTA button destinations.
    - Partner carousel rendering.
    - Instructor and testimonial card rendering.
-3. **About Us Page Tests** (`tests/unit/about/`):
+2. **About Us Page Tests** (`tests/unit/about/`):
    - `ProfileCard` and `SkillCard` rendering.
    - `StatCounter` count-up behavior and Indian number locale formatting (`en-IN`).
    - Vision & Mission glass card rendering.
-4. **Courses & Catalogue Tests** (`tests/unit/courses/`):
+3. **Courses & Catalogue Tests** (`tests/unit/courses/`):
    - Filtering by pathway (Undergraduate vs Graduate & Above).
    - Dynamic course page metadata generation and slug resolution.
-5. **Careers Page Tests** (`tests/unit/careers/`):
+4. **Careers Page Tests** (`tests/unit/careers/`):
    - Job vacancy listings from [src/data/careers.js](src/data/careers.js).
    - Application form validation and file upload handling.
-6. **E2E & Integration Tests** (`tests/e2e/`, `tests/integration/`):
+5. **E2E & Integration Tests** (`tests/e2e/`, `tests/integration/`):
    - End-to-end user journeys for course discovery and enquiry submission using Playwright.
 
 ---
@@ -140,6 +151,7 @@ To maintain comprehensive test coverage across the entire platform, the followin
 
 > **CRITICAL PROTOCOL FOR AI AGENTS**:
 > Whenever code is added or modified in the repository:
+>
 > 1. Run the test suite: `npm test` or `npx vitest run --pool=threads --maxWorkers=1`.
 > 2. If new components or features were added, create corresponding unit tests under `tests/unit/`.
 > 3. Update this document ([Test.md](Test.md)) with:

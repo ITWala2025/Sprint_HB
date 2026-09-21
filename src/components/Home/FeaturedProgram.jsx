@@ -43,7 +43,7 @@ export default function FeaturedProgram() {
   }, []);
 
   return (
-    <section className="sprint-section bg-brand-navy py-16 text-brand-white md:py-24">
+    <section className="sprint-section bg-brand-navy py-12 text-brand-white md:py-16 lg:py-20">
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="max-w-2xl">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-light">
@@ -57,7 +57,7 @@ export default function FeaturedProgram() {
           </p>
         </div>
 
-        <div className="relative mt-16 grid gap-0 md:pl-4">
+        <div className="relative mt-10 grid gap-0 md:pl-4">
           {/* The vertical rail. The filled segment grows with scroll
               progress to visualize "a clear sense of progression". */}
           <div
@@ -81,7 +81,7 @@ export default function FeaturedProgram() {
                   stageRefs.current[index] = el;
                 }}
                 data-index={index}
-                className="relative py-10 pl-8 md:pl-12"
+                className="relative py-8 pl-8 md:pl-12"
               >
                 {/* Node on the rail, filled when active */}
                 <span

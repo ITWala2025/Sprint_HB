@@ -1,44 +1,44 @@
+import Image from "next/image";
 import Link from "next/link";
 import { stats } from "@/data/data";
 
 /**
  * Hero Section — Requirements 6.1.
  *
- * - Full-screen background visual (video, ~10s, loops). Video src/poster
- *   are TBD per the doc — paths below point at where the final assets
- *   should live; until then the poster/gradient fallback carries the
- *   section so nothing breaks with missing media.
+ * - Full-screen background visual with a navy readability overlay.
  * - Content is left-aligned on desktop, stacks and centers on mobile.
- * - A navy scrim sits over the video so text stays readable regardless of
- *   footage (explicit requirement, not just a style choice).
+ * - A navy scrim sits over the image so text stays readable regardless of
+ *   the photo (explicit requirement, not just a style choice).
  * - Statistics row anchored to the bottom edge of the hero.
  */
 export default function Hero() {
   return (
-    <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-brand-navy">
-      {/* Background video. autoPlay+muted+playsInline is required for
-          browsers to allow autoplay; poster covers slow connections and
-          the (TBD) case where video is dropped in favor of a static image. */}
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        poster="/hero/hero-poster.jpg"
-      >
-        <source src="/hero/hero-background.mp4" type="video/mp4" />
-      </video>
+    <section className="relative flex min-h-[80svh] flex-col overflow-hidden bg-brand-navy">
+      <Image
+        src="/images/home/home-hero.jpg"
+        alt="Mentor guiding students working on a laptop at SPRINT"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-right"
+      />
 
-      {/* Readability scrim — required by spec ("visual shall not reduce
-          text readability; an overlay ... may be used"). Stronger on the
-          left where the copy sits, fading out toward the right. */}
+      {/* Keep the copy on the existing navy field while letting the photo
+          emerge gradually on the right. */}
       <div
-        className="absolute inset-0 bg-gradient-to-r from-brand-navy-dark via-brand-navy/85 to-brand-navy/40"
+        className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/90 via-[40%] to-transparent to-[70%] md:from-brand-navy md:via-brand-navy/85 md:via-[40%] md:to-transparent md:to-[65%]"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0 bg-gradient-to-r from-brand-navy/95 via-brand-navy/80 via-[45%] to-brand-navy/70 md:hidden"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-brand-navy/80 via-brand-navy/20 to-transparent"
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-between px-6 py-20 md:py-28">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-between px-6 py-12 md:py-16 lg:py-20">
         <div className="max-w-3xl text-left">
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red-light">
             SPRINT Institutional Training Hub

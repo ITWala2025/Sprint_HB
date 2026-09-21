@@ -16,6 +16,7 @@ import { testimonials } from "@/data/data";
  */
 export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [failedImages, setFailedImages] = useState({});
   const videoRefs = useRef([]);
   const total = testimonials.length;
 
@@ -39,7 +40,7 @@ export default function Testimonials() {
   const active = testimonials[activeIndex];
 
   return (
-    <section className="sprint-section bg-brand-white py-16 md:py-24">
+    <section className="sprint-section bg-brand-white py-12 md:py-16 lg:py-20">
       <div className="mx-auto max-w-4xl px-6 text-center">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Learner stories
@@ -68,6 +69,13 @@ export default function Testimonials() {
               >
                 <source src={active.videoUrl} type="video/mp4" />
               </video>
+            ) : failedImages[active.id] ? (
+              <div className="flex h-full w-full items-center justify-center bg-brand-navy font-display text-xl font-bold text-brand-white">
+                {active.name
+                  .split(" ")
+                  .map((part) => part[0])
+                  .join("")}
+              </div>
             ) : (
               <Image
                 src={active.photoUrl}
@@ -75,6 +83,12 @@ export default function Testimonials() {
                 fill
                 className="object-cover"
                 sizes="80px"
+                onError={() =>
+                  setFailedImages((current) => ({
+                    ...current,
+                    [active.id]: true,
+                  }))
+                }
               />
             )}
           </div>

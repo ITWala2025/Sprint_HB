@@ -10,7 +10,7 @@ import { faqs } from "@/data/data";
  */
 export default function FAQSection() {
   return (
-    <section className="sprint-section bg-brand-off-white py-16 md:py-24">
+    <section className="sprint-section bg-brand-off-white py-12 md:py-16 lg:py-20">
       <div className="mx-auto max-w-3xl px-6">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Need to know

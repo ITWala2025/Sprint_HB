@@ -83,7 +83,8 @@ export const moreCourses = [
   {
     courseId: "crs-002",
     title: "Data Science & Machine Learning",
-    shortDescription: "Statistics, Python, and ML fundamentals with real datasets.",
+    shortDescription:
+      "Statistics, Python, and ML fundamentals with real datasets.",
     thumbnailUrl: "/images/courses/abstract-data.svg",
     instructorName: "Karthik Iyer",
     category: "Data Science",
@@ -99,7 +100,8 @@ export const moreCourses = [
   {
     courseId: "crs-003",
     title: "Cloud & DevOps Engineering",
-    shortDescription: "AWS, CI/CD, and infrastructure-as-code from an SRE mindset.",
+    shortDescription:
+      "AWS, CI/CD, and infrastructure-as-code from an SRE mindset.",
     thumbnailUrl: "/images/courses/abstract-devops.svg",
     instructorName: "Priya Menon",
     category: "Cloud Computing",
@@ -115,7 +117,8 @@ export const moreCourses = [
   {
     courseId: "crs-004",
     title: "Product Management Essentials",
-    shortDescription: "Discovery, roadmapping, and shipping with cross-functional teams.",
+    shortDescription:
+      "Discovery, roadmapping, and shipping with cross-functional teams.",
     thumbnailUrl: "/images/courses/abstract-people.svg",
     instructorName: "Rahul Sen",
     category: "Product",
@@ -137,28 +140,28 @@ export const instructors = [
     name: "Ananya Rao",
     designation: "Senior Software Engineer",
     company: "NexaTech",
-    photoUrl: "/instructors/ananya-rao.jpg",
+    photoUrl: "/images/home/Ananya.jpeg",
   },
   {
     id: "ins-2",
     name: "Karthik Iyer",
     designation: "Lead Data Scientist",
     company: "Orion Cloud",
-    photoUrl: "/instructors/karthik-iyer.jpg",
+    photoUrl: "/images/home/Karthik.jpeg",
   },
   {
     id: "ins-3",
     name: "Priya Menon",
     designation: "Staff DevOps Engineer",
     company: "Vertex Systems",
-    photoUrl: "/instructors/priya-menon.jpg",
+    photoUrl: "/images/home/Priya.jpeg",
   },
   {
     id: "ins-4",
     name: "Rahul Sen",
     designation: "Group Product Manager",
     company: "Meridian Bank",
-    photoUrl: "/instructors/rahul-sen.jpg",
+    photoUrl: "/images/home/Rahul.jpeg",
   },
 ];
 
