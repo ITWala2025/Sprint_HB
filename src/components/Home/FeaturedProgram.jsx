@@ -49,7 +49,7 @@ export default function FeaturedProgram() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-light">
             Featured program
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
             {featuredCourse.title}
           </h2>
           <p className="mt-4 text-brand-white/75">

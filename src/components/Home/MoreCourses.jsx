@@ -16,7 +16,7 @@ export default function MoreCourses() {
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
               Learning pathways
             </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
               More learning paths
             </h2>
             <p className="mt-3 max-w-2xl text-lg leading-relaxed text-brand-text-secondary">

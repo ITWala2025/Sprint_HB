@@ -45,7 +45,7 @@ export default function Testimonials() {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Learner stories
         </p>
-        <h2 className="mt-2 text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
+        <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
           What our students say
         </h2>
 

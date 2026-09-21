@@ -31,7 +31,7 @@ export default function Instructors() {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Meet the mentors
         </p>
-        <h2 className="mt-2 text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
+        <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
           Learn from people who do this for a living
         </h2>
         <p className="mt-3 max-w-2xl text-lg leading-relaxed text-brand-text-secondary">
@@ -39,9 +39,12 @@ export default function Instructors() {
           full-time content creator.
         </p>
 
-        <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
           {instructors.map((instructor) => (
-            <div key={instructor.id} className="text-left">
+            <div
+              key={instructor.id}
+              className="flex h-full flex-col rounded-3xl border border-brand-border bg-brand-white p-4 shadow-sm"
+            >
               <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-brand-surface">
                 {failedImages[instructor.id] ? (
                   <InitialsAvatar name={instructor.name} />

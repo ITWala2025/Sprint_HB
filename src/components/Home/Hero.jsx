@@ -66,7 +66,7 @@ export default function Hero() {
 
         {/* Statistics row — anchored to bottom of hero */}
         <div className="w-full" aria-label="SPRINT impact statistics">
-          <dl className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+          <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat, index) => (
               <div
                 key={stat.id}

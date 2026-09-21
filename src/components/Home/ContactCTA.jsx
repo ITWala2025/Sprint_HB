@@ -11,7 +11,7 @@ export default function ContactCTA() {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Start with a conversation
         </p>
-        <h2 className="mx-auto mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
+        <h2 className="mx-auto mt-3 max-w-3xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
           Ready to Take the Next Step?
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-brand-text-secondary">
