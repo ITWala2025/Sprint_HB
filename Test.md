@@ -26,6 +26,9 @@ This document is the official reference for testing architecture, test suites, e
   - Uses `setupFiles: ["./tests/setup.tsx"]` and includes `tests/**/*.test.tsx`.
 - **Global Setups**: [vitest.setup.js](vitest.setup.js) and [tests/setup.tsx](tests/setup.tsx)
   - Import `@testing-library/jest-dom` matchers and mock Next.js `Image` and `Link` components.
+- **Type Declarations**: [tests/vitest.d.ts](tests/vitest.d.ts)
+  - Triple-slash references to `vitest/globals` and `@testing-library/jest-dom/vitest` so TypeScript picks up `afterEach`, `toBeInTheDocument`, `toHaveAttribute`, `toHaveClass`, etc.
+  - Registered in `tsconfig.json` `include` so `next build` type-checks test files.
 
 ---
 

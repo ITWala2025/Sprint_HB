@@ -34,6 +34,7 @@
 | **Typography** | Space Grotesk (Headings), Inter (Body) | Configured via `next/font/google` in root layout |
 | **Database & Auth** | Supabase (PostgreSQL 15+) | Complete schema, enums, triggers, and RLS policies in [src/Supabase/.sql](src/Supabase/.sql) |
 | **Testing** | Vitest, React Testing Library, jsdom, happy-dom | Vitest ^5.0.1, `@testing-library/react` ^16.3.3, `@testing-library/jest-dom` ^7.0.1, `@testing-library/user-event` ^14.6.7 |
+| **Type Definitions** | `tests/vitest.d.ts` | Triple-slash references to `vitest/globals` and `@testing-library/jest-dom/vitest` so TypeScript picks up `afterEach`, `toBeInTheDocument`, `toHaveAttribute`, `toHaveClass`, etc. |
 | **Runtime & Node** | Node.js >= 20 (Node v24 tested), npm >= 10 | Target OS: macOS / Linux / Windows |
 
 ---
@@ -116,9 +117,10 @@
     ├── e2e/                       # End-to-end test scenarios
     ├── fixtures/                  # Test mock data and fixtures
     ├── integration/               # Integration tests
-    └── unit/                      # Component unit tests
-        ├── contact/               # Contact and enquiry component tests
-        └── header_unit_test/      # Header, navigation, logo, and action tests
+    ├── unit/                      # Component unit tests
+    │   ├── contact/               # Contact and enquiry component tests
+    │   └── header_unit_test/      # Header, navigation, logo, and action tests
+    └── vitest.d.ts                # Vitest global & jest-dom matcher type declarations
 ```
 
 ---
