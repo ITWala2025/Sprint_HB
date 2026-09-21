@@ -5,7 +5,6 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import Header from "@/components/header/Header";
 import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";
 import Footer from "@/components/footer/Footer";
-import Watermark from "@/components/Watermark";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -52,7 +51,6 @@ export default function RootLayout({ children }) {
         <ConditionalCampusNewsTicker />
         <main id="main">{children}</main>
         <Footer />
-        <Watermark />
 
         <a
           href="https://wa.me/918521283184?text=Hello%20SPRINT%2C%20I%20would%20like%20to%20know%20more%20about%20your%20programs."

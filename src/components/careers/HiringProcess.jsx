@@ -3,11 +3,10 @@ import { hiringProcessSteps } from "@/data/careers";
 /**
  * Hiring Process — Dark navy section with 4-step visual guide.
  * Circles perfectly aligned with step titles, connecting line through center.
- * Uses covers-watermark to hide global watermark.
  */
 export default function HiringProcess() {
   return (
-    <section className="relative bg-brand-navy py-24 covers-watermark" aria-labelledby="hiring-process-heading">
+    <section className="relative bg-brand-navy py-24" aria-labelledby="hiring-process-heading">
       {/* Background gradient mesh */}
       <div
         className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_20%_10%,rgba(248,21,41,0.12),transparent_60%),radial-gradient(ellipse_50%_45%_at_80%_90%,rgba(11,99,182,0.1),transparent_50%)]"
