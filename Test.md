@@ -1,0 +1,136 @@
+# Test Suite & Quality Assurance Guide — SPRINT Training Hub
+
+This document is the official reference for testing architecture, test suites, execution commands, coverage status, and best practices across the SPRINT Training Hub codebase.
+
+---
+
+## 1. Testing Architecture & Stack
+
+| Component | Library / Tool | Version | Purpose |
+|---|---|---|---|
+| **Test Runner** | Vitest | ^5.0.1 | Fast, Vite-native test runner with ESM and worker thread support |
+| **DOM Environment** | jsdom | ^29.1.1 | Browser DOM simulation in Node.js runtime |
+| **Component Testing** | React Testing Library | ^16.3.3 | Testing user-centric React component behaviors |
+| **Custom Matchers** | `@testing-library/jest-dom` | ^7.0.1 | Semantic DOM assertions (`toBeInTheDocument`, `toHaveAttribute`, etc.) |
+| **BDD Specifications** | Gherkin | — | Acceptance criteria in [backlog_features.feature](backlog_features.feature) |
+
+### Configuration Files
+- **Runner Configuration**: [vitest.config.js](vitest.config.js)
+  - Configures `jsdom` environment.
+  - Registers global test functions (`describe`, `it`, `expect`, `beforeEach`, `afterEach`).
+  - Sets up `@/` alias resolution to `./src`.
+  - Sets up `setupFiles: ["./vitest.setup.js"]`.
+- **Global Setup**: [vitest.setup.js](vitest.setup.js)
+  - Imports `@testing-library/jest-dom/vitest` matchers.
+
+---
+
+## 2. Test Execution Commands
+
+### Prerequisites
+Before running tests for the first time or in a fresh container/clone:
+```bash
+npm install
+```
+*Note: This ensures all devDependencies (`vitest`, `jsdom`, `@testing-library/*`) are properly linked in `node_modules/.bin`.*
+
+### Running Tests
+
+| Task | Command | Description |
+|---|---|---|
+| **Run All Unit Tests** | `npm test` | Runs all Vitest suites using single-worker thread pool (`--pool=threads --maxWorkers=1`) |
+| **Watch Mode** | `npx vitest` | Re-runs tests on file change during active development |
+| **Single Test File** | `npx vitest run tests/unit/contact/StudentForm.test.jsx` | Runs only the specified test file |
+| **Pattern Matching** | `npx vitest run tests/unit/contact/` | Runs all tests inside a matching folder |
+| **Coverage Report** | `npx vitest run --coverage` | Generates detailed coverage statistics |
+
+---
+
+## 3. Current Test Inventory
+
+### 3.1 Contact & Enquiry Unit Tests (`tests/unit/contact/`)
+
+The contact section implements the specifications from [docs/md/Contact_Us.md](docs/md/Contact_Us.md) and [backlog_features.feature](backlog_features.feature).
+
+| Test Suite | File Path | Focus & Assertions |
+|---|---|---|
+| **ContactHero** | [tests/unit/contact/ContactHero.test.jsx](tests/unit/contact/ContactHero.test.jsx) | Renders hero headline, subtext, social links (LinkedIn, Instagram, YouTube), accessible `aria-label` attributes, and external link security (`rel="noopener noreferrer"`). |
+| **ContactMethods** | [tests/unit/contact/ContactMethods.test.jsx](tests/unit/contact/ContactMethods.test.jsx) | Actionable contact cards (Call Now `tel:`, Email Us `mailto:`, WhatsApp `https://wa.me/`), physical address, and office operating hours. |
+| **EnquirySection** | [tests/unit/contact/EnquirySection.test.jsx](tests/unit/contact/EnquirySection.test.jsx) | Dynamic tab switching between audiences (Student, Working Professional, Institute, Company), active tab visual indication, and rendering matching form. |
+| **StudentForm** | [tests/unit/contact/StudentForm.test.jsx](tests/unit/contact/StudentForm.test.jsx) | Student form field rendering, multi-select course trigger, intelligent course-to-message prefill logic, validation handling, and submit button state. |
+| **WorkingProfessionalForm** | [tests/unit/contact/WorkingProfessionalForm.test.jsx](tests/unit/contact/WorkingProfessionalForm.test.jsx) | Professional form fields (Company Name, Designation, Experience, Target Program), required field validation, and consent toggle. |
+| **InstituteForm** | [tests/unit/contact/InstituteForm.test.jsx](tests/unit/contact/InstituteForm.test.jsx) | Institutional representative fields (Institute Name, Contact Person, Official Email, Website, Service Interest), form validation. |
+| **CompanyForm** | [tests/unit/contact/CompanyForm.test.jsx](tests/unit/contact/CompanyForm.test.jsx) | Corporate enquiry fields (Company Name, Domain, Role, Purpose Type, Preferred Contact Time), form submission handling. |
+| **LocationSection** | [tests/unit/contact/LocationSection.test.jsx](tests/unit/contact/LocationSection.test.jsx) | SPRINT Hazaribagh center physical location card, landmark notes, embedded Google Maps iframe, and external directions link. |
+| **FAQSection** | [tests/unit/contact/FAQSection.test.jsx](tests/unit/contact/FAQSection.test.jsx) | Interactive accordion behavior, expanding/collapsing answers, keyboard accessibility, and `aria-expanded` attributes. |
+
+---
+
+## 4. Test Specifications & Gherkin Scenarios
+
+Acceptance criteria are specified in [backlog_features.feature](backlog_features.feature). Scenarios include:
+
+- **Section Ordering**: Header → Hero → Enquiry → Map → FAQs → CTA → Footer.
+- **Responsive Layout**: Two-column layout on desktop (35-40% reach us, 60-65% form) vs. single column stacked on mobile.
+- **Actionable Cards**: Verified click-to-call, mailto, and WhatsApp links.
+- **Dynamic Enquiry Form**: Audience switching dynamically renders appropriate fields.
+- **Validation**: Specific inline error messages for missing required fields, email formatting, and phone formatting.
+- **Intelligent Prefill**: Auto-generating query messages when courses are selected.
+- **Privacy Consent**: Mandatory consent checkbox preventing submission when unchecked.
+
+---
+
+## 5. Planned Test Suites & Roadmap
+
+To maintain comprehensive test coverage across the entire platform, the following test suites are planned:
+
+1. **Header & Navigation Tests** (`tests/unit/header/`):
+   - Desktop navigation item rendering based on [src/config/navigation.json](src/config/navigation.json).
+   - Mobile navigation drawer toggle, focus trapping, and keyboard escape.
+   - Campus news ticker rendering and link navigation.
+2. **Home Page Tests** (`tests/unit/home/`):
+   - Hero headline and CTA button destinations.
+   - Partner carousel rendering.
+   - Instructor and testimonial card rendering.
+3. **About Us Page Tests** (`tests/unit/about/`):
+   - `ProfileCard` and `SkillCard` rendering.
+   - `StatCounter` count-up behavior and Indian number locale formatting (`en-IN`).
+   - Vision & Mission glass card rendering.
+4. **Courses & Catalogue Tests** (`tests/unit/courses/`):
+   - Filtering by pathway (Undergraduate vs Graduate & Above).
+   - Dynamic course page metadata generation and slug resolution.
+5. **Careers Page Tests** (`tests/unit/careers/`):
+   - Job vacancy listings from [src/data/careers.js](src/data/careers.js).
+   - Application form validation and file upload handling.
+6. **E2E & Integration Tests** (`tests/e2e/`, `tests/integration/`):
+   - End-to-end user journeys for course discovery and enquiry submission using Playwright.
+
+---
+
+## 6. Best Practices for Writing Tests
+
+1. **Prioritize Accessible Queries**:
+   - Prefer: `screen.getByRole("button", { name: /submit/i })`, `screen.getByLabelText(/full name/i)`
+   - Secondary: `screen.getByText(...)`, `screen.getByPlaceholderText(...)`
+   - Avoid: `container.querySelector(...)` or CSS class selectors.
+2. **Test User Behavior, Not Implementation Details**:
+   - Simulate user clicks with `fireEvent.click()` or `@testing-library/user-event`.
+   - Test visible output and accessible state (`aria-expanded="true"`).
+3. **Isolate External Dependencies & Config**:
+   - Verify that components correctly consume [src/config/site.config.json](src/config/site.config.json).
+4. **Always Clean Up & Isolate State**:
+   - Ensure each test can run independently without state leakage.
+
+---
+
+## 7. AI Agent Test Maintenance Protocol
+
+> **CRITICAL PROTOCOL FOR AI AGENTS**:
+> Whenever code is added or modified in the repository:
+> 1. Run the test suite: `npm test` or `npx vitest run --pool=threads --maxWorkers=1`.
+> 2. If new components or features were added, create corresponding unit tests under `tests/unit/`.
+> 3. Update this document ([Test.md](Test.md)) with:
+>    - Newly added test files.
+>    - Newly covered scenarios.
+>    - Updated test results or status.
+> 4. Ensure [memory.md](memory.md) is also updated in tandem.
