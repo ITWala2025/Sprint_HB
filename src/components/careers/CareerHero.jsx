@@ -3,11 +3,10 @@ import Link from "next/link";
 /**
  * Careers Hero — Single-column layout with navy gradient background.
  * No external image assets. Subtle CSS-only decorative radial glow.
- * Uses covers-watermark to hide global watermark on this dark section.
  */
 export default function CareerHero() {
   return (
-    <section className="relative min-h-[70vh] flex items-center overflow-hidden bg-brand-navy covers-watermark">
+    <section className="relative min-h-[70vh] flex items-center overflow-hidden bg-brand-navy">
       {/* Subtle CSS-only decorative background: soft radial glows */}
       <div
         className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_20%_10%,rgba(248,21,41,0.12),transparent_60%),radial-gradient(ellipse_50%_45%_at_80%_90%,rgba(11,99,182,0.1),transparent_50%)]"

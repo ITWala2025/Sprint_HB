@@ -13,7 +13,7 @@ export default function LegalLayout({
 }) {
   return (
     <div className="bg-brand-off-white">
-      <header className="bg-brand-navy-dark text-white covers-watermark">
+      <header className="bg-brand-navy-dark text-white">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-red-200">
             {eyebrow}
