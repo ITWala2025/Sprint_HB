@@ -27,12 +27,13 @@
 | Layer | Technologies | Notes & Versions |
 |---|---|---|
 | **Framework** | Next.js (App Router), React 19, React-DOM 19 | Next.js ^16.3.5, React ^19.1.0 (modern Server & Client components) |
+| **Language & Type Safety** | TypeScript, JavaScript | TypeScript 7.0.2; `tsconfig.json` uses bundler module resolution and `react-jsx` |
 | **Styling** | Tailwind CSS v4, PostCSS, Custom CSS | Tailwind v4 with `@theme` directive; PostCSS `@tailwindcss/postcss` |
 | **Design Tokens** | Brand theme in [src/css/global.css](src/css/global.css) | Custom palette (`brand-navy`, `brand-red`, surfaces, typography) |
 | **Icons** | Lucide React, React Icons | `lucide-react` (^0.525.0), `react-icons` (^5.7.0) |
 | **Typography** | Space Grotesk (Headings), Inter (Body) | Configured via `next/font/google` in root layout |
 | **Database & Auth** | Supabase (PostgreSQL 15+) | Complete schema, enums, triggers, and RLS policies in [src/Supabase/.sql](src/Supabase/.sql) |
-| **Testing** | Vitest, React Testing Library, jsdom | Vitest ^5.0.1, `@testing-library/react` ^16.3.3, `@testing-library/jest-dom` ^7.0.1 |
+| **Testing** | Vitest, React Testing Library, jsdom, happy-dom | Vitest ^5.0.1, `@testing-library/react` ^16.3.3, `@testing-library/jest-dom` ^7.0.1, `@testing-library/user-event` ^14.6.7 |
 | **Runtime & Node** | Node.js >= 20 (Node v24 tested), npm >= 10 | Target OS: macOS / Linux / Windows |
 
 ---
@@ -48,6 +49,7 @@
 ├── postcss.config.mjs             # PostCSS plugins for Tailwind v4
 ├── README.md                      # Project onboarding and developer documentation
 ├── vitest.config.js               # Vitest runner configuration with jsdom & path aliases
+├── vitest.config.mjs              # TSX header-test runner configuration with happy-dom
 ├── vitest.setup.js                # Global test setup (jest-dom matchers)
 ├── config/
 │   └── environments/              # Environment-specific configuration (development, staging, production)
@@ -59,7 +61,7 @@
 │   │   ├── Contact_Us.md          # Multi-audience contact & enquiry specification
 │   │   ├── FOOTER_DOCUMENTATION.md# Footer requirements and column specifications
 │   │   ├── HEADER_DOCUMENTATION.md# Sticky navigation, mobile drawer, actions spec
-│   │   ├── Home_Page_Requirements.md # Home page sections and content requirements
+│   │   ├── Home_Page_Requirements.md # Home page requirements
 │   │   └── sprint_websit_markdown.md # Global requirement tracker (P0–P4 priority matrix)
 │   └── releases/                  # Release notes and changelogs
 ├── public/                        # Static assets, robots.txt, videos, favicons, fonts, images
@@ -110,10 +112,13 @@
 │   │   └── .sql                   # Complete PostgreSQL schema, RLS, functions, triggers
 │   └── utils/                     # Shared utility functions
 └── tests/
+    ├── setup.tsx                  # TSX test setup and Next.js component mocks
     ├── e2e/                       # End-to-end test scenarios
     ├── fixtures/                  # Test mock data and fixtures
     ├── integration/               # Integration tests
-    └── unit/                      # Component unit tests (ContactMethods, Forms, Sections)
+    └── unit/                      # Component unit tests
+        ├── contact/               # Contact and enquiry component tests
+        └── header_unit_test/      # Header, navigation, logo, and action tests
 ```
 
 ---

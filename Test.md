@@ -9,19 +9,23 @@ This document is the official reference for testing architecture, test suites, e
 | Component | Library / Tool | Version | Purpose |
 |---|---|---|---|
 | **Test Runner** | Vitest | ^5.0.1 | Fast, Vite-native test runner with ESM and worker thread support |
-| **DOM Environment** | jsdom | ^29.1.1 | Browser DOM simulation in Node.js runtime |
-| **Component Testing** | React Testing Library | ^16.3.3 | Testing user-centric React component behaviors |
+| **DOM Environment** | jsdom, happy-dom | ^29.1.1, ^20.14.5 | Browser DOM simulation for JSX and TSX component suites |
+| **Component Testing** | React Testing Library, `@testing-library/user-event` | ^16.3.3, ^14.6.7 | Testing user-centric React component behaviors and interactions |
 | **Custom Matchers** | `@testing-library/jest-dom` | ^7.0.1 | Semantic DOM assertions (`toBeInTheDocument`, `toHaveAttribute`, etc.) |
 | **BDD Specifications** | Gherkin | — | Acceptance criteria in [backlog_features.feature](backlog_features.feature) |
 
 ### Configuration Files
-- **Runner Configuration**: [vitest.config.js](vitest.config.js)
-  - Configures `jsdom` environment.
+- **JSX Runner Configuration**: [vitest.config.js](vitest.config.js)
+  - Configures the `jsdom` environment for the existing JSX component suites.
   - Registers global test functions (`describe`, `it`, `expect`, `beforeEach`, `afterEach`).
   - Sets up `@/` alias resolution to `./src`.
-  - Sets up `setupFiles: ["./vitest.setup.js"]`.
-- **Global Setup**: [vitest.setup.js](vitest.setup.js)
-  - Imports `@testing-library/jest-dom/vitest` matchers.
+  - Uses `setupFiles: ["./vitest.setup.js"]`.
+- **TSX Runner Configuration**: [vitest.config.mjs](vitest.config.mjs)
+  - Configures the `happy-dom` environment for the header TSX suites.
+  - Enables the React Vite plugin and global test functions.
+  - Uses `setupFiles: ["./tests/setup.tsx"]` and includes `tests/**/*.test.tsx`.
+- **Global Setups**: [vitest.setup.js](vitest.setup.js) and [tests/setup.tsx](tests/setup.tsx)
+  - Import `@testing-library/jest-dom` matchers and mock Next.js `Image` and `Link` components.
 
 ---
 
@@ -43,6 +47,16 @@ npm install
 | **Single Test File** | `npx vitest run tests/unit/contact/StudentForm.test.jsx` | Runs only the specified test file |
 | **Pattern Matching** | `npx vitest run tests/unit/contact/` | Runs all tests inside a matching folder |
 | **Coverage Report** | `npx vitest run --coverage` | Generates detailed coverage statistics |
+
+### Current Validation Results — 2026-09-21
+
+| Check | Command | Result |
+|---|---|---|
+| Unit and component tests | `npm test` | **Passed** — 14 test files, 72 tests |
+| Production build | `npm run build` | **Passed** — Next.js production build and static generation completed |
+| Lint | `npm run lint` | **Not available** — `next lint` is unsupported by the installed Next.js 16.3.5 project; ESLint is not installed |
+
+The merged dependency set includes both `jsdom` and `happy-dom`; install dependencies with `npm install` before running tests in a fresh clone.
 
 ---
 
@@ -80,15 +94,11 @@ Acceptance criteria are specified in [backlog_features.feature](backlog_features
 
 ---
 
-## 5. Planned Test Suites & Roadmap
+## 5. Additional Planned Test Suites & Roadmap
 
 To maintain comprehensive test coverage across the entire platform, the following test suites are planned:
 
-1. **Header & Navigation Tests** (`tests/unit/header/`):
-   - Desktop navigation item rendering based on [src/config/navigation.json](src/config/navigation.json).
-   - Mobile navigation drawer toggle, focus trapping, and keyboard escape.
-   - Campus news ticker rendering and link navigation.
-2. **Home Page Tests** (`tests/unit/home/`):
+1. **Home Page Tests** (`tests/unit/home/`):
    - Hero headline and CTA button destinations.
    - Partner carousel rendering.
    - Instructor and testimonial card rendering.
