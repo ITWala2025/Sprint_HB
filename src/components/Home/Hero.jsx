@@ -40,12 +40,12 @@ export default function Hero() {
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-between px-6 py-12 md:py-16 lg:py-20">
         <div className="max-w-3xl text-left">
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red-light">
+          {/* <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red-light">
             SPRINT Institutional Training Hub
-          </p>
+          </p> */}
           {/* Primary H1 (Section 14: exactly one per page) */}
           <h1 className="mt-5 font-display text-4xl font-black leading-tight tracking-tight text-brand-white sm:text-5xl md:text-6xl">
-            Skill Up. Get Ahead
+            Skill Up.. Get Ahead
           </h1>
 
           {/* Supporting description */}

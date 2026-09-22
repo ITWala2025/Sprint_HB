@@ -23,9 +23,9 @@ export default function HeaderLogo() {
         >
           SPRINT
         </span>
-        <span className="text-[9px] uppercase font-medium text-brand-text-muted" style={{ letterSpacing: "0.18em" }}>
+        {/* <span className="text-[9px] uppercase font-medium text-brand-text-muted" style={{ letterSpacing: "0.18em" }}>
           Institutional Hub
-        </span>
+        </span> */}
         <div className="mt-0.5 h-0.5 w-8 rounded-full bg-brand-red" />
       </div>
     </Link>

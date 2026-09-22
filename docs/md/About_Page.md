@@ -265,6 +265,20 @@ system specification.
 - Heading order: H2 (section), card headings as H3 (readable as list).
 - Body text on glass surfaces MUST meet WCAG AA (4.5:1); accents are decorative only.
 - No interaction may depend on hover alone; all states testable via keyboard focus.
+#### 3.4.8 Vision ⇄ Mission Swap Controls
+
+The two cards live on a single shared surface (`sprint-story-scroll`) that automatically crossfades between VISION and MISSION every 4 seconds.
+
+| Id | Functionality | Behavior Specification | Mapped Req |
+|---|---|---|---|
+| VM-SW-01 | Auto-rotate | Cards auto-advance every 4s; the timer restarts after any manual switch; pauses on hover, touch, keyboard focus and when the surface is mostly off-screen. Switching translates the horizontal track (`translateX` by index × 100%), so cards genuinely move left/right. | AB-19, AB-20 |
+| VM-SW-02 | Clean surface | No hint text or counter is rendered above the cards; interaction state is communicated only by the dot pagination at the bottom of the card. | GL-10 |
+| VM-SW-03 | Dot pagination | Two pagination dots at the bottom of the card indicate the active pane; each dot is a `<button>` with an accessible label ("Show Vision" / "Show Mission") and `aria-current` on the active dot; clicking a dot jumps to that card. | GL-09 |
+| VM-SW-04 | Swipe | On touch devices a horizontal swipe (horizontal travel > 48px and clearly dominant over vertical travel) switches to the adjacent card (swipe left = next, right = previous). | GL-09 |
+| VM-SW-05 | Keyboard | `ArrowLeft` / `ArrowRight` on the focused surface moves between cards (no arrow buttons are rendered). | GL-09 |
+| VM-SW-06 | Reduced motion | Auto-rotate is disabled under `prefers-reduced-motion`; dots, keyboard and swipe still switch manually; crossfade transitions are removed. | GL-40 |
+| VM-SW-07 | No-JS fallback | Both cards always remain in the DOM; the inactive card is hidden with `aria-hidden` + `.sprint-swap-pane.is-hidden` so content stays crawlable without JS. | - |
+
 ### 3.5 Leadership / Founders (Section 5)
 
 | Id | Functionality | Behavior Specification | Mapped Req |
@@ -318,7 +332,7 @@ system specification.
 | CTA-03 | Email | Email button uses `mailto:`, prefilled subject from approved copy. | GL-16 |
 | CTA-04 | WhatsApp | WhatsApp deep link `https://wa.me/<number>?text=<intent>`; opens app/browser chat with pre-filled message. | GL-17 |
 | CTA-05 | Primary fallback | "Request a Callback" / "Enroll" primary button -> `/register` when available, else `/contact`. | GL-06 |
-| CTA-06 | Tracking | All CTA events tracked (`cta_call`, `cta_email`, `cta_whatsapp`, `cta_register`) with section id `about`. | GL-19 |
+| CTA-06 | Tracking | All CTA events tracked (`cta_call`, `cta_email`, `cta_whatsapp`, `cta_contact`) with section id `about`. | GL-19 |
 | CTA-07 | Accessibility | All links real anchors (no JS-only); visible focus; hit area >= 44px. | GL-09 |
 | CTA-08 | No-JS fallback | All actions work without JS. | - |
 
@@ -459,7 +473,7 @@ Shared across all sections unless overridden above.
 | `vm_card_view` | Vision/Mission in view | `card=vision|mission` |
 | `profile_card_click` | Profile card click/expand | `profile=<id>` |
 | `skill_card_click` | Skill card click (if linked) | `skill=<ai|cloud|devops>` |
-| `cta_call` / `cta_email` / `cta_whatsapp` / `cta_register` | CTA actions | `page=/about`, `section=cta` |
+| `cta_call` / `cta_email` / `cta_whatsapp` / `cta_contact` | CTA actions | `page=/about`, `section=cta` |
 | `footer_link_click` | Footer link click | `link=<href>` |
 
 Consent: events comply with privacy policy; no PII collected on this page.

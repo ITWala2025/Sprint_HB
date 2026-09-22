@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Bell, Clock3, Lightbulb, Wrench } from "lucide-react";
+import { Bell, Clock3, Lightbulb, Megaphone, Wrench } from "lucide-react";
 
 /**
  * A single announcement in the ticker.
@@ -95,8 +95,8 @@ export default function CampusNewsTicker() {
     >
 			<div className="mx-auto flex min-h-12 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
 				<div className="hidden shrink-0 items-center gap-2 border-r border-white/10 pr-5 sm:flex">
-					<span className="grid size-8 place-items-center rounded-full bg-brand-red text-white">
-						<AlertTriangle className="size-4" aria-hidden="true" />
+					<span className="grid size-8 place-items-center rounded-full bg-brand-blue/15 text-brand-blue-light ring-1 ring-brand-blue/30">
+						<Megaphone className="size-4" aria-hidden="true" />
 					</span>
 					<div>
 						<p className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.16em] text-red-200">
