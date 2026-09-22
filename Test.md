@@ -72,6 +72,12 @@ The merged dependency set includes both `jsdom` and `happy-dom`; install depende
 - Browser console note: existing 400 responses remain for missing instructor image paths under `/instructors/`; no new spacing-related runtime errors were introduced.
 - `npm test`: blocked because the local `vitest` executable and Testing Library packages are not installed in `node_modules`.
 
+### Package JSON and dev build validation — 2026-09-22
+
+- `node -e "JSON.parse(...)"`: **Passed** — `package.json` parses successfully and reports `npm@10`.
+- `npm run build`: **Passed** — Next.js/Tailwind CSS compiled successfully and all 36 static pages were generated.
+- `npm run dev`: **Passed after clean restart** — the stale Next.js process was stopped and `.next` development output was regenerated; homepage returned HTTP 200.
+
 ---
 
 ## 3. Current Test Inventory
