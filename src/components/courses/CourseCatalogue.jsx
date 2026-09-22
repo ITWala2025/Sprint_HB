@@ -71,8 +71,38 @@ export default function CourseCatalogue({ items }) {
         <p className="courses-eyebrow">SPRINT learning catalogue</p>
         <h1>Tailored engineering and digital pathways for every career stage.</h1>
         <p>Explore 20+ practical courses, specialization packages, and guided pathways designed to turn learning into confident action.</p>
-        <div className="course-search"><Search size={20} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search courses, skills, or tools" aria-label="Search courses" />{query ? <div className="course-search__suggestions">{suggestions.length ? suggestions.map((item) => <Link key={item.slug} href={itemHref(item)}>{item.title}<ArrowRight size={15} /></Link>) : <p>No matching courses yet.</p>}</div> : null}</div>
-      </div>
+        {/*<div className="course-search">
+          <Search 
+            size={20} 
+            aria-hidden="true" 
+          />
+          
+          <input 
+            value={query} 
+            onChange={(event) => setQuery(event.target.value)} 
+            placeholder="Search courses, skills, or tools" 
+            aria-label="Search courses" 
+          />
+            
+            {query ? (
+              <div className="course-search__suggestions">
+                {suggestions.length ? (
+                  suggestions.map((item) => (
+                    <Link 
+                      key={item.slug} 
+                      href={itemHref(item)}
+                    >
+                      {item.title}
+                      <ArrowRight size={15} />
+                    </Link>
+                  ))
+                )  : (
+                  <p>No matching courses yet.</p>
+                )}
+              </div> 
+            )  : null}
+        </div> */}
+      </div> 
     </section>
 
     <section className="course-audience" aria-label="Choose your audience">
