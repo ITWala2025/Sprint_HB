@@ -76,9 +76,9 @@ export default function Footer() {
               >
                 SPRINT
               </span>
-              <span className="text-[10px] uppercase tracking-[0.18em] text-brand-off-white/50 font-medium">
+              {/*<span className="text-[10px] uppercase tracking-[0.18em] text-brand-off-white/50 font-medium">
                 Institutional Hub
-              </span>
+              </span> */}
               <div className="mt-1 h-0.5 w-10 rounded-full bg-brand-red" />
             </div>
           </div>
