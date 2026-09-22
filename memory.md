@@ -118,8 +118,10 @@
     ├── fixtures/                  # Test mock data and fixtures
     ├── integration/               # Integration tests
     ├── unit/                      # Component unit tests
-    │   ├── contact/               # Contact and enquiry component tests
-    │   └── header_unit_test/      # Header, navigation, logo, and action tests
+    │   │   ├── contact/               # Contact and enquiry component tests
+    │   │   ├── header_unit_test/      # Header, navigation, logo, and action tests
+    │   │   ├── layout/                # Campus news ticker tests
+    │   │   └── legal/                 # Legal page layout tests
     └── vitest.d.ts                # Vitest global & jest-dom matcher type declarations
 ```
 
@@ -167,7 +169,8 @@
    - Interactive job application form with file upload / resume URL.
 
 6. **Legal Pages (`/terms`, `/privacy`)** — [src/app/terms/page.jsx](src/app/terms/page.jsx), [src/app/privacy/page.jsx](src/app/privacy/page.jsx):
-   - Structured layout with sidebar navigation, sticky table of contents, and responsive readability.
+   - Shared compact single-column legal document layout with no sidebar or table-of-contents navigation.
+   - Reduced hero, article padding, section spacing, and typography for a shorter, denser reading experience.
 
 ---
 
@@ -236,6 +239,10 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 
 ## 7. Critical Project Rules & Conventions
 
+### Package Metadata
+
+- `package.json` declares `packageManager: "npm@10"` to keep dependency installation and Next/Tailwind package discovery consistent across development environments.
+
 1. **Centralized Contact Information**:
    - **Never** hardcode telephone numbers, email addresses, or social media URLs inside individual components.
    - Always import from [src/config/site.config.json](src/config/site.config.json).
@@ -284,3 +291,16 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - The two cards now live on a **horizontal sliding track** (`sprint-swap-viewport` + `sprint-swap-track`): switching translates the track by `index × 100%` (`translateX`), so the cards genuinely scroll left/right like a carousel. Pane crossfade classes (`.sprint-swap-pane` opacity/translateY `.is-hidden`) were replaced; reduced motion disables the slide via `.sprint-swap-track { transition: none }`.
 - Dots at the bottom, touch swipe, keyboard arrows and the 4s auto-rotate all remain unchanged.
 - Updated spec rows `VM-SW-01`/`VM-SW-02` in [docs/md/About_Page.md](docs/md/About_Page.md) and added a "no hint/counter" assertion to [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx).
+
+## 12. Legal Page Layout Update — 2026-09-22
+
+- Removed the shared sidebar/table-of-contents column from `/privacy` and `/terms` by updating `src/components/legal/LegalLayout.jsx`.
+- Changed legal pages to a single-column `max-w-4xl` document flow and reduced hero/article vertical rhythm.
+- Reduced legal headings, body copy, notice text, padding, and section gaps while retaining responsive spacing and accessible section anchors.
+- Added `tests/unit/legal/LegalLayout.test.jsx` to verify the sidebar is absent and the compact single-column structure is rendered.
+
+## 13. Campus Ticker Icon Update — 2026-09-22
+
+- Replaced the red `AlertTriangle` badge on the campus updates ticker with a blue `Megaphone` icon.
+- Applied the brand-blue translucent badge and light-blue icon treatment while leaving ticker content and behavior unchanged.
+- Added `tests/unit/layout/CampusNewsTicker.test.tsx` to prevent the alert icon from returning.
