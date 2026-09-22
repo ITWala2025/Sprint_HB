@@ -19,7 +19,7 @@ export default function HeaderLogo() {
       <div className="flex flex-col gap-0.5">
         <span
           className="text-xl font-black uppercase text-brand-navy"
-          style={{ fontFamily: "'Trebuchet MS', 'Segoe UI', sans-serif", letterSpacing: "0.32em" }}
+          style={{ fontFamily: "'Roboto Slab', serif", letterSpacing: "0.15em",color: "red" }}
         >
           SPRINT
         </span>
