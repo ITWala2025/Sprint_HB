@@ -17,7 +17,7 @@ export default function PartnerCarousel() {
   const track = [...partners, ...partners];
 
   return (
-    <section className="sprint-section overflow-hidden border-y border-brand-border bg-brand-white py-12 md:py-16 lg:py-20">
+    <section className="sprint-section overflow-hidden border-y border-brand-border bg-brand-white py-6 md:py-8 lg:py-10">
       <div className="mx-auto max-w-[1200px] px-6">
         <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Trusted by universities and industry partners
@@ -26,23 +26,23 @@ export default function PartnerCarousel() {
 
       {/* marquee-track wrapper enables the desktop hover-to-pause rule
           defined in globals.css without affecting touch devices. */}
-      <div className="marquee-track mt-6 w-full overflow-hidden">
+      <div className="marquee-track mt-8 w-full overflow-hidden">
         <div className="flex w-max animate-marquee gap-16">
           {track.map((partner, i) => (
             <div
               key={`${partner.id}-${i}`}
-              className="flex shrink-0 items-center gap-3 opacity-80"
+              className="flex shrink-0 items-center opacity-80"
             >
               <Image
                 src={partner.logoUrl}
                 alt={partner.name}
-                width={40}
-                height={40}
-                className="size-10 object-contain"
+                width={128}
+                height={128}
+                className="size-32 object-contain"
               />
-              <span className="whitespace-nowrap text-sm font-medium text-brand-text-secondary">
+              {/* <span className="whitespace-nowrap text-sm font-medium text-brand-text-secondary">
                 {partner.name}
-              </span>
+              </span> */}
             </div>
           ))}
         </div>
