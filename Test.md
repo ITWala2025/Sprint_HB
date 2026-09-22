@@ -92,6 +92,12 @@ The merged dependency set includes both `jsdom` and `happy-dom`; install depende
 - `npm test` result: **Passed** — 30 test files, 152 tests (includes [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) with 2 tests and [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) with 6 tests; zero regressions).
 - Production build check: `npm run build` — **Passed** after the changes.
 
+### Package JSON and dev build validation — 2026-09-22
+
+- `node -e "JSON.parse(...)"`: **Passed** — `package.json` parses successfully and reports `npm@10`.
+- `npm run build`: **Passed** — Next.js/Tailwind CSS compiled successfully and all 36 static pages were generated.
+- `npm run dev`: **Passed after clean restart** — the stale Next.js process was stopped and `.next` development output was regenerated; homepage returned HTTP 200.
+
 ---
 
 ## 3. Current Test Inventory
