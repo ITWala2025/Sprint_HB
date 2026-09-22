@@ -20,7 +20,7 @@ const inter = Inter({
 export const metadata = {
   metadataBase: new URL("https://sprint.institute"),
   title: {
-    default: "SPRINT | Institutional Training Hub",
+    default: "SPRINT",
     template: "%s | SPRINT",
   },
   description:
