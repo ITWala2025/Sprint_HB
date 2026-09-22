@@ -364,8 +364,7 @@ a {
   .sprint-card-interactive,
   .sprint-icon-tile,
   .sprint-pillar,
-  .sprint-reveal,
-  .sprint-swap-pane {
+  .sprint-reveal {
     transition: none;
   }
 
@@ -400,74 +399,27 @@ a {
   box-shadow: var(--shadow-brand-card);
 }
 
-/* Control row: hint + counter + arrows */
-.sprint-story-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+/* Vision/Mission horizontal slide track — cards move left/right like a
+   carousel scroll when switching; the off-screen pane stays in the DOM
+   but outside the viewport (§3.4). */
+.sprint-swap-viewport {
+  overflow: hidden;
 }
 
-.sprint-story-hint {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--color-brand-text-muted);
-}
-
-.sprint-story-counter {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  font-variant-numeric: tabular-nums;
-}
-
-/* Left / right scroll arrows */
-.sprint-story-arrow {
-  display: inline-grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  border: 1px solid var(--color-brand-border);
-  background: #ffffff;
-  color: var(--color-brand-navy);
-  transition: background-color 150ms ease, color 150ms ease,
-    border-color 150ms ease, opacity 150ms ease;
-}
-
-.sprint-story-arrow:hover:not(:disabled),
-.sprint-story-arrow:focus-visible {
-  background: var(--color-brand-navy);
-  border-color: transparent;
-  color: #ffffff;
-}
-
-.sprint-story-arrow:disabled {
-  cursor: not-allowed;
-  opacity: 0.35;
-}
-
-/* Vision/Mission auto-swap pane — crossfade between cards (§3.4) */
 .sprint-swap-pane {
-  transition: opacity 300ms ease, transform 300ms ease;
+  display: flex;
 }
 
-.sprint-swap-pane.is-hidden {
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(12px);
-  visibility: hidden;
+.sprint-swap-track {
+  display: flex;
+  align-items: stretch;
+  transition: transform 300ms ease-out;
+  will-change: transform;
 }
 
-/* Reduced motion: swap instantly, no crossfade */
+/* Reduced motion: track jumps instantly, no slide */
 @media (prefers-reduced-motion: reduce) {
-  .sprint-swap-pane {
-    transition: none;
-  }
-
-  .sprint-story-arrow {
+  .sprint-swap-track {
     transition: none;
   }
 

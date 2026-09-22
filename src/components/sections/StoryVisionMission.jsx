@@ -1,6 +1,5 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import VisionMissionCard from "@/components/cards/VisionMissionCard";
@@ -16,9 +15,11 @@ import VisionMissionCard from "@/components/cards/VisionMissionCard";
  * visibility hidden) and `aria-hidden`.
  *
  * Interaction pauses the timer: pointer hover/touch, keyboard
- * focus, or the surface being mostly off-screen.
+ * focus, or the surface being mostly off-screen. Users can also
+ * switch cards with the dot pagination at the bottom or by
+ * swiping horizontally on touch devices.
  *
- * Reduced motion: the auto-swap never starts — the arrows still
+ * Reduced motion: the auto-swap never starts — the dots still
  * switch manually, and the crossfade transition is disabled.
  *
  * Props:
@@ -28,10 +29,13 @@ import VisionMissionCard from "@/components/cards/VisionMissionCard";
 
 const TOTAL_PANES = 2; // vision + mission
 const AUTO_SWAP_MS = 4000; // pause between card swaps
+const SWIPE_THRESHOLD = 48; // minimum horizontal px travel for a swipe
 
 export default function StoryVisionMission({ story, visionMission }) {
   const surfaceRef = useRef(null);
   const [index, setIndex] = useState(0);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
   /* Auto-swap pause sources: pointer (hover/touch), keyboard focus
      and whether the surface is currently on-screen. */
@@ -54,6 +58,30 @@ export default function StoryVisionMission({ story, visionMission }) {
 
   const goPrev = () => swap(index - 1);
   const goNext = () => swap(index + 1);
+
+  /* Horizontal swipe to switch cards (touch) */
+  const handleTouchStart = (event) => {
+    pointerRef.current = true;
+    recalcPaused();
+    const touch = event.touches[0];
+    if (touch) {
+      touchStartX.current = touch.clientX;
+      touchStartY.current = touch.clientY;
+    }
+  };
+
+  const handleTouchEnd = (event) => {
+    pointerRef.current = false;
+    recalcPaused();
+    const touch = event.changedTouches[0];
+    if (!touch) return;
+    const deltaX = touch.clientX - touchStartX.current;
+    const deltaY = touch.clientY - touchStartY.current;
+    if (Math.abs(deltaX) > SWIPE_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) goNext();
+      else goPrev();
+    }
+  };
 
   /* Looping auto-swap: VISION -> MISSION -> VISION, one step per tick.
      Re-running on [index] also restarts the timer after a manual swap. */
@@ -96,8 +124,6 @@ export default function StoryVisionMission({ story, visionMission }) {
       goNext();
     }
   };
-
-  const pad = (value) => String(value).padStart(2, "0");
 
   return (
     <div className="mt-12 grid items-stretch gap-10 lg:grid-cols-2">
@@ -149,14 +175,8 @@ export default function StoryVisionMission({ story, visionMission }) {
           pointerRef.current = false;
           recalcPaused();
         }}
-        onTouchStart={() => {
-          pointerRef.current = true;
-          recalcPaused();
-        }}
-        onTouchEnd={() => {
-          pointerRef.current = false;
-          recalcPaused();
-        }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         onFocusCapture={() => {
           focusRef.current = true;
           recalcPaused();
@@ -169,57 +189,57 @@ export default function StoryVisionMission({ story, visionMission }) {
         }}
         className="sprint-story-scroll flex flex-col"
       >
-        {/* Control row: hint + live counter + prev/next arrows */}
-        <div className="sprint-story-head">
-          <div className="flex items-center gap-3">
-            <p className="sprint-story-hint">Auto-advances — pause on hover</p>
-            <p className="sprint-story-counter" aria-live="polite">
-              <span className="text-brand-navy font-bold tabular-nums">
-                {pad(index + 1)}
-              </span>
-              <span className="text-brand-text-muted">
-                {" "}/ {pad(TOTAL_PANES)}
-              </span>
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={goPrev}
-              aria-label={`Previous: show ${index === 0 ? "Mission" : "Vision"}`}
-              aria-controls="vision-mission-swap"
-              className="sprint-focus sprint-story-arrow"
+        {/* Vision/Mission panes on a horizontal track: switching slides the
+            track left/right so the cards move like a carousel scroll. Both
+            panes stay in the DOM for SEO; the off-screen one is aria-hidden. */}
+        <div className="sprint-swap-viewport">
+          <div
+            className="sprint-swap-track"
+            style={{ transform: `translateX(-${index * 100}%)` }}
+          >
+            <div
+              className="sprint-swap-pane w-full shrink-0"
+              aria-hidden={index === 0 ? undefined : "true"}
             >
-              <ChevronLeft className="size-5" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={goNext}
-              aria-label={`Next: show ${index === 0 ? "Mission" : "Vision"}`}
-              aria-controls="vision-mission-swap"
-              className="sprint-focus sprint-story-arrow"
+              <VisionMissionCard variant="vision" data={visionMission.vision} />
+            </div>
+            <div
+              className="sprint-swap-pane w-full shrink-0"
+              aria-hidden={index === 1 ? undefined : "true"}
             >
-              <ChevronRight className="size-5" aria-hidden="true" />
-            </button>
+              <VisionMissionCard variant="mission" data={visionMission.mission} />
+            </div>
           </div>
         </div>
 
-        {/* Both cards share ONE grid cell so the surface height stays stable
-            while VISION and MISSION crossfade (the inactive one is hidden). */}
-        <div className="mt-4 grid grid-cols-1 grid-rows-1">
-          <div
-            className={`sprint-swap-pane col-start-1 row-start-1 ${index === 0 ? "" : "is-hidden"}`}
-            aria-hidden={index === 0 ? undefined : "true"}
-          >
-            <VisionMissionCard variant="vision" data={visionMission.vision} />
-          </div>
-          <div
-            className={`sprint-swap-pane col-start-1 row-start-1 ${index === 1 ? "" : "is-hidden"}`}
-            aria-hidden={index === 1 ? undefined : "true"}
-          >
-            <VisionMissionCard variant="mission" data={visionMission.mission} />
-          </div>
+        {/* Dot pagination at the bottom of the card */}
+        <div
+          className="mt-4 flex items-center justify-center gap-2"
+          role="group"
+          aria-label="Vision and Mission slides"
+        >
+          {[0, 1].map((dotIndex) => (
+            <button
+              key={dotIndex}
+              type="button"
+              aria-label={dotIndex === 0 ? "Show Vision" : "Show Mission"}
+              aria-current={index === dotIndex ? "true" : undefined}
+              aria-controls="vision-mission-swap"
+              onClick={() => swap(dotIndex)}
+              className={`sprint-focus grid cursor-pointer place-items-center rounded-full p-2 transition-colors ${
+                index === dotIndex
+                  ? "text-brand-red"
+                  : "text-brand-border hover:text-brand-text-muted"
+              }`}
+            >
+              <span
+                aria-hidden="true"
+                className={`block h-2.5 rounded-full bg-current transition-all duration-200 ${
+                  index === dotIndex ? "w-6" : "w-2.5"
+                }`}
+              />
+            </button>
+          ))}
         </div>
       </div>
     </div>
