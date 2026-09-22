@@ -72,6 +72,12 @@ The merged dependency set includes both `jsdom` and `happy-dom`; install depende
 - Browser console note: existing 400 responses remain for missing instructor image paths under `/instructors/`; no new spacing-related runtime errors were introduced.
 - `npm test`: blocked because the local `vitest` executable and Testing Library packages are not installed in `node_modules`.
 
+### About page CTA, spacing & swap-controls validation — 2026-09-22
+
+- Reran the full Vitest suite after the About page changes ("Request a Callback" CTA redirected to `/contact`, reduced section padding, mobile-responsive `w-full sm:w-auto` buttons) and the Vision ⇄ Mission swap controls (arrows removed, dot pagination + touch swipe, then the top hint/counter removed and the cards converted to a left/right sliding track).
+- `npm test` result: **Passed** — 30 test files, 152 tests (includes [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) with 2 tests and [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) with 6 tests; zero regressions).
+- Production build check: `npm run build` — **Passed** after the changes.
+
 ---
 
 ## 3. Current Test Inventory
@@ -91,6 +97,15 @@ The contact section implements the specifications from [docs/md/Contact_Us.md](d
 | **CompanyForm**             | [tests/unit/contact/CompanyForm.test.jsx](tests/unit/contact/CompanyForm.test.jsx)                         | Corporate enquiry fields (Company Name, Domain, Role, Purpose Type, Preferred Contact Time), form submission handling.                                                     |
 | **LocationSection**         | [tests/unit/contact/LocationSection.test.jsx](tests/unit/contact/LocationSection.test.jsx)                 | SPRINT Hazaribagh center physical location card, landmark notes, embedded Google Maps iframe, and external directions link.                                                |
 | **FAQSection**              | [tests/unit/contact/FAQSection.test.jsx](tests/unit/contact/FAQSection.test.jsx)                           | Interactive accordion behavior, expanding/collapsing answers, keyboard accessibility, and `aria-expanded` attributes.                                                      |
+
+### 3.2 About Page Unit Tests (`tests/unit/about/`)
+
+The About page implements the specifications from [docs/md/About_Page.md](docs/md/About_Page.md) (10-section approved layout).
+
+| Test Suite         | File Path                                                                  | Focus & Assertions                                                                                                                                                                                                    |
+| ------------------ | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AboutPage**      | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) | Renders the "Connect With SPRINT" CTA section and asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback). Mocks `next/link` and polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
+| **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection. |
 
 ---
 

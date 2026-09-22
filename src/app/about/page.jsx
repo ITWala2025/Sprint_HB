@@ -79,7 +79,7 @@ export default function AboutPage() {
         id="who-is-sprint"
         className="sprint-hero-bg sprint-anchor relative overflow-hidden"
       >
-        <div className="sprint-hero-grid mx-auto max-w-[1200px] px-6 py-20 md:py-28">
+        <div className="sprint-hero-grid mx-auto max-w-[1200px] px-6 py-16 md:py-24">
           <div className="relative z-10">
             <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
               {about.hero.kicker}
@@ -94,7 +94,7 @@ export default function AboutPage() {
               <Link
                 href={about.hero.primaryCta.href}
                 data-track="hero_cta_click"
-                className="sprint-focus group inline-flex min-h-[48px] items-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
+                className="sprint-focus group inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark sm:w-auto"
               >
                 {about.hero.primaryCta.label}
                 <ArrowRight
@@ -104,7 +104,7 @@ export default function AboutPage() {
               </Link>
               <a
                 href={about.hero.secondaryCta.href}
-                className="sprint-focus inline-flex min-h-[48px] items-center rounded-full border border-brand-border bg-white px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:border-brand-navy"
+                className="sprint-focus inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-brand-border bg-white px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:border-brand-navy sm:w-auto"
               >
                 {about.hero.secondaryCta.label}
               </a>
@@ -155,7 +155,7 @@ export default function AboutPage() {
         aria-labelledby="our-story-heading"
         className="sprint-section sprint-anchor bg-brand-off-white"
       >
-        <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
+        <div className="mx-auto max-w-[1200px] px-6 py-12 md:py-16 lg:py-20">
           <SectionHeader
             heading={`${about.story.heading}, ${about.visionMission.heading}`}
             subtitle="Why SPRINT was established, and what drives everything we build"
@@ -167,7 +167,7 @@ export default function AboutPage() {
 
       {/* ============ 5. LEADERSHIP / FOUNDERS (§3.5) ============ */}
       <section id="leadership" className="sprint-section sprint-anchor bg-brand-off-white">
-        <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
+        <div className="mx-auto max-w-[1200px] px-6 py-12 md:py-16 lg:py-20">
           <SectionHeader
             heading={about.leadership.heading}
             subtitle={about.leadership.subtitle}
@@ -182,7 +182,7 @@ export default function AboutPage() {
 
       {/* ============ 6. FACULTY / EXPERTS (§3.6) ============ */}
       <section id="faculty" className="sprint-section sprint-anchor bg-white">
-        <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
+        <div className="mx-auto max-w-[1200px] px-6 py-12 md:py-16 lg:py-20">
           <SectionHeader
             heading={about.faculty.heading}
             subtitle={about.faculty.subtitle}
@@ -197,7 +197,7 @@ export default function AboutPage() {
 
       {/* ============ 7. INDUSTRY / ACADEMIC CONNECTION (§3.7) ============ */}
       <section id="industry-connection" className="sprint-section sprint-anchor bg-brand-surface">
-        <div className="mx-auto max-w-[1200px] px-6 py-16 md:py-24">
+        <div className="mx-auto max-w-[1200px] px-6 py-12 md:py-16 lg:py-20">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
             {/* Left: narrative on the academic–industry skill gap */}
             <div>
@@ -216,7 +216,7 @@ export default function AboutPage() {
               <Link
                 href={about.industry.cta.href}
                 data-track="industry_courses_link"
-                className="sprint-focus group mt-8 inline-flex min-h-[48px] items-center gap-2 rounded-full border-2 border-brand-navy px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:bg-brand-navy hover:text-white"
+                className="sprint-focus group mt-8 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border-2 border-brand-navy px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:bg-brand-navy hover:text-white sm:w-auto"
               >
                 {about.industry.cta.label}
                 <ArrowRight
@@ -239,7 +239,7 @@ export default function AboutPage() {
       {/* ============ 8. CTA — Connect With SPRINT (§3.9) ============ */}
       {/* Light ambient surface — stays clearly distinct from the navy footer below */}
       <section id="connect" className="sprint-cta-bg sprint-anchor relative overflow-hidden">
-        <div className="mx-auto max-w-[1200px] px-6 py-16 text-center md:py-24">
+        <div className="mx-auto max-w-[1200px] px-6 py-12 text-center md:py-16 lg:py-20">
           <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
             {about.cta.kicker}
           </p>
@@ -252,8 +252,8 @@ export default function AboutPage() {
 
           <Link
             href={about.cta.primaryCta.href}
-            data-track="cta_register"
-            className="sprint-focus group mt-8 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-gradient-to-r from-brand-red to-brand-purple px-9 py-3.5 text-base font-bold text-white shadow-brand-cta transition hover:-translate-y-0.5 hover:brightness-110 sm:mt-9"
+            data-track="cta_contact"
+            className="sprint-focus group mt-6 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-red to-brand-purple px-9 py-3.5 text-base font-bold text-white shadow-brand-cta transition hover:-translate-y-0.5 hover:brightness-110 sm:mt-7 sm:w-auto"
           >
             {about.cta.primaryCta.label}
             <ArrowRight
