@@ -1,47 +1,65 @@
 "use client";
 
-import Image from "next/image";
-import { useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef } from "react";
 import { testimonials } from "@/data/data";
 
 /**
  * Student Testimonials — Section 6.7 / 7.4.
  *
- * Text testimonials are used here (final mix is TBD per spec); the
- * per-card video ref/hover wiring is included so upgrading any entry to a
- * video testimonial later is a data change, not a rebuild. Hover-to-play
- * is desktop-only (mobile hover behavior is explicitly TBD in the spec),
- * enforced via the `group` + `hidden md:contents`-free approach below —
- * the play/pause calls simply do nothing if a card has no videoUrl.
+ * Text testimonials are rendered as a user-controlled horizontal track so
+ * every learner story remains available without adding vertical page height.
  */
 export default function Testimonials() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [failedImages, setFailedImages] = useState({});
-  const videoRefs = useRef([]);
-  const total = testimonials.length;
+  const trackRef = useRef(null);
+  const dragRef = useRef({ isDragging: false, startX: 0, startScrollLeft: 0 });
 
-  const goTo = (index) => setActiveIndex((index + total) % total);
+  const scrollByCard = (direction) => {
+    const track = trackRef.current;
+    if (!track) return;
 
-  const handleHoverStart = (index) => {
-    videoRefs.current[index]?.play().catch(() => {
-      /* Autoplay-with-sound can be blocked by the browser; spec calls this
-         out as a known risk to validate — fail silently rather than error. */
+    track.scrollBy({
+      left: direction * track.clientWidth,
+      behavior: "smooth",
     });
   };
 
-  const handleHoverEnd = (index) => {
-    const video = videoRefs.current[index];
-    if (video) {
-      video.pause();
-      video.currentTime = 0;
+  const handlePointerDown = (event) => {
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+
+    const track = trackRef.current;
+    if (!track) return;
+
+    dragRef.current = {
+      isDragging: true,
+      startX: event.clientX,
+      startScrollLeft: track.scrollLeft,
+    };
+    track.setPointerCapture(event.pointerId);
+  };
+
+  const handlePointerMove = (event) => {
+    if (!dragRef.current.isDragging) return;
+
+    const track = trackRef.current;
+    if (track) {
+      track.scrollLeft =
+        dragRef.current.startScrollLeft -
+        (event.clientX - dragRef.current.startX);
     }
   };
 
-  const active = testimonials[activeIndex];
+  const handlePointerUp = (event) => {
+    const track = trackRef.current;
+    if (track?.hasPointerCapture(event.pointerId)) {
+      track.releasePointerCapture(event.pointerId);
+    }
+    dragRef.current.isDragging = false;
+  };
 
   return (
     <section className="sprint-section bg-brand-white py-12 md:py-16 lg:py-20">
-      <div className="mx-auto max-w-4xl px-6 text-center">
+      <div className="mx-auto max-w-6xl px-6 text-center">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Learner stories
         </p>
@@ -49,93 +67,61 @@ export default function Testimonials() {
           What our students say
         </h2>
 
-        {/* Active testimonial */}
-        <div
-          className="mt-12"
-          onMouseEnter={() => handleHoverStart(activeIndex)}
-          onMouseLeave={() => handleHoverEnd(activeIndex)}
-        >
-          <div className="relative mx-auto h-20 w-20 overflow-hidden rounded-full bg-brand-surface">
-            {active.videoUrl ? (
-              <video
-                ref={(el) => {
-                  videoRefs.current[activeIndex] = el;
-                }}
-                muted
-                loop
-                playsInline
-                poster={active.photoUrl}
-                className="h-full w-full object-cover"
-              >
-                <source src={active.videoUrl} type="video/mp4" />
-              </video>
-            ) : failedImages[active.id] ? (
-              <div className="flex h-full w-full items-center justify-center bg-brand-navy font-display text-xl font-bold text-brand-white">
-                {active.name
-                  .split(" ")
-                  .map((part) => part[0])
-                  .join("")}
-              </div>
-            ) : (
-              <Image
-                src={active.photoUrl}
-                alt={active.name}
-                fill
-                className="object-cover"
-                sizes="80px"
-                onError={() =>
-                  setFailedImages((current) => ({
-                    ...current,
-                    [active.id]: true,
-                  }))
-                }
-              />
-            )}
-          </div>
-
-          <blockquote className="mt-6 text-xl font-medium text-brand-text">
-            &ldquo;{active.quote}&rdquo;
-          </blockquote>
-          <p className="mt-4 text-sm font-semibold text-brand-navy">
-            {active.name}
-          </p>
-          <p className="text-sm text-brand-text-secondary">{active.role}</p>
-        </div>
-
-        {/* Carousel controls */}
-        <div className="mt-10 flex items-center justify-center gap-6">
+        <div className="mt-10 flex items-center gap-3 sm:gap-5">
           <button
             type="button"
-            onClick={() => goTo(activeIndex - 1)}
+            onClick={() => scrollByCard(-1)}
             aria-label="Previous testimonial"
-            className="sprint-focus flex h-10 w-10 items-center justify-center rounded-full border border-brand-border text-brand-navy hover:border-brand-navy"
+            className="sprint-focus flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-border text-brand-navy transition-colors hover:border-brand-navy"
           >
-            ‹
+            <ChevronLeft aria-hidden="true" size={20} />
           </button>
 
-          <div className="flex gap-2" role="tablist" aria-label="Testimonials">
-            {testimonials.map((t, i) => (
-              <button
-                key={t.id}
-                type="button"
-                role="tab"
-                aria-selected={i === activeIndex}
-                aria-label={`Show testimonial from ${t.name}`}
-                onClick={() => goTo(i)}
-                className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                  i === activeIndex ? "bg-brand-red" : "bg-brand-border"
-                }`}
-              />
-            ))}
+          <div
+            ref={trackRef}
+            className="flex min-w-0 flex-1 snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            role="region"
+            aria-label="Learner testimonials"
+          >
+            {testimonials.map((testimonial) => {
+              const initials = testimonial.name
+                .split(" ")
+                .map((part) => part[0])
+                .join("");
+
+              return (
+                <article
+                  key={testimonial.id}
+                  className="flex min-h-64 w-full shrink-0 snap-start cursor-grab flex-col rounded-xl border border-brand-border bg-brand-white p-6 text-left shadow-sm active:cursor-grabbing md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
+                >
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-navy font-display text-lg font-bold text-brand-white">
+                    {initials}
+                  </div>
+                  <blockquote className="mt-6 flex-1 text-lg font-medium text-brand-text">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </blockquote>
+                  <p className="mt-6 text-sm font-bold text-brand-navy">
+                    {testimonial.name}
+                  </p>
+                  <p className="mt-1 text-sm text-brand-text-secondary">
+                    {testimonial.role}
+                  </p>
+                </article>
+              );
+            })}
           </div>
 
           <button
             type="button"
-            onClick={() => goTo(activeIndex + 1)}
+            onClick={() => scrollByCard(1)}
             aria-label="Next testimonial"
-            className="sprint-focus flex h-10 w-10 items-center justify-center rounded-full border border-brand-border text-brand-navy hover:border-brand-navy"
+            className="sprint-focus flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-border text-brand-navy transition-colors hover:border-brand-navy"
           >
-            ›
+            <ChevronRight aria-hidden="true" size={20} />
           </button>
         </div>
       </div>

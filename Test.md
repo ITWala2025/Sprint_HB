@@ -57,13 +57,13 @@ _Note: This ensures all devDependencies (`vitest`, `jsdom`, `@testing-library/_`
 
 ### Current Validation Results — 2026-09-22
 
-| Check                    | Command         | Result                                                                                                          |
-| ------------------------ | --------------- | --------------------------------------------------------------------------------------------------------------- |
-| Unit and component tests | `npm test`      | **Passed** — 30 test files, 146 tests, including legal layout and campus ticker regressions                         |
-| Legal layout test        | `npx vitest run tests/unit/legal/LegalLayout.test.jsx --pool=threads --maxWorkers=1` | **Passed** — verifies no sidebar/table of contents and the compact single-column structure |
-| Campus ticker test       | `npx vitest run tests/unit/layout/CampusNewsTicker.test.tsx` | **Passed** — verifies the red alert icon is replaced by the branded blue megaphone |
-| Production build         | `npm run build` | **Passed** — Next.js production build and static generation completed                                           |
-| Lint                     | `npm run lint`  | **Not available** — `next lint` is unsupported by the installed Next.js 16.3.5 project; ESLint is not installed |
+| Check                    | Command                                                                              | Result                                                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Unit and component tests | `npm test`                                                                           | **Passed** — 30 test files, 146 tests, including legal layout and campus ticker regressions                     |
+| Legal layout test        | `npx vitest run tests/unit/legal/LegalLayout.test.jsx --pool=threads --maxWorkers=1` | **Passed** — verifies no sidebar/table of contents and the compact single-column structure                      |
+| Campus ticker test       | `npx vitest run tests/unit/layout/CampusNewsTicker.test.tsx`                         | **Passed** — verifies the red alert icon is replaced by the branded blue megaphone                              |
+| Production build         | `npm run build`                                                                      | **Passed** — Next.js production build and static generation completed                                           |
+| Lint                     | `npm run lint`                                                                       | **Not available** — `next lint` is unsupported by the installed Next.js 16.3.5 project; ESLint is not installed |
 
 The merged dependency set includes both `jsdom` and `happy-dom`; install dependencies with `npm install` before running tests in a fresh clone.
 
@@ -122,22 +122,22 @@ The contact section implements the specifications from [docs/md/Contact_Us.md](d
 
 The About page implements the specifications from [docs/md/About_Page.md](docs/md/About_Page.md) (10-section approved layout).
 
-| Test Suite         | File Path                                                                  | Focus & Assertions                                                                                                                                                                                                    |
-| ------------------ | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AboutPage**      | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) | Renders the "Connect With SPRINT" CTA section and asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback). Mocks `next/link` and polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
-| **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection. |
+| Test Suite             | File Path                                                                                    | Focus & Assertions                                                                                                                                                                                                                                          |
+| ---------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AboutPage**          | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx)                   | Renders the "Connect With SPRINT" CTA section and asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback). Mocks `next/link` and polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
+| **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection.                                      |
 
 ### 3.3 Legal Page Unit Tests (`tests/unit/legal/`)
 
-| Test Suite        | File Path                                                                 | Focus & Assertions                                                                                                                                 |
-| ----------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **LegalLayout**   | [tests/unit/legal/LegalLayout.test.jsx](tests/unit/legal/LegalLayout.test.jsx) | Confirms `/privacy` and `/terms` share a compact single-column layout, the sidebar/table of contents is absent, and legal sections remain rendered. |
+| Test Suite      | File Path                                                                      | Focus & Assertions                                                                                                                                  |
+| --------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **LegalLayout** | [tests/unit/legal/LegalLayout.test.jsx](tests/unit/legal/LegalLayout.test.jsx) | Confirms `/privacy` and `/terms` share a compact single-column layout, the sidebar/table of contents is absent, and legal sections remain rendered. |
 
 ### 3.4 Campus Ticker Unit Tests (`tests/unit/layout/`)
 
-| Test Suite            | File Path                                                                                           | Focus & Assertions                                                                                                      |
-| --------------------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| **CampusNewsTicker**  | [tests/unit/layout/CampusNewsTicker.test.tsx](tests/unit/layout/CampusNewsTicker.test.tsx) | Confirms the red alert icon is replaced by the branded blue megaphone and the alert icon is absent.                     |
+| Test Suite           | File Path                                                                                  | Focus & Assertions                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| **CampusNewsTicker** | [tests/unit/layout/CampusNewsTicker.test.tsx](tests/unit/layout/CampusNewsTicker.test.tsx) | Confirms the red alert icon is replaced by the branded blue megaphone and the alert icon is absent. |
 
 ---
 
@@ -175,6 +175,17 @@ To maintain comprehensive test coverage across the entire platform, the followin
    - Application form validation and file upload handling.
 5. **E2E & Integration Tests** (`tests/e2e/`, `tests/integration/`):
    - End-to-end user journeys for course discovery and enquiry submission using Playwright.
+
+### 3.5 Learner Stories Unit Tests (`tests/unit/home/`)
+
+| Test Suite       | File Path                                                                      | Focus & Assertions                                                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Testimonials** | [tests/unit/home/Testimonials.test.jsx](tests/unit/home/Testimonials.test.jsx) | Confirms all shared testimonials render in the horizontal snap track, arrow controls are present, and quote/name/role content remains visible. |
+
+### Homepage learner stories horizontal carousel validation - 2026-09-22
+
+- Focused test: `npx vitest run tests/unit/home/Testimonials.test.jsx --pool=threads --maxWorkers=1`
+- Result: **Passed** - 1 test, 1 test file.
 
 ---
 

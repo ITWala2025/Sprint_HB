@@ -304,3 +304,9 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Replaced the red `AlertTriangle` badge on the campus updates ticker with a blue `Megaphone` icon.
 - Applied the brand-blue translucent badge and light-blue icon treatment while leaving ticker content and behavior unchanged.
 - Added `tests/unit/layout/CampusNewsTicker.test.tsx` to prevent the alert icon from returning.
+
+## 14. Homepage Learner Stories Horizontal Carousel - 2026-09-22
+
+- Updated [src/components/Home/Testimonials.jsx](src/components/Home/Testimonials.jsx) to render the shared `testimonials` data in one horizontal scroll-snap row instead of wrapping cards vertically.
+- Added responsive card widths for one visible card on mobile, two on tablet, and three on desktop, with hidden scrollbars and compact fixed card height behavior.
+- Added manual previous/next controls and mouse pointer dragging; touch scrolling remains native. There is no autoplay.
