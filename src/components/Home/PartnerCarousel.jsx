@@ -26,7 +26,7 @@ export default function PartnerCarousel() {
 
       {/* marquee-track wrapper enables the desktop hover-to-pause rule
           defined in globals.css without affecting touch devices. */}
-      <div className="marquee-track mt-8 w-full overflow-hidden">
+      <div className="marquee-track mt-4 w-full overflow-hidden md:mt-6">
         <div className="flex w-max animate-marquee gap-16">
           {track.map((partner, i) => (
             <div

@@ -37,14 +37,14 @@ export default function MoreCourses() {
           </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {moreCourses.map((course) => (
             <CourseCard key={course.courseId} course={course} />
           ))}
         </div>
 
         {/* Mobile View All Courses - not sticky, shown at bottom */}
-        <div className="mt-8 lg:hidden">
+        <div className="mt-6 lg:hidden">
           <Link
             href="/courses"
             className="block text-center text-sm font-semibold text-brand-navy hover:text-brand-red"

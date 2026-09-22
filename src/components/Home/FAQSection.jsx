@@ -19,7 +19,7 @@ export default function FAQSection() {
           Frequently asked questions
         </h2>
 
-        <div className="mt-10 divide-y divide-brand-border border-t border-brand-border">
+        <div className="mt-8 divide-y divide-brand-border border-t border-brand-border">
           {faqs.map((faq) => (
             <details key={faq.id} className="group py-5">
               <summary className="sprint-focus flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-brand-text marker:content-none">

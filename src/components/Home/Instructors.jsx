@@ -39,7 +39,7 @@ export default function Instructors() {
           full-time content creator.
         </p>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
           {instructors.map((instructor) => (
             <div
               key={instructor.id}

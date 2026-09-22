@@ -310,3 +310,24 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Updated [src/components/Home/Testimonials.jsx](src/components/Home/Testimonials.jsx) to render the shared `testimonials` data in one horizontal scroll-snap row instead of wrapping cards vertically.
 - Added responsive card widths for one visible card on mobile, two on tablet, and three on desktop, with hidden scrollbars and compact fixed card height behavior.
 - Added manual previous/next controls and mouse pointer dragging; touch scrolling remains native. There is no autoplay.
+
+## 15. Homepage Featured Program Zigzag Timeline - 2026-09-23
+
+- Updated [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx) to place the four existing stages on a centered vertical rail with alternating left/right content blocks at desktop widths.
+- Added `01` through `04` numbered red badges on the rail while preserving the existing stage labels, titles, descriptions, and scroll-driven active state.
+- Below the `lg` breakpoint, the layout collapses to a single left-aligned column with the rail and badges on the left for narrow screens.
+- Centered the Featured Program intro heading and description with a fluid, responsive `max-w-2xl` wrapper.
+
+## 16. Homepage Internal Spacing Update - 2026-09-23
+
+- Reduced repeated content offsets from `mt-10` to `mt-8` in the Featured Program, course paths, instructors, learner stories, FAQs, and Contact CTA sections.
+- Tightened the Featured Program timeline rows on small screens from `py-10` to `py-6` while retaining the generous desktop `lg:py-12` rhythm.
+- Reduced the partner marquee label gap responsively (`mt-4 md:mt-6`) and the mobile course CTA gap to `mt-6`.
+- Preserved outer section padding, hero composition, interactive behavior, and responsive breakpoints to avoid collapsing intentional visual structure.
+
+## 17. Featured Program Single Disclosure - 2026-09-23
+
+- Updated [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx) to default the Featured Program section to a collapsed state showing the label, title, overall description, and one `View Program Stages` toggle.
+- The toggle reveals all four existing timeline stages together in the preserved responsive zigzag layout, changes to `Hide Program Stages`, rotates the chevron, and animates the complete panel with one grid-row transition.
+- The scroll observer now attaches only while the stage panel is expanded; stage content and copy remain unchanged.
+- Added [tests/unit/home/FeaturedProgram.test.jsx](tests/unit/home/FeaturedProgram.test.jsx) covering collapsed and expanded single-panel behavior.

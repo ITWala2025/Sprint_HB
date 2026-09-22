@@ -187,6 +187,31 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Focused test: `npx vitest run tests/unit/home/Testimonials.test.jsx --pool=threads --maxWorkers=1`
 - Result: **Passed** - 1 test, 1 test file.
 
+### Homepage featured program zigzag timeline validation - 2026-09-23
+
+- Editor diagnostics: **Passed** for [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx).
+- The existing stage data and observer behavior remain unchanged; the component now uses a centered desktop rail with alternating blocks and a single left rail below `lg`.
+- Full Vitest: **Blocked by 11 pre-existing failures** — 34 test files and 156 tests passed; failures are in ContactMethods, CareerHero, and HeaderLogo suites, with no Featured Program failure.
+- Production build: **Passed** — Next.js compiled successfully, type-checking completed, and all 36 routes generated.
+
+### Featured program heading alignment validation - 2026-09-23
+
+- Centered the Featured Program intro with responsive `mx-auto w-full max-w-2xl text-center` layout classes.
+- Editor diagnostics: **Passed** for [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx).
+
+### Homepage internal spacing validation - 2026-09-23
+
+- Reduced repeated internal spacing across homepage sections while preserving outer section padding and responsive breakpoints.
+- Editor diagnostics: **Passed** for all seven updated Home components.
+- Production build check: **Passed** — Next.js compiled successfully, type-checking completed, and all 36 routes generated.
+
+### Featured Program single disclosure validation - 2026-09-23
+
+- Added [tests/unit/home/FeaturedProgram.test.jsx](tests/unit/home/FeaturedProgram.test.jsx) for default collapsed state, one-toggle expansion, all four stage renderings, and toggle state text/ARIA updates.
+- Focused test: `npx vitest run tests/unit/home/FeaturedProgram.test.jsx --pool=threads --maxWorkers=1`
+- Result: **Passed** — 1 test, 1 test file.
+- Production build check: **Passed** — Next.js compiled successfully, type-checking completed, and all 36 routes generated.
+
 ---
 
 ## 6. Best Practices for Writing Tests

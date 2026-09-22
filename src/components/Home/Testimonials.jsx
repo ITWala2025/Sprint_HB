@@ -67,7 +67,7 @@ export default function Testimonials() {
           What our students say
         </h2>
 
-        <div className="mt-10 flex items-center gap-3 sm:gap-5">
+        <div className="mt-8 flex items-center gap-3 sm:gap-5">
           <button
             type="button"
             onClick={() => scrollByCard(-1)}
