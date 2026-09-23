@@ -177,7 +177,7 @@ behavior (states, animations, breakpoints) is defined in Section 4 and Section 5
 | Id | Functionality | Behavior Specification | Mapped Req |
 |---|---|---|---|
 | HR-01 | Content display | H1 "Who is SPRINT?", one supporting sentence, primary CTA ("Explore Courses"), secondary link ("Our Story" smooth-scroll to `#our-story`). | GL-12, GL-11 |
-| HR-02 | Background | Ambient gradient/mesh background matching brand palette; decorative only (aria-hidden). | GL-05 |
+| HR-02 | Background | Ambient gradient/mesh background matching brand palette plus a full-bleed decorative photo layer (desktop/mobile WebP via `<picture>` + `next/image`, like the Contact hero) under a light glass overlay so the navy text stays readable; decorative only (`aria-hidden`). | GL-05 |
 | HR-03 | CTA behavior | Primary CTA links to `/courses` (or configured URL); opens in same tab; tracked event `hero_cta_click`. | GL-06 |
 | HR-04 | Performance | Background static/pre-rendered image or CSS; hero content fully readable with JS off. | GL-07 |
 | HR-05 | Responsive | Text scales via clamp; CTA remains tappable (min 44x44px hit area) on all widths. | GL-02 |

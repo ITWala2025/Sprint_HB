@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import about from "@/data/about.json";
 import siteConfig from "@/config/site.config.json";
@@ -50,6 +51,21 @@ const organizationSchema = {
 /* Indian-locale number formatting for impact stats (IMP-05) */
 const formatStatValue = (value) => Math.round(value).toLocaleString("en-IN");
 
+/* Hero title accent — wraps the highlighted brand word (e.g. "SPRINT") so the
+   heading matches the Contact hero's red-accent anatomy (§3.2 HR-02). */
+function HighlightHeroTitle({ text, highlight }) {
+  if (!highlight) return text;
+  const parts = text.split(highlight);
+  if (parts.length < 2) return text;
+  return (
+    <>
+      {parts[0]}
+      <span className="sprint-hero-title-accent">{highlight}</span>
+      {parts.slice(1).join(highlight)}
+    </>
+  );
+}
+
 function SectionHeader({ heading, subtitle, center = false, id }) {
   return (
     <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
@@ -79,18 +95,47 @@ export default function AboutPage() {
         id="who-is-sprint"
         className="sprint-hero-bg sprint-anchor relative overflow-hidden"
       >
-        <div className="sprint-hero-grid mx-auto max-w-[1200px] px-6 py-16 md:py-24">
-          <div className="relative z-10">
-            <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+        {/* Decorative full-bleed photo background — mirrors the Contact
+            hero treatment (About_Page.md §3.2 HR-02). Purely cosmetic;
+            the dark-navy overlay below keeps the white hero copy readable. */}
+        <picture className="sprint-hero-media" aria-hidden="true">
+          <source
+            media="(max-width: 767px)"
+            srcSet="/images/about_page/about-hero-mobile.webp"
+          />
+          <Image
+            src="/images/about_page/about-hero-desktop.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="sprint-hero-image"
+          />
+        </picture>
+        <div className="sprint-hero-overlay" aria-hidden="true" />
+
+        <div className="sprint-hero-content mx-auto max-w-[1200px] px-6">
+          <nav className="sprint-hero-breadcrumb" aria-label="Breadcrumb">
+            <Link href="/">Home</Link>
+            <span aria-hidden="true">›</span>
+            <span aria-current="page">About Us</span>
+          </nav>
+
+          <div className="sprint-hero-copy">
+            <p className="sprint-hero-eyebrow">
+              <span aria-hidden="true">›</span>
               {about.hero.kicker}
             </p>
-            <h1 className="mt-6 max-w-3xl text-4xl font-black leading-tight tracking-tight text-brand-navy sm:text-5xl md:text-6xl">
-              {about.hero.title}
+
+            <h1 className="sprint-hero-title">
+              <HighlightHeroTitle text={about.hero.title} highlight={about.hero.titleHighlight} />
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-brand-text-secondary">
+
+            <p className="sprint-hero-description">
               {about.hero.description}
             </p>
-            <div className="mt-10 flex flex-wrap items-center gap-4">
+
+            <div className="sprint-hero-ctas">
               <Link
                 href={about.hero.primaryCta.href}
                 data-track="hero_cta_click"
@@ -104,48 +149,35 @@ export default function AboutPage() {
               </Link>
               <a
                 href={about.hero.secondaryCta.href}
-                className="sprint-focus inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-brand-border bg-white px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:border-brand-navy sm:w-auto"
+                className="sprint-focus inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-white/40 bg-white/10 px-7 py-3 text-base font-semibold text-white transition-colors hover:border-white hover:bg-white/20 sm:w-auto"
               >
                 {about.hero.secondaryCta.label}
               </a>
             </div>
           </div>
 
-          <div className="sprint-hero-proof relative z-10" aria-label="SPRINT verified impact at a glance">
-            <span className="sprint-hero-proof-line" aria-hidden="true" />
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
-              Verified impact
-            </p>
-            <p className="mt-1 text-base font-semibold leading-snug text-brand-navy">
-              {about.impact.subtitle}
-            </p>
-
-            <div className="mt-5 flex flex-wrap gap-3" role="list" aria-label="Key impact statistics">
-              {about.impact.stats.map((stat) => (
-                <div
-                  key={stat.label}
-                  role="listitem"
-                  className="sprint-hero-stat flex min-w-[7.5rem] flex-1 flex-col rounded-2xl border border-brand-border bg-white/70 px-2.5 py-3 shadow-sm"
-                >
-                  <p className="sprint-hero-stat-value text-3xl font-black leading-none tabular-nums">
-                    {formatStatValue(stat.value)}
-                    {stat.suffix}
-                  </p>
-                  <p className="mt-1.5 text-xs font-semibold leading-tight text-brand-navy">
-                    {stat.label}
-                  </p>
-                  <p className="mt-1 text-[11px] leading-tight text-brand-text-muted">
-                    {stat.context}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <p className="mt-5 inline-flex items-center gap-1.5 text-xs font-medium text-brand-success">
-              <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
-              All figures source-verified
-            </p>
+          {/* Verified impact — horizontal stat band (§3.8 IMP-01 … IMP-05) */}
+          <div
+            className="sprint-hero-stats"
+            role="list"
+            aria-label="SPRINT verified impact at a glance"
+          >
+            {about.impact.stats.map((stat) => (
+              <div key={stat.label} role="listitem" className="sprint-hero-stat">
+                <p className="sprint-hero-stat-value tabular-nums">
+                  {formatStatValue(stat.value)}
+                  {stat.suffix}
+                </p>
+                <p className="sprint-hero-stat-label">{stat.label}</p>
+                <p className="sprint-hero-stat-context">{stat.context}</p>
+              </div>
+            ))}
           </div>
+
+          <p className="sprint-hero-verified">
+            <CheckCircle2 className="size-4 shrink-0 text-brand-success" aria-hidden="true" />
+            All figures source-verified
+          </p>
         </div>
       </section>
 

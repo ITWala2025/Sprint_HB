@@ -6,6 +6,7 @@
   "hero": {
     "kicker": "About SPRINT",
     "title": "Who is SPRINT?",
+    "titleHighlight": "SPRINT",
     "description": "SPRINT is a future-ready training hub in Hazaribagh, Jharkhand that bridges the gap between academic learning and industry execution through hands-on programs in emerging technologies.",
     "primaryCta": {
       "label": "Explore Courses",

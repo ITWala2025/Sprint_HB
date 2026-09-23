@@ -230,32 +230,148 @@ a {
   background-image: linear-gradient(90deg, rgba(11, 99, 182, 0.025), transparent 30%);
 }
 
-.sprint-hero-grid {
-  display: grid;
+/* ------------------------------------------------------------
+   ABOUT HERO CONTENT — Contact-page anatomy (§3.2 HR-02).
+   Full-bleed photo, dark-navy left-heavy overlay, breadcrumb,
+   red eyebrow, giant balanced H1 and a horizontal verified-impact
+   stat band anchored at the bottom (replaces the old 2-col grid
+   + right-side proof card).
+   ------------------------------------------------------------ */
+
+/* Single-column, vertically-centred hero content column */
+.sprint-hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: min(700px, calc(100vh - 5rem));
+  padding: 2rem 0 3.25rem;
+}
+
+.sprint-hero-breadcrumb {
+  display: flex;
   align-items: center;
-  gap: 3rem;
-  min-height: min(680px, calc(100vh - 5rem));
-  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+  gap: 0.55rem;
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.875rem;
 }
 
-.sprint-hero-proof {
-  justify-self: end;
-  width: min(100%, 320px);
-  padding: 2rem;
-  border: 1px solid rgba(1, 31, 62, 0.12);
-  border-radius: 1.5rem;
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: var(--shadow-brand-card);
-  backdrop-filter: blur(12px);
+.sprint-hero-breadcrumb a {
+  color: inherit;
+  text-decoration: none;
 }
 
-.sprint-hero-proof-line {
-  display: block;
-  width: 5rem;
-  height: 0.35rem;
-  margin-bottom: 1.5rem;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--color-brand-red), var(--color-brand-purple));
+.sprint-hero-breadcrumb a:hover {
+  color: #fff;
+}
+
+.sprint-hero-copy {
+  max-width: 700px;
+}
+
+.sprint-hero-eyebrow {
+  margin: 0 0 0.75rem;
+  color: var(--color-brand-red, #f81529);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.sprint-hero-eyebrow span {
+  margin-right: 0.3rem;
+}
+
+.sprint-hero-title {
+  margin: 0;
+  max-width: 760px;
+  color: #fff;
+  font-size: clamp(2.5rem, 5vw, 4.65rem);
+  line-height: 0.99;
+  letter-spacing: -0.045em;
+  font-weight: 850;
+  text-wrap: balance;
+}
+
+.sprint-hero-title-accent {
+  color: var(--color-brand-red, #f81529);
+}
+
+.sprint-hero-description {
+  max-width: 640px;
+  margin: 1.35rem 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(1rem, 1.35vw, 1.18rem);
+  line-height: 1.6;
+}
+
+.sprint-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+/* Verified impact — horizontal stat band (§3.8). 4-across on
+   tablet/desktop, 2×2 on mobile. */
+.sprint-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2.25rem;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+@media (min-width: 768px) {
+  .sprint-hero-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Stat tile — dark glass over the photo */
+.sprint-hero-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.sprint-hero-stat:hover,
+.sprint-hero-stat:focus-visible {
+  transform: translateY(-2px);
+}
+
+.sprint-hero-stat-label {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.sprint-hero-stat-context {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.sprint-hero-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.875rem;
+  font-weight: 550;
 }
 
 /* Vision & Mission glass card surface — About_Page.md §3.4.1 */
@@ -322,14 +438,14 @@ a {
   transform: translateY(0);
 }
 
-/* Hero ambient gradient mesh — decorative only (HR-02) */
+/* Hero ambient gradient mesh — decorative only (HR-02). Navy field so the
+   white hero copy stays readable while the full-bleed photo loads. */
 .sprint-hero-bg {
   isolation: isolate;
   background:
-    radial-gradient(ellipse 60% 55% at 15% 15%, rgba(11, 99, 182, 0.18), transparent 60%),
-    radial-gradient(ellipse 55% 50% at 85% 12%, rgba(124, 58, 237, 0.14), transparent 60%),
-    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(248, 21, 41, 0.09), transparent 65%),
-    linear-gradient(180deg, var(--color-brand-off-white, #f8fafc) 0%, var(--color-brand-white, #ffffff) 100%);
+    radial-gradient(ellipse 60% 55% at 15% 15%, rgba(11, 99, 182, 0.35), transparent 60%),
+    radial-gradient(ellipse 55% 50% at 85% 12%, rgba(124, 58, 237, 0.22), transparent 60%),
+    linear-gradient(180deg, var(--color-brand-navy, #011f3e) 0%, var(--color-brand-navy-dark, #001831) 100%);
 }
 
 .sprint-hero-bg::after {
@@ -344,15 +460,81 @@ a {
   mask-image: linear-gradient(to bottom, black, transparent 75%);
 }
 
+/* Full-bleed decorative photo layer — mirrors the Contact hero treatment
+   (About_Page.md §3.2 HR-02). The light glass overlay keeps the navy brand
+   text-readable while letting the photograph show through. */
+.sprint-hero-media,
+.sprint-hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sprint-hero-image {
+  object-fit: cover;
+  object-position: center center;
+}
+
+.sprint-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(1, 31, 62, 0.94) 0%,
+      rgba(1, 31, 62, 0.78) 31%,
+      rgba(1, 31, 62, 0.30) 55%,
+      rgba(1, 31, 62, 0.04) 100%
+    );
+}
+
 @media (max-width: 767px) {
-  .sprint-hero-grid {
+  .sprint-hero-content {
     min-height: auto;
-    grid-template-columns: 1fr;
+    padding: 2.5rem 0.75rem 2rem;
   }
 
-  .sprint-hero-proof {
-    justify-self: stretch;
-    width: 100%;
+  .sprint-hero-image {
+    object-position: center bottom;
+  }
+
+  .sprint-hero-overlay {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(1, 31, 62, 0.10) 0%,
+        rgba(1, 31, 62, 0.25) 30%,
+        rgba(1, 31, 62, 0.78) 57%,
+        rgba(1, 31, 62, 0.98) 100%
+      );
+  }
+
+  .sprint-hero-breadcrumb {
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+  }
+
+  .sprint-hero-title {
+    font-size: clamp(2.2rem, 10.5vw, 3.3rem);
+    line-height: 1.02;
+  }
+
+  .sprint-hero-description {
+    margin-top: 1rem;
+    font-size: 0.97rem;
+    line-height: 1.55;
+  }
+
+  .sprint-hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sprint-hero-stats {
+    gap: 0.75rem;
   }
 }
 
@@ -451,21 +633,10 @@ a {
 }
 
 /* ------------------------------------------------------------
-   HERO IMPACT STATS — §3.2 hero proof card (§3.8 stats).
-   The impact figures live in the hero's right panel so the
-   page's strongest proof is visible above the fold.
+   HERO IMPACT STATS — §3.8 stat band at the hero base.
+   The verified figures render as a 4-across (2×2 mobile) grid so
+   the page's strongest proof is visible above the fold.
    ------------------------------------------------------------ */
-
-/* Stat tile surface (white/60 glass on top of the hero proof) */
-.sprint-hero-stat {
-  transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.sprint-hero-stat:hover,
-.sprint-hero-stat:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-brand-card);
-}
 
 /* Gradient-filled stat numbers — brand red -> purple fill */
 .sprint-hero-stat-value {
@@ -478,6 +649,10 @@ a {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  font-size: 2.25rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 
