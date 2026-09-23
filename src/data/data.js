@@ -63,9 +63,9 @@ export const featuredProgramStages = [
 // Sections 6.4 / 6.5 — Featured Course + More Courses share the Course shape
 export const featuredCourse = {
   courseId: "crs-001",
-  title: "Full-Stack Engineering Program",
+  title: "SPRINT RISE Program (Fast-Track Employability)",
   shortDescription:
-    "Go from fundamentals to a job-ready full-stack portfolio in 6 months, mentored by MNC engineers.",
+    "Designed for pre-final and final year BCA/MCA/B.Tech students needing production-grade portfolio projects, Git workflows, and mock technical defense.",
   thumbnailUrl: "/images/courses/abstract-code.svg",
   instructorName: "Ananya Rao",
   category: "Software Engineering",

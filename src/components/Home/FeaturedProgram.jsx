@@ -13,14 +13,19 @@ import { featuredCourse, featuredProgramStages } from "@/data/data";
  * with normal page scrolling") and degrades gracefully (no JS = every
  * stage just renders statically, still readable).
  *
- * The whole block is intentionally NOT wrapped in a link/button per spec
- * ("not intended to function as a clickable card").
+ * The stages are revealed as one accessible disclosure so the section stays
+ * compact until a visitor asks to view the program path.
  */
 export default function FeaturedProgram() {
   const stageRefs = useRef([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
+    if (!isExpanded) {
+      return undefined;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -40,12 +45,12 @@ export default function FeaturedProgram() {
 
     stageRefs.current.forEach((el) => el && observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [isExpanded]);
 
   return (
     <section className="sprint-section bg-brand-navy py-12 text-brand-white md:py-16 lg:py-20">
       <div className="mx-auto max-w-[1200px] px-6">
-        <div className="max-w-2xl">
+        <div className="mx-auto w-full max-w-2xl text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-light">
             Featured program
           </p>
@@ -55,70 +60,111 @@ export default function FeaturedProgram() {
           <p className="mt-4 text-brand-white/75">
             {featuredCourse.shortDescription}
           </p>
+
+          <button
+            type="button"
+            className="sprint-focus mt-6 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-brand-red-light/60 px-5 py-2.5 text-sm font-semibold text-brand-white transition-colors hover:border-brand-red-light hover:bg-brand-red/15"
+            aria-controls="featured-program-stages"
+            aria-expanded={isExpanded}
+            onClick={() => setIsExpanded((expanded) => !expanded)}
+          >
+            <span>
+              {isExpanded ? "Hide Program Stages" : "View Program Stages"}
+            </span>
+            <span
+              className={`text-base leading-none transition-transform duration-300 ${
+                isExpanded ? "rotate-180" : ""
+              }`}
+              aria-hidden="true"
+            >
+              ⌄
+            </span>
+          </button>
         </div>
 
-        <div className="relative mt-10 grid gap-0 md:pl-4">
-          {/* The vertical rail. The filled segment grows with scroll
-              progress to visualize "a clear sense of progression". */}
-          <div
-            className="absolute left-0 top-0 hidden h-full w-px bg-brand-white/15 md:block"
-            aria-hidden="true"
-          >
-            <div
-              className="w-px bg-brand-red transition-[height] duration-500 ease-out"
-              style={{
-                height: `${((activeIndex + 1) / featuredProgramStages.length) * 100}%`,
-              }}
-            />
-          </div>
-
-          {featuredProgramStages.map((stage, index) => {
-            const isActive = index === activeIndex;
-            return (
+        <div
+          id="featured-program-stages"
+          aria-hidden={!isExpanded}
+          className={`grid transition-[grid-template-rows] duration-500 ease-in-out ${
+            isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <div className="relative mt-8 grid gap-0 pl-10 lg:pl-0">
+              {/* The vertical rail. The filled segment grows with scroll
+                  progress to visualize "a clear sense of progression". */}
               <div
-                key={stage.id}
-                ref={(el) => {
-                  stageRefs.current[index] = el;
-                }}
-                data-index={index}
-                className="relative py-8 pl-8 md:pl-12"
+                className="absolute left-4 top-0 h-full w-px bg-brand-white/15 lg:left-1/2 lg:-translate-x-1/2"
+                aria-hidden="true"
               >
-                {/* Node on the rail, filled when active */}
-                <span
-                  className={`absolute left-[-5px] top-11 hidden h-[11px] w-[11px] rounded-full border-2 md:block ${
-                    isActive
-                      ? "border-brand-red bg-brand-red"
-                      : "border-brand-white/40 bg-brand-navy"
-                  }`}
-                  aria-hidden="true"
+                <div
+                  className="w-px bg-brand-red transition-[height] duration-500 ease-out"
+                  style={{
+                    height: `${((activeIndex + 1) / featuredProgramStages.length) * 100}%`,
+                  }}
                 />
-
-                <p
-                  className={`text-sm font-semibold ${
-                    isActive ? "text-brand-red" : "text-brand-white/50"
-                  }`}
-                >
-                  {stage.stageLabel}
-                </p>
-                <h3
-                  className={`mt-1 font-display text-2xl font-semibold transition-opacity ${
-                    isActive ? "opacity-100" : "opacity-60"
-                  }`}
-                >
-                  {stage.title}
-                </h3>
-                <p
-                  className={`mt-2 max-w-lg transition-opacity ${
-                    isActive
-                      ? "text-brand-white/85 opacity-100"
-                      : "text-brand-white/60 opacity-70"
-                  }`}
-                >
-                  {stage.description}
-                </p>
               </div>
-            );
-          })}
+
+              {featuredProgramStages.map((stage, index) => {
+                const isActive = index === activeIndex;
+                const badgeNumber = String(index + 1).padStart(2, "0");
+                const isLeft = index % 2 === 0;
+
+                return (
+                  <div
+                    key={stage.id}
+                    ref={(el) => {
+                      stageRefs.current[index] = el;
+                    }}
+                    data-index={index}
+                    className="relative grid min-h-[190px] grid-cols-1 items-center py-6 lg:grid-cols-2 lg:py-12"
+                  >
+                    {/* Numbered node stays on the rail at every breakpoint. */}
+                    <span
+                      className={`absolute left-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border-4 border-brand-navy bg-brand-red text-xs font-bold text-brand-white shadow-[0_0_0_1px_rgba(232,70,47,0.35)] lg:left-1/2 lg:-translate-x-1/2 ${
+                        isActive ? "opacity-100" : "opacity-70"
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {badgeNumber}
+                    </span>
+
+                    <div
+                      className={`max-w-xl ${
+                        isLeft
+                          ? "lg:col-start-1 lg:justify-self-end lg:pr-16 lg:text-right"
+                          : "lg:col-start-2 lg:pl-16 lg:text-left"
+                      }`}
+                    >
+                      <p
+                        className={`text-sm font-semibold ${
+                          isActive ? "text-brand-red" : "text-brand-white/50"
+                        }`}
+                      >
+                        {stage.stageLabel}
+                      </p>
+                      <h3
+                        className={`mt-1 font-display text-2xl font-semibold transition-opacity ${
+                          isActive ? "opacity-100" : "opacity-60"
+                        }`}
+                      >
+                        {stage.title}
+                      </h3>
+                      <p
+                        className={`mt-2 max-w-lg transition-opacity ${
+                          isActive
+                            ? "text-brand-white/85 opacity-100"
+                            : "text-brand-white/60 opacity-70"
+                        }`}
+                      >
+                        {stage.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </section>

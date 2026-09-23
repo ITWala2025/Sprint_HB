@@ -55,28 +55,48 @@ _Note: This ensures all devDependencies (`vitest`, `jsdom`, `@testing-library/_`
 | **Pattern Matching**   | `npx vitest run tests/unit/contact/`                     | Runs all tests inside a matching folder                                                  |
 | **Coverage Report**    | `npx vitest run --coverage`                              | Generates detailed coverage statistics                                                   |
 
-### Current Validation Results — 2026-09-21
+### Current Validation Results — 2026-09-22
 
-| Check                    | Command         | Result                                                                                                          |
-| ------------------------ | --------------- | --------------------------------------------------------------------------------------------------------------- |
-| Unit and component tests | `npm test`      | **Passed** — 14 test files, 72 tests                                                                            |
-| Production build         | `npm run build` | **Passed** — Next.js production build and static generation completed                                           |
-| Lint                     | `npm run lint`  | **Not available** — `next lint` is unsupported by the installed Next.js 16.3.5 project; ESLint is not installed |
+| Check                    | Command                                                                              | Result                                                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Unit and component tests | `npm test`                                                                           | **Passed** — 30 test files, 146 tests, including legal layout and campus ticker regressions                     |
+| Legal layout test        | `npx vitest run tests/unit/legal/LegalLayout.test.jsx --pool=threads --maxWorkers=1` | **Passed** — verifies no sidebar/table of contents and the compact single-column structure                      |
+| Campus ticker test       | `npx vitest run tests/unit/layout/CampusNewsTicker.test.tsx`                         | **Passed** — verifies the red alert icon is replaced by the branded blue megaphone                              |
+| Production build         | `npm run build`                                                                      | **Passed** — Next.js production build and static generation completed                                           |
+| Lint                     | `npm run lint`                                                                       | **Not available** — `next lint` is unsupported by the installed Next.js 16.3.5 project; ESLint is not installed |
 
 The merged dependency set includes both `jsdom` and `happy-dom`; install dependencies with `npm install` before running tests in a fresh clone.
+
+### Legal page layout validation — 2026-09-22
+
+- `/privacy` and `/terms` render without the former sidebar/table-of-contents navigation.
+- Legal content uses a centered single-column article with reduced hero height, article padding, section gaps, and typography.
+- Full test suite and production build passed after the layout changes.
+
+### Campus ticker icon validation — 2026-09-22
+
+- The campus updates badge uses `Megaphone` instead of `AlertTriangle`.
+- The badge and icon use brand-blue styling instead of the previous red alert treatment.
+- The targeted ticker test and full test suite passed; the production build passed.
 
 ### Homepage spacing validation — 2026-09-22
 
 - Editor diagnostics: passed for all eight modified Home components.
 - Browser validation: passed at 1440px, 1024px, 768px, and 390px; adjacent sections have no added gaps, the hero remains 80svh, the course cards are centered at desktop widths, and the document has no horizontal overflow.
 - Browser console note: existing 400 responses remain for missing instructor image paths under `/instructors/`; no new spacing-related runtime errors were introduced.
-- `npm test`: blocked because the local `vitest` executable and Testing Library packages are not installed in `node_modules`.
+- No current test dependency blocker; dependencies are installed and the full suite passes.
 
 ### About page CTA, spacing & swap-controls validation — 2026-09-22
 
 - Reran the full Vitest suite after the About page changes ("Request a Callback" CTA redirected to `/contact`, reduced section padding, mobile-responsive `w-full sm:w-auto` buttons) and the Vision ⇄ Mission swap controls (arrows removed, dot pagination + touch swipe, then the top hint/counter removed and the cards converted to a left/right sliding track).
 - `npm test` result: **Passed** — 30 test files, 152 tests (includes [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) with 2 tests and [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) with 6 tests; zero regressions).
 - Production build check: `npm run build` — **Passed** after the changes.
+
+### Package JSON and dev build validation — 2026-09-22
+
+- `node -e "JSON.parse(...)"`: **Passed** — `package.json` parses successfully and reports `npm@10`.
+- `npm run build`: **Passed** — Next.js/Tailwind CSS compiled successfully and all 36 static pages were generated.
+- `npm run dev`: **Passed after clean restart** — the stale Next.js process was stopped and `.next` development output was regenerated; homepage returned HTTP 200.
 
 ---
 
@@ -102,10 +122,29 @@ The contact section implements the specifications from [docs/md/Contact_Us.md](d
 
 The About page implements the specifications from [docs/md/About_Page.md](docs/md/About_Page.md) (10-section approved layout).
 
+<<<<<<< HEAD
 | Test Suite         | File Path                                                                  | Focus & Assertions                                                                                                                                                                                                    |
 | ------------------ | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **AboutPage**      | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) | Renders the "Connect With SPRINT" CTA section, asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback), verifies the decorative full-bleed hero photo (`picture.sprint-hero-media` > `img.sprint-hero-image` with `alt=""`, About WebP source `about-hero-desktop.webp`), and checks the **horizontal verified-impact band** (`.sprint-hero-stats` `role=list` with 4 `listitem` stats + the "All figures source-verified" line). Mocks `next/link` and `next/image`; polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
 | **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection. |
+=======
+| Test Suite             | File Path                                                                                    | Focus & Assertions                                                                                                                                                                                                                                          |
+| ---------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AboutPage**          | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx)                   | Renders the "Connect With SPRINT" CTA section and asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback). Mocks `next/link` and polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
+| **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection.                                      |
+
+### 3.3 Legal Page Unit Tests (`tests/unit/legal/`)
+
+| Test Suite      | File Path                                                                      | Focus & Assertions                                                                                                                                  |
+| --------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **LegalLayout** | [tests/unit/legal/LegalLayout.test.jsx](tests/unit/legal/LegalLayout.test.jsx) | Confirms `/privacy` and `/terms` share a compact single-column layout, the sidebar/table of contents is absent, and legal sections remain rendered. |
+
+### 3.4 Campus Ticker Unit Tests (`tests/unit/layout/`)
+
+| Test Suite           | File Path                                                                                  | Focus & Assertions                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| **CampusNewsTicker** | [tests/unit/layout/CampusNewsTicker.test.tsx](tests/unit/layout/CampusNewsTicker.test.tsx) | Confirms the red alert icon is replaced by the branded blue megaphone and the alert icon is absent. |
+>>>>>>> 411e90521d47e5c5a53beb32d9a6bdcace3811b7
 
 ---
 
@@ -143,6 +182,42 @@ To maintain comprehensive test coverage across the entire platform, the followin
    - Application form validation and file upload handling.
 5. **E2E & Integration Tests** (`tests/e2e/`, `tests/integration/`):
    - End-to-end user journeys for course discovery and enquiry submission using Playwright.
+
+### 3.5 Learner Stories Unit Tests (`tests/unit/home/`)
+
+| Test Suite       | File Path                                                                      | Focus & Assertions                                                                                                                             |
+| ---------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Testimonials** | [tests/unit/home/Testimonials.test.jsx](tests/unit/home/Testimonials.test.jsx) | Confirms all shared testimonials render in the horizontal snap track, arrow controls are present, and quote/name/role content remains visible. |
+
+### Homepage learner stories horizontal carousel validation - 2026-09-22
+
+- Focused test: `npx vitest run tests/unit/home/Testimonials.test.jsx --pool=threads --maxWorkers=1`
+- Result: **Passed** - 1 test, 1 test file.
+
+### Homepage featured program zigzag timeline validation - 2026-09-23
+
+- Editor diagnostics: **Passed** for [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx).
+- The existing stage data and observer behavior remain unchanged; the component now uses a centered desktop rail with alternating blocks and a single left rail below `lg`.
+- Full Vitest: **Blocked by 11 pre-existing failures** — 34 test files and 156 tests passed; failures are in ContactMethods, CareerHero, and HeaderLogo suites, with no Featured Program failure.
+- Production build: **Passed** — Next.js compiled successfully, type-checking completed, and all 36 routes generated.
+
+### Featured program heading alignment validation - 2026-09-23
+
+- Centered the Featured Program intro with responsive `mx-auto w-full max-w-2xl text-center` layout classes.
+- Editor diagnostics: **Passed** for [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx).
+
+### Homepage internal spacing validation - 2026-09-23
+
+- Reduced repeated internal spacing across homepage sections while preserving outer section padding and responsive breakpoints.
+- Editor diagnostics: **Passed** for all seven updated Home components.
+- Production build check: **Passed** — Next.js compiled successfully, type-checking completed, and all 36 routes generated.
+
+### Featured Program single disclosure validation - 2026-09-23
+
+- Added [tests/unit/home/FeaturedProgram.test.jsx](tests/unit/home/FeaturedProgram.test.jsx) for default collapsed state, one-toggle expansion, all four stage renderings, and toggle state text/ARIA updates.
+- Focused test: `npx vitest run tests/unit/home/FeaturedProgram.test.jsx --pool=threads --maxWorkers=1`
+- Result: **Passed** — 1 test, 1 test file.
+- Production build check: **Passed** — Next.js compiled successfully, type-checking completed, and all 36 routes generated.
 
 ---
 

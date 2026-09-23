@@ -72,13 +72,13 @@ export default function Footer() {
             <div className="flex flex-col gap-0.5">
               <span
                 className="text-2xl font-black uppercase tracking-[0.3em] text-white"
-                style={{ fontFamily: "'Trebuchet MS', 'Segoe UI', sans-serif", letterSpacing: "0.35em" }}
+                style={{ fontFamily: "'Roboto Slab', serif", letterSpacing: "0.15em" }}
               >
                 SPRINT
               </span>
-              <span className="text-[10px] uppercase tracking-[0.18em] text-brand-off-white/50 font-medium">
+              {/* <span className="text-[10px] uppercase tracking-[0.18em] text-brand-off-white/50 font-medium">
                 Institutional Hub
-              </span>
+              </span> */}
               <div className="mt-1 h-0.5 w-10 rounded-full bg-brand-red" />
             </div>
           </div>

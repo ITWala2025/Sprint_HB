@@ -18,15 +18,15 @@ describe("ContactMethods", () => {
 
     expect(
       screen.getByRole("link", { name: /call now/i }),
-    ).toHaveAttribute("href", "tel:+918521283183");
+    ).toHaveAttribute("href", "tel:+918521283184");
 
     expect(
       screen.getByRole("link", { name: /send email/i }),
-    ).toHaveAttribute("href", "mailto:info@sprintedu.in");
+    ).toHaveAttribute("href", "mailto:info@sprint.naturalelements.co.in");
 
     expect(screen.getByText(/office hours/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/monday – saturday, 9:00 am – 6:00 pm/i),
+      screen.getByText(/monday – saturday, 9:00 am – 5:00 pm/i),
     ).toBeInTheDocument();
   });
 });

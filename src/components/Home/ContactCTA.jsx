@@ -19,7 +19,7 @@ export default function ContactCTA() {
           learning path? Our team is here to help you make the best choice for
           your career.
         </p>
-        <div className="mt-10">
+        <div className="mt-8">
           <Link
             href="/contact"
             className="sprint-focus inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"

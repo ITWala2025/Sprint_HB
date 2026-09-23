@@ -118,8 +118,10 @@
     ├── fixtures/                  # Test mock data and fixtures
     ├── integration/               # Integration tests
     ├── unit/                      # Component unit tests
-    │   ├── contact/               # Contact and enquiry component tests
-    │   └── header_unit_test/      # Header, navigation, logo, and action tests
+    │   │   ├── contact/               # Contact and enquiry component tests
+    │   │   ├── header_unit_test/      # Header, navigation, logo, and action tests
+    │   │   ├── layout/                # Campus news ticker tests
+    │   │   └── legal/                 # Legal page layout tests
     └── vitest.d.ts                # Vitest global & jest-dom matcher type declarations
 ```
 
@@ -167,7 +169,8 @@
    - Interactive job application form with file upload / resume URL.
 
 6. **Legal Pages (`/terms`, `/privacy`)** — [src/app/terms/page.jsx](src/app/terms/page.jsx), [src/app/privacy/page.jsx](src/app/privacy/page.jsx):
-   - Structured layout with sidebar navigation, sticky table of contents, and responsive readability.
+   - Shared compact single-column legal document layout with no sidebar or table-of-contents navigation.
+   - Reduced hero, article padding, section spacing, and typography for a shorter, denser reading experience.
 
 ---
 
@@ -236,6 +239,10 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 
 ## 7. Critical Project Rules & Conventions
 
+### Package Metadata
+
+- `package.json` declares `packageManager: "npm@10"` to keep dependency installation and Next/Tailwind package discovery consistent across development environments.
+
 1. **Centralized Contact Information**:
    - **Never** hardcode telephone numbers, email addresses, or social media URLs inside individual components.
    - Always import from [src/config/site.config.json](src/config/site.config.json).
@@ -285,6 +292,7 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Dots at the bottom, touch swipe, keyboard arrows and the 4s auto-rotate all remain unchanged.
 - Updated spec rows `VM-SW-01`/`VM-SW-02` in [docs/md/About_Page.md](docs/md/About_Page.md) and added a "no hint/counter" assertion to [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx).
 
+<<<<<<< HEAD
 ## 12. About Page Hero Photo Layer — 2026-09-22
 
 - Added a decorative full-bleed hero photo to the About "Who is SPRINT?" hero in [src/app/about/page.jsx](src/app/about/page.jsx), using the same treatment as the Contact hero: `<picture>` with mobile/desktop WebP sources (`/images/contact/contact-hero-mobile.webp` and `contact-hero-desktop.webp`) rendered via `next/image` (`fill`, `priority`, `sizes="100vw"`, `alt=""`) inside `aria-hidden` media/overlay layers (spec `HR-02`).
@@ -302,3 +310,44 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - **Data/config**: added `hero.titleHighlight: "SPRINT"` to [src/data/about.json](src/data/about.json); the new `HighlightHeroTitle` helper in [src/app/about/page.jsx](src/app/about/page.jsx) wraps that word in a `.sprint-hero-title-accent` span.
 - **CSS**: replaced `.sprint-hero-grid` / `.sprint-hero-proof` / `.sprint-hero-proof-line` with `.sprint-hero-content`, `.sprint-hero-breadcrumb`, `.sprint-hero-eyebrow`, `.sprint-hero-copy`, `.sprint-hero-title(-accent)`, `.sprint-hero-description`, `.sprint-hero-ctas`, `.sprint-hero-stats`, `.sprint-hero-stat`, `.sprint-hero-stat-label`, `.sprint-hero-stat-context`, `.sprint-hero-verified` in [src/css/global.css](src/css/global.css); mobile media query now stacks CTAs and keeps the 2×2 stat grid.
 - **Tests**: updated [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) to assert the About WebP source (`about-hero-desktop.webp`) and added a "horizontal impact band" test (`.sprint-hero-stats` role=list, 4 `listitem`s, source-verified line). All 10 About tests pass (`npx vitest run --pool=threads --maxWorkers=1 tests/unit/about/...`).
+=======
+## 12. Legal Page Layout Update — 2026-09-22
+
+- Removed the shared sidebar/table-of-contents column from `/privacy` and `/terms` by updating `src/components/legal/LegalLayout.jsx`.
+- Changed legal pages to a single-column `max-w-4xl` document flow and reduced hero/article vertical rhythm.
+- Reduced legal headings, body copy, notice text, padding, and section gaps while retaining responsive spacing and accessible section anchors.
+- Added `tests/unit/legal/LegalLayout.test.jsx` to verify the sidebar is absent and the compact single-column structure is rendered.
+
+## 13. Campus Ticker Icon Update — 2026-09-22
+
+- Replaced the red `AlertTriangle` badge on the campus updates ticker with a blue `Megaphone` icon.
+- Applied the brand-blue translucent badge and light-blue icon treatment while leaving ticker content and behavior unchanged.
+- Added `tests/unit/layout/CampusNewsTicker.test.tsx` to prevent the alert icon from returning.
+
+## 14. Homepage Learner Stories Horizontal Carousel - 2026-09-22
+
+- Updated [src/components/Home/Testimonials.jsx](src/components/Home/Testimonials.jsx) to render the shared `testimonials` data in one horizontal scroll-snap row instead of wrapping cards vertically.
+- Added responsive card widths for one visible card on mobile, two on tablet, and three on desktop, with hidden scrollbars and compact fixed card height behavior.
+- Added manual previous/next controls and mouse pointer dragging; touch scrolling remains native. There is no autoplay.
+
+## 15. Homepage Featured Program Zigzag Timeline - 2026-09-23
+
+- Updated [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx) to place the four existing stages on a centered vertical rail with alternating left/right content blocks at desktop widths.
+- Added `01` through `04` numbered red badges on the rail while preserving the existing stage labels, titles, descriptions, and scroll-driven active state.
+- Below the `lg` breakpoint, the layout collapses to a single left-aligned column with the rail and badges on the left for narrow screens.
+- Centered the Featured Program intro heading and description with a fluid, responsive `max-w-2xl` wrapper.
+
+## 16. Homepage Internal Spacing Update - 2026-09-23
+
+- Reduced repeated content offsets from `mt-10` to `mt-8` in the Featured Program, course paths, instructors, learner stories, FAQs, and Contact CTA sections.
+- Tightened the Featured Program timeline rows on small screens from `py-10` to `py-6` while retaining the generous desktop `lg:py-12` rhythm.
+- Reduced the partner marquee label gap responsively (`mt-4 md:mt-6`) and the mobile course CTA gap to `mt-6`.
+- Preserved outer section padding, hero composition, interactive behavior, and responsive breakpoints to avoid collapsing intentional visual structure.
+
+## 17. Featured Program Single Disclosure - 2026-09-23
+
+- Updated [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx) to default the Featured Program section to a collapsed state showing the label, title, overall description, and one `View Program Stages` toggle.
+- The toggle reveals all four existing timeline stages together in the preserved responsive zigzag layout, changes to `Hide Program Stages`, rotates the chevron, and animates the complete panel with one grid-row transition.
+- The scroll observer now attaches only while the stage panel is expanded; stage content and copy remain unchanged.
+- Added [tests/unit/home/FeaturedProgram.test.jsx](tests/unit/home/FeaturedProgram.test.jsx) covering collapsed and expanded single-panel behavior.
+>>>>>>> 411e90521d47e5c5a53beb32d9a6bdcace3811b7
