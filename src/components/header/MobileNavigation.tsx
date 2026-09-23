@@ -8,6 +8,7 @@ interface MobileNavigationProps {
   pathname: string;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
+  isAdmin?: boolean;
 }
 
 const navigation = [
@@ -17,7 +18,7 @@ const navigation = [
   { label: "Contact", href: "/contact" },
 ];
 
-export default function MobileNavigation({ pathname, isOpen, setIsOpen }: MobileNavigationProps) {
+export default function MobileNavigation({ pathname, isOpen, setIsOpen, isAdmin = false }: MobileNavigationProps) {
   useEffect(() => {
     setIsOpen(false);
   }, [pathname, setIsOpen]);
@@ -27,7 +28,7 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
       if (event.key === "Escape") setIsOpen(false);
     };
     const closeOnDesktop = () => {
-       if (window.innerWidth >= 1024) setIsOpen(false);
+      if (window.innerWidth >= 1024) setIsOpen(false);
     };
 
     document.addEventListener("keydown", closeOnEscape);
@@ -44,8 +45,8 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
   return (
     <div className="shrink-0 lg:hidden">
       <div className="flex shrink-0 items-center gap-2">
-        <Link href="/register" className="sprint-focus rounded-lg bg-brand-red px-4 py-2.5 text-sm font-semibold text-white">
-          Enroll
+        <Link href={isAdmin ? "/admin/dashboard" : "/register"} className={`sprint-focus rounded-lg px-4 py-2.5 text-sm font-semibold text-white ${isAdmin ? "bg-brand-navy" : "bg-brand-red"}`}>
+          {isAdmin ? "Admin" : "Enroll"}
         </Link>
         <button
           type="button"
@@ -73,7 +74,7 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
                     aria-current={active ? "page" : undefined}
                     className={`rounded-lg px-4 py-3 text-sm font-semibold ${
                       active ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-brand-surface"
-                    }`}
+                      }`}
                   >
                     {item.label}
                   </Link>
@@ -81,12 +82,20 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
               })}
             </div>
             <div className="mt-4 border-t border-brand-border pt-4">
-              <Link href="/student/login" onClick={() => setIsOpen(false)} className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-surface">
-                Student Login
-              </Link>
-              <Link href="/register" onClick={() => setIsOpen(false)} className="mt-2 block rounded-lg bg-brand-red px-4 py-3 text-center text-sm font-semibold text-white">
-                Enroll Now
-              </Link>
+              {isAdmin ? (
+                <Link href="/admin/dashboard" onClick={() => setIsOpen(false)} className="block rounded-lg bg-brand-navy px-4 py-3 text-center text-sm font-semibold text-white">
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link href="/student/login" onClick={() => setIsOpen(false)} className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-surface">
+                    Student Login
+                  </Link>
+                  <Link href="/register" onClick={() => setIsOpen(false)} className="mt-2 block rounded-lg bg-brand-red px-4 py-3 text-center text-sm font-semibold text-white">
+                    Enroll Now
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>

@@ -361,3 +361,16 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 =======
 >>>>>>> 411e90521d47e5c5a53beb32d9a6bdcace3811b7
 >>>>>>> ac7bac9d9e633a9f5a9d53dc31086a430f49584d
+
+## 19. Admin-Aware Public Shell - 2026-09-23
+
+- Added [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx) to use `usePathname()` and render public header, campus ticker, footer, WhatsApp affordance, and main content only outside `/admin/*` routes.
+- Updated [src/app/layout.jsx](src/app/layout.jsx) to delegate public chrome to `PublicSiteShell`, leaving the admin route subtree to [src/app/admin/layout.tsx](src/app/admin/layout.tsx).
+- Updated the public header components to resolve the Supabase session and `public.profiles.role`; admins see an `Admin Dashboard` action while non-admin and signed-out users retain `Student Portal` and `Enroll Now` actions on desktop and mobile.
+- Auth initialization is guarded when public Supabase environment variables are unavailable, preserving the public navigation fallback in isolated test environments.
+
+## 20. Public Header Restoration on Admin Routes - 2026-09-23
+
+- Updated [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx) to keep the public Header visible on `/admin/*` routes while hiding only the announcement ticker, public footer, and WhatsApp affordance there.
+- Admin-authenticated desktop and mobile actions now use the prominent `Go to Dashboard` label and link to `/admin/dashboard`; guest and signed-out states continue to show the default public actions.
+- Preserved the Header Supabase auth listener and profile-role lookup so action buttons swap immediately on sign-in and sign-out.

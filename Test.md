@@ -257,3 +257,17 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Full Vitest suite: `npm test` — **Blocked by 11 pre-existing failures**; 34 of 39 test files and 156 of 167 tests passed. Failures remain in ContactMethods, CareerHero, and HeaderLogo suites, with no admin authentication test failures.
 - The updated flow covers the eight-second timeout race, explicit non-admin denial, detailed failure logging, and unconditional `isSubmitting` reset in `finally`.
 - No new test file was added; the change is isolated to the admin login page and was validated by the project type-check before the production build.
+
+## 9. Admin-Aware Public Shell Validation - 2026-09-23
+
+- TypeScript validation: `npx tsc --noEmit` - **Passed**.
+- Focused header validation: `npx vitest run tests/unit/header_unit_test/Header.test.tsx --pool=threads --maxWorkers=1` - **Passed**; 14 tests across the repository and duplicated worktree discovery.
+- The focused run confirms the header mounts without Supabase configuration, preserves scroll and mobile-menu behavior, and retains default public actions through optional prop defaults.
+- No new test file was added; the route shell and admin-aware action branches are covered by existing header tests plus the successful production type-check.
+
+## 10. Public Header Restoration Validation - 2026-09-23
+
+- TypeScript validation: `npx tsc --noEmit` - **Passed**.
+- Focused header validation: `npx vitest run tests/unit/header_unit_test/Header.test.tsx --pool=threads --maxWorkers=1` - **Passed**; 14 tests passed.
+- Production build: `npm run build` - **Passed**; all 36 routes generated successfully.
+- Confirmed the Header remains rendered on admin routes while ticker, footer, and WhatsApp public chrome remain suppressed there.
