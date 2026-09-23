@@ -292,6 +292,25 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Dots at the bottom, touch swipe, keyboard arrows and the 4s auto-rotate all remain unchanged.
 - Updated spec rows `VM-SW-01`/`VM-SW-02` in [docs/md/About_Page.md](docs/md/About_Page.md) and added a "no hint/counter" assertion to [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx).
 
+<<<<<<< HEAD
+## 12. About Page Hero Photo Layer — 2026-09-22
+
+- Added a decorative full-bleed hero photo to the About "Who is SPRINT?" hero in [src/app/about/page.jsx](src/app/about/page.jsx), using the same treatment as the Contact hero: `<picture>` with mobile/desktop WebP sources (`/images/contact/contact-hero-mobile.webp` and `contact-hero-desktop.webp`) rendered via `next/image` (`fill`, `priority`, `sizes="100vw"`, `alt=""`) inside `aria-hidden` media/overlay layers (spec `HR-02`).
+- Unlike Contact's dark-navy overlay, the About hero uses a **light glass overlay** (`.sprint-hero-overlay`, `rgba(248,250,252,0.86 → 0.62)` gradient) so the approved navy-on-light hero text stays WCAG-readable while the photo shows through; mobile switches `object-position: center bottom` like Contact.
+- New CSS: `.sprint-hero-media`, `.sprint-hero-image`, `.sprint-hero-overlay` in [src/css/global.css](src/css/global.css).
+- The hero reuses the Contact image assets (no dedicated `/images/about/` asset yet) — swap the `src`/`srcSet` paths in the `<picture>` block when an About-specific photograph is supplied.
+- Updated spec row `HR-02` in [docs/md/About_Page.md](docs/md/About_Page.md) and added a hero-image assertion (and a `next/image` mock) to [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx).
+
+## 13. About Page Hero — Contact-Style Dark Overlay & Horizontal Impact Band — 2026-09-23
+
+- **Fixed the hero image reference** in [src/app/about/page.jsx](src/app/about/page.jsx): the photo was previously wired with an invalid backslash URL (`src="\images\about_page\image.png"`) and the mobile `<source>` still pointed at the **Contact** assets. The hero now uses dedicated About assets in `public/images/about_page/`:
+  - `about-hero-desktop.webp` (1600w, ~78 KB) rendered by `next/image` (`fill`, `priority`, `sizes="100vw"`, `alt=""`) and `about-hero-mobile.webp` (800w, ~29 KB) served by the `<picture>` `<source media="(max-width: 767px)">` — generated from the supplied 1672×940 `image.png` (2.2 MB) via `sharp`. This honours the §7.1 page-weight budget (compressed WebP) that the previous raw PNG violated.
+- **Reworked the hero to the Contact-page anatomy** (§3.2 HR-02): full-bleed photo, **dark-navy left-heavy overlay** (`.sprint-hero-overlay`, `90deg` rgba(1,31,62, 0.94→0.04) — replaces the earlier light-glass overlay), breadcrumb (`Home › About Us`), red eyebrow `› About SPRINT`, giant balanced H1 (`.sprint-hero-title`, clamp + `text-wrap: balance`) with a red-accent brand word, description, and primary/secondary CTAs. The navy mesh `.sprint-hero-bg` provides a readable fallback while the photo loads.
+- **"Our Impact" now renders as a horizontal stat band** (§3.8): the four verified stats moved out of the old 320px right-side proof card into a full-width band anchored at the hero base — 4-across on `>=768px`, 2×2 on mobile (`.sprint-hero-stats` grid). Dark-glass stat tiles (`.sprint-hero-stat`, white/8 + backdrop blur) keep the gradient red→purple numbers (`.sprint-hero-stat-value`, now `font-size/weight` in CSS) and end with the green `CheckCircle2` "All figures source-verified" line (`.sprint-hero-verified`).
+- **Data/config**: added `hero.titleHighlight: "SPRINT"` to [src/data/about.json](src/data/about.json); the new `HighlightHeroTitle` helper in [src/app/about/page.jsx](src/app/about/page.jsx) wraps that word in a `.sprint-hero-title-accent` span.
+- **CSS**: replaced `.sprint-hero-grid` / `.sprint-hero-proof` / `.sprint-hero-proof-line` with `.sprint-hero-content`, `.sprint-hero-breadcrumb`, `.sprint-hero-eyebrow`, `.sprint-hero-copy`, `.sprint-hero-title(-accent)`, `.sprint-hero-description`, `.sprint-hero-ctas`, `.sprint-hero-stats`, `.sprint-hero-stat`, `.sprint-hero-stat-label`, `.sprint-hero-stat-context`, `.sprint-hero-verified` in [src/css/global.css](src/css/global.css); mobile media query now stacks CTAs and keeps the 2×2 stat grid.
+- **Tests**: updated [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) to assert the About WebP source (`about-hero-desktop.webp`) and added a "horizontal impact band" test (`.sprint-hero-stats` role=list, 4 `listitem`s, source-verified line). All 10 About tests pass (`npx vitest run --pool=threads --maxWorkers=1 tests/unit/about/...`).
+=======
 ## 12. Legal Page Layout Update — 2026-09-22
 
 - Removed the shared sidebar/table-of-contents column from `/privacy` and `/terms` by updating `src/components/legal/LegalLayout.jsx`.
@@ -331,6 +350,7 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - The toggle reveals all four existing timeline stages together in the preserved responsive zigzag layout, changes to `Hide Program Stages`, rotates the chevron, and animates the complete panel with one grid-row transition.
 - The scroll observer now attaches only while the stage panel is expanded; stage content and copy remain unchanged.
 - Added [tests/unit/home/FeaturedProgram.test.jsx](tests/unit/home/FeaturedProgram.test.jsx) covering collapsed and expanded single-panel behavior.
+<<<<<<< HEAD
 
 ## 18. Admin Authentication Timeout - 2026-09-23
 
@@ -338,3 +358,6 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - The admin profile lookup uses `maybeSingle()` and requires `role === "admin"`; other roles are signed out and receive an explicit access-denied message.
 - Authentication failures are logged with `console.error`, and the submit state is reset in `finally` so timeout and error paths cannot leave the button stuck.
 - Successful authentication redirects with `window.location.href = "/admin/dashboard"` so edge middleware receives the refreshed session cookies.
+=======
+>>>>>>> 411e90521d47e5c5a53beb32d9a6bdcace3811b7
+>>>>>>> ac7bac9d9e633a9f5a9d53dc31086a430f49584d
