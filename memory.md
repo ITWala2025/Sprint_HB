@@ -331,3 +331,10 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - The toggle reveals all four existing timeline stages together in the preserved responsive zigzag layout, changes to `Hide Program Stages`, rotates the chevron, and animates the complete panel with one grid-row transition.
 - The scroll observer now attaches only while the stage panel is expanded; stage content and copy remain unchanged.
 - Added [tests/unit/home/FeaturedProgram.test.jsx](tests/unit/home/FeaturedProgram.test.jsx) covering collapsed and expanded single-panel behavior.
+
+## 18. Admin Authentication Timeout - 2026-09-23
+
+- Updated [src/app/admin/page.tsx](src/app/admin/page.tsx) to race the complete Supabase sign-in and profile-role lookup flow against an eight-second timeout.
+- The admin profile lookup uses `maybeSingle()` and requires `role === "admin"`; other roles are signed out and receive an explicit access-denied message.
+- Authentication failures are logged with `console.error`, and the submit state is reset in `finally` so timeout and error paths cannot leave the button stuck.
+- Successful authentication redirects with `window.location.href = "/admin/dashboard"` so edge middleware receives the refreshed session cookies.

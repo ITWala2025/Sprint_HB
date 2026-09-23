@@ -242,3 +242,11 @@ To maintain comprehensive test coverage across the entire platform, the followin
 >    - Newly covered scenarios.
 >    - Updated test results or status.
 > 4. Ensure [memory.md](memory.md) is also updated in tandem.
+
+## 8. Admin Authentication Timeout Validation - 2026-09-23
+
+- TypeScript validation: `npx tsc --noEmit` — **Passed** after the admin authentication refactor.
+- Production build: `npm run build` — **Passed**; Next.js compiled successfully and generated all 36 routes.
+- Full Vitest suite: `npm test` — **Blocked by 11 pre-existing failures**; 34 of 39 test files and 156 of 167 tests passed. Failures remain in ContactMethods, CareerHero, and HeaderLogo suites, with no admin authentication test failures.
+- The updated flow covers the eight-second timeout race, explicit non-admin denial, detailed failure logging, and unconditional `isSubmitting` reset in `finally`.
+- No new test file was added; the change is isolated to the admin login page and was validated by the project type-check before the production build.
