@@ -83,8 +83,8 @@ export default function Footer() {
             </div>
           </div>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-brand-off-white/80">
-           Hands-on, production-level education in Cloud, AI, and Software Systems —
-           bridging the academic industry gap with job-ready, execution-first training.
+           Hands on, production level education in Cloud, AI, and Software Systems 
+           bridging the academic industry gap with job ready, execution first training.
 
           </p>
           {/*

@@ -118,6 +118,20 @@ The contact section implements the specifications from [docs/md/Contact_Us.md](d
 | **LocationSection**         | [tests/unit/contact/LocationSection.test.jsx](tests/unit/contact/LocationSection.test.jsx)                 | SPRINT Hazaribagh center physical location card, landmark notes, embedded Google Maps iframe, and external directions link.                                                |
 | **FAQSection**              | [tests/unit/contact/FAQSection.test.jsx](tests/unit/contact/FAQSection.test.jsx)                           | Interactive accordion behavior, expanding/collapsing answers, keyboard accessibility, and `aria-expanded` attributes.                                                      |
 
+### Contact Hero responsive validation — 2026-09-23
+
+- Editor diagnostics: **Passed** for [src/components/contact/ContactHero.jsx](src/components/contact/ContactHero.jsx) and the Contact Hero rules in [src/css/global.css](src/css/global.css).
+- Focused ContactHero Vitest invocation: **Blocked** — Vitest 5.0.1 timed out while starting its threads worker; no ContactHero tests executed. The run also reported the existing Vite native-config warning.
+- Production build: **Blocked after successful compilation and TypeScript checks** — prerendering `/admin` requires missing Supabase URL/API-key environment variables; this is unrelated to Contact Hero.
+- The existing ContactHero test continues to cover the preserved heading, trust points, social link, and enquiry CTA after the eyebrow removal.
+- Spacing refinement diagnostics: **Passed** after matching the About Hero minimum height and desktop/tablet/mobile outer padding strategy; no Contact Hero-specific clipping or overflow diagnostics were reported.
+
+### Contact page mobile responsiveness — 2026-09-23
+
+- Editor diagnostics: **Passed** for the Contact responsive CSS, ContactMethods, EnquirySection, and Next configuration.
+- Contact Vitest suite: **Blocked** by the existing Vitest 5 worker startup timeout; no Contact tests executed.
+- Production build: **Blocked by generated-output/process state** after successful compilation; stale `.next/dev/types` errors appeared, and cleanup was blocked by a separate Next process holding `.next` cache files. The prior clean build compiled and type-checked successfully before stopping on missing Supabase variables while prerendering `/admin`.
+
 ### 3.2 About Page Unit Tests (`tests/unit/about/`)
 
 The About page implements the specifications from [docs/md/About_Page.md](docs/md/About_Page.md) (10-section approved layout).

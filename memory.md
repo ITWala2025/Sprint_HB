@@ -273,6 +273,18 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Made every About page CTA button mobile-responsive with the existing `w-full sm:w-auto` + `justify-center` pattern (hero primary, hero secondary, "View Courses" industry link, and the bottom "Request a Callback" button); tightened the bottom CTA top margin from `mt-8 sm:mt-9` to `mt-6 sm:mt-7`.
 - Added [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) covering the CTA redirect (`href="/contact"`, `data-track="cta_contact"`) and CTA section rendering.
 
+## 14. Contact Hero Responsive Cleanup — 2026-09-23
+
+- Removed the red `CONTACT US` eyebrow and its reserved spacing from [src/components/contact/ContactHero.jsx](src/components/contact/ContactHero.jsx); the breadcrumb, heading, description, trust points, social links, CTA, and existing responsive image assets remain unchanged.
+- Updated the Contact Hero rules in [src/css/global.css](src/css/global.css): reduced desktop hero-owned top/bottom padding by approximately 30%, added a tablet range for copy width and spacing, and adjusted mobile hero height, padding, heading clamp, and breadcrumb rhythm to prevent clipping or horizontal overflow.
+- Refined the Contact Hero again against the existing About Hero reference: restored `2rem` top and `3.25rem` bottom desktop padding, matched the `min(700px, calc(100vh - 5rem))` minimum height, added proportional tablet padding, and changed mobile to content-driven height with About-style `2.5rem 0.75rem 2rem` padding.
+
+## 15. Contact Page Mobile Responsiveness — 2026-09-23
+
+- Kept the existing Contact page structure and desktop styling, then added scoped mobile rules in [src/css/global.css](src/css/global.css): compacted Reach Us panel/card padding and gaps, reduced mobile form panel spacing, made the enquiry heading fluid, and allowed the audience selector to wrap in its existing two-column layout at narrow widths.
+- Adjusted the shared WhatsApp CTA only at mobile widths with responsive `right`/safe-area `bottom` offsets and a smaller touch-safe size so it stays visible without covering enquiry content.
+- Disabled the Next.js development indicator in [next.config.mjs](next.config.mjs). The black `N` was not rendered by SPRINT components; it was the framework dev indicator visible during local development.
+
 ## 10. About Page Vision/Mission Swap Controls — 2026-09-22
 
 - Reworked the Vision ⇄ Mission swap surface in [src/components/sections/StoryVisionMission.jsx](src/components/sections/StoryVisionMission.jsx) per stakeholder feedback (page `src/app/about/page.jsx`, §3.4):
