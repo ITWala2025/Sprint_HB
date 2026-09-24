@@ -8,6 +8,7 @@ interface MobileNavigationProps {
   pathname: string;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
+  isAdmin?: boolean;
 }
 
 const navigation = [
@@ -17,7 +18,12 @@ const navigation = [
   { label: "Contact", href: "/contact" },
 ];
 
-export default function MobileNavigation({ pathname, isOpen, setIsOpen }: MobileNavigationProps) {
+export default function MobileNavigation({
+  pathname,
+  isOpen,
+  setIsOpen,
+  isAdmin = false,
+}: MobileNavigationProps) {
   useEffect(() => {
     setIsOpen(false);
   }, [pathname, setIsOpen]);
@@ -27,7 +33,7 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
       if (event.key === "Escape") setIsOpen(false);
     };
     const closeOnDesktop = () => {
-       if (window.innerWidth >= 1024) setIsOpen(false);
+      if (window.innerWidth >= 1024) setIsOpen(false);
     };
 
     document.addEventListener("keydown", closeOnEscape);
@@ -44,8 +50,11 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
   return (
     <div className="shrink-0 lg:hidden">
       <div className="flex shrink-0 items-center gap-2">
-        <Link href="/register" className="sprint-focus rounded-lg bg-brand-red px-4 py-2.5 text-sm font-semibold text-white">
-          Enroll
+        <Link
+          href={isAdmin ? "/admin/dashboard" : "/register"}
+          className={`sprint-focus min-h-11 rounded-lg px-4 py-2.5 text-sm font-semibold text-white ${isAdmin ? "bg-brand-navy" : "bg-brand-red"}`}
+        >
+          {isAdmin ? "Admin" : "Enroll"}
         </Link>
         <button
           type="button"
@@ -53,14 +62,21 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
           aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={isOpen}
           aria-controls="mobile-navigation"
-          className="sprint-focus flex h-10 w-10 items-center justify-center rounded-lg border border-brand-border text-brand-navy"
+          className="sprint-focus flex h-11 w-11 items-center justify-center rounded-lg border border-brand-border text-brand-navy"
         >
-          {isOpen ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
+          {isOpen ? (
+            <X className="size-5" aria-hidden="true" />
+          ) : (
+            <Menu className="size-5" aria-hidden="true" />
+          )}
         </button>
       </div>
 
       {isOpen && (
-        <div id="mobile-navigation" className="sprint-mobile-drawer absolute left-0 right-0 top-full w-full border-b border-brand-border bg-white px-5 py-5 shadow-lg">
+        <div
+          id="mobile-navigation"
+          className="sprint-mobile-drawer absolute left-0 right-0 top-full w-full border-b border-brand-border bg-white px-5 py-5 shadow-lg"
+        >
           <nav aria-label="Mobile navigation">
             <div className="flex flex-col gap-1">
               {navigation.map((item) => {
@@ -72,7 +88,9 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
                     onClick={() => setIsOpen(false)}
                     aria-current={active ? "page" : undefined}
                     className={`rounded-lg px-4 py-3 text-sm font-semibold ${
-                      active ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-brand-surface"
+                      active
+                        ? "bg-brand-navy text-white"
+                        : "text-brand-navy hover:bg-brand-surface"
                     }`}
                   >
                     {item.label}
@@ -81,12 +99,32 @@ export default function MobileNavigation({ pathname, isOpen, setIsOpen }: Mobile
               })}
             </div>
             <div className="mt-4 border-t border-brand-border pt-4">
-              <Link href="/student/login" onClick={() => setIsOpen(false)} className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-surface">
-                Student Login
-              </Link>
-              <Link href="/register" onClick={() => setIsOpen(false)} className="mt-2 block rounded-lg bg-brand-red px-4 py-3 text-center text-sm font-semibold text-white">
-                Enroll Now
-              </Link>
+              {isAdmin ? (
+                <Link
+                  href="/admin/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className="block rounded-lg bg-brand-navy px-4 py-3 text-center text-sm font-semibold text-white"
+                >
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/student/login"
+                    onClick={() => setIsOpen(false)}
+                    className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-surface"
+                  >
+                    Student Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setIsOpen(false)}
+                    className="mt-2 block rounded-lg bg-brand-red px-4 py-3 text-center text-sm font-semibold text-white"
+                  >
+                    Enroll Now
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>

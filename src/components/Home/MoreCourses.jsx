@@ -1,6 +1,14 @@
 import Link from "next/link";
-import { moreCourses } from "@/data/data";
+import { courses } from "@/data/courses";
 import CourseCard from "../cards/CourseCard";
+
+const moreCourses = courses.filter((course) =>
+  [
+    "python-and-ai-foundations",
+    "docker-and-kubernetes",
+    "cybersecurity-basics",
+  ].includes(course.slug),
+);
 
 /**
  * More Courses / Learning Paths — Section 6.5.
@@ -9,7 +17,7 @@ import CourseCard from "../cards/CourseCard";
  */
 export default function MoreCourses() {
   return (
-    <section className="sprint-section relative bg-brand-white py-12 md:py-16 lg:py-20">
+    <section className="sprint-section relative bg-brand-white py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]">
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
@@ -29,7 +37,7 @@ export default function MoreCourses() {
             <div className="sticky top-24">
               <Link
                 href="/courses"
-                className="inline-flex items-center gap-1.5 shrink-0 whitespace-nowrap rounded-full border border-brand-border bg-white px-5 py-2.5 text-sm font-semibold text-brand-navy shadow-sm transition-colors hover:bg-brand-off-white hover:border-brand-navy hover:text-brand-red"
+                className="inline-flex min-h-11 items-center gap-1.5 shrink-0 whitespace-nowrap rounded-full border border-brand-border bg-white px-5 py-2.5 text-sm font-semibold text-brand-navy shadow-sm transition-colors hover:bg-brand-off-white hover:border-brand-navy hover:text-brand-red"
               >
                 View All Courses
               </Link>
@@ -39,7 +47,7 @@ export default function MoreCourses() {
 
         <div className="mt-8 grid grid-cols-1 justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {moreCourses.map((course) => (
-            <CourseCard key={course.courseId} course={course} />
+            <CourseCard key={course.slug} course={course} />
           ))}
         </div>
 
@@ -47,7 +55,7 @@ export default function MoreCourses() {
         <div className="mt-6 lg:hidden">
           <Link
             href="/courses"
-            className="block text-center text-sm font-semibold text-brand-navy hover:text-brand-red"
+            className="flex min-h-11 items-center justify-center text-center text-sm font-semibold text-brand-navy hover:text-brand-red"
           >
             View All Courses
           </Link>

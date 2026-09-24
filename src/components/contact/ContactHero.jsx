@@ -53,10 +53,6 @@ export default function ContactHero() {
         </nav>
 
         <div className="contact-hero__copy">
-          <p className="contact-hero__eyebrow">
-            <span aria-hidden="true">›</span> CONTACT US
-          </p>
-
           <h1 id="contact-hero-title">
             Let&apos;s Build Your <span>Future</span> Together
           </h1>

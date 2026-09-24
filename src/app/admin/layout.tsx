@@ -9,7 +9,7 @@ import {
     GraduationCap, LayoutDashboard, LogOut, Menu, Megaphone, PhoneCall, Search,
     School, Users,
 } from "lucide-react";
-import { logoutAdmin } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/client";
 
 type Icon = typeof LayoutDashboard;
 type NavigationItem = { label: string; href: string; icon: Icon; badge?: string };
@@ -95,23 +95,108 @@ function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate?: () =
 export default function AdminLayout({ children }: { children: ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
+    const supabase = createClient();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     if (pathname === "/admin") return children;
 
-    function handleSignOut() { logoutAdmin(); router.push("/admin"); }
-    const currentLabel = pathname === "/admin/dashboard" ? "Dashboard" : "Admin Console";
+    async function handleSignOut() {
+        await supabase.auth.signOut();
+        router.push("/admin");
+        router.refresh();
+    }
+
+    const currentLabel =
+        pathname === "/admin/dashboard" ? "Dashboard" : "Admin Console";
 
     return (
         <div className="min-h-[calc(100vh-5rem)] bg-slate-50 lg:flex">
-            <div className={`fixed inset-0 z-[60] bg-brand-navy/35 transition-opacity lg:hidden ${isMobileOpen ? "opacity-100" : "pointer-events-none opacity-0"}`} onClick={() => setIsMobileOpen(false)} aria-hidden="true" />
-            <div className={`fixed inset-y-0 left-0 z-[70] transition-transform duration-300 lg:static lg:translate-x-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}`}><Sidebar pathname={pathname} onNavigate={() => setIsMobileOpen(false)} /></div>
+            {/* Mobile Backdrop */}
+            <div
+                className={`fixed inset-0 z-[60] bg-brand-navy/35 transition-opacity lg:hidden ${isMobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+                    }`}
+                onClick={() => setIsMobileOpen(false)}
+                aria-hidden="true"
+            />
+
+            {/* Sidebar Container */}
+            <div
+                className={`fixed inset-y-0 left-0 z-[70] transition-transform duration-300 lg:static lg:translate-x-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full"
+                    }`}
+            >
+                <Sidebar pathname={pathname} onNavigate={() => setIsMobileOpen(false)} />
+            </div>
+
+            {/* Main Content Area */}
             <div className="min-w-0 flex-1">
                 <header className="sticky top-0 z-40 flex h-20 items-center justify-between gap-4 border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
-                    <div className="flex min-w-0 items-center gap-3"><button type="button" onClick={() => setIsMobileOpen(true)} className="sprint-focus flex size-10 items-center justify-center rounded-xl border border-slate-200 text-brand-navy lg:hidden" aria-label="Open admin navigation"><Menu className="size-5" aria-hidden="true" /></button><div className="min-w-0"><div className="hidden items-center gap-2 text-xs text-brand-text-muted sm:flex"><span>Admin</span><ChevronRight className="size-3" aria-hidden="true" /><span className="font-semibold text-brand-navy">{currentLabel}</span></div><h1 className="truncate font-display text-lg font-bold text-brand-navy sm:mt-1 sm:text-xl">{currentLabel}</h1></div></div>
-                    <div className="flex items-center gap-2 sm:gap-4"><label className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-brand-text-muted md:flex"><Search className="size-4" aria-hidden="true" /><span className="sr-only">Search admin console</span><input type="search" placeholder="Search console" className="w-32 bg-transparent outline-none placeholder:text-brand-text-muted lg:w-44" /></label><button type="button" className="relative hidden size-10 items-center justify-center rounded-xl text-brand-text-secondary hover:bg-brand-surface sm:flex" aria-label="View notifications"><Bell className="size-5" aria-hidden="true" /><span className="absolute right-2 top-2 size-2 rounded-full bg-brand-red" /></button><div className="hidden items-center gap-2 border-l border-slate-200 pl-4 md:flex"><span className="flex size-9 items-center justify-center rounded-full bg-brand-navy text-xs font-bold text-white">AD</span><span className="hidden text-right xl:block"><span className="block text-xs font-bold text-brand-navy">admin@sprint.institute</span><span className="block text-[11px] text-brand-success">● Active</span></span></div><button type="button" onClick={handleSignOut} className="sprint-focus inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-red-light hover:text-brand-red sm:px-4"><LogOut className="size-4" aria-hidden="true" /><span className="hidden sm:inline">Sign Out</span></button></div>
+                    <div className="flex min-w-0 items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={() => setIsMobileOpen(true)}
+                            className="sprint-focus flex size-10 items-center justify-center rounded-xl border border-slate-200 text-brand-navy lg:hidden"
+                            aria-label="Open admin navigation"
+                        >
+                            <Menu className="size-5" aria-hidden="true" />
+                        </button>
+                        <div className="min-w-0">
+                            <div className="hidden items-center gap-2 text-xs text-brand-text-muted sm:flex">
+                                <span>Admin</span>
+                                <ChevronRight className="size-3" aria-hidden="true" />
+                                <span className="font-semibold text-brand-navy">{currentLabel}</span>
+                            </div>
+                            <h1 className="truncate font-display text-lg font-bold text-brand-navy sm:mt-1 sm:text-xl">
+                                {currentLabel}
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 sm:gap-4">
+                        <label className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-brand-text-muted md:flex">
+                            <Search className="size-4" aria-hidden="true" />
+                            <span className="sr-only">Search admin console</span>
+                            <input
+                                type="search"
+                                placeholder="Search console"
+                                className="w-32 bg-transparent outline-none placeholder:text-brand-text-muted lg:w-44"
+                            />
+                        </label>
+
+                        <button
+                            type="button"
+                            className="relative hidden size-10 items-center justify-center rounded-xl text-brand-text-secondary hover:bg-brand-surface sm:flex"
+                            aria-label="View notifications"
+                        >
+                            <Bell className="size-5" aria-hidden="true" />
+                            <span className="absolute right-2 top-2 size-2 rounded-full bg-brand-red" />
+                        </button>
+
+                        <div className="hidden items-center gap-2 border-l border-slate-200 pl-4 md:flex">
+                            <span className="flex size-9 items-center justify-center rounded-full bg-brand-navy text-xs font-bold text-white">
+                                AD
+                            </span>
+                            <span className="hidden text-right xl:block">
+                                <span className="block text-xs font-bold text-brand-navy">
+                                    admin@sprint.institute
+                                </span>
+                                <span className="block text-[11px] text-emerald-600">● Active</span>
+                            </span>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={handleSignOut}
+                            className="sprint-focus inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-red-light hover:text-brand-red sm:px-4"
+                        >
+                            <LogOut className="size-4" aria-hidden="true" />
+                            <span className="hidden sm:inline">Sign Out</span>
+                        </button>
+                    </div>
                 </header>
-                <main className="min-h-[calc(100vh-10rem)] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</main>
+
+                <main className="min-h-[calc(100vh-10rem)] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+                    {children}
+                </main>
             </div>
         </div>
     );

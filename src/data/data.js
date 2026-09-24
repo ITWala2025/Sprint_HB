@@ -79,60 +79,6 @@ export const featuredCourse = {
   courseUrl: "/courses/full-stack-engineering",
 };
 
-export const moreCourses = [
-  {
-    courseId: "crs-002",
-    title: "Data Science & Machine Learning",
-    shortDescription:
-      "Statistics, Python, and ML fundamentals with real datasets.",
-    thumbnailUrl: "/images/courses/abstract-data.svg",
-    instructorName: "Karthik Iyer",
-    category: "Data Science",
-    difficultyLevel: "Intermediate",
-    duration: "5 months",
-    rating: 4.7,
-    reviewCount: 860,
-    currentPrice: 22999,
-    originalPrice: 45999,
-    discountPercentage: 50,
-    courseUrl: "/courses/data-science-ml",
-  },
-  {
-    courseId: "crs-003",
-    title: "Cloud & DevOps Engineering",
-    shortDescription:
-      "AWS, CI/CD, and infrastructure-as-code from an SRE mindset.",
-    thumbnailUrl: "/images/courses/abstract-devops.svg",
-    instructorName: "Priya Menon",
-    category: "Cloud Computing",
-    difficultyLevel: "Intermediate",
-    duration: "4 months",
-    rating: 4.6,
-    reviewCount: 512,
-    currentPrice: 19999,
-    originalPrice: 39999,
-    discountPercentage: 50,
-    courseUrl: "/courses/cloud-devops",
-  },
-  {
-    courseId: "crs-004",
-    title: "Product Management Essentials",
-    shortDescription:
-      "Discovery, roadmapping, and shipping with cross-functional teams.",
-    thumbnailUrl: "/images/courses/abstract-people.svg",
-    instructorName: "Rahul Sen",
-    category: "Product",
-    difficultyLevel: "Beginner",
-    duration: "3 months",
-    rating: 4.9,
-    reviewCount: 398,
-    currentPrice: 17999,
-    originalPrice: 34999,
-    discountPercentage: 49,
-    courseUrl: "/courses/product-management",
-  },
-];
-
 // Section 6.6 — Instructor Section (3–4 instructors)
 export const instructors = [
   {

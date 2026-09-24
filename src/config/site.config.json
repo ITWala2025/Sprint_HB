@@ -12,8 +12,8 @@
     "telHref": "tel:+918521283184/85",
     "email": "info@sprint.naturalelements.co.in",
     "emailHref": "mailto:info@sprint.naturalelements.co.in",
-    "whatsappNumber": "+918521283184/85",
-    "whatsappHref": "https://wa.me/+918521283184/85?text=Hi%20SPRINT%2C%20I%20would%20like%20to%20know%20more%20about%20your%20programs."
+    "whatsappNumber": "+918521283184",
+    "whatsappHref": "https://wa.me/+918521283184?text=Hi%20SPRINT%2C%20I%20would%20like%20to%20know%20more%20about%20your%20programs."
   },
   "socials": [
     { "label": "LinkedIn", "href": "https://www.linkedin.com/company/sprint-institute", "icon": "linkedin" },
