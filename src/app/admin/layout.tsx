@@ -5,9 +5,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-    Award, Bell, BookOpen, Building2, ChevronDown, ChevronRight, ClipboardCheck,
-    GraduationCap, LayoutDashboard, LogOut, Menu, Megaphone, PhoneCall, Search,
-    School, Users,
+    Award, Bell, BookOpen, Briefcase, Building2, ChevronDown, ChevronRight, ClipboardCheck,
+    ExternalLink, FileEdit, FileText, Globe, GraduationCap, LayoutDashboard, Layers, LogOut,
+    Menu, Megaphone, PhoneCall, Search, School, ShieldAlert, ShieldCheck, UserCheck, Users,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -17,10 +17,27 @@ type NavigationGroup = { label: string; icon: Icon; items: NavigationItem[] };
 
 const directItems: NavigationItem[] = [
     { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-    { label: "Admissions & Callbacks", href: "/admin/admissions", icon: PhoneCall, badge: "14" },
 ];
 
 const navigationGroups: NavigationGroup[] = [
+    {
+        label: "Admissions & Enquiries", icon: PhoneCall, items: [
+            { label: "Student Enquiries", href: "/admin/admissions/students", icon: PhoneCall, badge: "14" },
+            { label: "Partner Company Enquiries", href: "/admin/admissions/companies", icon: Building2 },
+            { label: "Partner College Enquiries", href: "/admin/admissions/colleges", icon: School },
+        ]
+    },
+    {
+        label: "Website CMS", icon: Globe, items: [
+            { label: "Homepage CMS", href: "/admin/cms/home", icon: Globe },
+            { label: "About Us CMS", href: "/admin/cms/about", icon: FileEdit },
+            { label: "Course & Bundle CMS", href: "/admin/cms/courses", icon: Layers },
+            { label: "Contact & Center CMS", href: "/admin/cms/contact", icon: PhoneCall },
+            { label: "Careers & Openings CMS", href: "/admin/cms/careers", icon: Briefcase },
+            { label: "Ticker & Campus Announcements", href: "/admin/cms/announcements", icon: Megaphone },
+            { label: "Legal & Compliance CMS", href: "/admin/cms/legal", icon: ShieldCheck },
+        ]
+    },
     {
         label: "Training & Courses", icon: BookOpen, items: [
             { label: "Edit Courses", href: "/admin/courses/edit", icon: BookOpen },
@@ -29,6 +46,7 @@ const navigationGroups: NavigationGroup[] = [
     },
     {
         label: "Student Operations", icon: Users, items: [
+            { label: "Enrollment Applications", href: "/admin/students/enrollments", icon: GraduationCap, badge: "7" },
             { label: "Student Directory & Attendance", href: "/admin/students/list", icon: Users },
         ]
     },
@@ -42,18 +60,29 @@ const navigationGroups: NavigationGroup[] = [
     {
         label: "Partner Companies (B2B Hiring)", icon: Building2, items: [
             { label: "List of Partners", href: "/admin/partners/companies/list", icon: Building2 },
-            { label: "Inquiries & Callbacks", href: "/admin/partners/companies/callbacks", icon: PhoneCall },
         ]
     },
     {
         label: "Partner Colleges / Institutes", icon: School, items: [
             { label: "List of Colleges", href: "/admin/partners/colleges/list", icon: School },
-            { label: "Inquiries & Callbacks", href: "/admin/partners/colleges/callbacks", icon: PhoneCall },
+        ]
+    },
+    {
+        label: "Trainer Management", icon: UserCheck, items: [
+            { label: "Trainer Profiles", href: "/admin/trainers/list", icon: UserCheck },
+            { label: "Trainer Assignments", href: "/admin/trainers/assignments", icon: ClipboardCheck },
+            { label: "Batch Allocations", href: "/admin/trainers/batches", icon: GraduationCap },
         ]
     },
 ];
 
 const updatesItem: NavigationItem = { label: "Announcements & Updates", href: "/admin/updates", icon: Megaphone };
+const legalGroup: NavigationGroup = {
+    label: "System & Legal", icon: ShieldAlert, items: [
+        { label: "Privacy Policy", href: "/privacy", icon: ShieldAlert },
+        { label: "Terms & Conditions", href: "/terms", icon: FileText },
+    ]
+};
 
 function isActive(pathname: string, href: string) {
     return pathname === href || pathname.startsWith(`${href}/`);
@@ -61,7 +90,7 @@ function isActive(pathname: string, href: string) {
 
 function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
-        Object.fromEntries(navigationGroups.map((group) => [group.label, group.items.some((item) => isActive(pathname, item.href))])),
+        Object.fromEntries([...navigationGroups, legalGroup].map((group) => [group.label, group.items.some((item) => isActive(pathname, item.href))])),
     );
 
     function renderLink(item: NavigationItem, nested = false) {
@@ -77,15 +106,25 @@ function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate?: () =
         );
     }
 
+    function renderGroup(group: NavigationGroup) {
+        const open = openGroups[group.label];
+        const GroupIcon = group.icon;
+        return <div key={group.label}><button type="button" onClick={() => setOpenGroups((current) => ({ ...current, [group.label]: !current[group.label] }))} className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-brand-text-secondary transition-colors hover:bg-brand-surface hover:text-brand-navy" aria-expanded={open}><GroupIcon className="size-4 shrink-0 text-brand-text-muted group-hover:text-brand-navy" aria-hidden="true" /><span className="min-w-0 flex-1 truncate">{group.label}</span>{open ? <ChevronDown className="size-4 shrink-0" aria-hidden="true" /> : <ChevronRight className="size-4 shrink-0" aria-hidden="true" />}</button>{open && <div className="mt-1 space-y-1 border-l border-slate-200 pl-1">{group.items.map((item) => renderLink(item, true))}</div>}</div>;
+    }
+
     return (
         <aside className="flex h-full w-[280px] shrink-0 flex-col border-r border-slate-200 bg-white">
             <div className="flex h-20 items-center border-b border-slate-200 px-6"><Link href="/admin/dashboard" onClick={onNavigate} className="flex items-center gap-3"><span className="flex size-10 items-center justify-center rounded-xl bg-brand-navy font-display text-lg font-bold text-white">S</span><span><span className="block font-display text-lg font-bold leading-none text-brand-navy">SPRINT</span><span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.18em] text-brand-red">Admin Console</span></span></Link></div>
-            <nav aria-label="Admin navigation" className="flex-1 space-y-1 overflow-y-auto px-4 py-5">
+            <nav aria-label="Admin navigation" className="flex flex-1 flex-col space-y-1 overflow-y-auto px-4 py-5">
                 <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">Overview</p>
                 {directItems.map((item) => renderLink(item))}
                 <p className="mb-3 mt-7 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">Management</p>
-                {navigationGroups.map((group) => { const open = openGroups[group.label]; const GroupIcon = group.icon; return <div key={group.label}><button type="button" onClick={() => setOpenGroups((current) => ({ ...current, [group.label]: !current[group.label] }))} className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-brand-text-secondary transition-colors hover:bg-brand-surface hover:text-brand-navy" aria-expanded={open}><GroupIcon className="size-4 shrink-0 text-brand-text-muted group-hover:text-brand-navy" aria-hidden="true" /><span className="min-w-0 flex-1 truncate">{group.label}</span>{open ? <ChevronDown className="size-4 shrink-0" aria-hidden="true" /> : <ChevronRight className="size-4 shrink-0" aria-hidden="true" />}</button>{open && <div className="mt-1 space-y-1 border-l border-slate-200 pl-1">{group.items.map((item) => renderLink(item, true))}</div>}</div>; })}
+                {navigationGroups.map(renderGroup)}
                 <div className="pt-1">{renderLink(updatesItem)}</div>
+                <div className="mt-auto border-t border-slate-200 pt-5">
+                    <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">System</p>
+                    {renderGroup(legalGroup)}
+                </div>
             </nav>
             <div className="border-t border-slate-200 p-4"><div className="flex items-center gap-3 rounded-xl bg-brand-off-white px-3 py-3"><span className="flex size-9 items-center justify-center rounded-full bg-brand-red text-xs font-bold text-white">AD</span><div className="min-w-0"><p className="truncate text-xs font-bold text-brand-navy">Administrator</p><p className="truncate text-[11px] text-brand-text-muted">admin@sprint.institute</p></div></div></div>
         </aside>
@@ -170,6 +209,15 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                             <Bell className="size-5" aria-hidden="true" />
                             <span className="absolute right-2 top-2 size-2 rounded-full bg-brand-red" />
                         </button>
+
+                        <Link
+                            href="/"
+                            className="sprint-focus inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-surface sm:px-4"
+                        >
+                            <ExternalLink className="size-4" aria-hidden="true" />
+                            <span className="hidden sm:inline">View Website</span>
+                            <span className="sm:hidden">Home</span>
+                        </Link>
 
                         <div className="hidden items-center gap-2 border-l border-slate-200 pl-4 md:flex">
                             <span className="flex size-9 items-center justify-center rounded-full bg-brand-navy text-xs font-bold text-white">

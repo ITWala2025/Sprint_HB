@@ -325,3 +325,21 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Editor diagnostics: **Passed** for all seven responsive files changed in this audit.
 - Browser matrix: **Passed** at 320, 360, 375, 390, 412, 768, 1024, 1280, and 1536px in both closed and open Featured Program states; landscape 667x320 also passed.
 - Verified no horizontal overflow, stage circle/rail misalignment, mobile text overlap, sub-44 visible tap targets, console errors, or console warnings. Long temporary stage text wrapped to 4-5 lines at narrow mobile widths without overlap.
+
+## 18. Website CMS Admin Navigation Validation - 2026-09-24
+
+- Editor diagnostics: **Passed** for [src/app/admin/layout.tsx](src/app/admin/layout.tsx) after adding the CMS group and correcting the `Briefcase` Lucide import.
+- TypeScript validation: `npx tsc --noEmit` - **Passed**.
+- No new test file was added; this change is navigation configuration only. Existing `isActive`, `openGroups`, `renderGroup`, and mobile `onNavigate` behavior continues to drive the new CMS entries.
+
+## 17. Admin Navigation and Enrollment Applications Validation - 2026-09-24
+
+- Production build: `npm run build` - **Passed**; Next.js compiled successfully, TypeScript completed, and `/admin/students/enrollments` was generated among 37 routes.
+- Confirmed the admin sidebar refactor preserves the shared `isActive` matching, `isMobileOpen` drawer close callback, collapsible group behavior, and the profile card placement.
+- No new automated test file was added; the enrollment page is a static scaffold pending backend actions and persistence wiring. The build validates its route, JSX, Lucide imports, and type safety.
+
+## 19. Admin and Public Shell Separation Validation - 2026-09-24
+
+- Editor diagnostics: **Passed** for [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx) and [src/app/admin/layout.tsx](src/app/admin/layout.tsx).
+- TypeScript validation: `npx tsc --noEmit` - **Passed**.
+- Verified the public shell conditionally removes Header, ticker, footer, and WhatsApp chrome for admin routes while preserving the admin-aware Header auth listener and responsive public actions on marketing routes.

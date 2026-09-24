@@ -11,7 +11,7 @@ export default function PublicSiteShell({ children }) {
 
     return (
         <>
-            <Header />
+            {!isAdminRoute && <Header />}
             {!isAdminRoute && <ConditionalCampusNewsTicker />}
             <main id="main">{children}</main>
             {!isAdminRoute && <Footer />}

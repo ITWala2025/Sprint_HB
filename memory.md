@@ -421,3 +421,22 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Updated [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx) so mobile stage text has a clear gap from the numbered rail circle, the circle is fixed at 40px, centered on the rail, and top-aligned with the stage label. Desktop `lg:` positioning remains unchanged.
 - Updated homepage/shared-shell layout classes in [src/components/Home/Testimonials.jsx](src/components/Home/Testimonials.jsx), [src/components/Home/MoreCourses.jsx](src/components/Home/MoreCourses.jsx), [src/components/header/Header.tsx](src/components/header/Header.tsx), [src/components/header/DesktopNavigation.tsx](src/components/header/DesktopNavigation.tsx), [src/components/header/MobileNavigation.tsx](src/components/header/MobileNavigation.tsx), and [src/components/footer/Footer.jsx](src/components/footer/Footer.jsx) to remove the 320px header squeeze and enforce 44px tap targets.
 - Browser validation covered closed/open stages, long temporary stage wrapping, portrait widths 320/360/375/390/412, tablet 768, desktop 1024/1280/1536, and landscape 667x320 with no horizontal overflow or console issues.
+
+## 28. Website CMS Admin Navigation - 2026-09-24
+
+- Added the collapsible `Website CMS` group to [src/app/admin/layout.tsx](src/app/admin/layout.tsx), with route-backed entries for Homepage, About Us, Course & Bundle, Contact & Center, Careers & Openings, Ticker & Campus Announcements, and Legal & Compliance content.
+- CMS entries use Lucide icons and map to the structured site domains documented in this file: homepage stats/program/partners/testimonials/FAQs, About profiles/faculty/impact, course and bundle data, contact configuration, careers data, campus updates, and public legal pages.
+- Existing active matching, automatic group expansion, responsive mobile drawer close handlers, admin groups, and SPRINT styling tokens remain unchanged.
+
+## 27. Admin Navigation and Enrollment Applications - 2026-09-24
+
+- Refactored [src/app/admin/layout.tsx](src/app/admin/layout.tsx) so Admissions & Callbacks is an expandable group containing student, partner company, and partner college enquiry routes; partner company and college groups now only expose their list routes.
+- Added pending-badge navigation for Enrollment Applications at `/admin/students/enrollments` under Student Operations, plus Trainer Management links for profiles, assignments, and batch allocations.
+- Added a bottom System & Legal group linking to the existing public `/privacy` and `/terms` routes while preserving active route matching, responsive drawer close behavior, Lucide icons, and SPRINT brand tokens.
+- Added [src/app/admin/students/enrollments/page.tsx](src/app/admin/students/enrollments/page.tsx) as a server-rendered review-table scaffold with applicant details and accessible view, accept, and reject action buttons.
+
+## 29. Admin and Public Shell Separation - 2026-09-24
+
+- Updated [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx) to omit the public Header on `/admin` and `/admin/*` routes. The public ticker, footer, and WhatsApp affordance remain excluded on the same route family.
+- Added a responsive `View Website`/`Home` action with an `ExternalLink` icon to [src/app/admin/layout.tsx](src/app/admin/layout.tsx), linking admins to `/` without changing the existing drawer or sign-out behavior.
+- Preserved the admin-aware public Header auth listener: it resolves `public.profiles.role`, shows `Go to Dashboard` for active admins, and returns to Student Portal/Enroll Now after Supabase sign-out.
