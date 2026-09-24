@@ -61,7 +61,7 @@ function UpdateItem({ update }: { update: CampusUpdate }) {
 
 	return (
 		<article
-			className="flex max-w-104 shrink-0 items-center gap-3 border-r border-white/10 px-5 first:pl-0 last:border-r-0"
+			className="flex shrink-0 items-center gap-3 border-r border-white/10 px-5 first:pl-0 last:border-r-0"
 			title={`${update.category}: ${update.message}`}
 		>
 			<span
@@ -70,7 +70,7 @@ function UpdateItem({ update }: { update: CampusUpdate }) {
 				<Icon className="size-3" aria-hidden="true" />
 				{update.category}
 			</span>
-			<p className="max-w-76 text-xs leading-relaxed text-slate-200">
+			<p className="whitespace-nowrap text-xs leading-relaxed text-slate-200">
 				{update.message}
 			</p>
 		</article>
@@ -90,7 +90,7 @@ function UpdateSet({ hidden = false }: { hidden?: boolean }) {
 export default function CampusNewsTicker() {
   return (
     <section
-      className="relative z-10 overflow-hidden border-b border-brand-navy-light bg-brand-navy-dark shadow-[0_8px_20px_-18px_rgba(1,31,62,0.8)]"
+      className="relative z-10 overflow-hidden border-b border-brand-navy-light bg-[linear-gradient(90deg,#163f68_0%,var(--color-brand-navy-dark)_50%,#163f68_100%)] shadow-[0_8px_20px_-18px_rgba(1,31,62,0.8)]"
       aria-label="SPRINT campus news and updates"
     >
 			<div className="mx-auto flex min-h-12 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
@@ -100,11 +100,11 @@ export default function CampusNewsTicker() {
 					</span>
 					<div>
 						<p className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.16em] text-red-200">
-							Campus updates
+							Updates
 						</p>
-						<p className="whitespace-nowrap text-xs text-slate-400">
+						{/*<p className="whitespace-nowrap text-xs text-slate-400">
 							Stay in the loop
-						</p>
+						</p> */}
 					</div>
 				</div>
 

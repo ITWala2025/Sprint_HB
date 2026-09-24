@@ -7,6 +7,12 @@ import { ArrowRight, ChevronDown, Heart, Search, SlidersHorizontal, X } from "lu
 import { audienceCopy, audienceOptions, categories } from "@/data/courses";
 
 const itemHref = (item) => `/${item.kind === "bundle" ? "bundles" : "courses"}/${item.slug}`;
+const matchesAudience = (item, audienceValue) => {
+  if (!item || !item.audience) return false;
+  return Array.isArray(item.audience)
+    ? item.audience.includes(audienceValue)
+    : item.audience === audienceValue;
+};
 
 function CourseTile({ item }) {
   return (
@@ -60,7 +66,7 @@ export default function CourseCatalogue({ items }) {
   };
   const visibleItems = useMemo(() => items.filter((item) => {
     const haystack = `${item.title} ${item.description} ${item.category} ${item.tools.join(" ")}`.toLowerCase();
-    return item.audience.includes(audience) && (!query || haystack.includes(query.toLowerCase())) && (!selectedCategories.length || selectedCategories.includes(item.category)) && (!selectedLevel || item.level === selectedLevel);
+    return matchesAudience(item, audience) && (!query || haystack.includes(query.toLowerCase())) && (!selectedCategories.length || selectedCategories.includes(item.category)) && (!selectedLevel || item.level === selectedLevel);
   }), [audience, items, query, selectedCategories, selectedLevel]);
   const suggestions = useMemo(() => items.filter((item) => item.title.toLowerCase().includes(query.toLowerCase())).slice(0, 5), [items, query]);
   const activeAudience = audienceCopy[audience];
@@ -115,7 +121,7 @@ export default function CourseCatalogue({ items }) {
     <main className="courses-content">
       <aside className="course-filter"><FilterContent {...{ selectedCategories, setSelectedCategories, selectedLevel, setSelectedLevel }} /></aside>
       <div className="courses-results">
-        <div className="courses-results__heading"><div><p className="courses-eyebrow">{audienceOptions.find((option) => option.value === audience).label}</p><h2>{activeAudience.title}</h2><p>{activeAudience.description}</p></div><button type="button" className="course-filter-trigger" onClick={() => setDrawerOpen(true)}><SlidersHorizontal size={17} /> Filter &amp; sort</button></div>
+        <div className="courses-results__heading"><div> {/* <p className="courses-eyebrow">{audienceOptions.find((option) => option.value === audience).label}</p> */} <h2>{activeAudience.title}</h2> {/* <p>{activeAudience.description}</p> */}</div><button type="button" className="course-filter-trigger" onClick={() => setDrawerOpen(true)}><SlidersHorizontal size={17} /> Filter &amp; sort</button></div>
         <div className="courses-results__meta"><span>{visibleItems.length} learning options</span><button type="button" onClick={() => { setQuery(""); setSelectedCategories([]); setSelectedLevel(""); }}>Clear filters</button></div>
         {visibleItems.length ? <div className="course-grid">{visibleItems.map((item) => <CourseTile key={`${item.kind}-${item.slug}`} item={item} />)}</div> : <div className="courses-empty"><h2>No matching learning options</h2><p>Try clearing a filter or searching with a broader term.</p></div>}
       </div>

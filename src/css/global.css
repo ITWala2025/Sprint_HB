@@ -5312,6 +5312,7 @@ a {
   text-transform: uppercase;
 }
 
+<<<<<<< HEAD
 .courses-hero h1,
 .course-detail h1 {
   max-width: 850px;
@@ -5322,6 +5323,10 @@ a {
   font-weight: 700;
   letter-spacing: -0.045em;
   line-height: 1.02;
+=======
+.courses-hero h1, .course-detail h1 { 
+  max-width: 850px; margin: .65rem 0 0; color: var(--color-brand-navy); font-family: var(--font-display); font-size: clamp(2.0rem, 4.5vw, 4rem); font-weight: 700; letter-spacing: -.045em; line-height: 1.02; 
+>>>>>>> 5dc3741663e8fc5f049f16cf15ffe579c3099e2c
 }
 
 .courses-hero__inner > p:not(.courses-eyebrow) {
@@ -5523,6 +5528,7 @@ a {
   gap: 1.5rem;
 }
 
+<<<<<<< HEAD
 .courses-results__heading h2,
 .courses-cta h2,
 .course-detail-section h2 {
@@ -5530,6 +5536,20 @@ a {
   color: var(--color-brand-navy);
   font: 700 clamp(1.75rem, 3vw, 2.55rem)/1.12 var(--font-display);
   letter-spacing: -0.035em;
+=======
+.courses-results__heading h2 {
+  margin: .35rem 0 0;
+  color: var(--color-brand-navy);
+  font: 700 clamp(1.4rem, 2.4vw, 2rem)/1.12 var(--font-display);
+  letter-spacing: -.035em;
+}
+
+.courses-cta h2, .course-detail-section h2 { 
+  margin: .45rem 0 0; 
+  color: var(--color-brand-navy); 
+  font: 700 clamp(1.75rem, 3vw, 2.55rem)/1.12 var(--font-display); 
+  letter-spacing: -.035em; 
+>>>>>>> 5dc3741663e8fc5f049f16cf15ffe579c3099e2c
 }
 
 .courses-results__heading p:not(.courses-eyebrow) {
