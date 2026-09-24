@@ -5523,9 +5523,6 @@ a {
   gap: 1.5rem;
 }
 
-<<<<<<< HEAD
-.courses-results__heading h2,
-=======
 .courses-results__heading h2 {
   margin: 0.35rem 0 0;
   color: var(--color-brand-navy);
@@ -5533,7 +5530,6 @@ a {
   letter-spacing: -0.035em;
 }
 
->>>>>>> 020b3018d35f813af4b6392b2b34fbb906e008ee
 .courses-cta h2,
 .course-detail-section h2 {
   margin: 0.45rem 0 0;
