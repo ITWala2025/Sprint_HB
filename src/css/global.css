@@ -5530,12 +5530,8 @@ a {
   letter-spacing: -0.035em;
 }
 
-<<<<<<< HEAD
 .courses-cta h2,
 .course-detail-section h2 {
-=======
-.courses-cta h2, .course-detail-section h2 {
->>>>>>> 36630ac505da9f256ff1b7bc3b76c5c079184af7
   margin: 0.45rem 0 0;
   color: var(--color-brand-navy);
   font: 700 clamp(1.75rem, 3vw, 2.55rem)/1.12 var(--font-display);
