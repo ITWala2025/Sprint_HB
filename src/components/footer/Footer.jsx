@@ -180,6 +180,7 @@ export default function Footer() {
                 href={siteConfig.contact.telHref}
                 className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white"
               >
+<<<<<<< HEAD
                 <Phone className="size-5 shrink-0 text-brand-red" aria-hidden="true" />
                 <span
                       className="wrap-break-word"
@@ -187,6 +188,18 @@ export default function Footer() {
                 >
                       {siteConfig.contact.phoneDisplay}
                       </span>
+=======
+                <Phone
+                  className="size-5 shrink-0 text-brand-red"
+                  aria-hidden="true"
+                />
+                <span
+                  className="wrap-break-word"
+                  style={{ fontFamily: "var(--font-body)" }}
+                >
+                  {siteConfig.contact.phoneDisplay}
+                </span>
+>>>>>>> 020b3018d35f813af4b6392b2b34fbb906e008ee
               </a>
             </li>
             <li>

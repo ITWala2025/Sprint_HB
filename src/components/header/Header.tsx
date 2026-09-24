@@ -16,7 +16,10 @@ export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
       return;
     }
 
@@ -42,10 +45,14 @@ export default function Header() {
       if (isMounted) setIsAdmin(profile?.role === "admin");
     }
 
-    supabase.auth.getUser().then(({ data: { user } }) => updateAdminStatus(user?.id));
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-      updateAdminStatus(session?.user.id);
-    });
+    supabase.auth
+      .getUser()
+      .then(({ data: { user } }) => updateAdminStatus(user?.id));
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        updateAdminStatus(session?.user.id);
+      },
+    );
 
     return () => {
       isMounted = false;
@@ -62,7 +69,9 @@ export default function Header() {
   }, []);
 
   return (
-    <header className={`sprint-site-header sticky top-0 z-50 w-full ${isScrolled ? "is-scrolled" : ""}`}>
+    <header
+      className={`sprint-site-header sticky top-0 z-50 w-full ${isScrolled ? "is-scrolled" : ""}`}
+    >
       <div className="relative mx-auto flex h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
         <HeaderLogo />
         <DesktopNavigation pathname={pathname} />

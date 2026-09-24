@@ -5318,7 +5318,7 @@ a {
   margin: 0.65rem 0 0;
   color: var(--color-brand-navy);
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5.7vw, 5.1rem);
+  font-size: clamp(2rem, 4.5vw, 4rem);
   font-weight: 700;
   letter-spacing: -0.045em;
   line-height: 1.02;
@@ -5523,7 +5523,17 @@ a {
   gap: 1.5rem;
 }
 
+<<<<<<< HEAD
 .courses-results__heading h2,
+=======
+.courses-results__heading h2 {
+  margin: 0.35rem 0 0;
+  color: var(--color-brand-navy);
+  font: 700 clamp(1.4rem, 2.4vw, 2rem)/1.12 var(--font-display);
+  letter-spacing: -0.035em;
+}
+
+>>>>>>> 020b3018d35f813af4b6392b2b34fbb906e008ee
 .courses-cta h2,
 .course-detail-section h2 {
   margin: 0.45rem 0 0;
