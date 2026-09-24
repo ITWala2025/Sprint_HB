@@ -79,38 +79,6 @@ export const featuredCourse = {
   courseUrl: "/courses/full-stack-engineering",
 };
 
-// Section 6.6 — Instructor Section (3–4 instructors)
-export const instructors = [
-  {
-    id: "ins-1",
-    name: "Ananya Rao",
-    designation: "Senior Software Engineer",
-    company: "NexaTech",
-    photoUrl: "/images/home/Ananya.jpeg",
-  },
-  {
-    id: "ins-2",
-    name: "Karthik Iyer",
-    designation: "Lead Data Scientist",
-    company: "Orion Cloud",
-    photoUrl: "/images/home/Karthik.jpeg",
-  },
-  {
-    id: "ins-3",
-    name: "Priya Menon",
-    designation: "Staff DevOps Engineer",
-    company: "Vertex Systems",
-    photoUrl: "/images/home/Priya.jpeg",
-  },
-  {
-    id: "ins-4",
-    name: "Rahul Sen",
-    designation: "Group Product Manager",
-    company: "Meridian Bank",
-    photoUrl: "/images/home/Rahul.jpeg",
-  },
-];
-
 // Section 6.7 — Student Testimonials (4–6, text-based for now; videoUrl is
 // optional so a testimonial can be upgraded to video without a type change)
 export const testimonials = [

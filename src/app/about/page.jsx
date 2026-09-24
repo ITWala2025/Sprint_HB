@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import about from "@/data/about.json";
 import siteConfig from "@/config/site.config.json";
 import StoryVisionMission from "@/components/sections/StoryVisionMission";
+import FacultyExperts from "@/components/sections/FacultyExperts";
 import ProfileCard from "@/components/cards/ProfileCard";
 import SkillCard from "@/components/cards/SkillCard";
 
@@ -69,7 +70,10 @@ function HighlightHeroTitle({ text, highlight }) {
 function SectionHeader({ heading, subtitle, center = false, id }) {
   return (
     <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
-      <h2 id={id} className="text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
+      <h2
+        id={id}
+        className="text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl"
+      >
         {heading}
       </h2>
       {subtitle ? (
@@ -125,12 +129,13 @@ export default function AboutPage() {
             </p>
 
             <h1 className="sprint-hero-title">
-              <HighlightHeroTitle text={about.hero.title} highlight={about.hero.titleHighlight} />
+              <HighlightHeroTitle
+                text={about.hero.title}
+                highlight={about.hero.titleHighlight}
+              />
             </h1>
 
-            <p className="sprint-hero-description">
-              {about.hero.description}
-            </p>
+            <p className="sprint-hero-description">{about.hero.description}</p>
 
             <div className="sprint-hero-ctas">
               <Link
@@ -160,7 +165,11 @@ export default function AboutPage() {
             aria-label="SPRINT verified impact at a glance"
           >
             {about.impact.stats.map((stat) => (
-              <div key={stat.label} role="listitem" className="sprint-hero-stat">
+              <div
+                key={stat.label}
+                role="listitem"
+                className="sprint-hero-stat"
+              >
                 <p className="sprint-hero-stat-value tabular-nums">
                   {formatStatValue(stat.value)}
                   {stat.suffix}
@@ -172,7 +181,10 @@ export default function AboutPage() {
           </div>
 
           <p className="sprint-hero-verified">
-            <CheckCircle2 className="size-4 shrink-0 text-brand-success" aria-hidden="true" />
+            <CheckCircle2
+              className="size-4 shrink-0 text-brand-success"
+              aria-hidden="true"
+            />
             All figures source-verified
           </p>
         </div>
@@ -191,13 +203,19 @@ export default function AboutPage() {
             id="our-story-heading"
           />
           <div className="mt-6 md:mt-8">
-            <StoryVisionMission story={about.story} visionMission={about.visionMission} />
+            <StoryVisionMission
+              story={about.story}
+              visionMission={about.visionMission}
+            />
           </div>
         </div>
       </section>
 
       {/* ============ 5. LEADERSHIP / FOUNDERS (§3.5) ============ */}
-      <section id="leadership" className="sprint-section sprint-anchor bg-brand-off-white">
+      <section
+        id="leadership"
+        className="sprint-section sprint-anchor bg-brand-off-white"
+      >
         <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
           <SectionHeader
             heading={about.leadership.heading}
@@ -212,22 +230,13 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 6. FACULTY / EXPERTS (§3.6) ============ */}
-      <section id="faculty" className="sprint-section sprint-anchor bg-white">
-        <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
-          <SectionHeader
-            heading={about.faculty.heading}
-            subtitle={about.faculty.subtitle}
-          />
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {about.faculty.profiles.map((profile) => (
-              <ProfileCard key={profile.name} profile={profile} showTags />
-            ))}
-          </div>
-        </div>
-      </section>
+      <FacultyExperts />
 
       {/* ============ 7. INDUSTRY / ACADEMIC CONNECTION (§3.7) ============ */}
-      <section id="industry-connection" className="sprint-section sprint-anchor bg-brand-surface">
+      <section
+        id="industry-connection"
+        className="sprint-section sprint-anchor bg-brand-surface"
+      >
         <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
           <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
             {/* Left: narrative */}
@@ -268,7 +277,10 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 8. CTA — Connect With SPRINT (§3.9) ============ */}
-      <section id="connect" className="sprint-cta-bg sprint-anchor relative overflow-hidden">
+      <section
+        id="connect"
+        className="sprint-cta-bg sprint-anchor relative overflow-hidden"
+      >
         <div className="mx-auto max-w-[1200px] px-6 py-8 text-center md:py-11 lg:py-14">
           <p className="inline-flex items-center rounded-full bg-brand-red-light px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
             {about.cta.kicker}
