@@ -73,7 +73,7 @@ function SectionHeader({ heading, subtitle, center = false, id }) {
         {heading}
       </h2>
       {subtitle ? (
-        <p className="mt-3 text-lg leading-relaxed text-brand-text-secondary">
+        <p className="mt-2 text-lg leading-relaxed text-brand-text-secondary">
           {subtitle}
         </p>
       ) : null}
@@ -95,9 +95,6 @@ export default function AboutPage() {
         id="who-is-sprint"
         className="sprint-hero-bg sprint-anchor relative overflow-hidden"
       >
-        {/* Decorative full-bleed photo background — mirrors the Contact
-            hero treatment (About_Page.md §3.2 HR-02). Purely cosmetic;
-            the dark-navy overlay below keeps the white hero copy readable. */}
         <picture className="sprint-hero-media" aria-hidden="true">
           <source
             media="(max-width: 767px)"
@@ -139,7 +136,7 @@ export default function AboutPage() {
               <Link
                 href={about.hero.primaryCta.href}
                 data-track="hero_cta_click"
-                className="sprint-focus group inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark sm:w-auto"
+                className="sprint-focus group inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-brand-red px-6 py-2.5 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark sm:w-auto"
               >
                 {about.hero.primaryCta.label}
                 <ArrowRight
@@ -149,14 +146,14 @@ export default function AboutPage() {
               </Link>
               <a
                 href={about.hero.secondaryCta.href}
-                className="sprint-focus inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-white/40 bg-white/10 px-7 py-3 text-base font-semibold text-white transition-colors hover:border-white hover:bg-white/20 sm:w-auto"
+                className="sprint-focus inline-flex min-h-[44px] w-full items-center justify-center rounded-full border border-white/40 bg-white/10 px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white hover:bg-white/20 sm:w-auto"
               >
                 {about.hero.secondaryCta.label}
               </a>
             </div>
           </div>
 
-          {/* Verified impact — horizontal stat band (§3.8 IMP-01 … IMP-05) */}
+          {/* Verified impact — horizontal stat band */}
           <div
             className="sprint-hero-stats"
             role="list"
@@ -181,30 +178,32 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ============ 3 + 4. OUR STORY · VISION · MISSION — two-part grid (§3.3 + §3.4) ============ */}
+      {/* ============ 3 + 4. OUR STORY · VISION · MISSION (§3.3 + §3.4) ============ */}
       <section
         id="our-story"
         aria-labelledby="our-story-heading"
         className="sprint-section sprint-anchor bg-brand-off-white"
       >
-        <div className="mx-auto max-w-[1200px] px-6 py-12 md:py-16 lg:py-20">
+        <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
           <SectionHeader
             heading={`${about.story.heading}, ${about.visionMission.heading}`}
             subtitle="Why SPRINT was established, and what drives everything we build"
             id="our-story-heading"
           />
-          <StoryVisionMission story={about.story} visionMission={about.visionMission} />
+          <div className="mt-6 md:mt-8">
+            <StoryVisionMission story={about.story} visionMission={about.visionMission} />
+          </div>
         </div>
       </section>
 
       {/* ============ 5. LEADERSHIP / FOUNDERS (§3.5) ============ */}
       <section id="leadership" className="sprint-section sprint-anchor bg-brand-off-white">
-        <div className="mx-auto max-w-[1200px] px-6 py-12 md:py-16 lg:py-20">
+        <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
           <SectionHeader
             heading={about.leadership.heading}
             subtitle={about.leadership.subtitle}
           />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {about.leadership.profiles.map((profile) => (
               <ProfileCard key={profile.name} profile={profile} />
             ))}
@@ -214,12 +213,12 @@ export default function AboutPage() {
 
       {/* ============ 6. FACULTY / EXPERTS (§3.6) ============ */}
       <section id="faculty" className="sprint-section sprint-anchor bg-white">
-        <div className="mx-auto max-w-[1200px] px-6 py-12 md:py-16 lg:py-20">
+        <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
           <SectionHeader
             heading={about.faculty.heading}
             subtitle={about.faculty.subtitle}
           />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {about.faculty.profiles.map((profile) => (
               <ProfileCard key={profile.name} profile={profile} showTags />
             ))}
@@ -229,26 +228,26 @@ export default function AboutPage() {
 
       {/* ============ 7. INDUSTRY / ACADEMIC CONNECTION (§3.7) ============ */}
       <section id="industry-connection" className="sprint-section sprint-anchor bg-brand-surface">
-        <div className="mx-auto max-w-[1200px] px-6 py-12 md:py-16 lg:py-20">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
-            {/* Left: narrative on the academic–industry skill gap */}
+        <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+            {/* Left: narrative */}
             <div>
               <SectionHeader
                 heading={about.industry.heading}
                 subtitle={about.industry.subtitle}
               />
-              <div className="mt-6 space-y-4 text-base leading-relaxed text-brand-text-secondary">
+              <div className="mt-4 space-y-3 text-base leading-relaxed text-brand-text-secondary">
                 {about.industry.paragraphs.map((paragraph) => (
                   <p key={paragraph.slice(0, 24)}>{paragraph}</p>
                 ))}
               </div>
-              <p className="mt-6 rounded-3xl border-l-4 border-brand-red bg-white p-5 font-medium text-brand-text shadow-sm">
+              <p className="mt-4 rounded-2xl border-l-4 border-brand-red bg-white p-4 font-medium text-brand-text shadow-sm">
                 {about.industry.approach}
               </p>
               <Link
                 href={about.industry.cta.href}
                 data-track="industry_courses_link"
-                className="sprint-focus group mt-8 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border-2 border-brand-navy px-7 py-3 text-base font-semibold text-brand-navy transition-colors hover:bg-brand-navy hover:text-white sm:w-auto"
+                className="sprint-focus group mt-6 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border-2 border-brand-navy px-6 py-2.5 text-base font-semibold text-brand-navy transition-colors hover:bg-brand-navy hover:text-white sm:w-auto"
               >
                 {about.industry.cta.label}
                 <ArrowRight
@@ -258,8 +257,8 @@ export default function AboutPage() {
               </Link>
             </div>
 
-            {/* Right: skill cards (IND-02) */}
-            <div className="grid gap-6 sm:grid-cols-3 lg:grid-cols-1">
+            {/* Right: skill cards */}
+            <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
               {about.industry.skills.map((skill) => (
                 <SkillCard key={skill.title} skill={skill} />
               ))}
@@ -269,23 +268,22 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 8. CTA — Connect With SPRINT (§3.9) ============ */}
-      {/* Light ambient surface — stays clearly distinct from the navy footer below */}
       <section id="connect" className="sprint-cta-bg sprint-anchor relative overflow-hidden">
-        <div className="mx-auto max-w-[1200px] px-6 py-12 text-center md:py-16 lg:py-20">
-          <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+        <div className="mx-auto max-w-[1200px] px-6 py-8 text-center md:py-11 lg:py-14">
+          <p className="inline-flex items-center rounded-full bg-brand-red-light px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
             {about.cta.kicker}
           </p>
-          <h2 className="mx-auto mt-5 max-w-2xl text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
+          <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
             {about.cta.heading}
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-brand-text-secondary">
+          <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-brand-text-secondary">
             {about.cta.description}
           </p>
 
           <Link
             href={about.cta.primaryCta.href}
             data-track="cta_contact"
-            className="sprint-focus group mt-6 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-red to-brand-purple px-9 py-3.5 text-base font-bold text-white shadow-brand-cta transition hover:-translate-y-0.5 hover:brightness-110 sm:mt-7 sm:w-auto"
+            className="sprint-focus group mt-5 inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-red to-brand-purple px-7 py-2.5 text-base font-bold text-white shadow-brand-cta transition hover:-translate-y-0.5 hover:brightness-110 sm:w-auto"
           >
             {about.cta.primaryCta.label}
             <ArrowRight
