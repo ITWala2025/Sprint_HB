@@ -179,7 +179,12 @@ export default function Footer() {
                 className="sprint-focus min-w-0 inline-flex items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white"
               >
                 <Phone className="size-5 shrink-0 text-brand-red" aria-hidden="true" />
-                <span className="wrap-break-word">{siteConfig.contact.phoneDisplay}</span>
+                <span
+                      className="wrap-break-word"
+                      style={{ fontFamily: "var(--font-body)" }}
+                >
+                      {siteConfig.contact.phoneDisplay}
+                      </span>
               </a>
             </li>
             <li>

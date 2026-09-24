@@ -5287,7 +5287,7 @@ input[type="checkbox"]:focus-visible {
 }
 
 .courses-hero h1, .course-detail h1 { 
-  max-width: 850px; margin: .65rem 0 0; color: var(--color-brand-navy); font-family: var(--font-display); font-size: clamp(2.4rem, 5.7vw, 5.1rem); font-weight: 700; letter-spacing: -.045em; line-height: 1.02; 
+  max-width: 850px; margin: .65rem 0 0; color: var(--color-brand-navy); font-family: var(--font-display); font-size: clamp(2.0rem, 4.5vw, 4rem); font-weight: 700; letter-spacing: -.045em; line-height: 1.02; 
 }
 
 .courses-hero__inner > p:not(.courses-eyebrow) { 
@@ -5385,8 +5385,18 @@ input[type="checkbox"]:focus-visible {
    display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; 
 }
 
-.courses-results__heading h2, .courses-cta h2, .course-detail-section h2 { 
-  margin: .45rem 0 0; color: var(--color-brand-navy); font: 700 clamp(1.75rem, 3vw, 2.55rem)/1.12 var(--font-display); letter-spacing: -.035em; 
+.courses-results__heading h2 {
+  margin: .35rem 0 0;
+  color: var(--color-brand-navy);
+  font: 700 clamp(1.4rem, 2.4vw, 2rem)/1.12 var(--font-display);
+  letter-spacing: -.035em;
+}
+
+.courses-cta h2, .course-detail-section h2 { 
+  margin: .45rem 0 0; 
+  color: var(--color-brand-navy); 
+  font: 700 clamp(1.75rem, 3vw, 2.55rem)/1.12 var(--font-display); 
+  letter-spacing: -.035em; 
 }
 
 .courses-results__heading p:not(.courses-eyebrow) { 
