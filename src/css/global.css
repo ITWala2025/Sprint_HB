@@ -5523,9 +5523,6 @@ a {
   gap: 1.5rem;
 }
 
-<<<<<<< HEAD
-.courses-results__heading h2,
-=======
 .courses-results__heading h2 {
   margin: 0.35rem 0 0;
   color: var(--color-brand-navy);
@@ -5533,9 +5530,7 @@ a {
   letter-spacing: -0.035em;
 }
 
->>>>>>> 020b3018d35f813af4b6392b2b34fbb906e008ee
-.courses-cta h2,
-.course-detail-section h2 {
+.courses-cta h2, .course-detail-section h2 {
   margin: 0.45rem 0 0;
   color: var(--color-brand-navy);
   font: 700 clamp(1.75rem, 3vw, 2.55rem)/1.12 var(--font-display);
@@ -5640,6 +5635,7 @@ a {
   font: 400 0.84rem/1.48 var(--font-body);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 .course-tile__chips {
