@@ -305,6 +305,7 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Updated spec rows `VM-SW-01`/`VM-SW-02` in [docs/md/About_Page.md](docs/md/About_Page.md) and added a "no hint/counter" assertion to [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx).
 
 <<<<<<< HEAD
+
 ## 12. About Page Hero Photo Layer — 2026-09-22
 
 - Added a decorative full-bleed hero photo to the About "Who is SPRINT?" hero in [src/app/about/page.jsx](src/app/about/page.jsx), using the same treatment as the Contact hero: `<picture>` with mobile/desktop WebP sources (`/images/contact/contact-hero-mobile.webp` and `contact-hero-desktop.webp`) rendered via `next/image` (`fill`, `priority`, `sizes="100vw"`, `alt=""`) inside `aria-hidden` media/overlay layers (spec `HR-02`).
@@ -321,8 +322,8 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - **"Our Impact" now renders as a horizontal stat band** (§3.8): the four verified stats moved out of the old 320px right-side proof card into a full-width band anchored at the hero base — 4-across on `>=768px`, 2×2 on mobile (`.sprint-hero-stats` grid). Dark-glass stat tiles (`.sprint-hero-stat`, white/8 + backdrop blur) keep the gradient red→purple numbers (`.sprint-hero-stat-value`, now `font-size/weight` in CSS) and end with the green `CheckCircle2` "All figures source-verified" line (`.sprint-hero-verified`).
 - **Data/config**: added `hero.titleHighlight: "SPRINT"` to [src/data/about.json](src/data/about.json); the new `HighlightHeroTitle` helper in [src/app/about/page.jsx](src/app/about/page.jsx) wraps that word in a `.sprint-hero-title-accent` span.
 - **CSS**: replaced `.sprint-hero-grid` / `.sprint-hero-proof` / `.sprint-hero-proof-line` with `.sprint-hero-content`, `.sprint-hero-breadcrumb`, `.sprint-hero-eyebrow`, `.sprint-hero-copy`, `.sprint-hero-title(-accent)`, `.sprint-hero-description`, `.sprint-hero-ctas`, `.sprint-hero-stats`, `.sprint-hero-stat`, `.sprint-hero-stat-label`, `.sprint-hero-stat-context`, `.sprint-hero-verified` in [src/css/global.css](src/css/global.css); mobile media query now stacks CTAs and keeps the 2×2 stat grid.
-- **Tests**: updated [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) to assert the About WebP source (`about-hero-desktop.webp`) and added a "horizontal impact band" test (`.sprint-hero-stats` role=list, 4 `listitem`s, source-verified line). All 10 About tests pass (`npx vitest run --pool=threads --maxWorkers=1 tests/unit/about/...`).
-=======
+- # **Tests**: updated [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) to assert the About WebP source (`about-hero-desktop.webp`) and added a "horizontal impact band" test (`.sprint-hero-stats` role=list, 4 `listitem`s, source-verified line). All 10 About tests pass (`npx vitest run --pool=threads --maxWorkers=1 tests/unit/about/...`).
+
 ## 12. Legal Page Layout Update — 2026-09-22
 
 - Removed the shared sidebar/table-of-contents column from `/privacy` and `/terms` by updating `src/components/legal/LegalLayout.jsx`.
@@ -362,17 +363,16 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - The toggle reveals all four existing timeline stages together in the preserved responsive zigzag layout, changes to `Hide Program Stages`, rotates the chevron, and animates the complete panel with one grid-row transition.
 - The scroll observer now attaches only while the stage panel is expanded; stage content and copy remain unchanged.
 - Added [tests/unit/home/FeaturedProgram.test.jsx](tests/unit/home/FeaturedProgram.test.jsx) covering collapsed and expanded single-panel behavior.
-<<<<<<< HEAD
+  <<<<<<< HEAD
 
 ## 18. Admin Authentication Timeout - 2026-09-23
 
 - Updated [src/app/admin/page.tsx](src/app/admin/page.tsx) to race the complete Supabase sign-in and profile-role lookup flow against an eight-second timeout.
 - The admin profile lookup uses `maybeSingle()` and requires `role === "admin"`; other roles are signed out and receive an explicit access-denied message.
 - Authentication failures are logged with `console.error`, and the submit state is reset in `finally` so timeout and error paths cannot leave the button stuck.
-- Successful authentication redirects with `window.location.href = "/admin/dashboard"` so edge middleware receives the refreshed session cookies.
-=======
->>>>>>> 411e90521d47e5c5a53beb32d9a6bdcace3811b7
->>>>>>> ac7bac9d9e633a9f5a9d53dc31086a430f49584d
+- # Successful authentication redirects with `window.location.href = "/admin/dashboard"` so edge middleware receives the refreshed session cookies.
+  > > > > > > > 411e90521d47e5c5a53beb32d9a6bdcace3811b7
+  > > > > > > > ac7bac9d9e633a9f5a9d53dc31086a430f49584d
 
 ## 19. Admin-Aware Public Shell - 2026-09-23
 
@@ -386,3 +386,38 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Updated [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx) to keep the public Header visible on `/admin/*` routes while hiding only the announcement ticker, public footer, and WhatsApp affordance there.
 - Admin-authenticated desktop and mobile actions now use the prominent `Go to Dashboard` label and link to `/admin/dashboard`; guest and signed-out states continue to show the default public actions.
 - Preserved the Header Supabase auth listener and profile-role lookup so action buttons swap immediately on sign-in and sign-out.
+
+## 21. Homepage Section Spacing and Featured Program Button - 2026-09-24
+
+- Recorded existing homepage outer vertical padding before the change: Hero, Featured Program, More Courses, Instructors, Testimonials, FAQs, and Contact CTA used `py-12 md:py-16 lg:py-20`; Partner Carousel used `py-6 md:py-8 lg:py-10`.
+- Reduced those values by 30% without changing horizontal padding: the first group now uses `py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]`, and Partner Carousel uses `py-[1.05rem] md:py-[1.4rem] lg:py-[1.75rem]`.
+- Updated the Featured Program disclosure button styling only: stronger default touch treatment, red hover fill, glow, lift, focus-visible ring, active scale feedback, and a larger hover-nudging chevron. Toggle behavior and content remain unchanged.
+
+## 22. Font Consistency Audit - 2026-09-24
+
+- Confirmed `Space_Grotesk` is loaded as `--font-display` for headings/display text and `Inter` is loaded as `--font-body` for body text and controls in [src/app/layout.jsx](src/app/layout.jsx).
+- Updated [src/css/global.css](src/css/global.css) so body text, headings, links, and buttons use the loaded `--font-body`/`--font-display` variables instead of Trebuchet MS and Georgia fallbacks.
+- Updated [src/components/header/HeaderLogo.tsx](src/components/header/HeaderLogo.tsx) to use `font-display` and removed the unloaded inline `Roboto Slab` family while preserving existing logo spacing and color.
+
+## 23. More Learning Paths Card Refresh - 2026-09-24
+
+- Updated [src/data/data.js](src/data/data.js) with placeholder durations for the three More Courses cards: Data Science (`16 weeks`), Cloud & DevOps (`12 weeks`), and Product Management (`8 weeks`). Removed their unused pricing and discount fields.
+- Updated [src/components/cards/CourseCard.jsx](src/components/cards/CourseCard.jsx) to replace pricing with a muted Clock duration row and add a bottom-aligned red Know More CTA with an ArrowRight icon, hover lift, pointer cursor, transition, and keyboard focus ring.
+- Preserved each card's existing outer course link and all existing category, title, description, and rating content.
+
+## 24. More Learning Paths Uses Courses Catalogue - 2026-09-24
+
+- Updated [src/components/Home/MoreCourses.jsx](src/components/Home/MoreCourses.jsx) to select `python-and-ai-foundations`, `docker-and-kubernetes`, and `cybersecurity-basics` directly from [src/data/courses.js](src/data/courses.js).
+- Updated [src/components/cards/CourseCard.jsx](src/components/cards/CourseCard.jsx) to consume the catalogue's `image`, `description`, `duration`, and `slug` fields and omit ratings when the source does not provide them. Detail links now resolve to each `/courses/<slug>` route.
+- Removed the obsolete homepage-only `moreCourses` duplicate data from [src/data/data.js](src/data/data.js); no other sections use it.
+
+## 25. Featured Program Arrow Icon - 2026-09-24
+
+- Updated [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx) to replace the small `⌄` glyph with lucide-react `ArrowDown`.
+- Preserved the existing icon span styling, `rotate-180` expanded-state behavior, button text, toggle logic, and all other button styles.
+
+## 26. Homepage Responsive Timeline Audit - 2026-09-24
+
+- Updated [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx) so mobile stage text has a clear gap from the numbered rail circle, the circle is fixed at 40px, centered on the rail, and top-aligned with the stage label. Desktop `lg:` positioning remains unchanged.
+- Updated homepage/shared-shell layout classes in [src/components/Home/Testimonials.jsx](src/components/Home/Testimonials.jsx), [src/components/Home/MoreCourses.jsx](src/components/Home/MoreCourses.jsx), [src/components/header/Header.tsx](src/components/header/Header.tsx), [src/components/header/DesktopNavigation.tsx](src/components/header/DesktopNavigation.tsx), [src/components/header/MobileNavigation.tsx](src/components/header/MobileNavigation.tsx), and [src/components/footer/Footer.jsx](src/components/footer/Footer.jsx) to remove the 320px header squeeze and enforce 44px tap targets.
+- Browser validation covered closed/open stages, long temporary stage wrapping, portrait widths 320/360/375/390/412, tablet 768, desktop 1024/1280/1536, and landscape 667x320 with no horizontal overflow or console issues.

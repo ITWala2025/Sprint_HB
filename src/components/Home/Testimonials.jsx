@@ -58,7 +58,7 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="sprint-section bg-brand-white py-12 md:py-16 lg:py-20">
+    <section className="sprint-section bg-brand-white py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]">
       <div className="mx-auto max-w-6xl px-6 text-center">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Learner stories
@@ -72,7 +72,7 @@ export default function Testimonials() {
             type="button"
             onClick={() => scrollByCard(-1)}
             aria-label="Previous testimonial"
-            className="sprint-focus flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-border text-brand-navy transition-colors hover:border-brand-navy"
+            className="sprint-focus flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-brand-border text-brand-navy transition-colors hover:border-brand-navy"
           >
             <ChevronLeft aria-hidden="true" size={20} />
           </button>
@@ -119,7 +119,7 @@ export default function Testimonials() {
             type="button"
             onClick={() => scrollByCard(1)}
             aria-label="Next testimonial"
-            className="sprint-focus flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-border text-brand-navy transition-colors hover:border-brand-navy"
+            className="sprint-focus flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-brand-border text-brand-navy transition-colors hover:border-brand-navy"
           >
             <ChevronRight aria-hidden="true" size={20} />
           </button>

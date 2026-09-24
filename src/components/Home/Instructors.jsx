@@ -26,7 +26,7 @@ export default function Instructors() {
   const [failedImages, setFailedImages] = useState({});
 
   return (
-    <section className="sprint-section bg-brand-off-white py-12 md:py-16 lg:py-20">
+    <section className="sprint-section bg-brand-off-white py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]">
       <div className="mx-auto max-w-[1200px] px-6">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Meet the mentors

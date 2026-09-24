@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { featuredCourse, featuredProgramStages } from "@/data/data";
 
@@ -48,7 +49,7 @@ export default function FeaturedProgram() {
   }, [isExpanded]);
 
   return (
-    <section className="sprint-section bg-brand-navy py-12 text-brand-white md:py-16 lg:py-20">
+    <section className="sprint-section bg-brand-navy py-[2.1rem] text-brand-white md:py-[3.5rem] lg:py-[4.375rem]">
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="mx-auto w-full max-w-2xl text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-light">
@@ -63,7 +64,7 @@ export default function FeaturedProgram() {
 
           <button
             type="button"
-            className="sprint-focus mt-6 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-brand-red-light/60 px-5 py-2.5 text-sm font-semibold text-brand-white transition-colors hover:border-brand-red-light hover:bg-brand-red/15"
+            className="sprint-focus group mt-6 inline-flex min-h-[48px] cursor-pointer items-center justify-center gap-2 rounded-full border border-brand-red-light/80 bg-brand-red/10 px-5 py-2.5 text-sm font-semibold text-brand-white shadow-[0_0_0_1px_rgba(232,70,47,0.08)] transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:border-brand-red-light hover:bg-brand-red hover:text-white hover:shadow-[0_8px_24px_rgba(232,70,47,0.28)] focus-visible:ring-2 focus-visible:ring-brand-red-light focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy active:scale-95"
             aria-controls="featured-program-stages"
             aria-expanded={isExpanded}
             onClick={() => setIsExpanded((expanded) => !expanded)}
@@ -72,12 +73,12 @@ export default function FeaturedProgram() {
               {isExpanded ? "Hide Program Stages" : "View Program Stages"}
             </span>
             <span
-              className={`text-base leading-none transition-transform duration-300 ${
+              className={`text-xl font-bold leading-none transition-all duration-200 ease-in-out group-hover:translate-y-0.5 ${
                 isExpanded ? "rotate-180" : ""
               }`}
               aria-hidden="true"
             >
-              ⌄
+              <ArrowDown className="size-5" aria-hidden="true" />
             </span>
           </button>
         </div>
@@ -117,11 +118,11 @@ export default function FeaturedProgram() {
                       stageRefs.current[index] = el;
                     }}
                     data-index={index}
-                    className="relative grid min-h-[190px] grid-cols-1 items-center py-6 lg:grid-cols-2 lg:py-12"
+                    className="relative grid min-h-[190px] grid-cols-1 items-start py-6 lg:grid-cols-2 lg:items-center lg:py-12"
                   >
                     {/* Numbered node stays on the rail at every breakpoint. */}
                     <span
-                      className={`absolute left-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border-4 border-brand-navy bg-brand-red text-xs font-bold text-brand-white shadow-[0_0_0_1px_rgba(232,70,47,0.35)] lg:left-1/2 lg:-translate-x-1/2 ${
+                      className={`absolute -left-11 top-6 z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-4 border-brand-navy bg-brand-red text-xs font-bold text-brand-white shadow-[0_0_0_1px_rgba(232,70,47,0.35)] lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 ${
                         isActive ? "opacity-100" : "opacity-70"
                       }`}
                       aria-hidden="true"
@@ -130,7 +131,7 @@ export default function FeaturedProgram() {
                     </span>
 
                     <div
-                      className={`max-w-xl ${
+                      className={`max-w-xl pl-4 lg:pl-0 ${
                         isLeft
                           ? "lg:col-start-1 lg:justify-self-end lg:pr-16 lg:text-right"
                           : "lg:col-start-2 lg:pl-16 lg:text-left"

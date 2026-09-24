@@ -137,15 +137,15 @@ The contact section implements the specifications from [docs/md/Contact_Us.md](d
 The About page implements the specifications from [docs/md/About_Page.md](docs/md/About_Page.md) (10-section approved layout).
 
 <<<<<<< HEAD
-| Test Suite         | File Path                                                                  | Focus & Assertions                                                                                                                                                                                                    |
+| Test Suite | File Path | Focus & Assertions |
 | ------------------ | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AboutPage**      | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) | Renders the "Connect With SPRINT" CTA section, asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback), verifies the decorative full-bleed hero photo (`picture.sprint-hero-media` > `img.sprint-hero-image` with `alt=""`, About WebP source `about-hero-desktop.webp`), and checks the **horizontal verified-impact band** (`.sprint-hero-stats` `role=list` with 4 `listitem` stats + the "All figures source-verified" line). Mocks `next/link` and `next/image`; polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
+| **AboutPage** | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) | Renders the "Connect With SPRINT" CTA section, asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback), verifies the decorative full-bleed hero photo (`picture.sprint-hero-media` > `img.sprint-hero-image` with `alt=""`, About WebP source `about-hero-desktop.webp`), and checks the **horizontal verified-impact band** (`.sprint-hero-stats` `role=list` with 4 `listitem` stats + the "All figures source-verified" line). Mocks `next/link` and `next/image`; polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
 | **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection. |
 =======
-| Test Suite             | File Path                                                                                    | Focus & Assertions                                                                                                                                                                                                                                          |
+| Test Suite | File Path | Focus & Assertions |
 | ---------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AboutPage**          | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx)                   | Renders the "Connect With SPRINT" CTA section and asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback). Mocks `next/link` and polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
-| **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection.                                      |
+| **AboutPage** | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) | Renders the "Connect With SPRINT" CTA section and asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback). Mocks `next/link` and polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
+| **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection. |
 
 ### 3.3 Legal Page Unit Tests (`tests/unit/legal/`)
 
@@ -158,7 +158,8 @@ The About page implements the specifications from [docs/md/About_Page.md](docs/m
 | Test Suite           | File Path                                                                                  | Focus & Assertions                                                                                  |
 | -------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
 | **CampusNewsTicker** | [tests/unit/layout/CampusNewsTicker.test.tsx](tests/unit/layout/CampusNewsTicker.test.tsx) | Confirms the red alert icon is replaced by the branded blue megaphone and the alert icon is absent. |
->>>>>>> 411e90521d47e5c5a53beb32d9a6bdcace3811b7
+
+> > > > > > > 411e90521d47e5c5a53beb32d9a6bdcace3811b7
 
 ---
 
@@ -285,3 +286,42 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Focused header validation: `npx vitest run tests/unit/header_unit_test/Header.test.tsx --pool=threads --maxWorkers=1` - **Passed**; 14 tests passed.
 - Production build: `npm run build` - **Passed**; all 36 routes generated successfully.
 - Confirmed the Header remains rendered on admin routes while ticker, footer, and WhatsApp public chrome remain suppressed there.
+
+## 11. Homepage Section Spacing and Featured Program Button Validation - 2026-09-24
+
+- Editor diagnostics: **Passed** for all eight modified homepage components.
+- Focused homepage tests: `npx vitest run tests/unit/home/FeaturedProgram.test.jsx tests/unit/home/Testimonials.test.jsx --pool=threads --maxWorkers=1` - **Passed**; 4 tests across 4 test files.
+- No test logic or test files were added; the existing Featured Program interaction coverage validates the preserved disclosure behavior.
+
+## 12. Font Consistency Audit Validation - 2026-09-24
+
+- Editor diagnostics: **Passed** for [src/css/global.css](src/css/global.css), [src/components/header/HeaderLogo.tsx](src/components/header/HeaderLogo.tsx), and the touched homepage components.
+- Post-fix search: **Passed**; no hardcoded font families or font utility mismatches remain in `src/components/Home/`.
+- Focused homepage behavior remains covered by the existing Featured Program and Testimonials tests. HeaderLogo tests remain blocked by pre-existing expectations for commented-out `Institutional Hub` content and the old Roboto Slab styling.
+
+## 13. More Learning Paths Card Refresh Validation - 2026-09-24
+
+- Editor diagnostics: **Passed** for [src/components/cards/CourseCard.jsx](src/components/cards/CourseCard.jsx) and [src/data/data.js](src/data/data.js).
+- Focused homepage tests: `npx vitest run tests/unit/home/FeaturedProgram.test.jsx tests/unit/home/Testimonials.test.jsx --pool=threads --maxWorkers=1` - **Passed**; 4 tests across 4 test files.
+- TypeScript validation: `npx tsc --noEmit` - **Passed**.
+- No CourseCard-specific test file exists; validation covered compilation, data shape, existing homepage behavior, and removal of pricing fields from the three More Courses entries.
+
+## 14. More Learning Paths Catalogue Migration Validation - 2026-09-24
+
+- Editor diagnostics: **Passed** for [src/components/Home/MoreCourses.jsx](src/components/Home/MoreCourses.jsx), [src/components/cards/CourseCard.jsx](src/components/cards/CourseCard.jsx), [src/data/courses.js](src/data/courses.js), and [src/data/data.js](src/data/data.js).
+- Focused homepage tests: `npx vitest run tests/unit/home/FeaturedProgram.test.jsx tests/unit/home/Testimonials.test.jsx --pool=threads --maxWorkers=1` - **Passed**; 4 tests across 4 test files.
+- TypeScript validation: `npx tsc --noEmit` - **Passed**.
+- Confirmed the three selected catalogue slugs map to existing dynamic course routes: `/courses/python-and-ai-foundations`, `/courses/docker-and-kubernetes`, and `/courses/cybersecurity-basics`.
+
+## 15. Featured Program Arrow Icon Validation - 2026-09-24
+
+- Editor diagnostics: **Passed** for [src/components/Home/FeaturedProgram.jsx](src/components/Home/FeaturedProgram.jsx).
+- Focused test: `npx vitest run tests/unit/home/FeaturedProgram.test.jsx --pool=threads --maxWorkers=1` - **Passed**; 2 test files.
+- Confirmed the new ArrowDown points down when closed and uses the existing `rotate-180` class when stages are open.
+
+## 16. Homepage Responsive Timeline Audit Validation - 2026-09-24
+
+- Focused tests: `npx vitest run tests/unit/home/FeaturedProgram.test.jsx tests/unit/home/Testimonials.test.jsx tests/unit/header_unit_test/Header.test.tsx --pool=threads --maxWorkers=1` - **Passed**; 18 tests across 6 test files.
+- Editor diagnostics: **Passed** for all seven responsive files changed in this audit.
+- Browser matrix: **Passed** at 320, 360, 375, 390, 412, 768, 1024, 1280, and 1536px in both closed and open Featured Program states; landscape 667x320 also passed.
+- Verified no horizontal overflow, stage circle/rail misalignment, mobile text overlap, sub-44 visible tap targets, console errors, or console warnings. Long temporary stage text wrapped to 4-5 lines at narrow mobile widths without overlap.

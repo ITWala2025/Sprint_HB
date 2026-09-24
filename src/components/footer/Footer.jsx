@@ -1,12 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowUpRight,
-  Linkedin,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { ArrowUpRight, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import { FcElectronics, FcSettings, FcSimCard } from "react-icons/fc";
 import { BiLogoLinkedin } from "react-icons/bi";
 import { SiInstagram, SiYoutube } from "react-icons/si";
@@ -50,7 +44,8 @@ export default function Footer() {
     <footer
       className="sprint-footer text-brand-off-white"
       style={{
-        backgroundImage: "url('/images/header&footer/footer_background_img.png')",
+        backgroundImage:
+          "url('/images/header&footer/footer_background_img.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -72,7 +67,10 @@ export default function Footer() {
             <div className="flex flex-col gap-0.5">
               <span
                 className="text-2xl font-black uppercase tracking-[0.3em] text-white"
-                style={{ fontFamily: "'Roboto Slab', serif", letterSpacing: "0.15em" }}
+                style={{
+                  fontFamily: "'Roboto Slab', serif",
+                  letterSpacing: "0.15em",
+                }}
               >
                 SPRINT
               </span>
@@ -83,9 +81,9 @@ export default function Footer() {
             </div>
           </div>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-brand-off-white/80">
-           Hands on, production level education in Cloud, AI, and Software Systems 
-           bridging the academic industry gap with job ready, execution first training.
-
+            Hands on, production level education in Cloud, AI, and Software
+            Systems bridging the academic industry gap with job ready, execution
+            first training.
           </p>
           {/*
           <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-brand-off-white/90">
@@ -107,13 +105,12 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="sprint-focus  grid size-10 shrink-0 place-items-center rounded-full border border-white/15 bg-white text-brand-off-white/80 transition-colors hover:border-brand-blue hover:text-brand-blue"
+                    className="sprint-focus  grid size-11 shrink-0 place-items-center rounded-full border border-white/15 bg-white text-brand-off-white/80 transition-colors hover:border-brand-blue hover:text-brand-blue"
                   >
                     <Icon
                       className="size-8"
                       color={socialIcon.color}
                       aria-hidden="true"
-                
                     />
                   </a>
                 </li>
@@ -132,7 +129,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="sprint-focus text-sm text-brand-off-white/75 transition-colors hover:text-white"
+                  className="sprint-focus inline-flex min-h-11 min-w-11 items-center text-sm text-brand-off-white/75 transition-colors hover:text-white"
                 >
                   {link.label}
                 </Link>
@@ -151,7 +148,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="sprint-focus inline-flex items-center gap-1.5 text-sm text-brand-off-white/75 transition-colors hover:text-white"
+                  className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-1.5 text-sm text-brand-off-white/75 transition-colors hover:text-white"
                 >
                   {link.label}
                   {link.outbound && (
@@ -170,24 +167,37 @@ export default function Footer() {
           </h2>
           <ul className="mt-5 space-y-4">
             <li className="flex items-start gap-3">
-              <MapPin className="mt-0.5 size-5 shrink-0 text-brand-red" aria-hidden="true" />
-              <span className="min-w-0 wrap-break-word text-sm text-brand-off-white/75">{siteConfig.address}</span>
+              <MapPin
+                className="mt-0.5 size-5 shrink-0 text-brand-red"
+                aria-hidden="true"
+              />
+              <span className="min-w-0 wrap-break-word text-sm text-brand-off-white/75">
+                {siteConfig.address}
+              </span>
             </li>
             <li>
               <a
                 href={siteConfig.contact.telHref}
-                className="sprint-focus min-w-0 inline-flex items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white"
+                className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white"
               >
-                <Phone className="size-5 shrink-0 text-brand-red" aria-hidden="true" />
-                <span className="wrap-break-word">{siteConfig.contact.phoneDisplay}</span>
+                <Phone
+                  className="size-5 shrink-0 text-brand-red"
+                  aria-hidden="true"
+                />
+                <span className="wrap-break-word">
+                  {siteConfig.contact.phoneDisplay}
+                </span>
               </a>
             </li>
             <li>
               <a
                 href={siteConfig.contact.emailHref}
-                className="sprint-focus min-w-0 inline-flex items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white"
+                className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white"
               >
-                <Mail className="size-5 shrink-0 text-brand-red" aria-hidden="true" />
+                <Mail
+                  className="size-5 shrink-0 text-brand-red"
+                  aria-hidden="true"
+                />
                 <span className="break-all">{siteConfig.contact.email}</span>
               </a>
             </li>
@@ -206,7 +216,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="sprint-focus text-sm text-brand-off-white/60 transition-colors hover:text-white"
+                  className="sprint-focus inline-flex min-h-11 min-w-11 items-center text-sm text-brand-off-white/60 transition-colors hover:text-white"
                 >
                   {link.label}
                 </Link>

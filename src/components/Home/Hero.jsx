@@ -38,7 +38,7 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-between px-6 py-12 md:py-16 lg:py-20">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-between px-6 py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]">
         <div className="max-w-3xl text-left">
           {/* <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red-light">
             SPRINT Institutional Training Hub

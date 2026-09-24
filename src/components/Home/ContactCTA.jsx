@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function ContactCTA() {
   return (
     <section className="sprint-cta-bg sprint-section relative overflow-hidden text-brand-navy">
-      <div className="mx-auto max-w-[1200px] px-6 py-12 text-center md:py-16 lg:py-20">
+      <div className="mx-auto max-w-[1200px] px-6 py-[2.1rem] text-center md:py-[3.5rem] lg:py-[4.375rem]">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Start with a conversation
         </p>
