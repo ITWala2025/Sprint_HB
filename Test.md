@@ -339,3 +339,13 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - TypeScript validation: `npx tsc --noEmit` - **Passed**.
 - Browser checks passed at 320, 375, 768, 1024, and 1280px: `MENTORS` stayed single-line, aligned with the heading, used the existing 8px spacing, and caused no Home overflow.
 - About rendered without the `MENTORS` eyebrow. No console errors or warnings were observed.
+
+## 23. Home Partner Marquee Logos Validation - 2026-09-24
+
+- Data/file cross-check: **Passed**; the 22 `logoUrl` values are unique and match the 22 `public/images/home/*.webp` files exactly (no missing paths, no unused files, no duplicates).
+- Headless Chrome (CDP) matrix at 320, 375, 768, 1024, 1280, and 1440px: **Passed**; 44 rendered images (22 logos × 2 copies), 22 unique logos, `--marquee-duration: 90s`, `marquee-rtl`, track width 8640px, no document horizontal overflow (`scrollWidth === innerWidth`), and hiding the strip did not change `scrollWidth`.
+- Loop seam: **Passed**; the distance from the first logo of copy 1 to the first logo of copy 2 equals exactly half the track width (delta 0), and frozen screenshots at `translateX(0)` and `translateX(-50%)` produced byte-identical PNGs.
+- Behaviour: **Passed**; animation confirmed moving, `animation-play-state: paused` while hovering the strip and `running` after the pointer leaves, and `animation-name: none` under `prefers-reduced-motion: reduce`.
+- Rendering: **Passed**; per-logo frames 128×128 / 144×128 / 192×128 / 240×128 / 112×128 / 96×96 with drawn logo heights 84–96px (previously the wide logos drew at 48–59px).
+- Network/console: **Passed**; all 22 raw and 22 optimized (`/_next/image`) logo requests returned 200, no broken images, and the only failed request/console error was the pre-existing `/favicon.ico` 404.
+- Merge-marker and import scan: **Passed**; no conflict markers, and both `PartnerCarousel.jsx` imports are still used.

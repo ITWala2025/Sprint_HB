@@ -432,3 +432,11 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 
 - Added an optional `eyebrow` prop to [src/components/sections/FacultyExperts.jsx](src/components/sections/FacultyExperts.jsx), using the existing Home eyebrow classes.
 - Passed `eyebrow="MENTORS"` only from [src/app/page.jsx](src/app/page.jsx); About remains without the label.
+
+## 33. Home Partner Marquee Logos - 2026-09-24
+
+- Expanded the Section 6.3 partner marquee in [src/data/data.js](src/data/data.js) from 8 to 22 logos by adding every unused partner file in `public/images/home/` (algocirrus, dell, eyogi-gurukul, global-medtech-solutions, hcl, iqvia, it-wala, kdadks, lululemon, sitetracker, swavlamban, tessellation, vishal-creations, zupharm-laboratories). Existing ids `p1`–`p8` are unchanged and the new entries use `p9`–`p22`; the order alternates industry/institutional partners with the larger technology partners so neither group forms a block.
+- Updated [src/components/Home/PartnerCarousel.jsx](src/components/Home/PartnerCarousel.jsx) so the 64px spacing moved from the track's `gap-16` to a per-card `pr-16`. The duplicated track now measures exactly twice one loop, which is what makes the existing `marquee-rtl` `-50%` keyframe land on a seamless seam; a flex `gap` has no trailing space and drifted by half a gap (32px) per loop.
+- Marquee duration is now derived from the real loop width (22 logo frames + gaps = 4320px) at the original 48px/s and passed to the existing `--marquee-duration` custom property in [src/css/global.css](src/css/global.css), so the longer track scrolls at the previous speed (90s) instead of the hard-coded 32s fallback.
+- Added per-logo frame overrides that keep the shared `object-contain` height and never stretch or crop the artwork: wide wordmarks get wider frames (algocirrus `w-36`, zupharm-laboratories `w-48`, global-medtech-solutions `w-60`, swavlamban/vishal-creations `w-28`) while square logo marks get `size-24` (eyogi-gurukul, it-wala), so every logo reads at the same visual height instead of a 48–59px sliver.
+- `next/image` usage with `width`/`height`, lazy loading, the `opacity-80` card, hover pause, reduced-motion handling, the heading text and all section spacing are unchanged. Alt text is now `${name} logo` (for example `Zupharm Laboratories logo`).
