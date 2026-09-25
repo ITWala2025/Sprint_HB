@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -11,9 +11,12 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
+
 type Icon = typeof LayoutDashboard;
 type NavigationItem = { label: string; href: string; icon: Icon; badge?: string };
 type NavigationGroup = { label: string; icon: Icon; items: NavigationItem[] };
+type Permission = { view?: boolean; create?: boolean; edit?: boolean; delete?: boolean; export?: boolean };
+type PermissionMap = Record<string, Permission> & { full_access?: boolean };
 
 const directItems: NavigationItem[] = [
     { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -74,6 +77,13 @@ const navigationGroups: NavigationGroup[] = [
             { label: "Batch Allocations", href: "/admin/trainers/batches", icon: GraduationCap },
         ]
     },
+    {
+        label: "Settings & Access",
+        icon: ShieldCheck,
+        items: [
+            { label: "Roles & Permissions", href: "/admin/roles", icon: ShieldCheck },
+        ]
+    },
 ];
 
 const updatesItem: NavigationItem = { label: "Announcements & Updates", href: "/admin/updates", icon: Megaphone };
@@ -88,7 +98,41 @@ function isActive(pathname: string, href: string) {
     return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+const itemPermission: Record<string, string> = {
+    "/admin/admissions": "admissions",
+    "/admin/cms/home": "cms_home",
+    "/admin/cms/about": "cms_about",
+    "/admin/cms/courses": "cms_courses",
+    "/admin/cms/contact": "cms_contact",
+    "/admin/cms/careers": "cms_careers",
+    "/admin/cms/announcements": "cms_announcements",
+    "/admin/cms/legal": "cms_legal",
+    "/admin/courses": "academics",
+    "/admin/students": "student_ops",
+    "/admin/academics": "academics",
+    "/admin/partners/companies": "partners",
+    "/admin/partners/colleges": "partners",
+    "/admin/trainers": "trainers",
+    "/admin/updates": "cms_announcements",
+    "/admin/roles": "access_control",
+};
+
+function hasFullAccess(permissionMap: PermissionMap | null, roleName?: string | null, isAdmin = false) {
+    if (isAdmin || roleName?.toLowerCase() === "super admin" || roleName?.toLowerCase() === "admin" || permissionMap?.full_access) return true;
+    const requiredModules = ["cms_home", "cms_about", "cms_courses", "cms_contact", "cms_careers", "cms_announcements", "cms_legal", "admissions", "student_ops", "academics", "trainers", "partners", "access_control"];
+    const requiredCapabilities = ["view", "create", "edit", "delete", "export"];
+    return Boolean(permissionMap && requiredModules.every((module) => requiredCapabilities.every((capability) => permissionMap[module]?.[capability as keyof Permission] === true)));
+}
+
+function canViewItem(item: NavigationItem, permissionMap: PermissionMap | null, roleName?: string | null, isAdmin = false, isLoading = false) {
+    const permissionKey = itemPermission[item.href];
+    return !permissionKey || isLoading || hasFullAccess(permissionMap, roleName, isAdmin) || permissionMap?.[permissionKey]?.view === true;
+}
+
+function Sidebar({ pathname, onNavigate, permissionMap, roleName, isAdmin, isLoading }: { pathname: string; onNavigate?: () => void; permissionMap: PermissionMap | null; roleName: string | null; isAdmin: boolean; isLoading: boolean }) {
+    const showStandardNavigation = isLoading || isAdmin;
+    const visibleGroups = useMemo(() => showStandardNavigation ? navigationGroups : navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => canViewItem(item, permissionMap, roleName, isAdmin, isLoading)) })).filter((group) => group.items.length > 0), [isAdmin, isLoading, permissionMap, roleName, showStandardNavigation]);
+    const visibleLegalGroup = showStandardNavigation ? legalGroup : { ...legalGroup, items: legalGroup.items.filter((item) => canViewItem(item, permissionMap, roleName, isAdmin, isLoading)) };
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
         Object.fromEntries([...navigationGroups, legalGroup].map((group) => [group.label, group.items.some((item) => isActive(pathname, item.href))])),
     );
@@ -119,11 +163,11 @@ function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate?: () =
                 <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">Overview</p>
                 {directItems.map((item) => renderLink(item))}
                 <p className="mb-3 mt-7 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">Management</p>
-                {navigationGroups.map(renderGroup)}
-                <div className="pt-1">{renderLink(updatesItem)}</div>
+                {visibleGroups.map(renderGroup)}
+                {(showStandardNavigation || canViewItem(updatesItem, permissionMap, roleName, isAdmin, isLoading)) && <div className="space-y-1 pt-1">{renderLink(updatesItem)}</div>}
                 <div className="mt-auto border-t border-slate-200 pt-5">
                     <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">System</p>
-                    {renderGroup(legalGroup)}
+                    {visibleLegalGroup.items.length > 0 && renderGroup(visibleLegalGroup)}
                 </div>
             </nav>
             <div className="border-t border-slate-200 p-4"><div className="flex items-center gap-3 rounded-xl bg-brand-off-white px-3 py-3"><span className="flex size-9 items-center justify-center rounded-full bg-brand-red text-xs font-bold text-white">AD</span><div className="min-w-0"><p className="truncate text-xs font-bold text-brand-navy">Administrator</p><p className="truncate text-[11px] text-brand-text-muted">admin@sprint.institute</p></div></div></div>
@@ -134,8 +178,44 @@ function Sidebar({ pathname, onNavigate }: { pathname: string; onNavigate?: () =
 export default function AdminLayout({ children }: { children: ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
-    const supabase = createClient();
+    const supabase = useMemo(() => createClient(), []);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
+    const [permissionMap, setPermissionMap] = useState<PermissionMap | null>(null);
+    const [roleName, setRoleName] = useState<string | null>(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAccessLoading, setIsAccessLoading] = useState(true);
+
+    useEffect(() => {
+        let isMounted = true;
+        async function loadAccess() {
+            const { data: userData } = await supabase.auth.getUser();
+            if (!userData.user) { setIsAccessLoading(false); return; }
+            const { data: profile } = await supabase
+                .from("profiles")
+                .select("role")
+                .eq("id", userData.user.id)
+                .maybeSingle();
+            if (!isMounted) return;
+            if (!profile) { setIsAccessLoading(false); return; }
+            const legacyAdmin = profile.role === "admin";
+            setIsAdmin(legacyAdmin);
+            setRoleName(profile.role ?? null);
+
+            if (!legacyAdmin) {
+                const { data: assignedProfile } = await supabase
+                    .from("profiles")
+                    .select("role_id, roles(name, permissions)")
+                    .eq("id", userData.user.id)
+                    .maybeSingle();
+                const role = Array.isArray(assignedProfile?.roles) ? assignedProfile.roles[0] : assignedProfile?.roles;
+                setRoleName(role?.name ?? profile.role ?? null);
+                setPermissionMap((role?.permissions as PermissionMap | null) ?? null);
+            }
+            setIsAccessLoading(false);
+        }
+        void loadAccess();
+        return () => { isMounted = false; };
+    }, [supabase]);
 
     if (pathname === "/admin") return children;
 
@@ -163,7 +243,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 className={`fixed inset-y-0 left-0 z-[70] transition-transform duration-300 lg:static lg:translate-x-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
             >
-                <Sidebar pathname={pathname} onNavigate={() => setIsMobileOpen(false)} />
+                <Sidebar pathname={pathname} onNavigate={() => setIsMobileOpen(false)} permissionMap={permissionMap} roleName={roleName} isAdmin={isAdmin} isLoading={isAccessLoading} />
             </div>
 
             {/* Main Content Area */}
