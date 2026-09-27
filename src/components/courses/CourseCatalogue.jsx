@@ -6,7 +6,10 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, ChevronDown, Heart, Search, SlidersHorizontal, X } from "lucide-react";
 import { audienceCopy, audienceOptions, categories } from "@/data/courses";
 
-const itemHref = (item) => `/${item.kind === "bundle" ? "bundles" : "courses"}/${item.slug}`;
+const itemHref = (item, audience) => {
+  const href = `/${item.kind === "bundle" ? "bundles" : "courses"}/${item.slug}`;
+  return item.kind === "bundle" ? href : `${href}?audience=${encodeURIComponent(audience)}`;
+};
 const matchesAudience = (item, audienceValue) => {
   if (!item || !item.audience) return false;
   return Array.isArray(item.audience)
@@ -14,7 +17,7 @@ const matchesAudience = (item, audienceValue) => {
     : item.audience === audienceValue;
 };
 
-function CourseTile({ item }) {
+function CourseTile({ item, audience }) {
   return (
     <article className="course-tile">
       <div className="course-tile__art">
@@ -29,8 +32,8 @@ function CourseTile({ item }) {
           <span>{item.duration}</span><span>{item.level}</span>{item.certificate ? <span>Certificate</span> : null}
         </div>
         <div className="course-tile__footer">
-          <span>{item.role}</span>
-          <Link href={itemHref(item)} aria-label={`Explore ${item.title}`} className="course-tile__link"><ArrowRight size={18} aria-hidden="true" /></Link>
+          {/* <span>{item.role}</span> */}
+          <Link href={itemHref(item, audience)} aria-label={`Explore ${item.title}`} className="course-tile__link"><ArrowRight size={18} aria-hidden="true" /></Link>
         </div>
       </div>
     </article>
@@ -123,7 +126,7 @@ export default function CourseCatalogue({ items }) {
       <div className="courses-results">
         <div className="courses-results__heading"><div> {/* <p className="courses-eyebrow">{audienceOptions.find((option) => option.value === audience).label}</p> */} <h2>{activeAudience.title}</h2> {/* <p>{activeAudience.description}</p> */}</div><button type="button" className="course-filter-trigger" onClick={() => setDrawerOpen(true)}><SlidersHorizontal size={17} /> Filter &amp; sort</button></div>
         <div className="courses-results__meta"><span>{visibleItems.length} learning options</span><button type="button" onClick={() => { setQuery(""); setSelectedCategories([]); setSelectedLevel(""); }}>Clear filters</button></div>
-        {visibleItems.length ? <div className="course-grid">{visibleItems.map((item) => <CourseTile key={`${item.kind}-${item.slug}`} item={item} />)}</div> : <div className="courses-empty"><h2>No matching learning options</h2><p>Try clearing a filter or searching with a broader term.</p></div>}
+        {visibleItems.length ? <div className="course-grid">{visibleItems.map((item) => <CourseTile key={`${item.kind}-${item.slug}`} item={item} audience={audience} />)}</div> : <div className="courses-empty"><h2>No matching learning options</h2><p>Try clearing a filter or searching with a broader term.</p></div>}
       </div>
     </main>
     {drawerOpen ? <div className="course-filter-drawer" role="dialog" aria-modal="true" aria-label="Course filters"><div className="course-filter-drawer__panel"><FilterContent {...{ selectedCategories, setSelectedCategories, selectedLevel, setSelectedLevel }} onClose={() => setDrawerOpen(false)} /><button className="course-filter-drawer__apply" type="button" onClick={() => setDrawerOpen(false)}>Show learning options</button></div></div> : null}

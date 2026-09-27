@@ -88,8 +88,8 @@ export const bundles = [
 export const catalogueItems = [...courses, ...bundles];
 export const audienceOptions = [
   { value: "student", label: "Students" },
-  { value: "it-pro", label: "IT Working Professionals" },
-  { value: "non-it", label: "Non-IT Working Professionals" },
+  { value: "it-pro", label: "IT Professionals" },
+  { value: "non-it", label: "Non-IT Professionals" },
 ];
 export const categories = [...new Set(courses.map((course) => course.category))];
 export { audienceCopy };

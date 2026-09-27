@@ -38,19 +38,21 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-between px-6 py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-between px-6 py-[2.1rem] md:py-[3.5rem] lg:pt-[4.375rem] lg:pb-[1.5rem]">
         <div className="max-w-3xl text-left">
           {/* <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-red-light">
             SPRINT Institutional Training Hub
           </p> */}
           {/* Primary H1 (Section 14: exactly one per page) */}
           <h1 className="mt-5 font-display text-4xl font-black leading-tight tracking-tight text-brand-white sm:text-5xl md:text-6xl">
-            Skill Up.. Get Ahead
+            We do not teach,
+            <br/>
+            We <em>#Empower </em>
           </h1>
 
           {/* Supporting description */}
           <p className="mt-6 max-w-md text-lg text-brand-white/85">
-            Mentor-led programs built with engineers from top companies — learn
+            Mentor-led programs built with engineers from top companies, learn
             the skills that get you hired, not just certified.
           </p>
 
