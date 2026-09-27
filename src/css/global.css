@@ -5483,7 +5483,8 @@ a {
   cursor: pointer;
 }
 
-.course-filter fieldset {
+.course-filter fieldset,
+.course-filter-drawer__panel fieldset {
   display: grid;
   gap: 0.75rem;
   margin: 1.35rem 0 0;
@@ -5492,7 +5493,8 @@ a {
   border-top: 1px solid var(--color-brand-border);
 }
 
-.course-filter legend {
+.course-filter legend,
+.course-filter-drawer__panel legend {
   padding: 0;
   color: var(--color-brand-navy);
   font: 800 0.78rem var(--font-body);
@@ -5500,7 +5502,8 @@ a {
   text-transform: uppercase;
 }
 
-.course-filter label {
+.course-filter label,
+.course-filter-drawer__panel label {
   display: flex;
   align-items: start;
   gap: 0.65rem;
@@ -5509,7 +5512,8 @@ a {
   font: 500 0.86rem/1.35 var(--font-body);
 }
 
-.course-filter input {
+.course-filter input,
+.course-filter-drawer__panel input {
   width: 1.1rem;
   height: 1.1rem;
   margin: 0.02rem 0 0;
@@ -5833,12 +5837,44 @@ a {
 }
 
 .course-curriculum {
+  position: relative;
+  display: grid;
+  gap: 0.85rem;
   margin-top: 1.3rem;
-  border-top: 1px solid var(--color-brand-border);
+}
+
+.course-curriculum::before {
+  position: absolute;
+  top: 1.25rem;
+  bottom: 1.25rem;
+  left: 0.3rem;
+  width: 1px;
+  background: var(--color-brand-border);
+  content: "";
 }
 
 .course-curriculum__item {
-  border-bottom: 1px solid var(--color-brand-border);
+  position: relative;
+  z-index: 1;
+  margin-left: 1rem;
+  padding: 0.8rem 1rem 0.95rem;
+  border: 1px solid var(--color-brand-border);
+  border-left: 3px solid var(--color-brand-blue);
+  border-radius: 0.5rem;
+  background: var(--color-brand-off-white);
+}
+
+.course-curriculum__item::before {
+  position: absolute;
+  top: 1rem;
+  left: -1rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  border: 2px solid var(--color-brand-white);
+  border-radius: 50%;
+  background: var(--color-brand-red);
+  box-shadow: 0 0 0 1px var(--color-brand-border);
+  content: "";
 }
 
 .course-curriculum__item button {
@@ -5847,7 +5883,7 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.1rem 0.1rem;
+  padding: 0.15rem 0;
   border: 0;
   background: transparent;
   color: var(--color-brand-navy);
@@ -5874,7 +5910,7 @@ a {
 }
 
 .course-curriculum__item ul {
-  margin: 0 0 1.2rem;
+  margin: 0.65rem 0 0;
   padding-left: 1.2rem;
   color: var(--color-brand-text-secondary);
   font: 400 0.92rem/1.65 var(--font-body);
@@ -6127,6 +6163,25 @@ a {
 
   .course-detail-section {
     padding: 2rem 0;
+  }
+
+  .course-curriculum {
+    gap: 0.7rem;
+  }
+
+  .course-curriculum::before {
+    left: 0.25rem;
+  }
+
+  .course-curriculum__item {
+    margin-left: 0.85rem;
+    padding: 0.75rem 0.85rem 0.9rem;
+  }
+
+  .course-curriculum__item::before {
+    left: -0.85rem;
+    width: 0.5rem;
+    height: 0.5rem;
   }
 
   .course-detail-aside > div:first-child {
