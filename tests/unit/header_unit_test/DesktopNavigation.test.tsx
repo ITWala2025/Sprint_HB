@@ -26,7 +26,7 @@ describe("DesktopNavigation", () => {
 
   it("renders links with correct hrefs", () => {
     render(<DesktopNavigation pathname="/courses" />);
-    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/home");
     expect(screen.getByRole("link", { name: "Courses" })).toHaveAttribute("href", "/courses");
     expect(screen.getByRole("link", { name: "About Us" })).toHaveAttribute("href", "/about");
     expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
@@ -44,14 +44,14 @@ describe("DesktopNavigation", () => {
     expect(screen.getByRole("link", { name: "Contact" })).not.toHaveAttribute("aria-current");
   });
 
-  it("marks Home as active when pathname is exactly /", () => {
-    render(<DesktopNavigation pathname="/" />);
+  it("marks Home as active when pathname is exactly /home", () => {
+    render(<DesktopNavigation pathname="/home" />);
     expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("link", { name: "Courses" })).not.toHaveAttribute("aria-current");
   });
 
-  it("marks Home as active when pathname is / with nested route", () => {
-    render(<DesktopNavigation pathname="/nested" />);
+  it("does not mark Home as active for a nested route", () => {
+    render(<DesktopNavigation pathname="/home/nested" />);
     expect(screen.getByRole("link", { name: "Home" })).not.toHaveAttribute("aria-current");
   });
 

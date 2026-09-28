@@ -47,7 +47,7 @@ export default function ContactHero() {
 
       <div className="contact-hero__content">
         <nav className="contact-hero__breadcrumb" aria-label="Breadcrumb">
-          <Link href="/">Home</Link>
+          <Link href="/home">Home</Link>
           <span aria-hidden="true">›</span>
           <span aria-current="page">Contact Us</span>
         </nav>

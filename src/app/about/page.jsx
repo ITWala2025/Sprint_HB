@@ -117,7 +117,7 @@ export default function AboutPage() {
 
         <div className="sprint-hero-content mx-auto max-w-[1200px] px-6">
           <nav className="sprint-hero-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <Link href="/home">Home</Link>
             <span aria-hidden="true">›</span>
             <span aria-current="page">About Us</span>
           </nav>

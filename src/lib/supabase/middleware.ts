@@ -58,7 +58,7 @@ export async function updateSession(request: NextRequest) {
     // Non-admin logged-in users cannot access any /admin routes
     if (!isAdmin && (isLoginPage || isAdminSubRoute)) {
       const url = request.nextUrl.clone();
-      url.pathname = "/";
+      url.pathname = "/home";
       return NextResponse.redirect(url);
     }
 

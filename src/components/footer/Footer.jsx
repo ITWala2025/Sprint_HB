@@ -13,7 +13,7 @@ import siteConfig from "@/config/site.config.json";
  */
 
 const exploreLinks = [
-  { label: "Home", href: "/" },
+  { label: "Home", href: "/home" },
   { label: "All Courses", href: "/courses" },
   { label: "About Us & Faculty", href: "/about" },
   { label: "Careers", href: "/careers" },

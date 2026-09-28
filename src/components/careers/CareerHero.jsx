@@ -21,7 +21,7 @@ export default function CareerHero() {
             className="sprint-hero-breadcrumb"
             aria-label="Breadcrumb"
           >
-            <Link href="/">Home</Link>
+            <Link href="/home">Home</Link>
             <span aria-hidden="true">›</span>
             <span aria-current="page">Careers</span>
           </nav>

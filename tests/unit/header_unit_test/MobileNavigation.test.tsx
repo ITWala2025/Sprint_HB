@@ -101,7 +101,7 @@ describe("MobileNavigation", () => {
   describe("navigation links", () => {
     it("renders Home, Courses, About Us, and Contact links in the drawer", () => {
       renderWithProps({ isOpen: true });
-      expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
+      expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/home");
       expect(screen.getByRole("link", { name: "Courses" })).toHaveAttribute("href", "/courses");
       expect(screen.getByRole("link", { name: "About Us" })).toHaveAttribute("href", "/about");
       expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
@@ -127,8 +127,8 @@ describe("MobileNavigation", () => {
       );
     });
 
-    it("marks Home as active when pathname is exactly /", () => {
-      renderWithProps({ isOpen: true, pathname: "/" });
+    it("marks Home as active when pathname is exactly /home", () => {
+      renderWithProps({ isOpen: true, pathname: "/home" });
       expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
         "aria-current",
         "page",

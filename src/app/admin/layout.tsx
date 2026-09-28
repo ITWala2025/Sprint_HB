@@ -291,7 +291,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                         </button>
 
                         <Link
-                            href="/"
+                            href="/home"
                             className="sprint-focus inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-surface sm:px-4"
                         >
                             <ExternalLink className="size-4" aria-hidden="true" />

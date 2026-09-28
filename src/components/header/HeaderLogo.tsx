@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function HeaderLogo() {
   return (
     <Link
-      href="/"
+      href="/home"
       className="flex shrink-0 items-center gap-3"
       aria-label="SPRINT Institutional Hub Home"
     >

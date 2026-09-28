@@ -5,7 +5,7 @@ interface DesktopNavigationProps {
 }
 
 const navigation = [
-  { label: "Home", href: "/" },
+  { label: "Home", href: "/home" },
   { label: "Courses", href: "/courses" },
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
@@ -15,7 +15,7 @@ export default function DesktopNavigation({
   pathname,
 }: DesktopNavigationProps) {
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+    href === "/home" ? pathname === "/home" : pathname.startsWith(href);
 
   return (
     <nav

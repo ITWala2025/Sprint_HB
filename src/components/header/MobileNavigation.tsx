@@ -12,7 +12,7 @@ interface MobileNavigationProps {
 }
 
 const navigation = [
-  { label: "Home", href: "/" },
+  { label: "Home", href: "/home" },
   { label: "Courses", href: "/courses" },
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
@@ -45,7 +45,7 @@ export default function MobileNavigation({
   }, [setIsOpen]);
 
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+    href === "/home" ? pathname === "/home" : pathname.startsWith(href);
 
   return (
     <div className="shrink-0 lg:hidden">

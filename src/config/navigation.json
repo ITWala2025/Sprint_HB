@@ -1,5 +1,5 @@
 [
-  { "label": "Home", "href": "/" },
+  { "label": "Home", "href": "/home" },
   { "label": "Courses", "href": "/courses" },
   { "label": "About Us", "href": "/about" },
   { "label": "Updates", "href": "/updates" },

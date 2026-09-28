@@ -8,7 +8,7 @@ describe("HeaderLogo", () => {
   it("renders a link pointing to the homepage", () => {
     render(<HeaderLogo />);
     const link = screen.getByLabelText(/SPRINT Institutional Hub Home/i);
-    expect(link).toHaveAttribute("href", "/");
+    expect(link).toHaveAttribute("href", "/home");
   });
 
   it("renders the logo image with correct src and alt", () => {
