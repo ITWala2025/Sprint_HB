@@ -349,3 +349,14 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Rendering: **Passed**; per-logo frames 128×128 / 144×128 / 192×128 / 240×128 / 112×128 / 96×96 with drawn logo heights 84–96px (previously the wide logos drew at 48–59px).
 - Network/console: **Passed**; all 22 raw and 22 optimized (`/_next/image`) logo requests returned 200, no broken images, and the only failed request/console error was the pre-existing `/favicon.ico` 404.
 - Merge-marker and import scan: **Passed**; no conflict markers, and both `PartnerCarousel.jsx` imports are still used.
+
+## 24. Careers Job Cards — Role Detail Modal Validation - 2026-09-28
+
+- New suite [tests/unit/careers/OpenPositions.test.jsx](tests/unit/careers/OpenPositions.test.jsx) — **Passed**, 6 tests covering: one card per role with an `aria-haspopup="dialog"` trigger and an Apply button; opening the dialog from the card body trigger with badge, location, duration, stipend, posted date, full description (no `line-clamp-3` inside the dialog), responsibilities, requirements and the mailto CTA href; opening the same dialog from the Apply action; dismissal via the X button, the Escape key and a backdrop click; focus moving to the close button and returning to the trigger; and page-scroll locking/release.
+- Focused run: `npx vitest run tests/unit/careers/ --pool=threads --maxWorkers=1` — **Passed**, 10 tests across 2 files (OpenPositions 6 + CareerHero 4).
+- Full suite: `npx vitest run --pool=threads --maxWorkers=1` — 22 files / 96 tests, **90 passing**. The 6 failures (ContactHero 1, ContactMethods 1, HeaderLogo 4) are pre-existing and reproduce identically with the Careers changes stashed.
+- Server-render check on `localhost:3000/careers`: `#positions-panel` contains 4 `aria-haspopup="dialog"` triggers (2 cards × title + Apply), 2 Apply buttons, the stretched overlay class `after:absolute after:inset-0`, the untouched `line-clamp-3` teaser, and **no** `mailto:` left inside the job list.
+- Compiled CSS check: the dev stylesheet chunk contains every new utility used by the dialog — `focus-within:border-brand-red`, `after:inset-0`, `after:rounded-2xl`, `max-h-[92vh]`, `rounded-t-3xl`, `z-[100]`, `backdrop-blur-sm`, `size-4.5`, `line-clamp-3`, `bg-sky-500/15`, `bg-violet-500/15`.
+- Header audit: the `/careers` header container (`relative mx-auto flex h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8`) is identical to `/` and to every other public route; only the route-aware active pill differs (Home is active on `/`, no pill is active on `/careers`).
+- Harness note: the committed `tests/vitest.config.js|mjs` resolve their `@` alias and `setupFiles` relative to `tests/`, so `npm test` cannot resolve `@/…` imports (same blocker recorded in §21). Validation used a temporary root config that was deleted after the run.
+

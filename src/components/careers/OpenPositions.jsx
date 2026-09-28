@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 import { careerRoles } from "@/data/careers";
+import RoleDetailModal, {
+  formatPostedDate,
+  roleTypeBadgeClass,
+  roleTypeLabel,
+} from "@/components/careers/RoleDetailModal";
 
 const typeOptions = [
   { value: "all", label: "All Roles" },
@@ -13,10 +18,14 @@ const EMAIL = "info@sprint.naturalelements.co.in";
 
 /**
  * Open Positions — Light section with filter tabs and role cards.
- * Apply buttons trigger mailto with pre-filled subject.
+ *
+ * Every card is an entry point to the role detail modal: clicking the card body
+ * (the stretched title trigger) or the Apply action opens the same dialog with
+ * the full, untruncated job details. The mailto hand-off lives inside the modal.
  */
 export default function OpenPositions() {
   const [selectedType, setSelectedType] = useState("all");
+  const [activeRole, setActiveRole] = useState(null);
 
   const filteredRoles = careerRoles.filter((role) => {
     if (selectedType === "all") return true;
@@ -73,25 +82,31 @@ export default function OpenPositions() {
               {filteredRoles.map((role) => (
                 <article
                   key={role.id}
-                  className="relative flex flex-col rounded-2xl border border-brand-border bg-brand-white p-6 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 hover:border-brand-red"
+                  className="relative flex flex-col rounded-2xl border border-brand-border bg-brand-white p-6 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 hover:border-brand-red focus-within:border-brand-red focus-within:shadow-lg"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-display text-lg font-semibold text-brand-navy">
-                        {role.title}
+                        {/* Stretched trigger — opens the modal from anywhere on the card */}
+                        <button
+                          type="button"
+                          onClick={() => setActiveRole(role)}
+                          aria-haspopup="dialog"
+                          className="sprint-focus rounded-md text-left after:absolute after:inset-0 after:rounded-2xl after:content-['']"
+                        >
+                          {role.title}
+                        </button>
                       </h3>
                       <p className="mt-1 text-sm text-brand-text-secondary">
                         {role.location}
                       </p>
                     </div>
                     <span
-                      className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] ${
-                        role.type === "internship"
-                          ? "bg-sky-500/15 text-sky-700"
-                          : "bg-violet-500/15 text-violet-700"
-                      }`}
+                      className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] ${roleTypeBadgeClass(
+                        role.type,
+                      )}`}
                     >
-                      {role.type === "internship" ? "Internship" : "Full-time"}
+                      {roleTypeLabel(role.type)}
                     </span>
                   </div>
 
@@ -112,21 +127,19 @@ export default function OpenPositions() {
 
                   <div className="mt-6 flex items-center justify-between">
                     <span className="text-xs text-brand-text-muted">
-                      Posted {new Date(role.postedDate).toLocaleDateString("en-IN", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
+                      Posted {formatPostedDate(role.postedDate)}
                     </span>
-                    <a
-                      href={createMailtoLink(role.title)}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-red hover:text-brand-red-dark"
+                    <button
+                      type="button"
+                      onClick={() => setActiveRole(role)}
+                      aria-haspopup="dialog"
+                      className="sprint-focus relative z-10 inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-brand-red transition-colors hover:text-brand-red-dark"
                     >
                       Apply
                       <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                       </svg>
-                    </a>
+                    </button>
                   </div>
                 </article>
               ))}
@@ -145,6 +158,15 @@ export default function OpenPositions() {
           )}
         </div>
       </div>
+
+      {/* Single shared dialog instance for the selected card */}
+      {activeRole ? (
+        <RoleDetailModal
+          role={activeRole}
+          applyHref={createMailtoLink(activeRole.title)}
+          onClose={() => setActiveRole(null)}
+        />
+      ) : null}
     </section>
   );
 }

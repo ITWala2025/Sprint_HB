@@ -16,7 +16,7 @@ const exploreLinks = [
   { label: "Home", href: "/" },
   { label: "All Courses", href: "/courses" },
   { label: "About Us & Faculty", href: "/about" },
-  { label: "Careers & Internships", href: "/careers" },
+  { label: "Careers", href: "/careers" },
   { label: "Contact & Directions", href: "/contact" },
 ];
 

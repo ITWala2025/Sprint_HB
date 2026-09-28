@@ -3,6 +3,11 @@ import Link from "next/link";
 /**
  * Careers Hero — Single-column layout with navy gradient background.
  * No external image assets. Subtle CSS-only decorative radial glow.
+ *
+ * Alignment: the content column reuses the shared site grid
+ * (`mx-auto max-w-[1200px] px-6` — the same container edge as the Home/About
+ * heroes, the section wrappers and the footer) so the hero copy starts on the
+ * same left edge as the global header brand lockup, on every page.
  */
 export default function CareerHero() {
   return (
@@ -19,21 +24,23 @@ export default function CareerHero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto max-w-[800px] px-6 py-20 text-left">
-        <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
-          Careers & Internships
-        </p>
+      <div className="relative z-10 mx-auto max-w-[1200px] px-6 py-14 text-left">
+        <nav className="sprint-hero-breadcrumb" aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <span aria-hidden="true">›</span>
+          <span aria-current="page">Careers</span>
+        </nav>
 
-        <h1 className="mt-6 max-w-2xl font-display text-4xl font-bold leading-[1.1] text-brand-white sm:text-5xl md:text-6xl">
+        <h1 className="max-w-2xl font-display text-4xl font-bold leading-[1.1] text-brand-white sm:text-5xl md:text-6xl">
           Build the Future of
           <br />
           <span className="text-brand-red">Tech Education</span>
         </h1>
 
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-white/80">
-          Join a team that bridges the academic–industry gap with hands-on, mentor-led programs.
-          We are looking for engineers, educators, and operators who want to shape how India learns
-          emerging technologies.
+          Join a team that bridges the academic–industry gap with hands-on,
+          mentor-led programs. We are looking for engineers, educators, and
+          operators who want to shape how India learns emerging technologies.
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center justify-start gap-4">
@@ -42,12 +49,6 @@ export default function CareerHero() {
             className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-red px-8 py-4 text-base font-semibold text-brand-white transition-colors hover:bg-brand-red-dark w-full sm:w-auto"
           >
             View Open Roles
-          </Link>
-          <Link
-            href="#application-form"
-            className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand-white/30 bg-transparent px-8 py-4 text-base font-semibold text-brand-white transition-colors hover:border-brand-white hover:bg-brand-white/10 w-full sm:w-auto"
-          >
-            Apply Now
           </Link>
         </div>
       </div>

@@ -11,6 +11,12 @@ export const careerRoles = [
     location: "Hazaribagh, Jharkhand (Hybrid)",
     description:
       "Design and prototype autonomous AI agents that assist learners and mentors across the SPRINT platform. Work with LLMs, tool-use frameworks, and evaluation pipelines to ship features that scale.",
+    responsibilities: [
+      "Prototype agent workflows using LLM tool-calling and retrieval pipelines",
+      "Build evaluation harnesses that measure answer quality and task success",
+      "Turn research spikes into production-ready React and TypeScript features",
+      "Document reusable patterns and pair with mentors so results stay reproducible",
+    ],
     requirements: [
       "Strong Python and TypeScript skills",
       "Experience with LLM APIs (OpenAI, Anthropic, or open-source)",
@@ -28,6 +34,12 @@ export const careerRoles = [
     location: "Hazaribagh, Jharkhand (On-site)",
     description:
       "Drive partnership growth with colleges, universities, and corporate clients. Own the pipeline from outreach to signed MoUs, representing SPRINT's programs to decision-makers across the region.",
+    responsibilities: [
+      "Own the outreach pipeline from first contact through signed MoU",
+      "Run discovery meetings, campus presentations, and program demos",
+      "Coordinate cohort planning and delivery timelines with academic leadership",
+      "Track pipeline health and report conversion metrics every week",
+    ],
     requirements: [
       "1–3 years B2B sales or business development experience",
       "Excellent communication skills (English/Hindi)",
