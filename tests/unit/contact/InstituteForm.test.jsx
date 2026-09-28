@@ -29,4 +29,15 @@ describe("InstituteForm", () => {
       "We are interested in Training and Workshop services for our institute.",
     );
   });
+
+  it("closes the dropdown when clicked outside", () => {
+    render(<InstituteForm />);
+
+    const trigger = screen.getByText(/select service\(s\)/i).closest("button");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
 });

@@ -29,4 +29,15 @@ describe("CompanyForm", () => {
       "We are interested in exploring Partnership and Hiring opportunities with SPRINT.",
     );
   });
+
+  it("closes the dropdown when clicked outside", () => {
+    render(<CompanyForm />);
+
+    const trigger = screen.getByText(/select purpose\(s\)/i).closest("button");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
 });
