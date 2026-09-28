@@ -7,6 +7,8 @@ import {
   ArrowRight,
   ChevronDown,
   Heart,
+  Pause,
+  Play,
   Search,
   SlidersHorizontal,
   X,
@@ -161,6 +163,33 @@ export default function CourseCatalogue({ items }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [heroSlide, setHeroSlide] = useState(0);
+  const [heroPaused, setHeroPaused] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const motionPreference = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+    const updateMotionPreference = () =>
+      setPrefersReducedMotion(motionPreference.matches);
+
+    updateMotionPreference();
+    motionPreference.addEventListener("change", updateMotionPreference);
+
+    return () =>
+      motionPreference.removeEventListener("change", updateMotionPreference);
+  }, []);
+
+  useEffect(() => {
+    if (heroPaused || prefersReducedMotion) return;
+
+    const intervalId = window.setInterval(() => {
+      setHeroSlide((currentSlide) => (currentSlide === 0 ? 1 : 0));
+    }, 6000);
+
+    return () => window.clearInterval(intervalId);
+  }, [heroPaused, prefersReducedMotion]);
 
   useEffect(() => {
     const value = new URLSearchParams(window.location.search).get(
@@ -226,8 +255,19 @@ export default function CourseCatalogue({ items }) {
 
   return (
     <div className="courses-page">
-      <section className="courses-hero">
-        <div className="courses-hero__inner">
+      <section
+        className="courses-hero"
+        role="region"
+        aria-label="Courses featured content"
+        aria-roledescription="carousel"
+      >
+        <div
+          className={`courses-hero__inner courses-hero__slide--content${heroSlide === 0 ? " is-active" : ""}`}
+          role="group"
+          aria-roledescription="slide"
+          aria-label="1 of 2: Courses catalogue"
+          aria-hidden={heroSlide !== 0}
+        >
           <p className="courses-eyebrow">
             SPRINT learning catalogue
           </p>
@@ -274,6 +314,55 @@ export default function CourseCatalogue({ items }) {
               </div>
             ) : null}
           </div> */}
+        </div>
+
+        <div
+          className={`courses-hero__slide--pathway${heroSlide === 1 ? " is-active" : ""}`}
+          role="group"
+          aria-roledescription="slide"
+          aria-label="2 of 2: Learning pathways"
+          aria-hidden={heroSlide !== 1}
+        >
+          <Image
+            src="/images/courses/courses-hero.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+          />
+        </div>
+
+        <div className="courses-hero__controls" role="group" aria-label="Carousel controls">
+          <button
+            type="button"
+            className={heroSlide === 0 ? "is-active" : ""}
+            aria-label="Show courses catalogue slide"
+            aria-pressed={heroSlide === 0}
+            onClick={() => {
+              setHeroSlide(0);
+              setHeroPaused(true);
+            }}
+          />
+          <button
+            type="button"
+            className={heroSlide === 1 ? "is-active" : ""}
+            aria-label="Show learning pathways slide"
+            aria-pressed={heroSlide === 1}
+            onClick={() => {
+              setHeroSlide(1);
+              setHeroPaused(true);
+            }}
+          />
+          {!prefersReducedMotion ? (
+            <button
+              type="button"
+              className="courses-hero__toggle"
+              aria-label={heroPaused ? "Resume slide rotation" : "Pause slide rotation"}
+              onClick={() => setHeroPaused((isPaused) => !isPaused)}
+            >
+              {heroPaused ? <Play size={14} /> : <Pause size={14} />}
+            </button>
+          ) : null}
         </div>
       </section>
 

@@ -5291,15 +5291,97 @@ a {
 }
 
 .courses-hero {
+  position: relative;
+  isolation: isolate;
   overflow: visible;
   background: linear-gradient(120deg, #f8fafc 0%, #eef5fc 55%, #fff0f2 100%);
   border-bottom: 1px solid var(--color-brand-border);
 }
 
+.courses-hero__slide--content,
+.courses-hero__slide--pathway {
+  transition: opacity 700ms ease;
+}
+
+.courses-hero__slide--content.is-active,
+.courses-hero__slide--pathway.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.courses-hero__slide--content:not(.is-active),
+.courses-hero__slide--pathway:not(.is-active) {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .courses-hero__inner {
+  position: relative;
+  z-index: 1;
   width: min(100% - 2rem, 1200px);
   margin: auto;
   padding: clamp(3.5rem, 8vw, 7rem) 0 clamp(4rem, 9vw, 7.5rem);
+}
+
+.courses-hero__slide--pathway {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--color-brand-navy-dark);
+}
+
+.courses-hero__slide--pathway img {
+  object-fit: contain;
+  object-position: center;
+}
+
+.courses-hero__controls {
+  position: absolute;
+  z-index: 2;
+  right: max(1rem, calc((100% - 1200px) / 2));
+  bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(1, 31, 62, 0.78);
+}
+
+.courses-hero__controls > button:not(.courses-hero__toggle) {
+  width: 0.55rem;
+  height: 0.55rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.58);
+  cursor: pointer;
+}
+
+.courses-hero__controls > button.is-active:not(.courses-hero__toggle) {
+  background: var(--color-brand-red);
+}
+
+.courses-hero__toggle {
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-brand-white);
+  cursor: pointer;
+}
+
+.courses-hero__controls button:focus-visible {
+  outline: 2px solid var(--color-brand-white);
+  outline-offset: 2px;
 }
 
 .courses-eyebrow {
@@ -6015,6 +6097,10 @@ a {
 }
 
 @media (max-width: 767px) {
+  .courses-hero__controls {
+    right: 1rem;
+  }
+
   .courses-hero__inner {
     padding: 3.25rem 0 3.5rem;
   }
@@ -6211,6 +6297,11 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .courses-hero__slide--content,
+  .courses-hero__slide--pathway {
+    transition: none;
+  }
+
   .course-tile,
   .course-tile__link,
   .course-curriculum__item svg {
