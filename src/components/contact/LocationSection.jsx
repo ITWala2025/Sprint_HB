@@ -140,7 +140,7 @@ export default function LocationSection() {
             <div className="location-image">
 
               <Image
-                src="/images/contact/sprint-office.webp"
+                src="/images/contact/sprint-office-realistic.webp"
                 alt="SPRINT School of Professional Studies and Information Technology office in Hazaribagh"
                 fill
                 priority={false}
