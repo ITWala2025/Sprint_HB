@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import FeaturedProgram from "@/components/Home/FeaturedProgram";
@@ -9,11 +9,8 @@ describe("FeaturedProgram", () => {
     vi.unstubAllGlobals();
   });
 
-  it("keeps the complete stages timeline collapsed until the single toggle is activated", () => {
+  it("renders every program stage immediately without a disclosure control", () => {
     render(<FeaturedProgram />);
-
-    const stages = document.getElementById("featured-program-stages");
-    const toggle = screen.getByRole("button", { name: /view program stages/i });
 
     expect(
       screen.getByRole("heading", { name: featuredCourse.title }),
@@ -21,25 +18,14 @@ describe("FeaturedProgram", () => {
     expect(
       screen.getByText(featuredCourse.shortDescription),
     ).toBeInTheDocument();
-    expect(toggle).toHaveAttribute("aria-expanded", "false");
-    expect(stages).toHaveAttribute("aria-hidden", "true");
-
-    vi.stubGlobal(
-      "IntersectionObserver",
-      class {
-        observe() {}
-        disconnect() {}
-      },
-    );
-
-    fireEvent.click(toggle);
-
     expect(
-      screen.getByRole("button", { name: /hide program stages/i }),
-    ).toHaveAttribute("aria-expanded", "true");
-    expect(stages).toHaveAttribute("aria-hidden", "false");
+      screen.queryByRole("button", { name: /program stages/i }),
+    ).not.toBeInTheDocument();
 
     featuredProgramStages.forEach((stage) => {
+      expect(
+        screen.getByRole("heading", { name: stage.title }),
+      ).toBeInTheDocument();
       expect(screen.getByText(stage.title)).toBeInTheDocument();
       expect(screen.getByText(stage.description)).toBeInTheDocument();
     });

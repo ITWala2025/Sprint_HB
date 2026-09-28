@@ -47,10 +47,10 @@ export default function OpenPositions() {
           <h2 id="open-positions-heading" className="mt-4 font-display text-3xl font-bold text-brand-navy sm:text-4xl">
             Roles We're Hiring For
           </h2>
-          <p className="mt-4 text-lg text-brand-text-secondary">
+          {/* <p className="mt-4 text-lg text-brand-text-secondary">
             Filter by type to find the right fit. All roles include mentorship, real projects,
             and a clear path to growth.
-          </p>
+          </p> */}
         </div>
 
         {/* Filter Tabs */}

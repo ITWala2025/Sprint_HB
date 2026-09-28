@@ -19,9 +19,9 @@ export default function ApplicationForm() {
           <h2 id="application-form-heading" className="mt-4 font-display text-3xl font-bold text-brand-navy sm:text-4xl">
             Submit Your Application
           </h2>
-          <p className="mt-4 text-lg text-brand-text-secondary">
+          {/* <p className="mt-4 text-lg text-brand-text-secondary">
             Send your resume here
-          </p>
+          </p> */}
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
@@ -34,12 +34,12 @@ export default function ApplicationForm() {
               </svg>
               Email your resume
             </a>
-            <Link
+            {/*<Link
               href="#open-positions"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-red px-8 py-4 text-base font-semibold text-brand-white transition-colors hover:bg-brand-red-dark w-full sm:w-auto"
             >
               View Open Roles
-            </Link>
+            </Link> */}
           </div>
 
           <p className="mt-6 text-sm text-brand-text-muted max-w-xl mx-auto">

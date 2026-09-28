@@ -1,29 +1,24 @@
 "use client";
 
-import { ArrowDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { Blocks, BriefcaseBusiness, Code2, Workflow } from "lucide-react";
 import { featuredCourse, featuredProgramStages } from "@/data/data";
 
-/**
- * Featured Course / Program — Section 6.4.
- *
- * Scroll-driven vertical timeline: each stage is observed with
- * IntersectionObserver, and the stage nearest the viewport center becomes
- * "active". This is deliberately observer-based rather than a scroll-jack
- * library — it never overrides native scroll (spec: "should not interfere
- * with normal page scrolling") and degrades gracefully (no JS = every
- * stage just renders statically, still readable).
- *
- * The stages are revealed as one accessible disclosure so the section stays
- * compact until a visitor asks to view the program path.
- */
+const stageIllustrations = [Code2, Blocks, Workflow, BriefcaseBusiness];
+const illustrationPanels = [
+  "bg-[linear-gradient(135deg,#dceeff,#f4f9ff_58%,#e5f2ff)]",
+  "bg-[linear-gradient(135deg,#e5f4ff,#f7fbff_58%,#e2f3f2)]",
+  "bg-[linear-gradient(135deg,#e2eeff,#f7f9ff_58%,#eeeaff)]",
+  "bg-[linear-gradient(135deg,#e4f2ff,#f8fbff_58%,#fff0f2)]",
+];
+
 export default function FeaturedProgram() {
   const stageRefs = useRef([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    if (!isExpanded) {
+    if (typeof IntersectionObserver === "undefined") {
       return undefined;
     }
 
@@ -46,125 +41,126 @@ export default function FeaturedProgram() {
 
     stageRefs.current.forEach((el) => el && observer.observe(el));
     return () => observer.disconnect();
-  }, [isExpanded]);
+  }, []);
 
   return (
-    <section className="sprint-section bg-brand-navy py-[2.1rem] text-brand-white md:py-[3.5rem] lg:py-[4.375rem]">
-      <div className="mx-auto max-w-[1200px] px-6">
-        <div className="mx-auto w-full max-w-2xl text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-light">
+    <section
+      className="sprint-section relative isolate overflow-hidden bg-[linear-gradient(145deg,var(--color-brand-blue-light)_0%,#f5faff_48%,#dcecff_100%)] py-12 text-brand-navy sm:py-16 lg:py-20"
+      aria-labelledby="featured-program-heading"
+    >
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,rgba(11,99,182,0.18),transparent_58%),radial-gradient(ellipse_at_8%_12%,rgba(248,21,41,0.045),transparent_35%)]"
+        aria-hidden="true"
+      />
+      <div className="relative mx-auto max-w-[1200px] px-5 sm:px-6">
+        <header className="mx-auto w-full max-w-2xl text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
             Featured program
           </p>
-          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2
+            id="featured-program-heading"
+            className="mt-3 font-display text-3xl font-bold sm:text-4xl"
+          >
             {featuredCourse.title}
           </h2>
-          <p className="mt-4 text-brand-white/75">
+          <p className="mt-4 leading-relaxed text-brand-text-secondary">
             {featuredCourse.shortDescription}
           </p>
+        </header>
 
-          <button
-            type="button"
-            className="sprint-focus group mt-6 inline-flex min-h-[48px] cursor-pointer items-center justify-center gap-2 rounded-full border border-brand-red-light/80 bg-brand-red/10 px-5 py-2.5 text-sm font-semibold text-brand-white shadow-[0_0_0_1px_rgba(232,70,47,0.08)] transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:border-brand-red-light hover:bg-brand-red hover:text-white hover:shadow-[0_8px_24px_rgba(232,70,47,0.28)] focus-visible:ring-2 focus-visible:ring-brand-red-light focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy active:scale-95"
-            aria-controls="featured-program-stages"
-            aria-expanded={isExpanded}
-            onClick={() => setIsExpanded((expanded) => !expanded)}
+        <div className="relative mx-auto mt-10 max-w-6xl sm:mt-14">
+          <div
+            className="absolute bottom-6 left-4 top-6 w-px bg-brand-blue/20 lg:left-1/2 lg:-translate-x-1/2"
+            aria-hidden="true"
           >
-            <span>
-              {isExpanded ? "Hide Program Stages" : "View Program Stages"}
-            </span>
-            <span
-              className={`text-xl font-bold leading-none transition-all duration-200 ease-in-out group-hover:translate-y-0.5 ${
-                isExpanded ? "rotate-180" : ""
-              }`}
-              aria-hidden="true"
-            >
-              <ArrowDown className="size-5" aria-hidden="true" />
-            </span>
-          </button>
-        </div>
+            <div
+              className="w-px bg-brand-blue transition-[height] duration-500 ease-out"
+              style={{
+                height: `${((activeIndex + 1) / featuredProgramStages.length) * 100}%`,
+              }}
+            />
+          </div>
 
-        <div
-          id="featured-program-stages"
-          aria-hidden={!isExpanded}
-          className={`grid transition-[grid-template-rows] duration-500 ease-in-out ${
-            isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-          }`}
-        >
-          <div className="min-h-0 overflow-hidden">
-            <div className="relative mt-8 grid gap-0 pl-10 lg:pl-0">
-              {/* The vertical rail. The filled segment grows with scroll
-                  progress to visualize "a clear sense of progression". */}
-              <div
-                className="absolute left-4 top-0 h-full w-px bg-brand-white/15 lg:left-1/2 lg:-translate-x-1/2"
-                aria-hidden="true"
-              >
+          <div className="relative space-y-5 lg:space-y-2">
+            {featuredProgramStages.map((stage, index) => {
+              const isActive = index === activeIndex;
+              const badgeNumber = String(index + 1).padStart(2, "0");
+              const isLeft = index % 2 === 0;
+              const StageIllustration =
+                stageIllustrations[index % stageIllustrations.length] ?? Code2;
+
+              return (
                 <div
-                  className="w-px bg-brand-red transition-[height] duration-500 ease-out"
-                  style={{
-                    height: `${((activeIndex + 1) / featuredProgramStages.length) * 100}%`,
+                  key={stage.id}
+                  ref={(element) => {
+                    stageRefs.current[index] = element;
                   }}
-                />
-              </div>
-
-              {featuredProgramStages.map((stage, index) => {
-                const isActive = index === activeIndex;
-                const badgeNumber = String(index + 1).padStart(2, "0");
-                const isLeft = index % 2 === 0;
-
-                return (
-                  <div
-                    key={stage.id}
-                    ref={(el) => {
-                      stageRefs.current[index] = el;
-                    }}
-                    data-index={index}
-                    className="relative grid min-h-[190px] grid-cols-1 items-start py-6 lg:grid-cols-2 lg:items-center lg:py-12"
+                  data-index={index}
+                  className="relative grid grid-cols-[2rem_minmax(0,1fr)] items-center gap-x-4 py-3 lg:min-h-[260px] lg:grid-cols-[minmax(0,1fr)_3.5rem_minmax(0,1fr)] lg:gap-x-5 lg:py-8"
+                >
+                  <span
+                    className={`z-10 col-start-1 row-start-1 grid size-10 place-items-center rounded-full border-4 border-white text-xs font-bold text-white shadow-[0_3px_12px_rgba(1,31,62,0.18)] ring-1 transition-colors duration-300 md:size-12 lg:col-start-2 ${
+                      isActive
+                        ? "bg-brand-red ring-brand-red/20"
+                        : "bg-brand-blue ring-brand-blue/15"
+                    }`}
+                    aria-hidden="true"
                   >
-                    {/* Numbered node stays on the rail at every breakpoint. */}
-                    <span
-                      className={`absolute -left-11 top-6 z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-4 border-brand-navy bg-brand-red text-xs font-bold text-brand-white shadow-[0_0_0_1px_rgba(232,70,47,0.35)] lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 ${
-                        isActive ? "opacity-100" : "opacity-70"
-                      }`}
-                      aria-hidden="true"
-                    >
-                      {badgeNumber}
-                    </span>
+                    {badgeNumber}
+                  </span>
 
+                  <article
+                    className={`sprint-focus col-start-2 row-start-1 min-w-0 overflow-hidden rounded-2xl border bg-white/90 shadow-sm backdrop-blur-sm transition-[border-color,box-shadow] duration-300 md:max-w-[640px] lg:max-w-[470px] ${
+                      isLeft
+                        ? "lg:col-start-1 lg:justify-self-end"
+                        : "lg:col-start-3 lg:justify-self-start"
+                    } ${
+                      isActive
+                        ? "border-brand-blue/35 shadow-brand-card ring-1 ring-brand-blue/10"
+                        : "border-brand-blue/10 shadow-[0_10px_28px_rgba(1,31,62,0.07)]"
+                    }`}
+                  >
                     <div
-                      className={`max-w-xl pl-4 lg:pl-0 ${
-                        isLeft
-                          ? "lg:col-start-1 lg:justify-self-end lg:pr-16 lg:text-right"
-                          : "lg:col-start-2 lg:pl-16 lg:text-left"
-                      }`}
+                      className={`relative isolate flex h-36 items-center justify-center overflow-hidden sm:h-40 md:h-44 ${illustrationPanels[index % illustrationPanels.length]}`}
+                      aria-hidden={stage.image ? undefined : "true"}
                     >
-                      <p
-                        className={`text-sm font-semibold ${
-                          isActive ? "text-brand-red" : "text-brand-white/50"
-                        }`}
-                      >
+                      {stage.image ? (
+                        <div className="relative h-full w-full">
+                          <Image
+                            src={stage.image}
+                            alt={stage.imageAlt ?? `${stage.title} illustration`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 470px"
+                            className="object-contain p-2"
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <span className="absolute size-36 rounded-full border border-brand-blue/10 sm:size-44" />
+                          <span className="absolute size-24 rounded-full border border-brand-blue/10 sm:size-32" />
+                          <span className="absolute right-[18%] top-5 size-3 rounded-sm bg-brand-red/35" />
+                          <span className="absolute bottom-6 left-[20%] size-2 rounded-full bg-brand-blue/40" />
+                          <span className="relative grid size-20 place-items-center rounded-[1.35rem] border border-white/80 bg-white/65 text-brand-blue shadow-[0_12px_28px_rgba(1,31,62,0.1)] sm:size-24">
+                            <StageIllustration className="size-10 sm:size-12" strokeWidth={1.5} />
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <div className="p-5 sm:p-6 md:p-7">
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-red">
                         {stage.stageLabel}
                       </p>
-                      <h3
-                        className={`mt-1 font-display text-2xl font-semibold transition-opacity ${
-                          isActive ? "opacity-100" : "opacity-60"
-                        }`}
-                      >
+                      <h3 className="mt-2 font-display text-xl font-semibold text-brand-navy sm:text-2xl">
                         {stage.title}
                       </h3>
-                      <p
-                        className={`mt-2 max-w-lg transition-opacity ${
-                          isActive
-                            ? "text-brand-white/85 opacity-100"
-                            : "text-brand-white/60 opacity-70"
-                        }`}
-                      >
+                      <p className="mt-3 max-w-prose text-sm leading-relaxed text-brand-text-secondary sm:text-base">
                         {stage.description}
                       </p>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  </article>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

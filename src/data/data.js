@@ -74,6 +74,8 @@ export const featuredProgramStages = [
     title: "Foundations",
     description:
       "Core programming, data structures, and problem-solving fundamentals taught live by working engineers.",
+    image: "/images/home/home-featuredprogram-1.png",
+    imageAlt: "Programming and software development learning",
   },
   {
     id: "stage-2",
