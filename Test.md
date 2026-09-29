@@ -360,3 +360,30 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Header audit: the `/careers` header container (`relative mx-auto flex h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8`) is identical to `/` and to every other public route; only the route-aware active pill differs (Home is active on `/`, no pill is active on `/careers`).
 - Harness note: the committed `tests/vitest.config.js|mjs` resolve their `@` alias and `setupFiles` relative to `tests/`, so `npm test` cannot resolve `@/…` imports (same blocker recorded in §21). Validation used a temporary root config that was deleted after the run.
 
+
+## 25. SPRINT Student Portal Unit Tests Validation — 2026-09-28
+
+- New unit test suites under `tests/unit/student/` covering the full student portal implementation:
+  - `StudentSidebar.test.jsx`: 5 tests covering shared config navigation links, default active page indicator (`aria-current="page"`), active route derivation from pathname, collapse/expand toggle, and student identity details.
+  - `StudentLayout.test.jsx`: 5 tests covering desktop layout rendering with collapsible sidebar, mobile drawer open/close via button, dismiss on Escape key, dismiss on backdrop click, and scroll lock on `document.body`.
+  - `StudentDashboard.test.jsx`: 9 tests covering personalized welcome banner, dynamic calendar with current date highlight (`aria-current="date"`), 4 info cards, learning progress widget with session counters and attendance link, enrollment progress bar (`role="progressbar"`), upcoming live classes empty state, quick action links, bottom support cards (feedback CTA, offer letters, announcements unread badge), and active dashboard highlighting.
+  - `StudentPlaceholderRoutes.test.jsx`: 5 parameterized tests for student placeholder sub-routes (Profile, Apply Course, Certificates, Placements, Help & Support).
+- Test execution:
+  - Extended `tests/vitest.setup.js` with `window.matchMedia` polyfill for jsdom environment.
+  - Executed tests using Vitest with `@/` alias resolution: 4 test files, 24 tests, **24 passed (100%)**.
+  - Temporary runner config was cleanly removed following validation.
+- Build validation: `npm run build` completed successfully, compiling all `/student/*` pages statically.
+
+## 26. Student Portal Sidebar Consolidation Unit Tests Validation — 2026-09-29
+
+- Scope: the nine-item sidebar rail, the three new placeholder routes (`my-course`, `result`, `settings`), the six retired routes (`applications`, `exams`, `cohort`, `attendance`, `permissions`, `placements`) and every dashboard link that used to point at them.
+- Student suite: `npx vitest run tests/unit/student --pool=threads --maxWorkers=1` — **Passed**, 5 files / 33 tests.
+  - `tests/unit/student/StudentSidebar.test.jsx` — 7 tests: labels + hrefs asserted in order against `src/config/student-navigation.json`, retired sections asserted absent, active-route matcher moved to `/certificate/i`.
+  - `tests/unit/student/StudentPlaceholderRoutes.test.jsx` — 7 parameterized placeholder checks (Profile, Apply Courses, My Course, Certificate, Result, Help & Support, Settings).
+  - `tests/unit/student/StudentDashboard.test.jsx` — 9 tests: learning-progress card asserted link-free (attendance is no longer a portal section), enrollment CTA asserted as “View My Course” → `/student/my-course`.
+  - `tests/unit/student/StudentLayout.test.jsx` — 5 tests (unchanged).
+  - `tests/unit/student/StudentPortalNavIntegrity.test.js` — 5 tests (new): nine unique sections, every sidebar href resolves to a `page.jsx`, every portal folder reachable from the rail or the dashboard quick actions (`resources` allow-listed as a dashboard-only destination), no quoted `/student/...` string inside the portal source points at a missing page, retired segments absent from both folders and links.
+- Wider JSX suite: `npx vitest run --pool=threads --maxWorkers=1` — `Test Files 3 failed | 18 passed (21)`, `Tests 5 failed | 64 passed (69)`. All five failures sit in `careers/CareerHero` (3), `contact/ContactHero` (1) and `contact/ContactMethods` (1): stale expectations left by `8ac3457` (breadcrumb Home → `/home`), `a20a122` (hero container/padding restructure) and `52b1f99` (phone/email refresh). They are outside the student portal task and were deliberately left untouched; no public-site file was modified.
+- Dangling-route check: `git grep -nE "/student/(applications|exams|cohort|attendance|permissions|placements)" -- src tests` returns no matches.
+- Harness note (same blocker as §21 and §24): the committed `tests/vitest.config.js|mjs` resolve `@/` and `setupFiles` relative to `tests/`, so `npm test` cannot resolve `@/…` imports; verification used a temporary root config that was deleted after the run.
+

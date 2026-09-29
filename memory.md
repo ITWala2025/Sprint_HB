@@ -460,3 +460,36 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Added placeholder `responsibilities` arrays to both roles in [src/data/careers.js](src/data/careers.js) so the new dialog section has content; replace with real JD copy when available. The [src/components/careers/CareerHero.jsx](src/components/careers/CareerHero.jsx) alignment work from the previous pass (shared `mx-auto max-w-[1200px] px-6` container, `Home > Careers` breadcrumb, −30% `py-14` padding, single "View Open Roles" CTA) is unchanged.
 - Validation: the 6 new tests in [tests/unit/careers/OpenPositions.test.jsx](tests/unit/careers/OpenPositions.test.jsx) pass; the full suite runs 96 tests with 90 passing and the same 6 pre-existing failures (ContactHero, ContactMethods, HeaderLogo). `/careers` renders the shared header container identically to `/`.
 
+
+## 36. SPRINT Student Portal Dashboard & Layout — 2026-09-28
+
+- Added the SPRINT Student Portal dashboard and navigation shell under `/student/(portal)` route group, preserving the public header and footer while keeping the portal layout off future auth entry points like `/student/login`.
+- Created configuration and data modules:
+  - `src/config/student-navigation.json`: the single source of truth for the sidebar rail. Created with twelve entries and consolidated to nine in §37 (Dashboard, Profile, Apply Courses, My Course, Assignment, Certificate, Result, Help & Support, Settings).
+  - `src/data/student.js`: student identity (`Ananya Sharma`, `SPR-2026-0148`), enrollment, quick actions, schedule, mentors, announcements, learning progress, and offer letters.
+  - `src/utils/dates.js`: safe date formatting utilities (`formatShortDate`).
+- Implemented components under `src/components/student/`:
+  - `StudentLayout.jsx`: responsive wrapper with a desktop collapsible sidebar and mobile slide-out drawer (with backdrop click, Escape key dismiss, and scroll lock).
+  - `StudentSidebar.jsx`: accessible portal navigation rail with collapse/expand toggle, active route highlighting via `aria-current="page"`, and student identity block.
+  - `StudentCard.jsx`: consistent card primitive styled with SPRINT tokens (`rounded-3xl`, `bg-brand-white`, `border-brand-border`, `font-display` heading).
+  - Dashboard widgets: `StudentWelcomeBanner`, `CalendarWidget`, `CurrentEnrollmentCard`, `LearningProgressCard`, `OfferLettersCard`, `AnnouncementsCard`, `QuickActions`, `UpcomingLiveClasses`, `InfoCards`.
+- Created placeholder routes under `src/app/student/(portal)/` for all sidebar destinations with consistent shell layouts and breadcrumb return links.
+- Unit testing with Vitest (`tests/unit/student/`):
+  - `StudentSidebar.test.jsx`: config links rendering, active indicator, collapse/expand toggle, and student profile details.
+  - `StudentLayout.test.jsx`: desktop sidebar integration, mobile drawer toggling, backdrop dismiss, Escape key dismiss, and scroll locking.
+  - `StudentDashboard.test.jsx`: welcome banner, calendar with current date highlight, info cards, learning progress widget, enrollment status with progressbar, empty states, and support cards.
+  - `StudentPlaceholderRoutes.test.jsx`: verification of portal placeholder views.
+  - All 4 test files (24 tests) passed successfully. Production build (`npm run build`) succeeded with 51 static pages generated.
+
+
+## 37. Student Portal Sidebar Consolidation & Route Cleanup — 2026-09-29
+
+- `src/config/student-navigation.json` is now the single source of truth for the portal rail at nine items in this order: Dashboard, Profile, Apply Courses, My Course, Assignment (badge `2`), Certificate, Result, Help & Support, Settings.
+- Route folders under `src/app/student/(portal)/` mirror the rail one-to-one plus `resources`. Created `my-course`, `result` and `settings`; removed `applications`, `exams`, `cohort`, `attendance`, `permissions` and `placements` (all empty placeholders). Page titles were aligned with the rail labels (`apply-course` → "Apply Courses", `assignments` → "Assignment", `certificates` → "Certificate").
+- `/student/resources` is kept on purpose even though it is off the rail: it is still a Dashboard Quick Action destination.
+- Dashboard widgets were re-pointed at surviving routes instead of the removed ones: `CurrentEnrollment.jsx` offers "View My Course" → `/student/my-course`, `OfferLettersCard.jsx` points at `/student/certificates`, `LearningProgress.jsx` no longer links to attendance (its `Link` / `ArrowRight` imports were dropped as part of that cleanup), `QuickActions.jsx` icon map gained `qa-result` and lost the attendance entry, and `mockQuickActions` in [src/data/student.js](src/data/student.js) swaps "View Attendance" for "View Result".
+- `StudentSidebar.jsx` keeps icons type-safe through the local `ICONS` registry: `BookOpen`, `GraduationCap` and `Settings` replaced `BookX`, `Users`, `BadgeCheck` and `ShieldCheck`, so all nine config keys resolve and the `LayoutDashboard` fallback stays unused.
+- `StudentPlaceholderPage.jsx` docstring no longer claims the portal ships only two placeholder pages.
+- New guard suite `tests/unit/student/StudentPortalNavIntegrity.test.js` keeps the rail honest: nine unique sections, every sidebar href resolving to a `page.jsx`, every portal folder reachable from the rail or the quick actions, no quoted `/student/...` string inside the portal source pointing at a missing page, and the retired sections staying retired.
+- Scope rule reaffirmed: public-site files (careers, courses, contact, header) are untouched by student portal work. The five failing tests in those suites (see Test.md §26) come from `8ac3457`, `a20a122` and `52b1f99` and were left as-is on instruction.
+- `next-env.d.ts` churn (`.next/types/...` → `.next/dev/types/...`, produced by the earlier build check) was reverted; it is Next-generated and not part of this task.
