@@ -43,8 +43,8 @@ const navigationGroups: NavigationGroup[] = [
     },
     {
         label: "Training & Courses", icon: BookOpen, items: [
-            { label: "Edit Courses", href: "/admin/courses/edit", icon: BookOpen },
-            { label: "Update Scholarship", href: "/admin/courses/scholarships", icon: Award },
+            { label: "Course Management", href: "/admin/courses", icon: BookOpen },
+            { label: "Update Scholarship", href: "/admin/scholarships", icon: Award },
         ]
     },
     {
