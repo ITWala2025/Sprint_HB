@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const purposeTypes = [
   "Partnership",
@@ -47,6 +47,24 @@ export default function CompanyForm() {
 
   const [purposeOpen, setPurposeOpen] = useState(false);
   const [messageEdited, setMessageEdited] = useState(false);
+  const purposeDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        purposeDropdownRef.current &&
+        !purposeDropdownRef.current.contains(event.target)
+      ) {
+        setPurposeOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -262,7 +280,7 @@ export default function CompanyForm() {
           Purpose Type <span aria-hidden="true">*</span>
         </label>
 
-        <div className="contact-multiselect">
+        <div className="contact-multiselect" ref={purposeDropdownRef}>
           <button
             type="button"
             className={`contact-multiselect__trigger ${

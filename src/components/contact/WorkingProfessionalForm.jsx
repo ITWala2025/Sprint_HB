@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const programs = [
   "Artificial Intelligence",
@@ -47,6 +47,24 @@ export default function WorkingProfessionalForm() {
 
   const [programOpen, setProgramOpen] = useState(false);
   const [messageEdited, setMessageEdited] = useState(false);
+  const programDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        programDropdownRef.current &&
+        !programDropdownRef.current.contains(event.target)
+      ) {
+        setProgramOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -214,7 +232,7 @@ export default function WorkingProfessionalForm() {
           <span aria-hidden="true">*</span>
         </label>
 
-        <div className="contact-multiselect">
+        <div className="contact-multiselect" ref={programDropdownRef}>
           <button
             type="button"
             className={`contact-multiselect__trigger ${

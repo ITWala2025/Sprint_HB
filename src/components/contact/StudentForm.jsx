@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const courses = [
   "Artificial Intelligence",
@@ -44,6 +44,24 @@ export default function StudentForm() {
 
   const [courseOpen, setCourseOpen] = useState(false);
   const [messageEdited, setMessageEdited] = useState(false);
+  const courseDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        courseDropdownRef.current &&
+        !courseDropdownRef.current.contains(event.target)
+      ) {
+        setCourseOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -155,7 +173,7 @@ export default function StudentForm() {
           Interested Course(s) <span aria-hidden="true">*</span>
         </label>
 
-        <div className="contact-multiselect">
+        <div className="contact-multiselect" ref={courseDropdownRef}>
           <button
             type="button"
             className={`contact-multiselect__trigger ${

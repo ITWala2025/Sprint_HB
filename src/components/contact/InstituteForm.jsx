@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const services = [
   "Training",
@@ -44,6 +44,24 @@ export default function InstituteForm() {
 
   const [serviceOpen, setServiceOpen] = useState(false);
   const [messageEdited, setMessageEdited] = useState(false);
+  const serviceDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        serviceDropdownRef.current &&
+        !serviceDropdownRef.current.contains(event.target)
+      ) {
+        setServiceOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -207,7 +225,7 @@ export default function InstituteForm() {
           Services <span aria-hidden="true">*</span>
         </label>
 
-        <div className="contact-multiselect">
+        <div className="contact-multiselect" ref={serviceDropdownRef}>
           <button
             type="button"
             className={`contact-multiselect__trigger ${

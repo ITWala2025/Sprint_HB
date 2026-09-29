@@ -29,4 +29,15 @@ describe("WorkingProfessionalForm", () => {
       "I'm interested in the Artificial Intelligence and Data Science programs as a working professional.",
     );
   });
+
+  it("closes the dropdown when clicked outside", () => {
+    render(<WorkingProfessionalForm />);
+
+    const trigger = screen.getByText(/select program\(s\)/i).closest("button");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
 });

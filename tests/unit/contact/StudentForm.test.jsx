@@ -31,4 +31,15 @@ describe("StudentForm", () => {
       "I'm interested in the Artificial Intelligence and Data Science courses.",
     );
   });
+
+  it("closes the dropdown when clicked outside", () => {
+    render(<StudentForm />);
+
+    const trigger = screen.getByText(/select course\(s\)/i).closest("button");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
 });
