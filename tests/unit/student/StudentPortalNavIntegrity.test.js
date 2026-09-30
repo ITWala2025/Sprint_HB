@@ -16,6 +16,12 @@ import { mockQuickActions } from "@/data/student";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const PORTAL_DIR = path.join(ROOT, "src", "app", "student", "(portal)");
+/**
+ * The auth screens (login, forgot-password, check-email, reset-password,
+ * password-reset-success) are full-screen routes that sit outside the (portal)
+ * group, so `/student/*` links may resolve to either directory.
+ */
+const STUDENT_DIR = path.join(ROOT, "src", "app", "student");
 const PORTAL_COMPONENT_DIR = path.join(ROOT, "src", "components", "student");
 const STUDENT_DATA_FILE = path.join(ROOT, "src", "data", "student.js");
 
@@ -31,8 +37,14 @@ const routeFolders = () =>
     .map((entry) => entry.name)
     .sort();
 
-const hasPage = (href) =>
-  existsSync(path.join(PORTAL_DIR, href.replace("/student/", ""), "page.jsx"));
+const hasPage = (href) => {
+  const segment = href.replace("/student/", "");
+  return (
+    existsSync(path.join(PORTAL_DIR, segment, "page.jsx")) ||
+    existsSync(path.join(STUDENT_DIR, segment, "page.jsx"))
+  );
+};
+
 
 const collectJsxFiles = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {

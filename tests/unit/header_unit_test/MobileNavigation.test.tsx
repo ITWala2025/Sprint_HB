@@ -107,9 +107,9 @@ describe("MobileNavigation", () => {
       expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
     });
 
-    it("renders Student Login and Enroll Now links in the drawer", () => {
+    it("renders Student Portal and Enroll Now links in the drawer", () => {
       renderWithProps({ isOpen: true });
-      expect(screen.getByRole("link", { name: /Student Login/i })).toHaveAttribute(
+      expect(screen.getByRole("link", { name: /Student Portal/i })).toHaveAttribute(
         "href",
         "/student/login",
       );
@@ -169,10 +169,10 @@ describe("MobileNavigation", () => {
       expect(mockSetIsOpen).toHaveBeenCalledWith(false);
     });
 
-    it("calls setIsOpen(false) when Student Login link is clicked", () => {
+    it("calls setIsOpen(false) when Student Portal link is clicked", () => {
       renderWithProps({ isOpen: true });
       mockSetIsOpen.mockClear();
-      fireEvent.click(screen.getByRole("link", { name: /Student Login/i }));
+      fireEvent.click(screen.getByRole("link", { name: /Student Portal/i }));
       expect(mockSetIsOpen).toHaveBeenCalledWith(false);
     });
 

@@ -114,7 +114,7 @@ export default function MobileNavigation({
                     onClick={() => setIsOpen(false)}
                     className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-surface"
                   >
-                    Student Login
+                    Student Portal
                   </Link>
                   <Link
                     href="/register"

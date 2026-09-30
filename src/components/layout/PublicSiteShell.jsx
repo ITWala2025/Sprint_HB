@@ -5,18 +5,38 @@ import Header from "@/components/header/Header";
 import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";
 import Footer from "@/components/footer/Footer";
 
+/**
+ * Routes that render their own full-screen chrome: the Student Portal auth
+ * screens (often opened from an emailed link) and the enrollment wizard, which
+ * is a focused task rather than a marketing page. All of them skip the public
+ * header, campus ticker, footer and floating WhatsApp bubble.
+ */
+const FOCUSED_ROUTES = [
+    "/student/login",
+    "/student/forgot-password",
+    "/student/check-email",
+    "/student/reset-password",
+    "/student/password-reset-success",
+    "/student/enroll",
+];
+
+const matchesRoute = (pathname, routes) =>
+    routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
+
 export default function PublicSiteShell({ children }) {
     const pathname = usePathname();
     const isAdminRoute = pathname.startsWith("/admin");
+    const isFocusedRoute = matchesRoute(pathname, FOCUSED_ROUTES);
+    const showPublicChrome = !isAdminRoute && !isFocusedRoute;
 
     return (
         <>
-            {!isAdminRoute && <Header />}
-            {!isAdminRoute && <ConditionalCampusNewsTicker />}
+            {showPublicChrome && <Header />}
+            {showPublicChrome && <ConditionalCampusNewsTicker />}
             <main id="main">{children}</main>
-            {!isAdminRoute && <Footer />}
+            {showPublicChrome && <Footer />}
 
-            {!isAdminRoute && (
+            {showPublicChrome && (
                 <a
                     href="https://wa.me/918521283184?text=Hello%20SPRINT%2C%20I%20would%20like%20to%20know%20more%20about%20your%20programs."
                     target="_blank"
