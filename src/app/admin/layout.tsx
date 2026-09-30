@@ -25,7 +25,7 @@ const directItems: NavigationItem[] = [
 const navigationGroups: NavigationGroup[] = [
     {
         label: "Admissions & Enquiries", icon: PhoneCall, items: [
-            { label: "Student Enquiries", href: "/admin/admissions/students", icon: PhoneCall, badge: "14" },
+            { label: "Std/Emp Enquiries", href: "/admin/admissions/students", icon: PhoneCall, badge: "14" },
             { label: "Partner Company Enquiries", href: "/admin/admissions/companies", icon: Building2 },
             { label: "Partner College Enquiries", href: "/admin/admissions/colleges", icon: School },
         ]
@@ -78,7 +78,7 @@ const navigationGroups: NavigationGroup[] = [
         ]
     },
     {
-        label: "Settings & Access",
+        label: "Access Management",
         icon: ShieldCheck,
         items: [
             { label: "Roles & Permissions", href: "/admin/roles", icon: ShieldCheck },
