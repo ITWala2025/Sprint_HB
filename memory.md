@@ -195,7 +195,7 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 
 1. `profiles`: Extends `auth.users`, stores name, email, role, phone, avatar.
 2. `students`: Academic details, registration number, college, branch, semester.
-3. `courses`: Course titles, slug, category, difficulty, duration, pricing, curriculum (JSONB), tools, outcomes.
+3. `courses`: Course titles, slug, category, difficulty, text duration, audience, delivery mode, curriculum (JSONB), tools, outcomes. Course management does not use pricing.
 4. `course_bundles`: Multi-course career bundles and packages.
 5. `bundle_courses`: Many-to-many relationship mapping courses to bundles.
 6. `batches`: Scheduled cohorts with start date, mode, seat capacity, status.
@@ -494,6 +494,7 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Scope rule reaffirmed: public-site files (careers, courses, contact, header) are untouched by student portal work. The five failing tests in those suites (see Test.md §26) come from `8ac3457`, `a20a122` and `52b1f99` and were left as-is on instruction.
 - `next-env.d.ts` churn (`.next/types/...` → `.next/dev/types/...`, produced by the earlier build check) was reverted; it is Next-generated and not part of this task.
 
+<<<<<<< HEAD
 ## 38. SPRINT Student Portal Phase 1 Authentication UI (Mock) — 2026-09-30
 
 - Five full-screen auth screens were added **outside** the `(portal)` group so they never inherit the portal sidebar rail: `src/app/student/login/page.jsx`, `forgot-password/page.jsx`, `check-email/page.jsx`, `reset-password/page.jsx` and `password-reset-success/page.jsx`. The `src/app/student/login/.gitkeep` placeholder was deleted now that the route holds a real page.
@@ -551,3 +552,22 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Links to `/student/login` left untouched everywhere (`HeaderActions`, `MobileNavigation`, `Footer`, `EnrollmentWizard:138`) — the routes return when the teammate ships them. Explicitly accepted consequence: `StudentPortalNavIntegrity.test.js` → "leaves no portal link pointing at a removed section" fails on the wizard's href until then (the test scans quoted `/student/*` across all of `src/components/student/**`). `PublicSiteShell` still lists the five auth paths in its focus list — harmless pathname gating; its test mocks paths.
 - Verified: enrollment + surviving auth → 10 files / 98 tests green; full suite → `5 failed | 33 passed (38)` files, `10 failed | 230 passed (240)` tests (9 pre-existing + the accepted nav-integrity one); `npm run build` → success, no auth routes in `app-path-routes-manifest.json`, `/student/enroll/page` + `/student/(portal)/dashboard/page` present. Historical sections §38/§40 and Test.md §29 describe the pre-split tree.
 
+=======
+## 38. Admin Course Management — 2026-09-29
+
+- Added the client-side course manager at `/admin/courses` with search/category/difficulty filtering, summary metrics, course detail and edit dialogs, module and tag editors, publish/featured controls, and Supabase CRUD against `public.courses`.
+- The initial version stored audience using the shared enum, numeric duration fields, and prices. These fields were superseded by the SPRINT course contract documented in §39; do not apply its original migration.
+
+## 39. SPRINT Course Structure Alignment — 2026-09-30
+
+- Course Management now has one Training & Courses sidebar item at `/admin/courses`; scholarship links point to `/admin/scholarships`.
+- Course form/list data uses `undergraduate` or `working_professional`, delivery mode, `difficulty_level`, and text duration. No pricing/currency fields are used in the course admin UI or payload; legacy price columns remain untouched for database compatibility.
+- The catalogue defaults to a card grid styled with the public `.course-tile` classes and can switch to a table. Search uses title/slug, with category, level, and audience filters matching the SPRINT filter vocabulary.
+- Apply [src/Supabase/Course Audience and Duration Migration.sql](src/Supabase/Course%20Audience%20and%20Duration%20Migration.sql) to existing databases. It converts old audience/category values, defines both `audience` and `audience_type` as constrained text columns, removes numeric duration columns, and requests a PostgREST schema-cache reload.
+
+## 40. Public Catalogue Supabase Data — 2026-09-30
+
+- [src/components/courses/CourseCatalogue.jsx](src/components/courses/CourseCatalogue.jsx) fetches published `public.courses` rows ordered by `created_at` descending. Empty results or query errors use the original local catalogue; successful database results are combined with local career packages.
+- Database rows are normalized from `difficulty_level`, `delivery_method`, `audience` / `audience_type`, `thumbnail_url`, and `tools` into the public card model. Undergraduate maps to the Students audience tab; working professionals map to the IT and Non-IT tabs.
+- Category options derive from the active course set; title/slug search and category/level/audience filters operate on both database and local catalogue records. Missing custom artwork gets inline category-themed SVG art; `/courses/[slug]` links retain the existing audience query.
+>>>>>>> ce3938dc950cf06cfb653085309c0f68915849e7

@@ -1,0 +1,646 @@
+/* =========================================================
+   SPRINT — CHECK YOUR EMAIL
+   Enterprise Authentication UI
+========================================================= */
+
+.student-check-email-page {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px;
+
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(79, 141, 247, 0.08),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      #f7f9fc 0%,
+      #eef3f9 100%
+    );
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.student-check-email-card {
+  width: min(1240px, 100%);
+  min-height: 700px;
+
+  display: grid;
+  grid-template-columns: 42% 58%;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(1, 31, 62, 0.08);
+  border-radius: 24px;
+
+  box-shadow:
+    0 24px 70px rgba(1, 31, 62, 0.12),
+    0 6px 20px rgba(1, 31, 62, 0.06);
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.student-check-email-visual {
+  position: relative;
+
+  min-height: 700px;
+
+  overflow: hidden;
+
+  background: #011f3e;
+}
+
+.student-check-email-visual__image {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* =========================================================
+   PANEL
+========================================================= */
+
+.student-check-email-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+}
+
+.student-check-email-wrapper {
+  width: min(450px, calc(100% - 80px));
+
+  padding: 48px 0;
+}
+
+/* =========================================================
+   MOBILE LOGO
+========================================================= */
+
+.student-check-email-mobile-logo {
+  display: none;
+}
+
+/* =========================================================
+   BACK
+========================================================= */
+
+.student-check-email-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-bottom: 38px;
+
+  color: #315f9e;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition:
+    color 180ms ease,
+    gap 180ms ease;
+}
+
+.student-check-email-back:hover {
+  color: #f81529;
+  gap: 9px;
+}
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.student-check-email-icon {
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 22px;
+
+  border-radius: 50%;
+
+  background: rgba(248, 21, 41, 0.08);
+
+  color: #f81529;
+}
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.student-check-email-heading {
+  margin-bottom: 27px;
+}
+
+.student-check-email-eyebrow {
+  display: inline-block;
+
+  margin-bottom: 10px;
+
+  color: #f81529;
+
+  font-size: 11px;
+  line-height: 1;
+
+  font-weight: 800;
+
+  letter-spacing: 0.15em;
+}
+
+.student-check-email-heading h1 {
+  margin: 0;
+
+  color: #011f3e;
+
+  font-size: clamp(30px, 3vw, 38px);
+  line-height: 1.12;
+
+  font-weight: 500;
+
+  letter-spacing: -0.035em;
+}
+
+.student-check-email-heading h1 strong {
+  font-weight: 800;
+}
+
+.student-check-email-heading > p {
+  max-width: 420px;
+
+  margin: 14px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   EMAIL ADDRESS
+========================================================= */
+
+.student-check-email-address {
+  max-width: 100%;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 15px;
+  padding: 8px 11px;
+
+  border: 1px solid #e4eaf1;
+  border-radius: 7px;
+
+  background: #f8fafc;
+
+  color: #173252;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.student-check-email-address svg {
+  flex: 0 0 auto;
+
+  color: #4f8df7;
+}
+
+/* =========================================================
+   TIP
+========================================================= */
+
+.student-check-email-tip {
+  display: flex;
+
+  gap: 12px;
+
+  padding: 15px 16px;
+
+  border: 1px solid #e4eaf1;
+  border-radius: 11px;
+
+  background: #f8fafc;
+}
+
+.student-check-email-tip-icon {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #4f8df7;
+}
+
+.student-check-email-tip strong {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #173252;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.student-check-email-tip p {
+  margin: 0;
+
+  color: #718096;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   RESEND
+========================================================= */
+
+.student-check-email-resend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-top: 22px;
+
+  color: #718096;
+
+  font-size: 12px;
+}
+
+.student-check-email-resend button {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #315f9e;
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: color 180ms ease;
+}
+
+.student-check-email-resend button:hover:not(:disabled) {
+  color: #f81529;
+  text-decoration: underline;
+}
+
+.student-check-email-resend button:disabled {
+  color: #94a3b8;
+
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   SPINNER
+========================================================= */
+
+.student-check-email-spin {
+  animation: studentCheckEmailSpin 900ms linear infinite;
+}
+
+@keyframes studentCheckEmailSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   SUCCESS
+========================================================= */
+
+.student-check-email-success {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 8px;
+
+  margin-top: 16px;
+  padding: 11px 13px;
+
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+
+  background: #f0fdf4;
+
+  color: #166534;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.student-check-email-error {
+  margin-top: 16px;
+  padding: 11px 13px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fff5f5;
+
+  color: #b42318;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   SIGN IN
+========================================================= */
+
+.student-check-email-signin {
+  width: 100%;
+  min-height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 25px;
+
+  border: 1px solid #d9e1eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #173252;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.student-check-email-signin:hover {
+  border-color: #315f9e;
+
+  background: #f8fafc;
+
+  color: #315f9e;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.student-check-email-footer {
+  margin-top: 25px;
+
+  color: #a0aab7;
+
+  font-size: 10px;
+
+  text-align: center;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1024px) {
+  .student-check-email-page {
+    padding: 24px;
+  }
+
+  .student-check-email-card {
+    grid-template-columns: 40% 60%;
+    min-height: 650px;
+  }
+
+  .student-check-email-visual {
+    min-height: 650px;
+  }
+
+  .student-check-email-wrapper {
+    width: min(420px, calc(100% - 56px));
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+  .student-check-email-page {
+    min-height: 100vh;
+
+    display: block;
+
+    padding: 0;
+
+    background: #ffffff;
+  }
+
+  .student-check-email-card {
+    width: 100%;
+    min-height: 100vh;
+
+    display: block;
+
+    border: 0;
+    border-radius: 0;
+
+    box-shadow: none;
+
+    overflow: visible;
+  }
+
+  .student-check-email-visual {
+    display: none;
+  }
+
+  .student-check-email-panel {
+    min-height: 100vh;
+
+    display: block;
+
+    background: #ffffff;
+  }
+
+  .student-check-email-wrapper {
+    width: 100%;
+
+    padding:
+      28px
+      max(22px, env(safe-area-inset-right))
+      30px
+      max(22px, env(safe-area-inset-left));
+  }
+
+  /* Mobile logo */
+  .student-check-email-mobile-logo {
+    display: flex;
+
+    justify-content: center;
+
+    margin-bottom: 40px;
+  }
+
+  .student-check-email-mobile-logo a {
+    display: block;
+
+    width: min(330px, 88%);
+  }
+
+  .student-check-email-mobile-logo img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    object-fit: contain;
+  }
+
+  .student-check-email-back {
+    margin-bottom: 30px;
+  }
+
+  .student-check-email-icon {
+    margin-right: auto;
+    margin-bottom: 18px;
+    margin-left: auto;
+  }
+
+  .student-check-email-heading {
+    margin-bottom: 25px;
+
+    text-align: center;
+  }
+
+  .student-check-email-heading > p {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .student-check-email-address {
+    display: flex;
+
+    width: fit-content;
+
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .student-check-email-tip {
+    max-width: 430px;
+
+    margin-right: auto;
+    margin-left: auto;
+
+    text-align: left;
+  }
+
+  .student-check-email-resend {
+    max-width: 430px;
+
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .student-check-email-signin {
+    max-width: 430px;
+
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+  .student-check-email-wrapper {
+    padding-top: 22px;
+  }
+
+  .student-check-email-mobile-logo {
+    margin-bottom: 34px;
+  }
+
+  .student-check-email-mobile-logo a {
+    width: min(300px, 92%);
+  }
+
+  .student-check-email-heading h1 {
+    font-size: 30px;
+  }
+
+  .student-check-email-heading > p {
+    font-size: 13px;
+  }
+
+  .student-check-email-resend {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .student-check-email-back,
+  .student-check-email-resend button,
+  .student-check-email-signin {
+    transition: none;
+  }
+
+  .student-check-email-spin {
+    animation: none;
+  }
+}

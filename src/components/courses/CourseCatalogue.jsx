@@ -13,10 +13,10 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import {
   audienceCopy,
   audienceOptions,
-  categories,
 } from "@/data/courses";
 
 const itemHref = (item, audience) => {
@@ -35,20 +35,64 @@ const matchesAudience = (item, audienceValue) => {
     : item.audience === audienceValue;
 };
 
+function normalizeDatabaseCourse(course) {
+  const rawAudience = course.audience_type || course.audience || "undergraduate";
+  const audienceValue = String(rawAudience).toLowerCase().replaceAll(" ", "_");
+  const audience = Array.isArray(rawAudience)
+    ? rawAudience
+    : audienceValue === "undergraduate" || audienceValue === "student"
+      ? ["student"]
+      : audienceValue === "working_professional"
+        ? ["it-pro", "non-it"]
+        : [audienceValue];
+
+  return {
+    ...course,
+    kind: "course",
+    audience,
+    category: course.category || "Software Engineering",
+    level: course.difficulty_level || course.difficulty || "Beginner",
+    difficulty_level: course.difficulty_level || course.difficulty || "Beginner",
+    delivery_method: course.delivery_method || course.mode || "Hybrid",
+    duration: course.duration || "Duration to be announced",
+    description: course.description || "A practical SPRINT technology pathway.",
+    tools: Array.isArray(course.tools) ? course.tools : [],
+    certificate: course.certificate_included ?? true,
+    image: course.thumbnail_url || course.image || null,
+  };
+}
+
+function CourseArt({ category }) {
+  const normalized = category.toLowerCase();
+
+  if (normalized.includes("artificial") || normalized.includes("machine learning") || normalized.includes("ai")) {
+    return <svg aria-hidden="true" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full"><rect width="800" height="240" fill="#101432" /><path d="M-30 205C94 175 109 40 260 54s175 171 318 105S734 17 850 28" fill="none" stroke="#c084fc" strokeWidth="30" strokeLinecap="round" opacity=".72" /><path d="M-40 230C90 206 155 110 256 122s164 119 292 78S721 97 850 100" fill="none" stroke="#fb7185" strokeWidth="13" strokeLinecap="round" opacity=".9" /><circle cx="614" cy="55" r="23" fill="#fda4af" opacity=".9" /><circle cx="685" cy="178" r="9" fill="#e9d5ff" /></svg>;
+  }
+
+  if (normalized.includes("cloud") || normalized.includes("devops")) {
+    return <svg aria-hidden="true" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full"><rect width="800" height="240" fill="#082b4c" /><path d="M122 163 256 83l133 91 150-92 133 75" fill="none" stroke="#67e8f9" strokeWidth="3" opacity=".68" /><path d="M256 83v112m133-21V57m150 25v113" fill="none" stroke="#93c5fd" strokeWidth="2" opacity=".55" />{[[122, 163], [256, 83], [389, 174], [539, 82], [672, 157], [256, 195], [389, 57], [539, 195]].map(([cx, cy]) => <g key={`${cx}-${cy}`}><circle cx={cx} cy={cy} r="18" fill="#0b63b6" stroke="#a5f3fc" strokeWidth="3" /><circle cx={cx} cy={cy} r="5" fill="#fff" /></g>)}</svg>;
+  }
+
+  if (normalized.includes("software") || normalized.includes("web") || normalized.includes("engineering")) {
+    return <svg aria-hidden="true" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full"><rect width="800" height="240" fill="#082b3b" /><path d="m286 64-87 56 87 56m228-112 87 56-87 56m-65-132-67 152" fill="none" stroke="#67e8f9" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" /><circle cx="119" cy="58" r="7" fill="#fda4af" /><circle cx="670" cy="187" r="12" fill="#c4b5fd" /></svg>;
+  }
+
+  if (normalized.includes("data")) {
+    return <svg aria-hidden="true" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full"><rect width="800" height="240" fill="#102c48" /><path d="M110 190h590M145 190V135h75v55m45 0V92h75v98m45 0V119h75v71m45 0V60h75v130m45 0v-42h75v42" fill="none" stroke="#93c5fd" strokeWidth="12" strokeLinejoin="round" /><path d="m125 112 137-35 123 30 125-61 146 19" fill="none" stroke="#fb7185" strokeWidth="5" /></svg>;
+  }
+
+  return <svg aria-hidden="true" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full"><rect width="800" height="240" fill="#142a45" /><path d="M40 178C178 40 278 226 408 84s243-4 352-68" fill="none" stroke="#38bdf8" strokeWidth="20" opacity=".76" /><path d="M32 222C188 78 292 247 433 127S682 71 797 29" fill="none" stroke="#fb7185" strokeWidth="8" opacity=".92" /><circle cx="646" cy="179" r="27" fill="#fda4af" opacity=".85" /><circle cx="151" cy="58" r="13" fill="#c4b5fd" /></svg>;
+}
+
 function CourseTile({ item, audience }) {
+  const level = item.difficulty_level || item.difficulty || item.level || "Beginner";
   return (
     <article className="course-tile">
       <div className="course-tile__art">
-        <Image
-          src={item.image}
-          alt=""
-          fill
-          sizes="(min-width: 1024px) 26vw, (min-width: 640px) 45vw, 100vw"
-          className="object-cover"
-        />
+        {item.image?.startsWith("/") ? <Image src={item.image} alt="" fill sizes="(min-width: 1024px) 26vw, (min-width: 640px) 45vw, 100vw" className="object-cover" /> : item.image ? <div aria-hidden="true" className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(0deg, rgba(1,31,62,.18), rgba(1,31,62,.04)), url("${item.image}")` }} /> : <CourseArt category={item.category} />}
 
         <span className="course-tile__type">
-          {item.kind === "bundle" ? "Learning package" : "Course"}
+          {item.kind === "bundle" ? "Career Package" : "Course"}
         </span>
       </div>
 
@@ -63,16 +107,17 @@ function CourseTile({ item, audience }) {
 
         <div className="course-tile__chips">
           <span>{item.duration}</span>
-          <span>{item.level}</span>
+          <span>{item.delivery_method || "Hybrid"}</span>
+          <span>{level}</span>
           {item.certificate ? <span>Certificate</span> : null}
         </div>
 
         <div className="course-tile__footer">
-          {/* <span>{item.role}</span> */}
+          <span>Know More</span>
 
           <Link
             href={itemHref(item, audience)}
-            aria-label={`Explore ${item.title}`}
+            aria-label={`Know more about ${item.title}`}
             className="course-tile__link"
           >
             <ArrowRight size={18} aria-hidden="true" />
@@ -84,6 +129,7 @@ function CourseTile({ item, audience }) {
 }
 
 function FilterContent({
+  categories,
   selectedCategories,
   setSelectedCategories,
   selectedLevel,
@@ -158,6 +204,8 @@ function FilterContent({
 }
 
 export default function CourseCatalogue({ items }) {
+  const supabase = useMemo(() => createClient(), []);
+  const [catalogueItems, setCatalogueItems] = useState(items);
   const [audience, setAudience] = useState("student");
   const [query, setQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -166,6 +214,36 @@ export default function CourseCatalogue({ items }) {
   const [heroSlide, setHeroSlide] = useState(0);
   const [heroPaused, setHeroPaused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  const filterCategories = useMemo(
+    () => [...new Set(catalogueItems.filter((item) => item.kind === "course").map((item) => item.category).filter(Boolean))].sort(),
+    [catalogueItems]
+  );
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadCourses() {
+      const { data: dbCourses, error } = await supabase
+        .from("courses")
+        .select("*")
+        .eq("is_published", true)
+        .order("created_at", { ascending: false });
+
+      if (!active) return;
+
+      if (error || !dbCourses?.length) {
+        setCatalogueItems(items);
+        return;
+      }
+
+      const localPackages = items.filter((item) => item.kind === "bundle");
+      setCatalogueItems([...dbCourses.map(normalizeDatabaseCourse), ...localPackages]);
+    }
+
+    void loadCourses();
+    return () => { active = false; };
+  }, [items, supabase]);
 
   useEffect(() => {
     const motionPreference = window.matchMedia(
@@ -216,8 +294,8 @@ export default function CourseCatalogue({ items }) {
 
   const visibleItems = useMemo(
     () =>
-      items.filter((item) => {
-        const haystack = `${item.title} ${item.description} ${item.category} ${item.tools.join(
+      catalogueItems.filter((item) => {
+        const haystack = `${item.title} ${item.slug} ${item.description} ${item.category} ${(item.tools || []).join(
           " "
         )}`.toLowerCase();
 
@@ -227,12 +305,12 @@ export default function CourseCatalogue({ items }) {
             haystack.includes(query.toLowerCase())) &&
           (!selectedCategories.length ||
             selectedCategories.includes(item.category)) &&
-          (!selectedLevel || item.level === selectedLevel)
+          (!selectedLevel || (item.difficulty_level || item.difficulty || item.level) === selectedLevel)
         );
       }),
     [
       audience,
-      items,
+      catalogueItems,
       query,
       selectedCategories,
       selectedLevel,
@@ -241,14 +319,12 @@ export default function CourseCatalogue({ items }) {
 
   const suggestions = useMemo(
     () =>
-      items
+      catalogueItems
         .filter((item) =>
-          item.title
-            .toLowerCase()
-            .includes(query.toLowerCase())
+          `${item.title} ${item.slug}`.toLowerCase().includes(query.toLowerCase())
         )
         .slice(0, 5),
-    [items, query]
+    [catalogueItems, query]
   );
 
   const activeAudience = audienceCopy[audience];
@@ -268,13 +344,13 @@ export default function CourseCatalogue({ items }) {
           aria-label="1 of 2: Courses catalogue"
           aria-hidden={heroSlide !== 0}
         >
-          <p className="courses-eyebrow">
+          {/*<p className="courses-eyebrow">
             SPRINT learning catalogue
-          </p>
+          </p> */}
 
           <h1>
-            Tailored engineering and digital pathways for every
-            career stage.
+            Tailored pathways for every
+            career stage
           </h1>
 
           <p>
@@ -427,6 +503,7 @@ export default function CourseCatalogue({ items }) {
         <aside className="course-filter">
           <FilterContent
             {...{
+              categories: filterCategories,
               selectedCategories,
               setSelectedCategories,
               selectedLevel,
@@ -457,6 +534,19 @@ export default function CourseCatalogue({ items }) {
               <SlidersHorizontal size={17} />
               Filter &amp; sort
             </button>
+          </div>
+
+          <div className="course-search">
+            <Search size={20} aria-hidden="true" />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search courses, skills, or tools"
+              aria-label="Search courses"
+            />
+            {query ? <div className="course-search__suggestions">
+              {suggestions.length ? suggestions.map((item) => <Link key={`${item.kind}-${item.slug}`} href={itemHref(item, audience)}>{item.title}<ArrowRight size={15} /></Link>) : <p>No matching courses yet.</p>}
+            </div> : null}
           </div>
 
           <div className="courses-results__meta">
@@ -508,6 +598,7 @@ export default function CourseCatalogue({ items }) {
           <div className="course-filter-drawer__panel">
             <FilterContent
               {...{
+                categories: filterCategories,
                 selectedCategories,
                 setSelectedCategories,
                 selectedLevel,
@@ -529,20 +620,19 @@ export default function CourseCatalogue({ items }) {
 
       <section className="courses-cta">
         <div>
-          <p className="courses-eyebrow">
+          {/* <p className="courses-eyebrow">
             Not sure where to start?
-          </p>
+          </p> */}
 
-          <h2>Choose a pathway with room to grow.</h2>
+          <h2>Not sure which learning pathway is right for you?</h2>
 
           <p>
-            Explore a course today and sign up when the next
-            suitable batch opens.
+            Our experts can help you identify the right track or course based on your background, and goals.
           </p>
         </div>
 
-        <Link href="/register">
-          Sign up for SPRINT
+        <Link href="/contact">
+          Connect With An Expert
           <ArrowRight size={18} />
         </Link>
       </section>

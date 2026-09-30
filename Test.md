@@ -387,6 +387,7 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Dangling-route check: `git grep -nE "/student/(applications|exams|cohort|attendance|permissions|placements)" -- src tests` returns no matches.
 - Harness note (same blocker as §21 and §24): the committed `tests/vitest.config.js|mjs` resolve `@/` and `setupFiles` relative to `tests/`, so `npm test` cannot resolve `@/…` imports; verification used a temporary root config that was deleted after the run.
 
+<<<<<<< HEAD
 ## 27. SPRINT Student Portal Phase 1 Auth UI (Mock) Unit Tests Validation — 2026-09-30
 
 - Scope: the five mock auth screens (`/student/login`, `/student/forgot-password`, `/student/check-email`, `/student/reset-password`, `/student/password-reset-success`), the shared auth kit in [src/components/student/auth/](src/components/student/auth/), the stub auth layer [src/lib/auth/mock-auth.js](src/lib/auth/mock-auth.js), and the chrome-free gate added to [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx).
@@ -458,4 +459,40 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Scope change: the five auth screens (login, forgot-password, check-email, reset-password, password-reset-success) moved to a teammate. Deleted: the five route folders, `AuthCard.jsx`, `AuthSplitLayout.jsx`, `AuthCenteredLayout.jsx`, `src/lib/auth/mock-auth.js` (the mock backend seam), and six test files (the five screen suites + `AuthLayouts`). Retained as shared/Step-5 kit: `AuthButton`, `AuthField`, `auth-validation.js` (+ `AuthValidation.test.js`), `PasswordInput`, `PasswordRequirements` (+ `PasswordInput.test.jsx`) — the wizard imports the first three; the password pair is reserved for the Account step.
 - Suites: `unit/student/enrollment unit/student/auth` → **10 files / 98 tests passed**. Full suite → `Test Files 5 failed | 33 passed (38)`, `Tests 10 failed | 230 passed (240)`: the nine pre-existing career/contact/header failures plus the one **expected** `StudentPortalNavIntegrity` case ("leaves no portal link pointing at a removed section") — `EnrollmentWizard` links `/student/login`, which the teammate's rebuilt routes will serve again; failure explicitly accepted at deletion time.
 - Production build: `npm run build` — **Passed**; `app-path-routes-manifest.json` contains no auth routes and keeps `/student/enroll/page` plus every `/student/(portal)` route.
+=======
+## 27. Admin Course Management Validation — 2026-09-29
+
+- Added [tests/unit/admin/CourseManagement.test.tsx](tests/unit/admin/CourseManagement.test.tsx), covering slug generation, immediate search filtering, and the featured-program update request.
+- Focused run: `npx vitest run --config tests/vitest.config.mjs tests/unit/admin/CourseManagement.test.tsx --pool=threads --maxWorkers=1` — **Passed**, 1 file / 2 tests.
+- Full run: `npx vitest run --config tests/vitest.config.mjs --pool=threads --maxWorkers=1` — **126 passed, 9 failed** across 28 files. The failures are existing Careers, Contact, and HeaderLogo expectations; the new course suite passes.
+- `npx tsc --noEmit`, editor diagnostics for the course page and admin layout, and `npm run build` — **Passed**; the build generated `/admin/courses`.
+- The initial migration note in this entry was superseded by §28; apply only the migration documented there for the current SPRINT course data contract.
+
+## 28. SPRINT Course Structure Alignment — 2026-09-30
+
+- Updated the Training & Courses navigation to one Course Management item at `/admin/courses` and moved scholarship links to `/admin/scholarships`.
+- The course list displays target audience, mode/level, and text duration with no pricing UI or pricing fields in the course TypeScript interfaces/forms. Audience values are `undergraduate` and `working_professional`.
+- Updated [tests/unit/admin/CourseManagement.test.tsx](tests/unit/admin/CourseManagement.test.tsx) to use the SPRINT schema values and assert table/grid switching, table headers, and absence of pricing.
+- Apply [src/Supabase/Course Audience and Duration Migration.sql](src/Supabase/Course%20Audience%20and%20Duration%20Migration.sql) to existing databases before using the updated course form.
+
+## 29. Course Catalogue Admin Dual View — 2026-09-30
+
+- Admin course catalog defaults to the public `.course-tile` card style with title/category/description, duration/mode/level chips, tools, and edit/publish/delete actions; the list/table view remains available.
+- Metrics and filters now match the SPRINT catalogue vocabulary. Search matches title and slug, while category, level, and audience filters compose in real time.
+- Focused verification: `npx vitest run --config tests/vitest.config.mjs tests/unit/admin/CourseManagement.test.tsx --pool=threads --maxWorkers=1`, `npx tsc --noEmit`, `git diff --check`, and `npm run build` — **Passed**; `/admin/courses` is included in the production route output.
+
+## 30. Course Audience Insert Compatibility — 2026-09-30
+
+- Course create/update payloads now set both `audience` and `audience_type` from the selector (falling back to `undergraduate`) and default `difficulty_level` to `Beginner`.
+- The canonical courses schema and existing-database migration include both audience columns; the migration requests a PostgREST schema-cache reload.
+- Added a modal-submit test asserting both audience columns and the difficulty fallback are included in a successful insert payload.
+- Focused course suite: **Passed**, 3 tests. A read-only live PostgREST query selecting `audience`, `audience_type`, and `difficulty_level` also succeeded, confirming those columns are present in the active schema cache.
+
+## 31. Public Catalogue Supabase Integration — 2026-09-30
+
+- [src/components/courses/CourseCatalogue.jsx](src/components/courses/CourseCatalogue.jsx) now loads published Supabase courses ordered newest-first, falls back to local course data for empty/error results, and keeps local career packages in the live result set.
+- New [tests/unit/courses/CourseCatalogue.test.jsx](tests/unit/courses/CourseCatalogue.test.jsx) verifies query arguments, card rendering and detail link for a database course, live category/level/audience filtering, and local fallback on an empty response.
+- Focused run: `npx vitest run --config tests/vitest.config.mjs tests/unit/courses/CourseCatalogue.test.jsx --pool=threads --maxWorkers=1` — **Passed**, 2 tests.
+- Combined course suites — **Passed**, 5 tests; `npx tsc --noEmit`, `npm run build`, and `git diff --check` also passed.
+>>>>>>> ce3938dc950cf06cfb653085309c0f68915849e7
 

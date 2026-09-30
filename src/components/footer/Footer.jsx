@@ -52,7 +52,7 @@ export default function Footer() {
         backgroundColor: "#011f3e",
       }}
     >
-      <div className="mx-auto grid grid-cols-2 gap-x-10 gap-y-8 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 lg:max-w-300 lg:grid-cols-[2fr_1fr_1fr_1.4fr]">
+      <div className="mx-auto grid grid-cols-2 gap-x-6 gap-y-4 px-4 py-5 sm:gap-10 sm:gap-y-8 sm:px-6 sm:py-10 lg:max-w-300 lg:grid-cols-[2fr_1fr_1fr_1.4fr]">
         {/* Brand identity & mission (columns 1 & 2) */}
         <div className="col-span-2 lg:col-span-1">
           <div className="flex items-center gap-4">
@@ -80,7 +80,7 @@ export default function Footer() {
               <div className="mt-1 h-0.5 w-10 rounded-full bg-brand-red" />
             </div>
           </div>
-          <p className="mt-4 max-w-md text-sm leading-relaxed text-brand-off-white/80">
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-brand-off-white/80 sm:mt-4">
             Hands on, production level education in Cloud, AI, and Software
             Systems bridging the academic industry gap with job ready, execution
             first training.
@@ -91,7 +91,7 @@ export default function Footer() {
             Verified Institutional Education Model
           </p>
           */}
-          <ul className="mt-6 flex flex-wrap items-center gap-3">
+          <ul className="mt-4 flex flex-wrap items-center gap-3 sm:mt-6">
             {siteConfig.socials.map((social) => {
               const socialIcon = socialIcons[social.icon] ?? {
                 component: Linkedin,
@@ -124,12 +124,12 @@ export default function Footer() {
           <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-white">
             Explore
           </h2>
-          <ul className="mt-5 space-y-3">
+          <ul className="mt-3 space-y-1 sm:mt-5">
             {exploreLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="sprint-focus inline-flex min-h-11 min-w-11 items-center text-sm text-brand-off-white/75 transition-colors hover:text-white"
+                  className="sprint-focus inline-flex min-h-11 min-w-11 items-center text-sm text-brand-off-white/75 transition-colors hover:text-white lg:min-h-0 lg:min-w-0"
                 >
                   {link.label}
                 </Link>
@@ -143,12 +143,12 @@ export default function Footer() {
           <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-white">
             Portals
           </h2>
-          <ul className="mt-5 space-y-3">
+          <ul className="mt-3 space-y-1 sm:mt-5">
             {portalLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-1.5 text-sm text-brand-off-white/75 transition-colors hover:text-white"
+                  className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-1.5 text-sm text-brand-off-white/75 transition-colors hover:text-white lg:min-h-0 lg:min-w-0"
                 >
                   {link.label}
                   {link.outbound && (
@@ -165,7 +165,7 @@ export default function Footer() {
           <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-white">
             Visit & Contact
           </h2>
-          <ul className="mt-5 space-y-4">
+          <ul className="mt-3 space-y-2 sm:mt-5 sm:space-y-4">
             <li className="flex items-start gap-3">
               <MapPin
                 className="mt-0.5 size-5 shrink-0 text-brand-red"
@@ -178,7 +178,7 @@ export default function Footer() {
             <li>
               <a
                 href={siteConfig.contact.telHref}
-                className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white"
+                className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white lg:min-h-0 lg:min-w-0"
               >
                 <Phone
                   className="size-5 shrink-0 text-brand-red"
@@ -195,7 +195,7 @@ export default function Footer() {
             <li>
               <a
                 href={siteConfig.contact.emailHref}
-                className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white"
+                className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-3 text-sm text-brand-off-white/75 transition-colors hover:text-white lg:min-h-0 lg:min-w-0"
               >
                 <Mail
                   className="size-5 shrink-0 text-brand-red"
@@ -210,7 +210,7 @@ export default function Footer() {
 
       {/* Compliance bar (FTR-02) — dynamic year, falls back to static markup */}
       <div className="border-t border-white/10    ">
-        <div className="mx-auto flex max-w-300 flex-col items-center justify-between gap-4 px-4 py-5 text-center sm:px-6 sm:py-6 md:flex-row md:text-left ">
+        <div className="mx-auto flex max-w-300 flex-col items-center justify-between gap-4 px-4 py-5 text-center sm:px-6 sm:py-6 md:flex-row md:text-left">
           <p className="text-xs leading-relaxed text-brand-off-white/60 sm:text-sm">
             © {year} SPRINT. All rights reserved
           </p>

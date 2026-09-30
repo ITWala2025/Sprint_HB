@@ -1,0 +1,479 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import {
+    BookOpen, Check, Clock, Edit3, Eye, LayoutGrid, List, Plus, Search, Star, Trash2, X,
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+
+export interface SyllabusModule {
+    title: string;
+    sessions: number;
+    topics?: string[];
+}
+
+export interface CourseItem {
+    id: string;
+    slug: string;
+    title: string;
+    category: string;
+    difficulty_level: string;
+    audience: "undergraduate" | "working_professional";
+    audience_type: "undergraduate" | "working_professional";
+    delivery_method: "Hybrid" | "Online" | "Offline";
+    duration: string;
+    description: string;
+    long_description: string | null;
+    prerequisites: string | null;
+    tools: string[];
+    curriculum: SyllabusModule[];
+    outcomes: string[];
+    is_featured: boolean;
+    is_published: boolean;
+    pathway: string | null;
+    target_role: string | null;
+    certificate_included: boolean;
+    thumbnail_url: string | null;
+}
+
+type CoursePayload = Omit<CourseItem, "id">;
+type Notice = { type: "success" | "error"; message: string };
+type CatalogView = "grid" | "table";
+
+const categories = [
+    "Artificial Intelligence & ML",
+    "Cloud & DevOps",
+    "Full Stack Web",
+    "Data Analytics",
+    "Cybersecurity",
+    "Software Engineering",
+    "Career & Soft Skills",
+];
+const difficulties = ["Beginner", "Intermediate", "Advanced"];
+const modes = ["Hybrid", "Online", "Offline"] as const;
+const audiences = [
+    { value: "undergraduate", label: "Undergraduate" },
+    { value: "working_professional", label: "Working Professional" },
+] as const;
+
+const inputClass = "sprint-focus mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy placeholder:text-brand-text-muted";
+const labelClass = "block text-xs font-bold text-brand-navy";
+const iconButtonClass = "sprint-focus inline-flex size-9 items-center justify-center rounded-lg border border-slate-200 text-brand-navy transition hover:border-brand-navy hover:bg-brand-surface disabled:opacity-50";
+
+export function generateSlug(title: string) {
+    return title
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+}
+
+function normalizeCourse(row: CourseItem): CourseItem {
+    const curriculum = Array.isArray(row.curriculum) ? row.curriculum : [];
+    const audience = row.audience_type || row.audience || "undergraduate";
+    return {
+        ...row,
+        audience,
+        audience_type: audience,
+        tools: Array.isArray(row.tools) ? row.tools : [],
+        outcomes: Array.isArray(row.outcomes) ? row.outcomes : [],
+        curriculum: curriculum.map((module) => ({
+            ...module,
+            title: module.title ?? "",
+            sessions: Number(module.sessions) || module.topics?.length || 0,
+        })),
+    };
+}
+
+export default function CourseManagementPage() {
+    const supabase = useMemo(() => createClient(), []);
+    const [courses, setCourses] = useState<CourseItem[]>([]);
+    const [search, setSearch] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("all");
+    const [difficultyFilter, setDifficultyFilter] = useState("all");
+    const [audienceFilter, setAudienceFilter] = useState("all");
+    const [catalogView, setCatalogView] = useState<CatalogView>("grid");
+    const [isLoading, setIsLoading] = useState(true);
+    const [savingId, setSavingId] = useState<string | null>(null);
+    const [notice, setNotice] = useState<Notice | null>(null);
+    const [editingCourse, setEditingCourse] = useState<CourseItem | null | undefined>(undefined);
+    const [viewingCourse, setViewingCourse] = useState<CourseItem | null>(null);
+
+    useEffect(() => {
+        let active = true;
+        async function loadCourses() {
+            setIsLoading(true);
+            const { data, error } = await supabase.from("courses").select("*").order("title");
+            if (!active) return;
+            if (error) {
+                setNotice({ type: "error", message: `Courses could not be loaded: ${error.message}` });
+            } else {
+                setCourses(((data ?? []) as CourseItem[]).map(normalizeCourse));
+            }
+            setIsLoading(false);
+        }
+        void loadCourses();
+        return () => { active = false; };
+    }, [supabase]);
+
+    const filteredCourses = useMemo(() => {
+        const query = search.trim().toLowerCase();
+        return courses.filter((course) => {
+            const matchesSearch = !query || `${course.title} ${course.slug}`.toLowerCase().includes(query);
+            const matchesCategory = categoryFilter === "all" || course.category === categoryFilter;
+            const matchesDifficulty = difficultyFilter === "all" || course.difficulty_level === difficultyFilter;
+            const matchesAudience = audienceFilter === "all" || course.audience_type === audienceFilter;
+            return matchesSearch && matchesCategory && matchesDifficulty && matchesAudience;
+        });
+    }, [courses, search, categoryFilter, difficultyFilter, audienceFilter]);
+
+    const publishedCount = courses.filter((course) => course.is_published).length;
+    const featuredCount = courses.filter((course) => course.is_featured).length;
+    const activeCategoryCount = new Set(courses.map((course) => course.category).filter(Boolean)).size;
+
+    async function saveCourse(payload: CoursePayload, id?: string) {
+        setSavingId(id ?? "new");
+        setNotice(null);
+        const audience = payload.audience_type || payload.audience || "undergraduate";
+        const normalizedPayload: CoursePayload = {
+            ...payload,
+            audience,
+            audience_type: audience,
+            difficulty_level: payload.difficulty_level || "Beginner",
+        };
+        const query = id
+            ? supabase.from("courses").update(normalizedPayload).eq("id", id).select("*").single()
+            : supabase.from("courses").insert(normalizedPayload).select("*").single();
+        const { data, error } = await query;
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Course could not be saved: ${error.message}` });
+            return false;
+        }
+        const saved = normalizeCourse(data as CourseItem);
+        setCourses((current) => id
+            ? current.map((course) => course.id === id ? saved : course)
+            : [...current, saved].sort((first, second) => first.title.localeCompare(second.title)));
+        setEditingCourse(undefined);
+        setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
+        return true;
+    }
+
+    async function toggleFeatured(course: CourseItem) {
+        setSavingId(course.id);
+        const nextValue = !course.is_featured;
+        const { error } = await supabase.from("courses").update({ is_featured: nextValue }).eq("id", course.id);
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Featured status could not be changed: ${error.message}` });
+            return;
+        }
+        setCourses((current) => current.map((item) => item.id === course.id ? { ...item, is_featured: nextValue } : item));
+        setNotice({ type: "success", message: `${course.title} ${nextValue ? "featured" : "removed from featured programs"}.` });
+    }
+
+    async function togglePublished(course: CourseItem) {
+        setSavingId(course.id);
+        const nextValue = !course.is_published;
+        const { error } = await supabase.from("courses").update({ is_published: nextValue }).eq("id", course.id);
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Visibility could not be changed: ${error.message}` });
+            return;
+        }
+        setCourses((current) => current.map((item) => item.id === course.id ? { ...item, is_published: nextValue } : item));
+        setNotice({ type: "success", message: `${course.title} ${nextValue ? "published" : "unpublished"}.` });
+    }
+
+    async function deleteCourse(course: CourseItem) {
+        if (!window.confirm(`Delete “${course.title}”? This cannot be undone.`)) return;
+        setSavingId(course.id);
+        const { error } = await supabase.from("courses").delete().eq("id", course.id);
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Course could not be deleted: ${error.message}` });
+            return;
+        }
+        setCourses((current) => current.filter((item) => item.id !== course.id));
+        setNotice({ type: "success", message: `${course.title} deleted.` });
+    }
+
+    return (
+        <div className="mx-auto max-w-[1500px] space-y-6">
+            <section className="relative overflow-hidden rounded-2xl bg-brand-navy px-6 py-7 text-white shadow-brand-card sm:px-8">
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,rgba(11,99,182,0.45),transparent_35%),radial-gradient(circle_at_10%_100%,rgba(248,21,41,0.2),transparent_30%)]" />
+                <div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+                    <div>
+                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-red-100">Training &amp; Courses</p>
+                        <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Course Management</h2>
+                        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Manage SPRINT technology pathways, learning outcomes, and catalogue visibility.</p>
+                    </div>
+                    <button type="button" onClick={() => setEditingCourse(null)} className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-red px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">
+                        <Plus className="size-4" aria-hidden="true" /> Add Course
+                    </button>
+                </div>
+            </section>
+
+            {notice && <div className="fixed right-4 top-24 z-[120] w-[min(36rem,calc(100vw-2rem))]"><NoticeBanner notice={notice} onDismiss={() => setNotice(null)} /></div>}
+
+            <section aria-label="Course summary metrics" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <MetricCard label="Total Courses" value={courses.length} note="Programs in the catalogue" icon={BookOpen} />
+                <MetricCard label="Published on Site" value={publishedCount} note="Visible in the public catalogue" icon={Check} />
+                <MetricCard label="Featured Pathways" value={featuredCount} note="Highlighted on the homepage" icon={Star} />
+                <MetricCard label="Active Categories" value={activeCategoryCount} note="Categories with courses" icon={BookOpen} />
+            </section>
+
+            <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Courses">
+                <div className="flex flex-col gap-3 border-b border-slate-200 p-5 sm:px-6">
+                    <label className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-brand-text-muted sm:max-w-md">
+                        <Search className="size-4 shrink-0" aria-hidden="true" />
+                        <span className="sr-only">Search courses by title or slug</span>
+                        <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search title or slug" className="min-w-0 flex-1 bg-transparent text-brand-navy outline-none placeholder:text-brand-text-muted" />
+                    </label>
+                    <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
+                        <div className="grid gap-2 sm:grid-cols-3">
+                            <label className="sr-only" htmlFor="course-category-filter">Filter by category</label>
+                            <select id="course-category-filter" value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)} className="sprint-focus rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy">
+                                <option value="all">All</option>
+                                {categories.map((category) => <option key={category} value={category}>{category}</option>)}
+                            </select>
+                            <label className="sr-only" htmlFor="course-level-filter">Filter by level</label>
+                            <select id="course-level-filter" value={difficultyFilter} onChange={(event) => setDifficultyFilter(event.target.value)} className="sprint-focus rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy">
+                                <option value="all">All</option>
+                                {difficulties.map((difficulty) => <option key={difficulty} value={difficulty}>{difficulty}</option>)}
+                            </select>
+                            <label className="sr-only" htmlFor="course-audience-filter">Filter by audience</label>
+                            <select id="course-audience-filter" value={audienceFilter} onChange={(event) => setAudienceFilter(event.target.value)} className="sprint-focus rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy">
+                                <option value="all">All</option>
+                                {audiences.map((audience) => <option key={audience.value} value={audience.value}>{audience.label}</option>)}
+                            </select>
+                        </div>
+                        <div className="inline-flex w-fit items-center rounded-lg border border-slate-200 bg-slate-50 p-1" aria-label="Catalog view">
+                            <button type="button" aria-label="Card view" aria-pressed={catalogView === "grid"} onClick={() => setCatalogView("grid")} className={`sprint-focus inline-flex size-9 items-center justify-center rounded-md ${catalogView === "grid" ? "bg-white text-brand-navy shadow-sm" : "text-brand-text-muted hover:text-brand-navy"}`}><LayoutGrid className="size-4" aria-hidden="true" /></button>
+                            <button type="button" aria-label="Table view" aria-pressed={catalogView === "table"} onClick={() => setCatalogView("table")} className={`sprint-focus inline-flex size-9 items-center justify-center rounded-md ${catalogView === "table" ? "bg-white text-brand-navy shadow-sm" : "text-brand-text-muted hover:text-brand-navy"}`}><List className="size-4" aria-hidden="true" /></button>
+                        </div>
+                    </div>
+                </div>
+                {catalogView === "table" && <div className="overflow-x-auto">
+                    <table className="w-full min-w-[1180px] text-left text-sm">
+                        <thead className="bg-slate-50 text-[10px] uppercase tracking-wider text-brand-text-muted">
+                            <tr>
+                                <th className="px-5 py-3 font-bold sm:px-6">Course</th>
+                                <th className="px-4 py-3 font-bold">Category</th>
+                                <th className="px-4 py-3 font-bold">Target Audience</th>
+                                <th className="px-4 py-3 font-bold">Mode &amp; Level</th>
+                                <th className="px-4 py-3 font-bold">Duration</th>
+                                <th className="px-4 py-3 font-bold">Status</th>
+                                <th className="px-4 py-3 text-center font-bold">Featured</th>
+                                <th className="px-5 py-3 text-right font-bold sm:px-6">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {isLoading ? <tr><td colSpan={8} className="px-6 py-16 text-center text-sm text-brand-text-muted">Loading courses…</td></tr>
+                                : filteredCourses.length === 0 ? <tr><td colSpan={8} className="px-6 py-16 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</td></tr>
+                                    : filteredCourses.map((course) => <CourseRow key={course.id} course={course} isBusy={savingId === course.id} onView={() => setViewingCourse(course)} onEdit={() => setEditingCourse(course)} onDelete={() => void deleteCourse(course)} onToggleFeatured={() => void toggleFeatured(course)} />)}
+                        </tbody>
+                    </table>
+                </div>}
+                {catalogView === "grid" && <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">{isLoading ? <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">Loading courses…</p> : filteredCourses.length ? filteredCourses.map((course) => <AdminCourseCard key={course.id} course={course} isBusy={savingId === course.id} onEdit={() => setEditingCourse(course)} onTogglePublished={() => void togglePublished(course)} onDelete={() => void deleteCourse(course)} />) : <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</p>}</div>}
+                <div className="border-t border-slate-100 px-5 py-3 text-xs text-brand-text-muted sm:px-6">Showing {filteredCourses.length} of {courses.length} courses</div>
+            </section>
+
+            {editingCourse !== undefined && <CourseModal course={editingCourse} isSaving={savingId === (editingCourse?.id ?? "new")} onClose={() => setEditingCourse(undefined)} onSave={(payload) => saveCourse(payload, editingCourse?.id)} />}
+            {viewingCourse && <CourseDetailsModal course={viewingCourse} onClose={() => setViewingCourse(null)} onEdit={() => { setViewingCourse(null); setEditingCourse(viewingCourse); }} />}
+        </div>
+    );
+}
+
+function MetricCard({ label, value, note, icon: Icon }: { label: string; value: ReactNode; note: string; icon: typeof BookOpen }) {
+    return <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-4"><div><p className="text-sm font-medium text-brand-text-secondary">{label}</p><p className="mt-3 font-display text-3xl font-bold text-brand-navy">{value}</p></div><span className="flex size-11 items-center justify-center rounded-xl bg-brand-blue-light text-brand-blue"><Icon className="size-5" aria-hidden="true" /></span></div>
+        <p className="mt-3 text-xs text-brand-text-muted">{note}</p>
+    </article>;
+}
+
+function NoticeBanner({ notice, onDismiss }: { notice: Notice; onDismiss: () => void }) {
+    const success = notice.type === "success";
+    return <div role={success ? "status" : "alert"} className={`flex items-start justify-between gap-3 rounded-lg border px-4 py-3 text-sm ${success ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-red-200 bg-brand-red-light text-brand-red"}`}>
+        <p>{notice.message}</p><button type="button" onClick={onDismiss} aria-label="Dismiss notification" className="sprint-focus rounded p-0.5"><X className="size-4" aria-hidden="true" /></button>
+    </div>;
+}
+
+function AdminCourseCard({ course, isBusy, onEdit, onTogglePublished, onDelete }: { course: CourseItem; isBusy: boolean; onEdit: () => void; onTogglePublished: () => void; onDelete: () => void }) {
+    return <article className="course-tile">
+        <div className="course-tile__art" style={course.thumbnail_url ? { backgroundImage: `linear-gradient(0deg, rgba(1,31,62,.22), rgba(1,31,62,.05)), url("${course.thumbnail_url}")`, backgroundPosition: "center", backgroundSize: "cover" } : undefined}>
+            <span className="course-tile__type">Course</span>
+            <span className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold ${course.is_published ? "bg-emerald-50 text-emerald-700" : "bg-white/95 text-slate-600"}`}>{course.is_published ? "Published" : "Draft"}</span>
+        </div>
+        <div className="course-tile__body">
+            <p className="course-tile__category">{course.category}</p>
+            <h2>{course.title}</h2>
+            <p className="course-tile__description" style={{ WebkitLineClamp: 2 }}>{course.description}</p>
+            <div className="course-tile__chips">
+                <span>{course.duration || "Duration not set"}</span>
+                <span>{course.delivery_method}</span>
+                <span>{course.difficulty_level}</span>
+            </div>
+            <div className="mt-3 flex min-h-7 flex-wrap gap-1.5" aria-label={`Tools taught in ${course.title}`}>
+                {course.tools.length ? course.tools.map((tool) => <span key={tool} className="rounded-full bg-brand-blue-light px-2 py-1 text-[10px] font-semibold text-brand-blue">{tool}</span>) : <span className="text-xs text-brand-text-muted">No tools listed</span>}
+            </div>
+            <footer className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
+                <button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-brand-surface"><Edit3 className="size-3.5" aria-hidden="true" />Edit</button>
+                <button type="button" onClick={onTogglePublished} disabled={isBusy} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:border-brand-blue hover:bg-brand-blue-light disabled:opacity-50"><Check className="size-3.5" aria-hidden="true" />Toggle Publish</button>
+                <button type="button" onClick={onDelete} disabled={isBusy} aria-label={`Delete ${course.title}`} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-bold text-brand-red hover:bg-brand-red-light disabled:opacity-50"><Trash2 className="size-3.5" aria-hidden="true" />Delete</button>
+            </footer>
+        </div>
+    </article>;
+}
+
+function CourseRow({ course, isBusy, onView, onEdit, onDelete, onToggleFeatured }: { course: CourseItem; isBusy: boolean; onView: () => void; onEdit: () => void; onDelete: () => void; onToggleFeatured: () => void }) {
+    return <tr className="hover:bg-slate-50/70">
+        <td className="max-w-[280px] px-5 py-4 sm:px-6"><p className="truncate font-semibold text-brand-navy">{course.title}</p><p className="mt-1 truncate text-xs text-brand-text-muted">/{course.slug}</p></td>
+        <td className="px-4 py-4"><span className="inline-flex max-w-[210px] rounded-full bg-brand-blue-light px-2.5 py-1 text-[10px] font-semibold leading-4 text-brand-blue">{course.category}</span></td>
+        <td className="px-4 py-4"><span className="inline-flex rounded-full bg-brand-blue-light px-2.5 py-1 text-[10px] font-semibold text-brand-blue">{audiences.find((audience) => audience.value === course.audience_type)?.label ?? "Undergraduate"}</span></td>
+        <td className="whitespace-nowrap px-4 py-4 text-xs font-semibold text-brand-text-secondary">{course.delivery_method} <span className="px-1 text-brand-text-muted">•</span> {course.difficulty_level}</td>
+        <td className="whitespace-nowrap px-4 py-4 text-xs text-brand-text-secondary"><span className="inline-flex items-center gap-1.5"><Clock className="size-3.5 text-brand-text-muted" aria-hidden="true" />{course.duration || "–"}</span></td>
+        <td className="px-4 py-4"><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${course.is_published ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>{course.is_published ? "Published" : "Draft"}</span></td>
+        <td className="px-4 py-4 text-center"><button type="button" onClick={onToggleFeatured} disabled={isBusy} aria-label={`${course.is_featured ? "Unfeature" : "Feature"} ${course.title}`} aria-pressed={course.is_featured} className={`sprint-focus inline-flex size-9 items-center justify-center rounded-lg transition disabled:opacity-50 ${course.is_featured ? "bg-amber-50 text-amber-600 hover:bg-amber-100" : "text-slate-400 hover:bg-slate-100 hover:text-amber-600"}`}><Star className="size-4" fill={course.is_featured ? "currentColor" : "none"} aria-hidden="true" /></button></td>
+        <td className="px-5 py-4 sm:px-6"><div className="flex justify-end gap-1.5"><button type="button" onClick={onView} className={iconButtonClass} aria-label={`View ${course.title}`} title="View"><Eye className="size-4" aria-hidden="true" /></button><button type="button" onClick={onEdit} className={iconButtonClass} aria-label={`Edit ${course.title}`} title="Edit"><Edit3 className="size-4" aria-hidden="true" /></button><button type="button" onClick={onDelete} disabled={isBusy} className={`${iconButtonClass} text-brand-red hover:border-brand-red hover:bg-brand-red-light`} aria-label={`Delete ${course.title}`} title="Delete"><Trash2 className="size-4" aria-hidden="true" /></button></div></td>
+    </tr>;
+}
+
+function emptyCourse(): CoursePayload {
+    return {
+        slug: "", title: "", category: categories[0], difficulty_level: "Beginner", audience: "undergraduate", audience_type: "undergraduate", delivery_method: "Hybrid",
+        duration: "", description: "", long_description: "", prerequisites: "",
+        tools: [], curriculum: [], outcomes: [], is_featured: false, is_published: false,
+        pathway: null, target_role: null, certificate_included: true, thumbnail_url: null,
+    };
+}
+
+function CourseModal({ course, isSaving, onClose, onSave }: { course: CourseItem | null; isSaving: boolean; onClose: () => void; onSave: (payload: CoursePayload) => Promise<boolean> }) {
+    const [form, setForm] = useState<CoursePayload>(() => course ? {
+        ...course,
+        audience: course.audience_type || course.audience || "undergraduate",
+        audience_type: course.audience_type || course.audience || "undergraduate",
+        curriculum: course.curriculum.map((module) => ({ ...module })),
+        tools: [...course.tools], outcomes: [...course.outcomes],
+    } : emptyCourse());
+    const [slugEdited, setSlugEdited] = useState(Boolean(course));
+    const [toolInput, setToolInput] = useState("");
+    const closeRef = useRef<HTMLButtonElement>(null);
+    const categoryOptions = form.category && !categories.includes(form.category) ? [form.category, ...categories] : categories;
+
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        closeRef.current?.focus();
+        function onKeyDown(event: KeyboardEvent) { if (event.key === "Escape" && !isSaving) onClose(); }
+        document.addEventListener("keydown", onKeyDown);
+        return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", onKeyDown); };
+    }, [isSaving, onClose]);
+
+    function setField<Key extends keyof CoursePayload>(key: Key, value: CoursePayload[Key]) {
+        setForm((current) => ({ ...current, [key]: value }));
+    }
+
+    function addTool() {
+        const value = toolInput.trim();
+        if (!value || form.tools.some((tool) => tool.toLowerCase() === value.toLowerCase())) return;
+        setField("tools", [...form.tools, value]);
+        setToolInput("");
+    }
+
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        await onSave(form);
+    }
+
+    return <div className="fixed inset-0 z-[100] flex items-end justify-center bg-brand-navy/55 p-0 backdrop-blur-sm sm:items-center sm:p-5" onMouseDown={(event) => { if (event.target === event.currentTarget && !isSaving) onClose(); }}>
+        <section role="dialog" aria-modal="true" aria-labelledby="course-modal-title" className="flex max-h-[96dvh] w-full max-w-4xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[92vh] sm:rounded-2xl">
+            <header className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7"><div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-red">Training &amp; Courses</p><h2 id="course-modal-title" className="mt-1 font-display text-xl font-bold text-brand-navy">{course ? "Edit Course" : "Add Course"}</h2></div><button ref={closeRef} type="button" onClick={onClose} disabled={isSaving} className={iconButtonClass} aria-label="Close course form"><X className="size-4" aria-hidden="true" /></button></header>
+            <form onSubmit={(event) => void handleSubmit(event)} className="flex min-h-0 flex-1 flex-col">
+                <div className="min-h-0 flex-1 space-y-7 overflow-y-auto px-5 py-5 sm:px-7">
+                    <FormSection title="Basic Info">
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <label className={`${labelClass} sm:col-span-2`}>Title<input required value={form.title} onChange={(event) => { const title = event.target.value; setField("title", title); if (!slugEdited) setField("slug", generateSlug(title)); }} className={inputClass} placeholder="e.g. Docker & Kubernetes" /></label>
+                            <label className={labelClass}>Slug<div className="flex gap-2"><input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={form.slug} onChange={(event) => { setSlugEdited(true); setField("slug", generateSlug(event.target.value)); }} className={`${inputClass} mt-1.5`} placeholder="docker-and-kubernetes" /><button type="button" onClick={() => { setSlugEdited(false); setField("slug", generateSlug(form.title)); }} className="sprint-focus mt-1.5 shrink-0 rounded-lg border border-slate-200 px-3 text-xs font-bold text-brand-navy hover:bg-brand-surface">Reset</button></div></label>
+                            <label className={labelClass}>Category<select value={form.category} onChange={(event) => setField("category", event.target.value)} className={inputClass}>{categoryOptions.map((category) => <option key={category} value={category}>{category}</option>)}</select></label>
+                            <label className={labelClass}>Audience Type<select value={form.audience_type} onChange={(event) => { const audience = event.target.value as CoursePayload["audience_type"]; setField("audience", audience); setField("audience_type", audience); }} className={inputClass}>{audiences.map((audience) => <option key={audience.value} value={audience.value}>{audience.label}</option>)}</select></label>
+                        </div>
+                    </FormSection>
+                    <FormSection title="Delivery & Specs">
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <label className={labelClass}>Delivery Method<select value={form.delivery_method} onChange={(event) => setField("delivery_method", event.target.value as CoursePayload["delivery_method"])} className={inputClass}>{modes.map((mode) => <option key={mode}>{mode}</option>)}</select></label>
+                            <label className={labelClass}>Difficulty Level<select value={form.difficulty_level} onChange={(event) => setField("difficulty_level", event.target.value)} className={inputClass}>{difficulties.map((difficulty) => <option key={difficulty}>{difficulty}</option>)}</select></label>
+                            <label className={labelClass}>Duration<input required value={form.duration} onChange={(event) => setField("duration", event.target.value)} className={inputClass} placeholder="e.g. 12 weeks" /></label>
+                        </div>
+                    </FormSection>
+                    <FormSection title="Short Description">
+                        <label className={labelClass}>Catalogue Card Description<textarea required rows={3} value={form.description} onChange={(event) => setField("description", event.target.value)} className={inputClass} placeholder="A concise overview for course cards" /></label>
+                    </FormSection>
+                    <TagSection title="Tools Taught" tags={form.tools} value={toolInput} onChange={setToolInput} onAdd={addTool} onRemove={(tag) => setField("tools", form.tools.filter((item) => item !== tag))} placeholder="Docker, Kubernetes, PyTorch…" />
+                    <FormSection title="Program Status">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:gap-8">
+                            <label className="inline-flex items-center gap-2.5 text-sm font-semibold text-brand-navy"><input type="checkbox" checked={form.is_published} onChange={(event) => setField("is_published", event.target.checked)} className="size-4 accent-brand-red" />Visible on Website</label>
+                            <label className="inline-flex items-center gap-2.5 text-sm font-semibold text-brand-navy"><input type="checkbox" checked={form.is_featured} onChange={(event) => setField("is_featured", event.target.checked)} className="size-4 accent-brand-red" />Homepage Featured</label>
+                        </div>
+                    </FormSection>
+                </div>
+                <footer className="flex justify-end gap-2 border-t border-slate-200 bg-white px-5 py-4 sm:px-7">
+                    <button type="button" onClick={onClose} disabled={isSaving} className="sprint-focus rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-brand-navy hover:bg-brand-surface">Cancel</button>
+                    <button type="submit" disabled={isSaving} className="sprint-focus inline-flex min-w-32 items-center justify-center gap-2 rounded-lg bg-brand-red px-4 py-2.5 text-sm font-bold text-white hover:brightness-110 disabled:opacity-70">{isSaving && <span className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true" />}{isSaving ? "Saving…" : "Save Course"}</button>
+                </footer>
+            </form>
+        </section>
+    </div>;
+}
+
+function FormSection({ title, children }: { title: string; children: ReactNode }) {
+    return <section className="space-y-3"><h3 className="border-b border-slate-100 pb-2 font-display text-sm font-bold text-brand-navy">{title}</h3>{children}</section>;
+}
+
+function TagSection({ title, tags, value, onChange, onAdd, onRemove, placeholder }: { title: string; tags: string[]; value: string; onChange: (value: string) => void; onAdd: () => void; onRemove: (tag: string) => void; placeholder: string }) {
+    return <FormSection title={title}>
+        <div className="flex gap-2"><input value={value} onChange={(event) => onChange(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); onAdd(); } }} className={`${inputClass} mt-0`} placeholder={placeholder} /><button type="button" onClick={onAdd} className="sprint-focus shrink-0 rounded-lg border border-slate-200 px-4 text-sm font-bold text-brand-navy hover:bg-brand-surface">Add</button></div>
+        <div className="flex flex-wrap gap-2">{tags.map((tag) => <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-brand-surface py-1 pl-3 pr-1.5 text-xs font-semibold text-brand-navy">{tag}<button type="button" onClick={() => onRemove(tag)} aria-label={`Remove ${tag}`} className="sprint-focus rounded-full p-1 text-brand-text-muted hover:bg-white hover:text-brand-red"><X className="size-3" aria-hidden="true" /></button></span>)}</div>
+    </FormSection>;
+}
+
+function CourseDetailsModal({ course, onClose, onEdit }: { course: CourseItem; onClose: () => void; onEdit: () => void }) {
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        function onKeyDown(event: KeyboardEvent) { if (event.key === "Escape") onClose(); }
+        document.addEventListener("keydown", onKeyDown);
+        return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", onKeyDown); };
+    }, [onClose]);
+    return <div className="fixed inset-0 z-[100] flex items-end justify-center bg-brand-navy/55 p-0 backdrop-blur-sm sm:items-center sm:p-5" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+        <section role="dialog" aria-modal="true" aria-labelledby="course-details-title" className="flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl">
+            <header className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7"><div><p className="text-xs font-semibold text-brand-red">{course.category}</p><h2 id="course-details-title" className="mt-1 font-display text-xl font-bold text-brand-navy">{course.title}</h2><p className="mt-1 text-xs text-brand-text-muted">/{course.slug}</p></div><button type="button" onClick={onClose} aria-label="Close course details" className={iconButtonClass}><X className="size-4" aria-hidden="true" /></button></header>
+            <div className="min-h-0 flex-1 space-y-6 overflow-y-auto px-5 py-5 sm:px-7">
+                <div className="grid gap-3 sm:grid-cols-3"><DetailValue label="Difficulty Level" value={course.difficulty_level} /><DetailValue label="Delivery Method" value={course.delivery_method} /><DetailValue label="Duration" value={course.duration || "Not specified"} /><DetailValue label="Target Audience" value={audiences.find((item) => item.value === course.audience_type)?.label ?? "Undergraduate"} /><DetailValue label="Status" value={course.is_published ? "Published" : "Draft"} /></div>
+                <DetailSection title="Short Description"><p className="text-sm leading-6 text-brand-text-secondary">{course.description || "No short description provided."}</p></DetailSection>
+                <DetailSection title="Detailed Description"><p className="whitespace-pre-wrap text-sm leading-6 text-brand-text-secondary">{course.long_description || "No detailed description provided."}</p></DetailSection>
+                <DetailSection title="Prerequisites"><p className="whitespace-pre-wrap text-sm leading-6 text-brand-text-secondary">{course.prerequisites || "No formal prerequisites"}</p></DetailSection>
+                <DetailSection title="Curriculum">
+                    {course.curriculum.length ? <ol className="space-y-2">{course.curriculum.map((module, index) => <li key={`${module.title}-${index}`} className="rounded-lg border border-slate-200 p-3"><div className="flex justify-between gap-3"><p className="text-sm font-semibold text-brand-navy">{index + 1}. {module.title}</p><span className="whitespace-nowrap text-xs text-brand-text-muted">{module.sessions} sessions</span></div>{module.topics?.length ? <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-brand-text-secondary">{module.topics.map((topic) => <li key={topic}>{topic}</li>)}</ul> : null}</li>)}</ol> : <p className="text-sm text-brand-text-muted">No modules added.</p>}
+                </DetailSection>
+                <DetailSection title="Tools Taught"><TagList items={course.tools} empty="No tools listed." /></DetailSection>
+                <DetailSection title="Learning Outcomes"><TagList items={course.outcomes} empty="No learning outcomes listed." /></DetailSection>
+            </div>
+            <footer className="flex justify-end gap-2 border-t border-slate-200 px-5 py-4 sm:px-7"><button type="button" onClick={onClose} className="sprint-focus rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-brand-navy hover:bg-brand-surface">Close</button><button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-2 rounded-lg bg-brand-red px-4 py-2.5 text-sm font-bold text-white hover:brightness-110"><Edit3 className="size-4" aria-hidden="true" /> Edit Course</button></footer>
+        </section>
+    </div>;
+}
+
+function DetailValue({ label, value }: { label: string; value: ReactNode }) {
+    return <div className="rounded-lg border border-slate-200 p-3"><p className="text-[10px] font-bold uppercase tracking-wide text-brand-text-muted">{label}</p><p className="mt-1 text-sm font-semibold text-brand-navy">{value}</p></div>;
+}
+
+function DetailSection({ title, children }: { title: string; children: ReactNode }) {
+    return <section><h3 className="mb-2 font-display text-sm font-bold text-brand-navy">{title}</h3>{children}</section>;
+}
+
+function TagList({ items, empty }: { items: string[]; empty: string }) {
+    return items.length ? <ul className="flex flex-wrap gap-2">{items.map((item) => <li key={item} className="rounded-full bg-brand-surface px-3 py-1 text-xs font-semibold text-brand-navy">{item}</li>)}</ul> : <p className="text-sm text-brand-text-muted">{empty}</p>;
+}
