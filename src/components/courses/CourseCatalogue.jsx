@@ -344,13 +344,13 @@ export default function CourseCatalogue({ items }) {
           aria-label="1 of 2: Courses catalogue"
           aria-hidden={heroSlide !== 0}
         >
-          <p className="courses-eyebrow">
+          {/*<p className="courses-eyebrow">
             SPRINT learning catalogue
-          </p>
+          </p> */}
 
           <h1>
-            Tailored engineering and digital pathways for every
-            career stage.
+            Tailored pathways for every
+            career stage
           </h1>
 
           <p>
@@ -620,20 +620,19 @@ export default function CourseCatalogue({ items }) {
 
       <section className="courses-cta">
         <div>
-          <p className="courses-eyebrow">
+          {/* <p className="courses-eyebrow">
             Not sure where to start?
-          </p>
+          </p> */}
 
-          <h2>Choose a pathway with room to grow.</h2>
+          <h2>Not sure which learning pathway is right for you?</h2>
 
           <p>
-            Explore a course today and sign up when the next
-            suitable batch opens.
+            Our experts can help you identify the right track or course based on your background, and goals.
           </p>
         </div>
 
-        <Link href="/register">
-          Sign up for SPRINT
+        <Link href="/contact">
+          Connect With An Expert
           <ArrowRight size={18} />
         </Link>
       </section>

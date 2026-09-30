@@ -5801,8 +5801,8 @@ a {
   justify-content: space-between;
   gap: 2rem;
   width: min(100% - 2rem, 1200px);
-  margin: 0 auto 5rem;
-  padding: clamp(2rem, 5vw, 4rem);
+  margin: 0 auto 3rem;
+  padding: 2.25rem 4rem;
   border-radius: 1.25rem;
   background: var(--color-brand-navy);
   color: #fff;
@@ -5811,12 +5811,15 @@ a {
 .courses-cta h2 {
   color: #fff;
 }
+
+
 .courses-cta p:not(.courses-eyebrow) {
   max-width: 610px;
-  margin: 0.85rem 0 0;
+  margin: 0.65rem 0 0;
   color: rgba(255, 255, 255, 0.75);
   font: 400 1rem/1.55 var(--font-body);
 }
+
 .courses-cta a,
 .course-detail-hero__cta,
 .course-detail-aside a {
@@ -5831,6 +5834,7 @@ a {
   font: 800 0.86rem var(--font-body);
   text-decoration: none;
 }
+
 .courses-cta a:hover,
 .course-detail-hero__cta:hover,
 .course-detail-aside a:hover {
@@ -6217,9 +6221,12 @@ a {
     font: 800 0.9rem var(--font-body);
   }
 
+  /* Mobile */
+@media (max-width: 768px) {
   .courses-cta {
-    align-items: start;
+    align-items: flex-start;
     flex-direction: column;
+    padding: 2rem;
     margin-bottom: 3rem;
   }
 
@@ -6311,4 +6318,5 @@ a {
   .course-tile:hover {
     transform: none;
   }
+}
 }
