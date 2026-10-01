@@ -17,44 +17,48 @@ export default function EnrollmentStepPanel({
   children,
   className = "",
 }) {
+  const isAccountStep = step.id === "account";
+
   return (
     <section
       aria-labelledby={headingId}
       className={`rounded-2xl border border-brand-border bg-brand-white p-5 shadow-brand-card sm:p-6 ${className}`}
     >
-      <header>
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-red">
-            Step {stepNumber} of {totalSteps}
-          </p>
-          {step.isScaffolded ? (
-            <span className="rounded-full border border-brand-border bg-brand-off-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-brand-text-muted">
-              Scaffolded
-            </span>
+      {!isAccountStep ? (
+        <header>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-red">
+              Step {stepNumber} of {totalSteps}
+            </p>
+            {step.isScaffolded ? (
+              <span className="rounded-full border border-brand-border bg-brand-off-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-brand-text-muted">
+                Scaffolded
+              </span>
+            ) : null}
+            {step.isOptional ? (
+              <span className="rounded-full border border-brand-navy/15 bg-brand-surface px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-brand-text-secondary">
+                Optional
+              </span>
+            ) : null}
+          </div>
+
+          <h2
+            id={headingId}
+            tabIndex={-1}
+            className="sprint-focus mt-2 rounded font-display text-xl font-bold leading-tight text-brand-navy sm:text-2xl"
+          >
+            {step.title}
+          </h2>
+
+          {step.description ? (
+            <p className="mt-1.5 text-sm leading-relaxed text-brand-text-secondary">
+              {step.description}
+            </p>
           ) : null}
-          {step.isOptional ? (
-            <span className="rounded-full border border-brand-navy/15 bg-brand-surface px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-brand-text-secondary">
-              Optional
-            </span>
-          ) : null}
-        </div>
+        </header>
+      ) : null}
 
-        <h2
-          id={headingId}
-          tabIndex={-1}
-          className="sprint-focus mt-2 rounded font-display text-xl font-bold leading-tight text-brand-navy sm:text-2xl"
-        >
-          {step.title}
-        </h2>
-
-        {step.description ? (
-          <p className="mt-1.5 text-sm leading-relaxed text-brand-text-secondary">
-            {step.description}
-          </p>
-        ) : null}
-      </header>
-
-      <div className="mt-5">{children}</div>
+      <div className={isAccountStep ? "" : "mt-5"}>{children}</div>
     </section>
   );
 }

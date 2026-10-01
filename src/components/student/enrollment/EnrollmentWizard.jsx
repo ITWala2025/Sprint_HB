@@ -69,7 +69,9 @@ export default function EnrollmentWizard() {
       [sliceId]: { ...previous[sliceId], [field]: value },
     }));
     // Clear this field's error as soon as the student starts fixing it.
-    setErrors((previous) => (previous[field] ? { ...previous, [field]: "" } : previous));
+    setErrors((previous) =>
+      previous[field] ? { ...previous, [field]: "" } : previous,
+    );
   };
 
   const handleChange = handleChangeIn(step.id);
@@ -101,7 +103,8 @@ export default function EnrollmentWizard() {
   // reads as a decision rather than a silent failure.
   const handleSkip = () => {
     const notice =
-      step.skipNotice ?? "You can complete this step later from your Student Dashboard.";
+      step.skipNotice ??
+      "You can complete this step later from your Student Dashboard.";
     if (isLast) {
       setStatusNotice(notice);
       setIsComplete(true);
@@ -118,10 +121,15 @@ export default function EnrollmentWizard() {
       return;
     }
 
-    if (typeof window !== "undefined" && typeof window.scrollTo === "function") {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.scrollTo === "function"
+    ) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-    document.getElementById(isComplete ? SUCCESS_HEADING_ID : STEP_HEADING_ID)?.focus();
+    document
+      .getElementById(isComplete ? SUCCESS_HEADING_ID : STEP_HEADING_ID)
+      ?.focus();
   }, [stepIndex, isComplete]);
 
   return (
@@ -149,8 +157,8 @@ export default function EnrollmentWizard() {
             Start your enrollment
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-brand-text-secondary">
-            Three short steps — your details, education and portal account. You can move back and
-            forth at any point without losing an answer.
+            Three short steps — your details, education and portal account. You
+            can move back and forth at any point without losing an answer.
           </p>
         </div>
 
@@ -167,8 +175,13 @@ export default function EnrollmentWizard() {
             role="status"
             className="mt-4 flex items-start gap-2.5 rounded-xl border border-brand-border bg-brand-white px-4 py-3 shadow-brand-card sm:px-5"
           >
-            <CircleCheck aria-hidden="true" className="mt-px size-4 shrink-0 text-brand-red" />
-            <p className="text-xs leading-relaxed text-brand-text-secondary">{statusNotice}</p>
+            <CircleCheck
+              aria-hidden="true"
+              className="mt-px size-4 shrink-0 text-brand-red"
+            />
+            <p className="text-xs leading-relaxed text-brand-text-secondary">
+              {statusNotice}
+            </p>
           </div>
         ) : null}
 
@@ -198,6 +211,13 @@ export default function EnrollmentWizard() {
                 errors={errors}
                 onChange={handleChange}
                 onChangeIn={handleChangeIn}
+                {...(step.id === "account"
+                  ? {
+                      stepNumber: stepIndex + 1,
+                      headingId: STEP_HEADING_ID,
+                      summaryValues: values,
+                    }
+                  : {})}
               />
 
               <EnrollmentStepFooter
@@ -213,7 +233,8 @@ export default function EnrollmentWizard() {
         )}
 
         <p className="mt-6 text-center text-[11px] font-medium leading-relaxed text-brand-text-muted md:mt-8">
-          Preview build — answers stay in this browser tab and nothing is submitted to SPRINT.
+          Preview build — answers stay in this browser tab and nothing is
+          submitted to SPRINT.
         </p>
       </div>
     </div>
