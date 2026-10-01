@@ -123,10 +123,10 @@ export default function AboutPage() {
           </nav>
 
           <div className="sprint-hero-copy">
-            <p className="sprint-hero-eyebrow">
+            {/* <p className="sprint-hero-eyebrow">
               <span aria-hidden="true">›</span>
               {about.hero.kicker}
-            </p>
+            </p> */}
 
             <h1 className="sprint-hero-title">
               <HighlightHeroTitle
@@ -180,13 +180,13 @@ export default function AboutPage() {
             ))}
           </div>
 
-          <p className="sprint-hero-verified">
+          {/* <p className="sprint-hero-verified">
             <CheckCircle2
               className="size-4 shrink-0 text-brand-success"
               aria-hidden="true"
             />
             All figures source-verified
-          </p>
+          </p> */}
         </div>
       </section>
 

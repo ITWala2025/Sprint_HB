@@ -52,7 +52,7 @@ export default function ProfileCard({ profile, showTags = false }) {
         {profile.bio}
       </p>
 
-      {showTags && profile.tags?.length > 0 && (
+      {/* {showTags && profile.tags?.length > 0 && (
         <ul className="mt-4 flex flex-wrap gap-2" aria-label="Expertise">
           {profile.tags.map((tag) => (
             <li
@@ -63,7 +63,7 @@ export default function ProfileCard({ profile, showTags = false }) {
             </li>
           ))}
         </ul>
-      )}
+      )} */}
 
       {profile.socials?.length > 0 && (
         <ul className="mt-4 flex items-center gap-2">
