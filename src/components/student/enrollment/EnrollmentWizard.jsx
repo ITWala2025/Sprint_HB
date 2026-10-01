@@ -24,10 +24,10 @@ const SUCCESS_HEADING_ID = "enrollment-success-heading";
  * Enrollment wizard shell (Phase 1 — UI + client-side state only).
  *
  * One state object holds every step's answers (`{ personal, education,
- * specialization, learningPath, account }`) and the steps are controlled
- * components reading from it. That is what makes moving back and forth free:
- * going forward merges the step's values into that same object, going back just
- * re-renders the step with the values it left behind.
+ * account }`) and the steps are controlled components reading from it. That is
+ * what makes moving back and forth free: going forward merges the step's values
+ * into that same object, going back just re-renders the step with the values it
+ * left behind.
  *
  * The wizard owns everything generic — which step is active, validation on
  * submit, focus management, the progress indicator and the Back / Skip /
@@ -59,10 +59,9 @@ export default function EnrollmentWizard() {
     setStepIndex(index);
   };
 
-  // `handleChangeIn("specialization")("track")` writes into any slice of the
-  // shared state — that is how Step 2 collects the specialization choice Step 3
-  // will later read. For the active slice it reduces to the plain
-  // `handleChange("email")` the fields are wired to.
+  // `handleChangeIn("account")("phone")` writes into any slice of the shared
+  // state; for the active slice it reduces to the plain `handleChange("email")`
+  // the fields are wired to.
   const handleChangeIn = (sliceId) => (field) => (event) => {
     const { value } = event.target;
     setValues((previous) => ({
@@ -150,8 +149,8 @@ export default function EnrollmentWizard() {
             Start your enrollment
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-brand-text-secondary">
-            Five short steps — your details, education, specialization, learning path and portal
-            account. You can move back and forth at any point without losing an answer.
+            Three short steps — your details, education and portal account. You can move back and
+            forth at any point without losing an answer.
           </p>
         </div>
 
@@ -199,7 +198,6 @@ export default function EnrollmentWizard() {
                 errors={errors}
                 onChange={handleChange}
                 onChangeIn={handleChangeIn}
-                specialization={values.specialization}
               />
 
               <EnrollmentStepFooter

@@ -1,12 +1,12 @@
 import { Construction } from "lucide-react";
 
 /**
- * Body shown by the scaffolded steps of the enrollment wizard.
+ * Body shown by the scaffolded step of the enrollment wizard.
  *
- * Steps 3-5 exist as routes, progress entries and step components so the shell,
- * the shared state and the navigation can be reviewed end to end. Their forms
- * land in the next phase; until then each one lists the fields it will collect
- * instead of pretending to be a finished screen.
+ * The last step (Account) exists as a route, progress entry and step component
+ * so the shell, the shared state and the navigation can be reviewed end to end.
+ * Its form lands in the next phase; until then it lists the fields it will
+ * collect instead of pretending to be a finished screen.
  */
 export default function EnrollmentComingSoon({ note, fields = [] }) {
   return (

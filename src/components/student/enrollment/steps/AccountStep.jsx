@@ -1,7 +1,7 @@
 import EnrollmentComingSoon from "../EnrollmentComingSoon";
 
 /**
- * Step 5 — Account (scaffolded).
+ * Step 3 — Account (scaffolded).
  *
  * When the form lands it reuses `PasswordInput` and `PasswordRequirements` from
  * the Phase 1 auth kit plus `validateNewPassword` / `validateConfirmPassword`

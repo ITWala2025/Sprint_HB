@@ -8,15 +8,9 @@ import {
 } from "@/components/student/enrollment/enrollment-steps";
 
 describe("Enrollment step registry", () => {
-  it("keeps the five agreed steps in order", () => {
-    expect(ENROLLMENT_STEP_IDS).toEqual([
-      "personal",
-      "education",
-      "specialization",
-      "learningPath",
-      "account",
-    ]);
-    expect(ENROLLMENT_STEP_COUNT).toBe(5);
+  it("keeps the three agreed steps in order", () => {
+    expect(ENROLLMENT_STEP_IDS).toEqual(["personal", "education", "account"]);
+    expect(ENROLLMENT_STEP_COUNT).toBe(3);
   });
 
   it("gives every step a unique label and its own copy", () => {
@@ -38,10 +32,10 @@ describe("Enrollment step registry", () => {
     });
   });
 
-  it("marks exactly the three scaffolded steps", () => {
+  it("marks exactly the one scaffolded step", () => {
     const scaffolded = ENROLLMENT_STEPS.filter((step) => step.isScaffolded).map((step) => step.id);
 
-    expect(scaffolded).toEqual(["specialization", "learningPath", "account"]);
+    expect(scaffolded).toEqual(["account"]);
   });
 
   it("marks only Step 2 optional and hands it the agreed skip notice", () => {
@@ -62,20 +56,21 @@ describe("Enrollment step registry", () => {
 
   it("seeds every step's slice of the shared state", () => {
     expect(createEmptyEnrollment()).toEqual({
-      personal: { name: "", email: "", phone: "" },
-      education: {
-        level: "",
-        institution: "",
-        degree: "",
-        year: "",
-        graduationYear: "",
-        city: "",
+      personal: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        dob: "",
+        country: "India",
         state: "",
-        currentRole: "",
+        phone: "",
       },
-      // Step 2 writes the specialization choice into this slice (see EducationStep).
-      specialization: { track: "" },
-      learningPath: {},
+      education: {
+        courseDegree: "",
+        semesterYear: "",
+        currentRole: "",
+        course: "",
+      },
       account: {},
     });
   });
@@ -83,9 +78,23 @@ describe("Enrollment step registry", () => {
   it("validates the personal step against the shared email and mobile rules", () => {
     const personal = ENROLLMENT_STEPS[0];
 
-    expect(personal.validate({ name: "A", email: "nope", phone: "123" })).toEqual({
-      name: "Your name needs at least 2 characters.",
+    expect(
+      personal.validate({
+        firstName: "A",
+        lastName: "",
+        email: "nope",
+        // Country arrives pre-seeded from initialValues.
+        country: "India",
+        state: "",
+        phone: "123",
+      }),
+    ).toEqual({
+      firstName: "Your name needs at least 2 characters.",
+      lastName: "Please enter your last name.",
       email: "Please enter a valid email address.",
+      dob: "Please enter your date of birth.",
+      country: "",
+      state: "Please select your state.",
       phone: "Please enter a valid 10-digit mobile number.",
     });
   });
@@ -94,9 +103,9 @@ describe("Enrollment step registry", () => {
     const first = createEmptyEnrollment();
     const second = createEmptyEnrollment();
 
-    first.personal.name = "Ananya Sharma";
+    first.personal.firstName = "Ananya";
 
-    expect(second.personal.name).toBe("");
+    expect(second.personal.firstName).toBe("");
     expect(first.personal).not.toBe(second.personal);
   });
 });

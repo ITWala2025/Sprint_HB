@@ -17,6 +17,12 @@ import { AlertCircle, ChevronDown } from "lucide-react";
  * wiring — the enrollment wizard uses it for its known-value questions. The
  * empty option uses `placeholder` as its label, and a chevron is rendered
  * automatically unless `trailing` supplies its own.
+ *
+ * `prefix` renders a static box attached to the left of a text input (the
+ * enrollment wizard's `+91` country-code box): the box shares the field's
+ * border colour, and the input's left corners flatten against it so the two read
+ * as one control. The icon, trailing slot and every piece of wiring stay exactly
+ * where they are without a prefix.
  */
 export default function AuthField({
   id,
@@ -32,6 +38,7 @@ export default function AuthField({
   icon,
   trailing,
   options,
+  prefix,
   labelAction,
   required = false,
   disabled = false,
@@ -91,7 +98,46 @@ export default function AuthField({
           </span>
         ) : null}
 
-        {isSelect ? (
+        {!isSelect && prefix ? (
+          <div className="flex items-stretch">
+            <span
+              className={`flex h-12 shrink-0 items-center rounded-l-xl border border-r-0 bg-brand-surface px-3 text-sm font-semibold text-brand-text-secondary ${
+                error ? "border-brand-red" : "border-brand-border"
+              }`}
+            >
+              {prefix}
+            </span>
+            <div className="relative min-w-0 flex-1">
+              {icon ? (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 left-0 grid w-11 place-items-center text-brand-text-muted"
+                >
+                  {icon}
+                </span>
+              ) : null}
+              <input
+                id={id}
+                ref={inputRef}
+                name={name}
+                type={type}
+                value={value}
+                onChange={onChange}
+                placeholder={placeholder}
+                autoComplete={autoComplete}
+                inputMode={inputMode}
+                maxLength={maxLength}
+                autoFocus={autoFocus}
+                disabled={disabled}
+                required={required}
+                aria-invalid={error ? "true" : undefined}
+                aria-describedby={describedBy || undefined}
+                className={`${fieldClasses} rounded-l-none`}
+              />
+              {trailing}
+            </div>
+          </div>
+        ) : isSelect ? (
           <select
             id={id}
             ref={inputRef}
@@ -134,7 +180,8 @@ export default function AuthField({
           />
         )}
 
-        {trailingSlot}
+        {/* A prefix field renders its own trailing slot inside the input row. */}
+        {prefix && !isSelect ? null : trailingSlot}
       </div>
 
       {hint ? (

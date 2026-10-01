@@ -6,10 +6,16 @@ import EnrollmentSuccessPanel from "@/components/student/enrollment/EnrollmentSu
 
 describe("EnrollmentSuccessPanel", () => {
   const values = {
-    personal: { name: "Ananya Sharma", email: "ananya@sprint.co.in", phone: "98765 43210" },
+    personal: {
+      firstName: "Ananya",
+      lastName: "Sharma",
+      email: "ananya@sprint.co.in",
+      dob: "2004-06-15",
+      country: "India",
+      state: "Karnataka",
+      phone: "9876543210",
+    },
     education: {},
-    specialization: {},
-    learningPath: {},
     account: {},
   };
 
@@ -35,17 +41,27 @@ describe("EnrollmentSuccessPanel", () => {
   it("echoes back what the wizard collected from the other steps", () => {
     renderPanel();
 
-    expect(screen.getByText("Full name")).toBeInTheDocument();
-    expect(screen.getByText("Ananya Sharma")).toBeInTheDocument();
+    expect(screen.getByText("First name")).toBeInTheDocument();
+    expect(screen.getByText("Ananya")).toBeInTheDocument();
+    expect(screen.getByText("Sharma")).toBeInTheDocument();
     expect(screen.getByText("ananya@sprint.co.in")).toBeInTheDocument();
-    expect(screen.getByText("98765 43210")).toBeInTheDocument();
+    expect(screen.getByText("2004-06-15")).toBeInTheDocument();
+    expect(screen.getByText("India")).toBeInTheDocument();
+    expect(screen.getByText("Karnataka")).toBeInTheDocument();
+    expect(screen.getByText("9876543210")).toBeInTheDocument();
   });
 
   it("skips rows the student has not filled in", () => {
-    renderPanel({ values: { ...values, personal: { name: "Ananya Sharma", email: "", phone: "" } } });
+    renderPanel({
+      values: {
+        ...values,
+        personal: { firstName: "Ananya", lastName: "", email: "", dob: "", country: "India", state: "", phone: "" },
+      },
+    });
 
+    expect(screen.queryByText("Last name")).not.toBeInTheDocument();
     expect(screen.queryByText("Email address")).not.toBeInTheDocument();
-    expect(screen.queryByText("Mobile number")).not.toBeInTheDocument();
+    expect(screen.queryByText("Phone number")).not.toBeInTheDocument();
   });
 
   it("stays honest about the mock submission", () => {

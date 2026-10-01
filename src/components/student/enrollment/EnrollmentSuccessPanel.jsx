@@ -11,9 +11,13 @@ import AuthButton from "@/components/student/auth/AuthButton";
  * collected, which is the visible proof that every step shared one state object.
  */
 const SUMMARY_ROWS = [
-  { field: "name", label: "Full name" },
+  { field: "firstName", label: "First name" },
+  { field: "lastName", label: "Last name" },
   { field: "email", label: "Email address" },
-  { field: "phone", label: "Mobile number" },
+  { field: "dob", label: "Date of birth" },
+  { field: "country", label: "Country" },
+  { field: "state", label: "State" },
+  { field: "phone", label: "Phone number" },
 ];
 
 export default function EnrollmentSuccessPanel({

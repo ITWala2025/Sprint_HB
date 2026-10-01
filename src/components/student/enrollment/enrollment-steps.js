@@ -1,8 +1,7 @@
 import AccountStep from "./steps/AccountStep";
 import EducationStep from "./steps/EducationStep";
-import LearningPathStep from "./steps/LearningPathStep";
 import PersonalInformationStep from "./steps/PersonalInformationStep";
-import SpecializationStep from "./steps/SpecializationStep";
+import { DEFAULT_COUNTRY } from "./enrollment-locations";
 import {
   validateEducationProfile,
   validateNoFieldsYet,
@@ -14,7 +13,7 @@ import {
  *
  * Contract every step keeps:
  * - `id` doubles as the key in the wizard's shared state (personal, education,
- *   specialization, learningPath, account) *and* as the id prefix of its fields
+ *   account) *and* as the id prefix of its fields
  *   (`${id}-${fieldName}`), which is how the wizard focuses the first invalid
  *   field after a failed submit.
  * - `initialValues` seeds that slice of state, so switching steps back and forth
@@ -22,9 +21,9 @@ import {
  * - `validate(values)` returns a `{ field: message }` map; `compactErrors` drops
  *   the valid entries.
  *
- * Steps 3-5 are still scaffolded in this phase (`isScaffolded`) — they already
- * own their label, copy, state slice and navigation slot, so landing their forms
- * is a change inside `steps/*.jsx` only.
+ * The last step — Account — is still scaffolded in this phase (`isScaffolded`):
+ * it already owns its label, copy, state slice and navigation slot, so landing
+ * its form is a change inside `steps/AccountStep.jsx` only.
  *
  * `isOptional` marks a step the student may skip: the wizard then renders the
  * third "Skip for now" action in the footer and shows `skipNotice` on the step
@@ -39,7 +38,17 @@ export const ENROLLMENT_STEPS = [
     title: "Personal Information",
     description: "Start with the details we need to open your enrollment file.",
     Component: PersonalInformationStep,
-    initialValues: { name: "", email: "", phone: "" },
+    // Country is pre-seeded with India so the State select opens enabled with
+    // the Indian list; the other six fields start empty.
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      dob: "",
+      country: DEFAULT_COUNTRY,
+      state: "",
+      phone: "",
+    },
     validate: validatePersonalInformation,
     isScaffolded: false,
   },
@@ -50,43 +59,23 @@ export const ENROLLMENT_STEPS = [
     description:
       "Help us understand your background and career interests. You can skip this step and complete it later from your Student Dashboard.",
     Component: EducationStep,
+    // Four optional fields, named after the schema columns they map to:
+    // `students.course_degree`, `year_semester`/`current_semester`,
+    // `employment_status` and `registrations.course_id` (the course id the
+    // Course dropdown stores). The removed fields (level, institution,
+    // graduationYear, city, state) are simply no longer collected — nothing
+    // in the database is touched.
     initialValues: {
-      level: "",
-      institution: "",
-      degree: "",
-      year: "",
-      graduationYear: "",
-      city: "",
-      state: "",
+      courseDegree: "",
+      semesterYear: "",
       currentRole: "",
+      course: "",
     },
     validate: validateEducationProfile,
     isScaffolded: false,
     isOptional: true,
     skipNotice:
       "You can complete your education & career profile later from your Student Dashboard.",
-  },
-  {
-    id: "specialization",
-    label: "Specialization",
-    title: "Specialization",
-    description: "Choose the program and track you want to specialise in.",
-    Component: SpecializationStep,
-    // `track` is the answer Step 2 collects (see steps/EducationStep.jsx) and the
-    // state this step will read when its own form lands.
-    initialValues: { track: "" },
-    validate: validateNoFieldsYet,
-    isScaffolded: true,
-  },
-  {
-    id: "learningPath",
-    label: "Learning Path",
-    title: "Learning Path",
-    description: "Decide how and when you want to attend classes.",
-    Component: LearningPathStep,
-    initialValues: {},
-    validate: validateNoFieldsYet,
-    isScaffolded: true,
   },
   {
     id: "account",

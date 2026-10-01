@@ -12,7 +12,7 @@ describe("EnrollmentStepFooter", () => {
         isFirst={false}
         isLast={false}
         stepNumber={2}
-        totalSteps={5}
+        totalSteps={3}
         {...props}
       />,
     );
@@ -49,9 +49,9 @@ describe("EnrollmentStepFooter", () => {
   });
 
   it("repeats the step counter in the pinned bar so progress stays visible", () => {
-    renderFooter({ stepNumber: 3, totalSteps: 5 });
+    renderFooter({ stepNumber: 2, totalSteps: 3 });
 
-    expect(screen.getByText("Step 3 of 5")).toBeInTheDocument();
+    expect(screen.getByText("Step 2 of 3")).toBeInTheDocument();
   });
 
   it("hides Back on the first step and right-aligns Continue", () => {
@@ -64,7 +64,7 @@ describe("EnrollmentStepFooter", () => {
   });
 
   it("renames the primary action on the last step", () => {
-    renderFooter({ isLast: true, stepNumber: 5 });
+    renderFooter({ isLast: true, stepNumber: 3 });
 
     expect(screen.getByRole("button", { name: /submit enrollment/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^back$/i })).toBeInTheDocument();
