@@ -1,20 +1,22 @@
 import { TrendingUp } from "lucide-react";
 
 import StudentCard from "@/components/student/StudentCard";
-import { mockLearningProgress } from "@/data/student";
-import { formatShortDate } from "@/utils/dates";
+import { mockEnrollment, mockLearningProgress } from "@/data/student";
+import { formatDateRange, formatShortDate } from "@/utils/dates";
 
 const RADIUS = 54;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-function CircularProgress({ value }) {
+function CircularProgress({ value, compact = false }) {
   const clamped = Math.min(100, Math.max(0, Number(value) || 0));
 
   return (
-    <div className="relative grid size-32 shrink-0 place-items-center">
+    <div
+      className={`relative grid ${compact ? "size-28" : "size-32"} shrink-0 place-items-center`}
+    >
       <svg
         viewBox="0 0 128 128"
-        className="size-32 -rotate-90"
+        className={`${compact ? "size-28" : "size-32"} -rotate-90`}
         role="img"
         aria-label={`${clamped} percent learning progress`}
       >
@@ -24,7 +26,7 @@ function CircularProgress({ value }) {
           r={RADIUS}
           fill="none"
           strokeWidth="10"
-          className="stroke-brand-surface"
+          className={compact ? "stroke-white/25" : "stroke-brand-surface"}
         />
         <circle
           cx="64"
@@ -35,10 +37,12 @@ function CircularProgress({ value }) {
           strokeLinecap="round"
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={CIRCUMFERENCE * (1 - clamped / 100)}
-          className="stroke-brand-red"
+          className={compact ? "stroke-brand-red-light" : "stroke-brand-red"}
         />
       </svg>
-      <span className="absolute font-display text-2xl font-bold text-brand-navy">
+      <span
+        className={`absolute font-display text-2xl font-bold ${compact ? "text-white" : "text-brand-navy"}`}
+      >
         {clamped}%
       </span>
     </div>
@@ -50,7 +54,7 @@ function CircularProgress({ value }) {
  * counters. The counters stay inline: attendance is no longer its own portal
  * section, so the card is the single source for the learner's session record.
  */
-export default function LearningProgress() {
+export default function LearningProgress({ compact = false }) {
   const {
     completionPercent,
     status,
@@ -68,9 +72,51 @@ export default function LearningProgress() {
       value: attendedSessions,
       tone: "text-brand-success",
     },
-    { id: "missed", label: "Missed", value: missedSessions, tone: "text-brand-red" },
-    { id: "total", label: "Total", value: totalSessions, tone: "text-brand-navy" },
+    {
+      id: "missed",
+      label: "Missed",
+      value: missedSessions,
+      tone: "text-brand-red",
+    },
+    {
+      id: "total",
+      label: "Total",
+      value: totalSessions,
+      tone: "text-brand-navy",
+    },
   ];
+
+  if (compact) {
+    return (
+      <section
+        aria-labelledby="student-progress-heading"
+        className="mx-auto w-full max-w-sm"
+      >
+        <h2
+          id="student-progress-heading"
+          className="mb-3 text-center text-sm font-bold text-brand-white sm:text-left"
+        >
+          My Learning Progress
+        </h2>
+        <div className="flex items-center justify-center gap-4 sm:justify-start">
+          <div className="flex min-w-0 flex-col items-center gap-1.5">
+            <CircularProgress value={completionPercent} compact />
+            <p className="text-center text-[11px] font-medium text-brand-white/80">
+              Cohort:{" "}
+              {formatDateRange(
+                mockEnrollment.cohortStart,
+                mockEnrollment.cohortEnd,
+                " – ",
+              )}
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center rounded-full bg-emerald-300/15 px-3 py-1.5 text-xs font-bold text-emerald-100 ring-1 ring-emerald-200/30">
+            {status}
+          </span>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <StudentCard

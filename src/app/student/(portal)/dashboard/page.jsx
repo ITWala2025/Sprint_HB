@@ -1,13 +1,11 @@
 import AnnouncementsCard from "@/components/student/dashboard/AnnouncementsCard";
-import CurrentEnrollment from "@/components/student/dashboard/CurrentEnrollment";
-import DashboardCalendar from "@/components/student/dashboard/DashboardCalendar";
-import InfoCards from "@/components/student/dashboard/InfoCards";
 import LearningProgress from "@/components/student/dashboard/LearningProgress";
-import OfferLettersCard from "@/components/student/dashboard/OfferLettersCard";
 import QuickActions from "@/components/student/dashboard/QuickActions";
-import ShareExperienceCard from "@/components/student/dashboard/ShareExperienceCard";
 import UpcomingLiveClasses from "@/components/student/dashboard/UpcomingLiveClasses";
 import WelcomeBanner from "@/components/student/dashboard/WelcomeBanner";
+import { mockAnnouncements } from "@/data/student";
+import Link from "next/link";
+import { ArrowRight, Bell } from "lucide-react";
 
 export const metadata = {
   title: "Student Dashboard",
@@ -18,34 +16,39 @@ export const metadata = {
 
 /**
  * Student Dashboard (UI pass).
- * Section order: welcome banner → calendar + info cards → progression →
- * live classes → quick actions → announcements row.
+ * Section order: hero → announcement shortcut → live classes → quick actions →
+ * announcements.
  * All values come from `src/data/student.js` mock data.
  */
 export default function StudentDashboardPage() {
+  const unreadCount = mockAnnouncements.filter((item) => item.unread).length;
+
   return (
     <div className="flex flex-col gap-5 lg:gap-6">
-      <WelcomeBanner />
+      <WelcomeBanner>
+        <LearningProgress compact />
+      </WelcomeBanner>
 
-      <div className="grid gap-5 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-6">
-        <DashboardCalendar />
-        <InfoCards />
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
-        <LearningProgress />
-        <CurrentEnrollment />
-      </div>
+      <Link
+        href="#dashboard-announcements"
+        className="sprint-focus group flex min-h-12 items-center gap-3 rounded-lg border border-brand-border bg-brand-white px-4 py-2.5 text-sm transition-colors hover:border-brand-red hover:bg-brand-red-light"
+      >
+        <Bell className="size-4 shrink-0 text-brand-red" aria-hidden="true" />
+        <span className="font-semibold text-brand-navy">Announcements</span>
+        <span className="rounded-full bg-brand-red-light px-2 py-0.5 text-[11px] font-bold text-brand-red">
+          {unreadCount} new
+        </span>
+        <ArrowRight
+          className="ml-auto size-4 shrink-0 text-brand-text-muted transition-transform group-hover:translate-x-0.5"
+          aria-hidden="true"
+        />
+      </Link>
 
       <UpcomingLiveClasses />
 
       <QuickActions />
 
-      <div className="grid gap-5 lg:grid-cols-3 lg:gap-6">
-        <ShareExperienceCard />
-        <OfferLettersCard />
-        <AnnouncementsCard />
-      </div>
+      <AnnouncementsCard />
     </div>
   );
 }

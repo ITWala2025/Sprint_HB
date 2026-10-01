@@ -1,11 +1,27 @@
 [
-  { "label": "Dashboard", "href": "/student/dashboard", "icon": "layoutDashboard" },
+  {
+    "label": "Dashboard",
+    "href": "/student/dashboard",
+    "icon": "layoutDashboard"
+  },
   { "label": "Profile", "href": "/student/profile", "icon": "userRound" },
-  { "label": "Apply Courses", "href": "/student/apply-course", "icon": "bookPlus" },
+  {
+    "label": "Apply Courses",
+    "href": "/student/apply-course",
+    "icon": "bookPlus"
+  },
   { "label": "My Course", "href": "/student/my-course", "icon": "bookOpen" },
-  { "label": "Assignment", "href": "/student/assignments", "icon": "clipboardList", "badge": "2" },
+  {
+    "label": "Assignment",
+    "href": "/student/assignments",
+    "icon": "clipboardList",
+    "badge": "2"
+  },
   { "label": "Certificate", "href": "/student/certificates", "icon": "award" },
   { "label": "Result", "href": "/student/result", "icon": "graduationCap" },
-  { "label": "Help & Support", "href": "/student/help-support", "icon": "lifeBuoy" },
-  { "label": "Settings", "href": "/student/settings", "icon": "settings" }
+  {
+    "label": "Help & Support",
+    "href": "/student/help-support",
+    "icon": "lifeBuoy"
+  }
 ]

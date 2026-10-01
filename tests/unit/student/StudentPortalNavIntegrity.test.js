@@ -14,7 +14,12 @@ import { mockQuickActions } from "@/data/student";
  * 3. nothing inside the portal source links to a removed section
  */
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
+const ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "..",
+  "..",
+);
 const PORTAL_DIR = path.join(ROOT, "src", "app", "student", "(portal)");
 /**
  * The auth screens (login, forgot-password, check-email, reset-password,
@@ -26,10 +31,10 @@ const PORTAL_COMPONENT_DIR = path.join(ROOT, "src", "components", "student");
 const STUDENT_DATA_FILE = path.join(ROOT, "src", "data", "student.js");
 
 /**
- * Portal routes that intentionally stay off the sidebar because they are
- * dashboard destinations only. Keep in sync with the nav config.
+ * Portal routes represented inside another page instead of the sidebar.
+ * Resources is a dashboard destination; Settings is embedded in Profile.
  */
-const OFF_SIDEBAR_ROUTES = ["resources"];
+const OFF_SIDEBAR_ROUTES = ["resources", "settings"];
 
 const routeFolders = () =>
   readdirSync(PORTAL_DIR, { withFileTypes: true })
@@ -44,7 +49,6 @@ const hasPage = (href) => {
     existsSync(path.join(STUDENT_DIR, segment, "page.jsx"))
   );
 };
-
 
 const collectJsxFiles = (dir) =>
   readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -72,10 +76,24 @@ const portalStudentLinks = () => {
 };
 
 describe("Student portal navigation integrity", () => {
-  it("keeps the sidebar at the nine agreed sections with unique targets", () => {
-    expect(navigation).toHaveLength(9);
-    expect(new Set(navigation.map((item) => item.label)).size).toBe(navigation.length);
-    expect(new Set(navigation.map((item) => item.href)).size).toBe(navigation.length);
+  it("keeps the sidebar at the eight agreed sections with unique targets", () => {
+    expect(navigation).toHaveLength(8);
+    expect(new Set(navigation.map((item) => item.label)).size).toBe(
+      navigation.length,
+    );
+    expect(new Set(navigation.map((item) => item.href)).size).toBe(
+      navigation.length,
+    );
+  });
+
+  it("keeps Settings embedded in the Profile page", () => {
+    const profilePage = readFileSync(
+      path.join(PORTAL_DIR, "profile", "page.jsx"),
+      "utf8",
+    );
+
+    expect(profilePage).toContain('id="settings"');
+    expect(navigation.some((item) => item.label === "Settings")).toBe(false);
   });
 
   it("resolves every sidebar entry to an existing page", () => {
@@ -88,8 +106,12 @@ describe("Student portal navigation integrity", () => {
   it("keeps every portal route reachable from the sidebar or the dashboard", () => {
     routeFolders().forEach((folder) => {
       if (OFF_SIDEBAR_ROUTES.includes(folder)) return;
-      const inSidebar = navigation.some((item) => item.href === `/student/${folder}`);
-      const inQuickActions = mockQuickActions.some((action) => action.href === `/student/${folder}`);
+      const inSidebar = navigation.some(
+        (item) => item.href === `/student/${folder}`,
+      );
+      const inQuickActions = mockQuickActions.some(
+        (action) => action.href === `/student/${folder}`,
+      );
       expect(inSidebar || inQuickActions, folder).toBe(true);
     });
   });
@@ -118,7 +140,9 @@ describe("Student portal navigation integrity", () => {
 
     retired.forEach((segment) => {
       expect(folders, `folder /student/${segment}`).not.toContain(segment);
-      expect(links, `link /student/${segment}`).not.toContain(`/student/${segment}`);
+      expect(links, `link /student/${segment}`).not.toContain(
+        `/student/${segment}`,
+      );
     });
   });
 });

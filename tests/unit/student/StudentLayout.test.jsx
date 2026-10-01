@@ -4,8 +4,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import StudentLayout from "@/components/student/StudentLayout";
 
+const mockPathname = vi.fn(() => "/student/dashboard");
+
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/student/dashboard",
+  usePathname: () => mockPathname(),
 }));
 
 vi.mock("next/link", () => ({
@@ -40,6 +42,29 @@ describe("StudentLayout", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /collapse sidebar/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("hides the redundant portal label on the dashboard but keeps it on other pages", () => {
+    const { rerender } = render(
+      <StudentLayout>
+        <p>Dashboard content</p>
+      </StudentLayout>,
+    );
+
+    expect(
+      screen.queryByText("Student Portal", { selector: "p" }),
+    ).not.toBeInTheDocument();
+
+    mockPathname.mockReturnValue("/student/profile");
+    rerender(
+      <StudentLayout>
+        <p>Profile content</p>
+      </StudentLayout>,
+    );
+
+    expect(
+      screen.getByText("Student Portal", { selector: "p" }),
     ).toBeInTheDocument();
   });
 
