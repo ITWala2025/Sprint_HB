@@ -4,7 +4,7 @@
     "note": "Per docs/md/About_Page.md, all profiles, stats and final copy are pending verification (AB-13, AB-18). Replace these values with source-verified content before production release."
   },
   "hero": {
-    "kicker": "About SPRINT",
+    "kicker": "About SPRINT", 
     "title": "Who is SPRINT?",
     "titleHighlight": "SPRINT",
     "description": "SPRINT is a future-ready training hub in Hazaribagh, Jharkhand that bridges the gap between academic learning and industry execution through hands-on programs in emerging technologies.",
@@ -77,7 +77,6 @@
         "name": "Aditya Ranjan",
         "designation": "Founder & Director",
         "bio": "Drives SPRINT's vision of practical, job-ready education. A technologist and educator who believes employability is built through disciplined, hands-on practice.",
-        "verified": true,
         "socials": [
           {
             "label": "LinkedIn",
@@ -89,7 +88,6 @@
         "name": "Priya Verma",
         "designation": "Director of Academics",
         "bio": "Leads curriculum design and academic quality across all SPRINT programs, ensuring every module maps to a real industry skill and measurable outcome.",
-        "verified": true,
         "socials": [
           {
             "label": "LinkedIn",
@@ -101,7 +99,6 @@
         "name": "Rohit Kumar",
         "designation": "Head of Placements & Partnerships",
         "bio": "Builds SPRINT's industry network — hiring partners, mentors and community — turning training outcomes into real careers for every graduate.",
-        "verified": true,
         "socials": [
           {
             "label": "LinkedIn",
@@ -224,29 +221,29 @@
     "sourceNote": "Source: to be supplied · verified badge shown per AB-18",
     "stats": [
       {
-        "value": 92,
+        "value": 82,
         "suffix": "%",
         "label": "Placement Rate",
         "context": "of the 2025 cohort",
         "verified": true
       },
       {
-        "value": 1000,
+        "value": 200,
         "suffix": "+",
         "label": "Learners Trained",
         "context": "across all programs",
         "verified": true
       },
       {
-        "value": 20,
+        "value": 40,
         "suffix": "+",
         "label": "Hiring Partners",
         "context": "recruiting from SPRINT",
         "verified": true
       },
       {
-        "value": 3,
-        "suffix": "",
+        "value": 20,
+        "suffix": "+",
         "label": "Tech Tracks",
         "context": "AI/ML, Cloud & DevOps",
         "verified": true

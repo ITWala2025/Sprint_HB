@@ -10,10 +10,10 @@
  */
 // Section 6.2 — What We Give (4 statistical/value items)
 export const stats = [
-  { id: "stat-1", value: "500+", label: "Learners upskilled" },
-  { id: "stat-2", value: "36+", label: "Industry mentors & SMEs" },
-  { id: "stat-3", value: "92%", label: "Job-ready placement rate" },
-  { id: "stat-4", value: "40+", label: "Internship partners" },
+  { id: "stat-1", value: "200+", label: "Learners upskilled" },
+  { id: "stat-2", value: "30+", label: "Industry mentors & SMEs" },
+  { id: "stat-3", value: "82%", label: "Job-ready placement rate" },
+  { id: "stat-4", value: "40+", label: "Industry partners" },
 ];
 
 // Section 6.3 — Partner Associations
