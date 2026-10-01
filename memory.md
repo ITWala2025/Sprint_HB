@@ -304,8 +304,6 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Dots at the bottom, touch swipe, keyboard arrows and the 4s auto-rotate all remain unchanged.
 - Updated spec rows `VM-SW-01`/`VM-SW-02` in [docs/md/About_Page.md](docs/md/About_Page.md) and added a "no hint/counter" assertion to [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx).
 
-<<<<<<< HEAD
-
 ## 12. About Page Hero Photo Layer — 2026-09-22
 
 - Added a decorative full-bleed hero photo to the About "Who is SPRINT?" hero in [src/app/about/page.jsx](src/app/about/page.jsx), using the same treatment as the Contact hero: `<picture>` with mobile/desktop WebP sources (`/images/contact/contact-hero-mobile.webp` and `contact-hero-desktop.webp`) rendered via `next/image` (`fill`, `priority`, `sizes="100vw"`, `alt=""`) inside `aria-hidden` media/overlay layers (spec `HR-02`).
@@ -460,7 +458,6 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Added placeholder `responsibilities` arrays to both roles in [src/data/careers.js](src/data/careers.js) so the new dialog section has content; replace with real JD copy when available. The [src/components/careers/CareerHero.jsx](src/components/careers/CareerHero.jsx) alignment work from the previous pass (shared `mx-auto max-w-[1200px] px-6` container, `Home > Careers` breadcrumb, −30% `py-14` padding, single "View Open Roles" CTA) is unchanged.
 - Validation: the 6 new tests in [tests/unit/careers/OpenPositions.test.jsx](tests/unit/careers/OpenPositions.test.jsx) pass; the full suite runs 96 tests with 90 passing and the same 6 pre-existing failures (ContactHero, ContactMethods, HeaderLogo). `/careers` renders the shared header container identically to `/`.
 
-
 ## 36. SPRINT Student Portal Dashboard & Layout — 2026-09-28
 
 - Added the SPRINT Student Portal dashboard and navigation shell under `/student/(portal)` route group, preserving the public header and footer while keeping the portal layout off future auth entry points like `/student/login`.
@@ -481,7 +478,6 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
   - `StudentPlaceholderRoutes.test.jsx`: verification of portal placeholder views.
   - All 4 test files (24 tests) passed successfully. Production build (`npm run build`) succeeded with 51 static pages generated.
 
-
 ## 37. Student Portal Sidebar Consolidation & Route Cleanup — 2026-09-29
 
 - `src/config/student-navigation.json` is now the single source of truth for the portal rail at nine items in this order: Dashboard, Profile, Apply Courses, My Course, Assignment (badge `2`), Certificate, Result, Help & Support, Settings.
@@ -494,7 +490,6 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Scope rule reaffirmed: public-site files (careers, courses, contact, header) are untouched by student portal work. The five failing tests in those suites (see Test.md §26) come from `8ac3457`, `a20a122` and `52b1f99` and were left as-is on instruction.
 - `next-env.d.ts` churn (`.next/types/...` → `.next/dev/types/...`, produced by the earlier build check) was reverted; it is Next-generated and not part of this task.
 
-<<<<<<< HEAD
 ## 38. SPRINT Student Portal Phase 1 Authentication UI (Mock) — 2026-09-30
 
 - Five full-screen auth screens were added **outside** the `(portal)` group so they never inherit the portal sidebar rail: `src/app/student/login/page.jsx`, `forgot-password/page.jsx`, `check-email/page.jsx`, `reset-password/page.jsx` and `password-reset-success/page.jsx`. The `src/app/student/login/.gitkeep` placeholder was deleted now that the route holds a real page.
@@ -511,7 +506,6 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - `tests/unit/student/StudentPortalNavIntegrity.test.js` gained a `STUDENT_DIR` fallback: `/student/<segment>` links now resolve against both `src/app/student/(portal)/<segment>/page.jsx` and the full-screen `src/app/student/<segment>/page.jsx`, which is what keeps the auth links inside `src/components/student/auth/` from reading as dangling. The `(portal)`-only reachability and retired-section checks are untouched.
 - Verified: `npx vitest run --config tests/vitest.config.mjs --pool=threads --maxWorkers=1` → `Test Files 4 failed | 32 passed (36)`, `Tests 9 failed | 192 passed (201)`; `npm run build` → exit 0 with 54 pages and all five auth routes registered (`/student/check-email` dynamic because it awaits the async `searchParams` promise). `npm run lint` stays broken repo-wide because Next 16 removed `next lint`, and the pre-existing CareerHero / ContactHero / ContactMethods / HeaderLogo failures (Test.md §26) were left as-is. The `next-env.d.ts` churn produced by the build check was reverted again.
 
-
 ## 39. Student Enrollment Wizard Shell (Phase 1, UI only) — 2026-09-30
 
 - New route `src/app/student/enroll/page.jsx` renders the wizard full-screen with `robots: { index: false, follow: false }`, and `src/components/layout/PublicSiteShell.jsx` now gates the public chrome through a renamed `FOCUSED_ROUTES` list (`AUTH_ROUTES` + `/student/enroll`), so the wizard joins the auth screens as a chrome-free task surface while `/home`, `/student/dashboard` and `/admin/*` keep their previous behavior.
@@ -522,7 +516,6 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Chrome components: [EnrollmentProgress.jsx](src/components/student/enrollment/EnrollmentProgress.jsx) renders a `nav[aria-label="Enrollment progress"]` with a compact "Step 3 of 5" counter and bar below `md` and a full numbered stepper above it (completed steps are buttons for jumping back, unreached steps are disabled so nobody skips ahead into an empty form; every state also carries screen-reader-only wording). [EnrollmentStepPanel.jsx](src/components/student/enrollment/EnrollmentStepPanel.jsx) mirrors `AuthCard`'s surface but renders an `h2` under the page `h1`, with `tabIndex={-1}` for the programmatic focus. [EnrollmentStepFooter.jsx](src/components/student/enrollment/EnrollmentStepFooter.jsx) is the sticky bar: `fixed` with a safe-area inset below `md`, `md:static` inside the card, submit-as-Continue, Back as `type="button"`, both `h-12`. [EnrollmentSuccessPanel.jsx](src/components/student/enrollment/EnrollmentSuccessPanel.jsx) closes the flow by echoing the captured values and offering "Review my details" (back to Step 1 with the data intact) plus a homepage link.
 - Deliberate non-goals, documented in the code: no backend wiring, no persistence and no `?step=` URL sync — a refresh restarts the wizard, and the page says so with a preview-build notice matching the auth screens' honesty note.
 - Verification: `npx vitest run --config tests/vitest.config.mjs unit/student/enrollment` → **7 files / 59 tests passed**; full suite → `Test Files 4 failed | 39 passed (43)`, `Tests 9 failed | 252 passed (261)` with only the pre-existing CareerHero/ContactHero/ContactMethods/HeaderLogo failures; `npm run build` → exit 0 with `/student/enroll` generated. See Test.md §28 for the per-file breakdown.
-
 
 ## 40. Auth Component Co-location Refactor — 2026-09-30
 
@@ -536,13 +529,12 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 ## 41. Enrollment Step 2 — Optional Education & Career Profile — 2026-09-30
 
 - Step 2 is the wizard's first `isOptional` step, and the registry is the single source of that behaviour: `isOptional: true` drives the "Optional" chip in `EnrollmentStepPanel`, the third footer action and the extra `pb-44` mobile spacing; `skipNotice` ("You can complete your education & career profile later from your Student Dashboard.") is the exact copy shown — in a `role="status"` notice on the step the student lands on — after a skip. `handleSkip` in `EnrollmentWizard` deliberately bypasses validation, never clears typed answers, and the notice is cleared by the next navigation so it never lingers.
-- Optional-step validation contract: only a *filled* field can fail. `validateGraduationYearField` (four digits, 1980 … current year + 8) is the sole rule and `validateEducationProfile` aggregates it — an empty form passes Continue, so skipping needs no special case.
+- Optional-step validation contract: only a _filled_ field can fail. `validateGraduationYearField` (four digits, 1980 … current year + 8) is the sole rule and `validateEducationProfile` aggregates it — an empty form passes Continue, so skipping needs no special case.
 - Cross-slice writes: the wizard exposes `onChangeIn(sliceId)(field)(event)`, with `handleChange = handleChangeIn(step.id)` as the active-slice shorthand. The specialization picker is rendered by Step 2 but writes `specialization.track` (registry seed `{ track: "" }`) so Step 3 can read it — this is the pattern to reuse whenever one screen must answer into another step's state.
 - Kit additions: `AuthField` accepts `options: [{ value, label }]` to become a `<select>` with identical label/hint/error/`aria-*` wiring (empty-option label from `placeholder`, chevron auto-rendered unless `trailing` provides one), and `AuthButton` has a `ghost` variant for quiet tertiary actions. Both are generic now; Step 2 was their first customer.
 - `SPECIALIZATION_OPTIONS` is exported from `steps/EducationStep.jsx` (ten tracks + "I'm not sure yet" = 11 options) so Step 3 and tests share one list. The picker is a `fieldset`/`legend` radio group, ids `education-track-<slug>`, selected state = `border-brand-red ring-2 ring-brand-red/15`; "I'm not sure yet" is a first-class answer so an undecided student is never blocked.
 - Footer layout trick worth remembering: Back + Skip live in a `flex w-full gap-3` wrapper on mobile (pinned bar stays two rows tall under `pb-44`) and `md:contents` unwraps them into the desktop [Back] [Skip for now] [Continue] toolbar. Without `onSkip` the wrapper is absent and the old DOM shape is untouched, which is why the pre-existing footer tests still pass unchanged.
 - Verified: `unit/student/enrollment` → 8 files / 78 tests passing; full suite → only the nine pre-existing career/contact/header failures (root-caused to commit `8ac3457`'s `/home` link change not updating those tests — an import scan proves no connection to Step 2); `npm run build` → exit 0. See Test.md §30.
-
 
 ## 42. Scope Split — Auth Screens Handed to a Teammate — 2026-09-30
 
@@ -552,22 +544,20 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Links to `/student/login` left untouched everywhere (`HeaderActions`, `MobileNavigation`, `Footer`, `EnrollmentWizard:138`) — the routes return when the teammate ships them. Explicitly accepted consequence: `StudentPortalNavIntegrity.test.js` → "leaves no portal link pointing at a removed section" fails on the wizard's href until then (the test scans quoted `/student/*` across all of `src/components/student/**`). `PublicSiteShell` still lists the five auth paths in its focus list — harmless pathname gating; its test mocks paths.
 - Verified: enrollment + surviving auth → 10 files / 98 tests green; full suite → `5 failed | 33 passed (38)` files, `10 failed | 230 passed (240)` tests (9 pre-existing + the accepted nav-integrity one); `npm run build` → success, no auth routes in `app-path-routes-manifest.json`, `/student/enroll/page` + `/student/(portal)/dashboard/page` present. Historical sections §38/§40 and Test.md §29 describe the pre-split tree.
 
-=======
-## 38. Admin Course Management — 2026-09-29
+## 43. Admin Course Management — 2026-09-29
 
 - Added the client-side course manager at `/admin/courses` with search/category/difficulty filtering, summary metrics, course detail and edit dialogs, module and tag editors, publish/featured controls, and Supabase CRUD against `public.courses`.
-- The initial version stored audience using the shared enum, numeric duration fields, and prices. These fields were superseded by the SPRINT course contract documented in §39; do not apply its original migration.
+- The initial version stored audience using the shared enum, numeric duration fields, and prices. These fields were superseded by the SPRINT course contract documented in §44; do not apply its original migration.
 
-## 39. SPRINT Course Structure Alignment — 2026-09-30
+## 44. SPRINT Course Structure Alignment — 2026-09-30
 
 - Course Management now has one Training & Courses sidebar item at `/admin/courses`; scholarship links point to `/admin/scholarships`.
 - Course form/list data uses `undergraduate` or `working_professional`, delivery mode, `difficulty_level`, and text duration. No pricing/currency fields are used in the course admin UI or payload; legacy price columns remain untouched for database compatibility.
 - The catalogue defaults to a card grid styled with the public `.course-tile` classes and can switch to a table. Search uses title/slug, with category, level, and audience filters matching the SPRINT filter vocabulary.
 - Apply [src/Supabase/Course Audience and Duration Migration.sql](src/Supabase/Course%20Audience%20and%20Duration%20Migration.sql) to existing databases. It converts old audience/category values, defines both `audience` and `audience_type` as constrained text columns, removes numeric duration columns, and requests a PostgREST schema-cache reload.
 
-## 40. Public Catalogue Supabase Data — 2026-09-30
+## 45. Public Catalogue Supabase Data — 2026-09-30
 
 - [src/components/courses/CourseCatalogue.jsx](src/components/courses/CourseCatalogue.jsx) fetches published `public.courses` rows ordered by `created_at` descending. Empty results or query errors use the original local catalogue; successful database results are combined with local career packages.
 - Database rows are normalized from `difficulty_level`, `delivery_method`, `audience` / `audience_type`, `thumbnail_url`, and `tools` into the public card model. Undergraduate maps to the Students audience tab; working professionals map to the IT and Non-IT tabs.
 - Category options derive from the active course set; title/slug search and category/level/audience filters operate on both database and local catalogue records. Missing custom artwork gets inline category-themed SVG art; `/courses/[slug]` links retain the existing audience query.
->>>>>>> ce3938dc950cf06cfb653085309c0f68915849e7

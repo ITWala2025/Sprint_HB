@@ -136,16 +136,10 @@ The contact section implements the specifications from [docs/md/Contact_Us.md](d
 
 The About page implements the specifications from [docs/md/About_Page.md](docs/md/About_Page.md) (10-section approved layout).
 
-<<<<<<< HEAD
-| Test Suite | File Path | Focus & Assertions |
-| ------------------ | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AboutPage** | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) | Renders the "Connect With SPRINT" CTA section, asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback), verifies the decorative full-bleed hero photo (`picture.sprint-hero-media` > `img.sprint-hero-image` with `alt=""`, About WebP source `about-hero-desktop.webp`), and checks the **horizontal verified-impact band** (`.sprint-hero-stats` `role=list` with 4 `listitem` stats + the "All figures source-verified" line). Mocks `next/link` and `next/image`; polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
-| **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection. |
-=======
-| Test Suite | File Path | Focus & Assertions |
-| ---------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AboutPage** | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx) | Renders the "Connect With SPRINT" CTA section and asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback). Mocks `next/link` and polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
-| **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection. |
+| Test Suite             | File Path                                                                                    | Focus & Assertions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ---------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **AboutPage**          | [tests/unit/about/AboutPage.test.jsx](tests/unit/about/AboutPage.test.jsx)                   | Renders the "Connect With SPRINT" CTA section, asserts the "Request a Callback" primary CTA resolves to `/contact` with `data-track="cta_contact"` (CTA-05 fallback), verifies the decorative full-bleed hero photo (`picture.sprint-hero-media` > `img.sprint-hero-image` with `alt=""`, About WebP source `about-hero-desktop.webp`), and checks the **horizontal verified-impact band** (`.sprint-hero-stats` `role=list` with 4 `listitem` stats + the "All figures source-verified" line). Mocks `next/link` and `next/image`; polyfills jsdom gaps (`matchMedia`, `IntersectionObserver`). |
+| **StoryVisionMission** | [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx) | Vision/Mission sliding track: no arrow buttons, no top hint/counter, dot pagination at the card bottom with `aria-current` on the active dot, dot-click switching, swipe-left navigation, and vertical-drag rejection.                                                                                                                                                                                                                                                                                                                                                                           |
 
 ### 3.3 Legal Page Unit Tests (`tests/unit/legal/`)
 
@@ -158,8 +152,6 @@ The About page implements the specifications from [docs/md/About_Page.md](docs/m
 | Test Suite           | File Path                                                                                  | Focus & Assertions                                                                                  |
 | -------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
 | **CampusNewsTicker** | [tests/unit/layout/CampusNewsTicker.test.tsx](tests/unit/layout/CampusNewsTicker.test.tsx) | Confirms the red alert icon is replaced by the branded blue megaphone and the alert icon is absent. |
-
-> > > > > > > 411e90521d47e5c5a53beb32d9a6bdcace3811b7
 
 ---
 
@@ -360,7 +352,6 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Header audit: the `/careers` header container (`relative mx-auto flex h-20 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8`) is identical to `/` and to every other public route; only the route-aware active pill differs (Home is active on `/`, no pill is active on `/careers`).
 - Harness note: the committed `tests/vitest.config.js|mjs` resolve their `@` alias and `setupFiles` relative to `tests/`, so `npm test` cannot resolve `@/…` imports (same blocker recorded in §21). Validation used a temporary root config that was deleted after the run.
 
-
 ## 25. SPRINT Student Portal Unit Tests Validation — 2026-09-28
 
 - New unit test suites under `tests/unit/student/` covering the full student portal implementation:
@@ -387,7 +378,6 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Dangling-route check: `git grep -nE "/student/(applications|exams|cohort|attendance|permissions|placements)" -- src tests` returns no matches.
 - Harness note (same blocker as §21 and §24): the committed `tests/vitest.config.js|mjs` resolve `@/` and `setupFiles` relative to `tests/`, so `npm test` cannot resolve `@/…` imports; verification used a temporary root config that was deleted after the run.
 
-<<<<<<< HEAD
 ## 27. SPRINT Student Portal Phase 1 Auth UI (Mock) Unit Tests Validation — 2026-09-30
 
 - Scope: the five mock auth screens (`/student/login`, `/student/forgot-password`, `/student/check-email`, `/student/reset-password`, `/student/password-reset-success`), the shared auth kit in [src/components/student/auth/](src/components/student/auth/), the stub auth layer [src/lib/auth/mock-auth.js](src/lib/auth/mock-auth.js), and the chrome-free gate added to [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx).
@@ -409,14 +399,13 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - `npm run lint` remains **unavailable repo-wide**: Next 16 removed `next lint`, so the script exits with `Invalid project directory provided, no such directory: ...\lint` and the repository ships no ESLint config. Validation relied on the Vitest run and the production build.
 - Harness note (same blocker as §21, §24 and §26): bare `npm test` discovers 57 files and fails all of them because `vitest run` is not given the config — the committed `tests/vitest.config.mjs` is only applied with an explicit `--config`, which is the invocation used above. The earlier `next-env.d.ts` churn produced by the build check was reverted again.
 
-
 ## 28. Student Enrollment Wizard Shell Unit Tests Validation — 2026-09-30
 
 - Scope: the new `/student/enroll` route, the wizard shell under [src/components/student/enrollment/](src/components/student/enrollment/) (shared state, progress indicator, step navigation) and Step 1 (Personal Information). Steps 2-5 are scaffolded: they own their label, copy, shared-state slice and navigation slot, but their forms land in a later phase.
 - Enrollment suite: `npx vitest run --config tests/vitest.config.mjs unit/student/enrollment` — **Passed**, 7 files / 59 tests.
   - [enrollment-validation.test.js](tests/unit/student/enrollment/enrollment-validation.test.js) — 17 tests: mobile normalisation (`+91`, `91`, leading `0`, numbers that genuinely start with 91), name rules (empty, single character, digits rejected, apostrophes/hyphens allowed), mobile rules (too short, not starting 6-9, every common spelling of a real number), the aggregate Step 1 error map, the reused auth email message, and `compactErrors` key ordering.
   - [enrollment-steps.test.js](tests/unit/student/enrollment/enrollment-steps.test.js) — 7 tests: the five ids in order, unique labels plus non-empty copy, the `Component`/`validate`/`initialValues` contract on every step, exactly four scaffolded steps, the seeded state shape, Step 1 validation wired to the auth email rules, and a fresh state object per `createEmptyEnrollment()` call.
-  - [EnrollmentWizard.test.jsx](tests/unit/student/enrollment/EnrollmentWizard.test.jsx) — 10 tests: Step 1 opens with the progress indicator and no Back, an empty submit blocks with three inline alerts and focuses the first field, malformed email/phone are rejected, answers survive forward *and* back navigation, a corrected field clears its own error, a completed step is revisitable from the progress indicator while future steps stay disabled, the scaffolded note renders, all five steps walk to the summary that echoes the captured values, "Review my details" reopens the wizard with data intact, and the preview notice stays on the page.
+  - [EnrollmentWizard.test.jsx](tests/unit/student/enrollment/EnrollmentWizard.test.jsx) — 10 tests: Step 1 opens with the progress indicator and no Back, an empty submit blocks with three inline alerts and focuses the first field, malformed email/phone are rejected, answers survive forward _and_ back navigation, a corrected field clears its own error, a completed step is revisitable from the progress indicator while future steps stay disabled, the scaffolded note renders, all five steps walk to the summary that echoes the captured values, "Review my details" reopens the wizard with data intact, and the preview notice stays on the page.
   - [PersonalInformationStep.test.jsx](tests/unit/student/enrollment/PersonalInformationStep.test.jsx) — 7 tests: three labelled fields, required marks plus hint copy, `${idPrefix}-${field}` ids, `email`/`tel` input types and autocomplete tokens, hint wiring through `aria-describedby`, controlled values reported as `[fieldName, value]`, and inline alerts with `aria-invalid`.
   - [EnrollmentProgress.test.jsx](tests/unit/student/enrollment/EnrollmentProgress.test.jsx) — 7 tests: the navigation landmark, the compact "Step 2 of 5" counter with the active label, five ordered items, `aria-current="step"`, the screen-reader state text, revisit-only completed steps, and the all-complete state.
   - [EnrollmentStepFooter.test.jsx](tests/unit/student/enrollment/EnrollmentStepFooter.test.jsx) — 6 tests: submit versus `type="button"`, the pinned mobile bar flipping to `md:static`, the 48px controls, the repeated step counter, Back hidden on Step 1, and the "Submit Enrollment" label on the last step.
@@ -426,7 +415,6 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Production build: `npm run build` — **Passed** (exit 0); `/student/enroll` is generated as a static route alongside the five auth routes.
 - Mobile and accessibility notes: the Back/Continue bar is `fixed` below `md` (with a safe-area inset for notched phones) and `md:static` inside the step card; every control is `h-12` (48px, above the 44px touch-target floor); the wizard moves focus to the new step heading after each change; and every validation message renders with `role="alert"` on the field that caused it.
 - Deliberate non-goals for this phase (documented in the wizard docblock): no backend, no persistence and no `?step=` URL sync, so a browser refresh restarts the wizard.
-
 
 ## 29. Auth Screen Co-location Refactor Unit Tests Validation — 2026-09-30
 
@@ -453,46 +441,43 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Full suite: `npx vitest run --config tests/vitest.config.mjs --pool=threads --maxWorkers=1` — `Test Files 4 failed | 40 passed (44)`, `Tests 9 failed | 269 passed (278)`. The same nine pre-existing CareerHero (3), ContactHero (1), ContactMethods (1) and HeaderLogo (4) failures, triaged: they expect `/` links and older hero/header copy while commit `8ac3457` ("update navigation links to point to /home") changed the components and routes — none of the four files (nor their components) imports `student/auth` or `student/enrollment`, so Step 2 cannot be their cause (verified by import scan and a stash round-trip that reproduced the failures independently of this work).
 - Production build: `npm run build` — **Passed** (exit 0), `/student/enroll` prerendered with the new Step 2 in place.
 
-
 ## 31. Auth Screen Removal — Suite Impact — 2026-09-30
 
 - Scope change: the five auth screens (login, forgot-password, check-email, reset-password, password-reset-success) moved to a teammate. Deleted: the five route folders, `AuthCard.jsx`, `AuthSplitLayout.jsx`, `AuthCenteredLayout.jsx`, `src/lib/auth/mock-auth.js` (the mock backend seam), and six test files (the five screen suites + `AuthLayouts`). Retained as shared/Step-5 kit: `AuthButton`, `AuthField`, `auth-validation.js` (+ `AuthValidation.test.js`), `PasswordInput`, `PasswordRequirements` (+ `PasswordInput.test.jsx`) — the wizard imports the first three; the password pair is reserved for the Account step.
 - Suites: `unit/student/enrollment unit/student/auth` → **10 files / 98 tests passed**. Full suite → `Test Files 5 failed | 33 passed (38)`, `Tests 10 failed | 230 passed (240)`: the nine pre-existing career/contact/header failures plus the one **expected** `StudentPortalNavIntegrity` case ("leaves no portal link pointing at a removed section") — `EnrollmentWizard` links `/student/login`, which the teammate's rebuilt routes will serve again; failure explicitly accepted at deletion time.
 - Production build: `npm run build` — **Passed**; `app-path-routes-manifest.json` contains no auth routes and keeps `/student/enroll/page` plus every `/student/(portal)` route.
-=======
-## 27. Admin Course Management Validation — 2026-09-29
+
+## 32. Admin Course Management Validation — 2026-09-29
 
 - Added [tests/unit/admin/CourseManagement.test.tsx](tests/unit/admin/CourseManagement.test.tsx), covering slug generation, immediate search filtering, and the featured-program update request.
 - Focused run: `npx vitest run --config tests/vitest.config.mjs tests/unit/admin/CourseManagement.test.tsx --pool=threads --maxWorkers=1` — **Passed**, 1 file / 2 tests.
 - Full run: `npx vitest run --config tests/vitest.config.mjs --pool=threads --maxWorkers=1` — **126 passed, 9 failed** across 28 files. The failures are existing Careers, Contact, and HeaderLogo expectations; the new course suite passes.
 - `npx tsc --noEmit`, editor diagnostics for the course page and admin layout, and `npm run build` — **Passed**; the build generated `/admin/courses`.
-- The initial migration note in this entry was superseded by §28; apply only the migration documented there for the current SPRINT course data contract.
+- The initial migration note in this entry was superseded by §33; apply only the migration documented there for the current SPRINT course data contract.
 
-## 28. SPRINT Course Structure Alignment — 2026-09-30
+## 33. SPRINT Course Structure Alignment — 2026-09-30
 
 - Updated the Training & Courses navigation to one Course Management item at `/admin/courses` and moved scholarship links to `/admin/scholarships`.
 - The course list displays target audience, mode/level, and text duration with no pricing UI or pricing fields in the course TypeScript interfaces/forms. Audience values are `undergraduate` and `working_professional`.
 - Updated [tests/unit/admin/CourseManagement.test.tsx](tests/unit/admin/CourseManagement.test.tsx) to use the SPRINT schema values and assert table/grid switching, table headers, and absence of pricing.
 - Apply [src/Supabase/Course Audience and Duration Migration.sql](src/Supabase/Course%20Audience%20and%20Duration%20Migration.sql) to existing databases before using the updated course form.
 
-## 29. Course Catalogue Admin Dual View — 2026-09-30
+## 34. Course Catalogue Admin Dual View — 2026-09-30
 
 - Admin course catalog defaults to the public `.course-tile` card style with title/category/description, duration/mode/level chips, tools, and edit/publish/delete actions; the list/table view remains available.
 - Metrics and filters now match the SPRINT catalogue vocabulary. Search matches title and slug, while category, level, and audience filters compose in real time.
 - Focused verification: `npx vitest run --config tests/vitest.config.mjs tests/unit/admin/CourseManagement.test.tsx --pool=threads --maxWorkers=1`, `npx tsc --noEmit`, `git diff --check`, and `npm run build` — **Passed**; `/admin/courses` is included in the production route output.
 
-## 30. Course Audience Insert Compatibility — 2026-09-30
+## 35. Course Audience Insert Compatibility — 2026-09-30
 
 - Course create/update payloads now set both `audience` and `audience_type` from the selector (falling back to `undergraduate`) and default `difficulty_level` to `Beginner`.
 - The canonical courses schema and existing-database migration include both audience columns; the migration requests a PostgREST schema-cache reload.
 - Added a modal-submit test asserting both audience columns and the difficulty fallback are included in a successful insert payload.
 - Focused course suite: **Passed**, 3 tests. A read-only live PostgREST query selecting `audience`, `audience_type`, and `difficulty_level` also succeeded, confirming those columns are present in the active schema cache.
 
-## 31. Public Catalogue Supabase Integration — 2026-09-30
+## 36. Public Catalogue Supabase Integration — 2026-09-30
 
 - [src/components/courses/CourseCatalogue.jsx](src/components/courses/CourseCatalogue.jsx) now loads published Supabase courses ordered newest-first, falls back to local course data for empty/error results, and keeps local career packages in the live result set.
 - New [tests/unit/courses/CourseCatalogue.test.jsx](tests/unit/courses/CourseCatalogue.test.jsx) verifies query arguments, card rendering and detail link for a database course, live category/level/audience filtering, and local fallback on an empty response.
 - Focused run: `npx vitest run --config tests/vitest.config.mjs tests/unit/courses/CourseCatalogue.test.jsx --pool=threads --maxWorkers=1` — **Passed**, 2 tests.
 - Combined course suites — **Passed**, 5 tests; `npx tsc --noEmit`, `npm run build`, and `git diff --check` also passed.
->>>>>>> ce3938dc950cf06cfb653085309c0f68915849e7
-

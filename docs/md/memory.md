@@ -304,8 +304,6 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Dots at the bottom, touch swipe, keyboard arrows and the 4s auto-rotate all remain unchanged.
 - Updated spec rows `VM-SW-01`/`VM-SW-02` in [docs/md/About_Page.md](docs/md/About_Page.md) and added a "no hint/counter" assertion to [tests/unit/about/StoryVisionMission.test.jsx](tests/unit/about/StoryVisionMission.test.jsx).
 
-<<<<<<< HEAD
-
 ## 12. About Page Hero Photo Layer — 2026-09-22
 
 - Added a decorative full-bleed hero photo to the About "Who is SPRINT?" hero in [src/app/about/page.jsx](src/app/about/page.jsx), using the same treatment as the Contact hero: `<picture>` with mobile/desktop WebP sources (`/images/contact/contact-hero-mobile.webp` and `contact-hero-desktop.webp`) rendered via `next/image` (`fill`, `priority`, `sizes="100vw"`, `alt=""`) inside `aria-hidden` media/overlay layers (spec `HR-02`).
