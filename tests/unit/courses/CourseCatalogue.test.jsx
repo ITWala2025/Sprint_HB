@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import CourseCatalogue from "@/components/courses/CourseCatalogue";
@@ -82,5 +82,73 @@ describe("CourseCatalogue Supabase integration", () => {
         render(<CourseCatalogue items={catalogueItems} />);
 
         await waitFor(() => expect(screen.getByRole("heading", { name: "Python & AI Foundations" })).toBeInTheDocument());
+    });
+
+    it("renders the six SPRINT RISE journey milestones in order", () => {
+        render(<CourseCatalogue items={catalogueItems} />);
+
+        const journey = screen.getByRole("region", { name: "Program Journey" });
+        const milestones = within(journey).getByRole("list", {
+            name: "Program milestones",
+        });
+        const titles = within(milestones)
+            .getAllByRole("heading", { level: 4 })
+            .map((heading) => heading.textContent);
+
+        expect(titles).toEqual([
+            "Day One",
+            "Technical Sessions (124 hours)",
+            "Personality Development (46 hours)",
+            "Industry Ways of Working (40 hours)",
+            "Internship (90 hours)",
+            "Industry-Ready",
+        ]);
+        expect(
+            within(
+                screen
+                    .getByText("SPRINT RISE")
+                    .closest(".courses-signature-programs__panel"),
+            ).getByRole("link", { name: /Explore Program/ }),
+        ).toHaveAttribute("href", "#individual-modular-courses");
+    });
+
+    it("renders the SPRINT 3-Year journey stages in order with their year labels", () => {
+        render(<CourseCatalogue items={catalogueItems} />);
+
+        const programName = screen.getByText("SPRINT 3-Year Program");
+        const panel = programName.closest(
+            ".courses-signature-programs__panel--three-year",
+        );
+
+        expect(panel).not.toBeNull();
+        expect(
+            within(panel).getByRole("heading", {
+                name: "A three-year learning journey",
+            }),
+        ).toBeInTheDocument();
+        expect(
+            within(panel).getByText(
+                "Progress through Foundations in Year 1, Ignite in Year 2, and Outperform in Year 3.",
+            ),
+        ).toBeInTheDocument();
+        expect(
+            within(panel).getByRole("link", { name: /Explore Program/ }),
+        ).toHaveAttribute("href", "#individual-modular-courses");
+        const journey = within(panel).getByRole("region", {
+            name: "3-Year Program Journey",
+        });
+        const stages = within(journey).getByRole("list", {
+            name: "SPRINT 3-Year Program stages",
+        });
+        const stageCards = within(stages).getAllByRole("listitem");
+
+        expect(
+            stageCards.map((card) => card.textContent.replace(/\s+/g, " ").trim()),
+        ).toEqual([
+            "Foundations · Year 1",
+            "Ignite · Year 2",
+            "Outperform · Year 3",
+        ]);
+        expect(stages.querySelectorAll("img")).toHaveLength(3);
     });
 });

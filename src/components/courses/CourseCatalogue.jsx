@@ -5,8 +5,11 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
+  BadgeCheck,
+  BarChart3,
   ChevronDown,
   Heart,
+  Laptop,
   Pause,
   Play,
   Search,
@@ -203,6 +206,207 @@ function FilterContent({
   );
 }
 
+function FeaturedPrograms() {
+  const milestones = [
+    {
+      title: "Day One",
+      description: "An introduction to SPRINT RISE and the six-month program.",
+      image: "/images/courses/abstract-people.svg",
+    },
+    {
+      title: "Technical Sessions (124 hours)",
+      description: "Build in-demand skills across Cloud, AI, and DevOps.",
+      image: "/images/courses/abstract-code.svg",
+    },
+    {
+      title: "Personality Development (46 hours)",
+      description: "A dedicated 46-hour personality development track.",
+      image: "/images/courses/abstract-people.svg",
+    },
+    {
+      title: "Industry Ways of Working (40 hours)",
+      description: "A focused 40-hour module on industry ways of working.",
+      image: "/images/courses/abstract-devops.svg",
+    },
+    {
+      title: "Internship (90 hours)",
+      description: "A 90-hour internship component in the program.",
+      image: "/images/courses/abstract-web.svg",
+    },
+    {
+      title: "Industry-Ready",
+      description:
+        "Bring together in-demand skills and hands-on project experience.",
+      image: "/images/courses/abstract-security.svg",
+    },
+  ];
+  const threeYearStages = [
+    {
+      title: "Foundations",
+      year: "Year 1",
+      image: "/images/courses/abstract-code.svg",
+    },
+    {
+      title: "Ignite",
+      year: "Year 2",
+      image: "/images/courses/abstract-data.svg",
+    },
+    {
+      title: "Outperform",
+      year: "Year 3",
+      image: "/images/courses/abstract-web.svg",
+    },
+  ];
+
+  return (
+    <section
+      className="courses-signature-programs"
+      aria-labelledby="signature-programs-heading"
+    >
+      <div className="courses-signature-programs__heading">
+        <h2 id="signature-programs-heading">Our Signature Programs</h2>
+        <p>
+          Immersive, structured learning experiences for long-term career
+          growth.
+        </p>
+      </div>
+
+      <div className="courses-signature-programs__panel">
+        <div className="courses-signature-programs__overview">
+          <p className="courses-signature-programs__name">SPRINT RISE</p>
+          <h3>Campus to Corporate in 6 Months</h3>
+          <p className="courses-signature-programs__description">
+            An intensive, industry-focused program to build in-demand skills in
+            Cloud, AI, DevOps and more with hands-on projects and expert
+            mentorship.
+          </p>
+
+          <ul className="courses-signature-programs__metadata">
+            <li>
+              <BarChart3 size={19} aria-hidden="true" />
+              <span>Beginner to Intermediate</span>
+            </li>
+            <li>
+              <Laptop size={19} aria-hidden="true" />
+              <span>Online + In Campus</span>
+            </li>
+            <li>
+              <BadgeCheck size={19} aria-hidden="true" />
+              <span>Certification</span>
+            </li>
+          </ul>
+
+          <Link
+            href="#individual-modular-courses"
+            className="courses-signature-programs__cta"
+          >
+            Explore Program
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
+
+        <section
+          className="courses-signature-programs__journey"
+          aria-labelledby="signature-programs-journey-heading"
+        >
+          <h3
+            id="signature-programs-journey-heading"
+            className="courses-signature-programs__journey-heading"
+          >
+            Program Journey
+          </h3>
+          <ol
+            className="courses-signature-programs__milestones"
+            aria-label="Program milestones"
+            tabIndex={0}
+          >
+            {milestones.map((milestone) => (
+              <li
+                className="courses-signature-programs__milestone"
+                key={milestone.title}
+              >
+                <div className="courses-signature-programs__milestone-image">
+                  <Image
+                    src={milestone.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 767px) 74vw, (max-width: 1023px) 168px, 190px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="courses-signature-programs__milestone-content">
+                  <h4>{milestone.title}</h4>
+                  <p>{milestone.description}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </div>
+
+      <div
+        className="courses-signature-programs__panel courses-signature-programs__panel--three-year"
+      >
+        <div className="courses-signature-programs__overview">
+          <p className="courses-signature-programs__name">
+            SPRINT 3-Year Program
+          </p>
+          <h3>A three-year learning journey</h3>
+          <p className="courses-signature-programs__description">
+            Progress through Foundations in Year 1, Ignite in Year 2, and
+            Outperform in Year 3.
+          </p>
+          <Link
+            href="#individual-modular-courses"
+            className="courses-signature-programs__cta"
+          >
+            Explore Program
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
+        <section
+          className="courses-signature-programs__journey"
+          aria-labelledby="three-year-journey-heading"
+        >
+          <h3
+            id="three-year-journey-heading"
+            className="courses-signature-programs__journey-heading"
+          >
+            3-Year Program Journey
+          </h3>
+          <ol
+            className="courses-signature-programs__milestones courses-signature-programs__milestones--three-year"
+            aria-label="SPRINT 3-Year Program stages"
+            tabIndex={0}
+          >
+            {threeYearStages.map((stage) => (
+              <li
+                className="courses-signature-programs__milestone courses-signature-programs__milestone--three-year"
+                key={stage.year}
+              >
+                <div className="courses-signature-programs__milestone-image">
+                  <Image
+                    src={stage.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 767px) 74vw, (max-width: 1023px) 168px, 220px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="courses-signature-programs__milestone-content courses-signature-programs__milestone-content--stage">
+                  <span className="courses-signature-programs__stage-label">
+                    {stage.title} · {stage.year}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </div>
+    </section>
+  );
+}
+
 export default function CourseCatalogue({ items }) {
   const supabase = useMemo(() => createClient(), []);
   const [catalogueItems, setCatalogueItems] = useState(items);
@@ -359,26 +563,22 @@ export default function CourseCatalogue({ items }) {
             confident action.
           </p>
 
-          {/* <div className="course-search">
-            <Search
-              size={20}
-              aria-hidden="true"
-            />
-
+          <div className="course-search">
+            <Search size={20} aria-hidden="true" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search courses, skills, or tools"
               aria-label="Search courses"
+              onFocus={() => setHeroPaused(true)}
             />
-
             {query ? (
               <div className="course-search__suggestions">
                 {suggestions.length ? (
                   suggestions.map((item) => (
                     <Link
-                      key={item.slug}
-                      href={itemHref(item)}
+                      key={`${item.kind}-${item.slug}`}
+                      href={itemHref(item, audience)}
                     >
                       {item.title}
                       <ArrowRight size={15} />
@@ -389,7 +589,7 @@ export default function CourseCatalogue({ items }) {
                 )}
               </div>
             ) : null}
-          </div> */}
+          </div>
         </div>
 
         <div
@@ -441,6 +641,8 @@ export default function CourseCatalogue({ items }) {
           ) : null}
         </div>
       </section>
+
+      <FeaturedPrograms />
 
       <section
         className="course-audience"
@@ -496,22 +698,19 @@ export default function CourseCatalogue({ items }) {
               aria-hidden="true"
             />
           </label>
+
+          <button
+            type="button"
+            className="course-filter-trigger"
+            onClick={() => setDrawerOpen(true)}
+          >
+            <SlidersHorizontal size={17} />
+            Filter &amp; sort
+          </button>
         </div>
       </section>
 
-      <main className="courses-content">
-        <aside className="course-filter">
-          <FilterContent
-            {...{
-              categories: filterCategories,
-              selectedCategories,
-              setSelectedCategories,
-              selectedLevel,
-              setSelectedLevel,
-            }}
-          />
-        </aside>
-
+      <main id="individual-modular-courses" className="courses-content">
         <div className="courses-results">
           <div className="courses-results__heading">
             <div>
@@ -525,28 +724,6 @@ export default function CourseCatalogue({ items }) {
 
               {/* <p>{activeAudience.description}</p> */}
             </div>
-
-            <button
-              type="button"
-              className="course-filter-trigger"
-              onClick={() => setDrawerOpen(true)}
-            >
-              <SlidersHorizontal size={17} />
-              Filter &amp; sort
-            </button>
-          </div>
-
-          <div className="course-search">
-            <Search size={20} aria-hidden="true" />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search courses, skills, or tools"
-              aria-label="Search courses"
-            />
-            {query ? <div className="course-search__suggestions">
-              {suggestions.length ? suggestions.map((item) => <Link key={`${item.kind}-${item.slug}`} href={itemHref(item, audience)}>{item.title}<ArrowRight size={15} /></Link>) : <p>No matching courses yet.</p>}
-            </div> : null}
           </div>
 
           <div className="courses-results__meta">
