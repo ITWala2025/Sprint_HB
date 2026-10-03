@@ -1,75 +1,93 @@
-import {
-  BookOpen,
-  Briefcase,
-  Building2,
-  CalendarCheck,
-  CalendarDays,
-  GraduationCap,
-  Map,
-  MapPin,
-} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { BookOpen, Briefcase, CalendarDays, GraduationCap } from "lucide-react";
 
 import AuthField from "@/components/student/auth/AuthField";
+import { catalogueItems } from "@/data/courses";
+import { createClient } from "@/lib/supabase/client";
+
+import {
+  COURSE_FIELD_MESSAGES,
+  COURSE_STATUS,
+  resolveCourseOptions,
+} from "../enrollment-course-options";
 
 /**
  * Step 2 — Education & Career Profile (optional).
  *
- * Nothing here is required: the eight profile fields accept empty strings and
- * only `graduationYear` has a rule (a filled one must look like a real year),
- * so an untouched step always passes Continue and "Skip for now" needs no
- * special case. Whatever *is* typed stays in the shared `education` slice when
- * the student moves on — skipping never discards partial answers.
+ * Four profile fields, nothing required: `courseDegree` and `semesterYear` are
+ * free text, `currentRole` is a fixed dropdown, and `course` is a dropdown fed
+ * from the same source of truth the SPRINT Course page uses — the Supabase
+ * `courses` table first, the local catalogue in `src/data/courses.js` as the
+ * fallback (see `enrollment-course-options.js`). No course names are written
+ * here, so a course published through Course Management appears automatically.
+ * The stored `course` value is the course id the backend expects.
  *
- * The specialization picker also lives on this screen (the product wants the
- * career-interest answer alongside the background) but it writes into the
- * `specialization` slice through `onChangeIn("specialization")("track")`, which
- * is what lets Step 3 read the choice when its own form lands.
+ * Every field accepts an empty string, so an untouched step always passes
+ * Continue and "Skip for now" needs no special case. Whatever *is* chosen stays
+ * in the shared `education` slice when the student moves on — skipping never
+ * discards partial answers, and re-visiting the step preloads them.
  *
- * Field ids follow the wizard's `${idPrefix}-${fieldName}` convention so a
- * failed Continue can focus `education-graduationYear` directly.
+ * Field ids follow the wizard's `${idPrefix}-${fieldName}` convention.
  */
-const EDUCATION_LEVELS = [
-  { value: "class-10", label: "High school (Class 10)" },
-  { value: "class-12", label: "Senior secondary (Class 12)" },
-  { value: "diploma", label: "Diploma / Polytechnic" },
-  { value: "bachelors", label: "Bachelor's degree" },
-  { value: "masters", label: "Master's degree" },
-  { value: "doctorate", label: "Doctorate / PhD" },
-  { value: "certification", label: "Professional certification" },
-  { value: "other", label: "Other" },
-];
 
 /**
- * The tracks offered on this step, exported so Step 3 and the tests reuse the
- * one list instead of re-typing it. "I'm not sure yet" is a first-class answer:
- * an undecided student must never be blocked.
+ * The career-role choices, exported so the tests reuse the one list.
+ * `employment_status` in the schema is free text, so the labels are stored
+ * as-is — readable in the success summary and safe for the database.
  */
-export const SPECIALIZATION_OPTIONS = [
-  { value: "ai-engineer", label: "AI Engineer" },
-  { value: "cloud-engineer", label: "Cloud Engineer" },
-  { value: "devops-engineer", label: "DevOps Engineer" },
-  { value: "software-engineer", label: "Software Engineer" },
-  { value: "data-engineer", label: "Data Engineer" },
-  { value: "security-specialist", label: "Security Specialist" },
-  { value: "sre", label: "Site Reliability Engineer (SRE)" },
-  { value: "solution-architect", label: "Solution Architect" },
-  { value: "it-consultant", label: "IT Consultant" },
-  { value: "product-engineer", label: "Product Engineer" },
-  { value: "not-sure-yet", label: "I'm not sure yet" },
+export const CURRENT_ROLE_OPTIONS = [
+  { value: "Student", label: "Student" },
+  { value: "IT Professional", label: "IT Professional" },
+  { value: "Non-IT Professional", label: "Non-IT Professional" },
+  { value: "Working Professional", label: "Working Professional" },
 ];
 
-export default function EducationStep({
-  idPrefix,
-  values = {},
-  errors = {},
-  onChange,
-  onChangeIn,
-  specialization = {},
-}) {
-  const track = specialization.track ?? "";
-  // Cross-slice writer handed over by the wizard; the guard keeps the step
-  // renderable in isolation (storybook-style or a lone unit test).
-  const handleTrackChange = onChangeIn ? onChangeIn("specialization")("track") : undefined;
+export default function EducationStep({ idPrefix, values = {}, errors = {}, onChange }) {
+  // Same client the Course page uses — one Supabase project, one `courses` table.
+  const supabase = useMemo(() => createClient(), []);
+  // `loading` only exists before the first fetch settles; afterwards the state
+  // carries `ready` (with options) or `empty`/`error` (without).
+  const [courseField, setCourseField] = useState({
+    status: COURSE_STATUS.LOADING,
+    options: [],
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadCourses() {
+      let dbRows = null;
+      let dbError = null;
+      try {
+        const { data, error } = await supabase
+          .from("courses")
+          .select("id, title, slug")
+          .eq("is_published", true)
+          .order("title");
+        dbRows = data;
+        dbError = error;
+      } catch (caught) {
+        // A temporary API failure must never break the step.
+        dbError = caught;
+      }
+
+      if (!active) return;
+      setCourseField(resolveCourseOptions({ dbRows, dbError, localItems: catalogueItems }));
+    }
+
+    void loadCourses();
+    return () => {
+      active = false;
+    };
+  }, [supabase]);
+
+  const courseStatusMessage = COURSE_FIELD_MESSAGES[courseField.status];
+  // Keep the control a <select> in every state (an empty options array would
+  // make AuthField fall back to a text input) — while the list is unavailable
+  // the single placeholder option carries the status and the field is disabled.
+  const courseSelectOptions = courseField.options.length
+    ? courseField.options
+    : [{ value: "__course_status__", label: courseStatusMessage ?? "Select a course" }];
 
   return (
     <div className="space-y-6">
@@ -85,141 +103,55 @@ export default function EducationStep({
 
       <div className="grid gap-5 sm:grid-cols-2">
         <AuthField
-          id={`${idPrefix}-level`}
-          name="level"
-          label="Current education level"
-          value={values.level ?? ""}
-          onChange={onChange("level")}
-          placeholder="Select your current level"
-          options={EDUCATION_LEVELS}
-          icon={<GraduationCap aria-hidden="true" className="size-4.5" />}
-        />
-
-        <AuthField
-          id={`${idPrefix}-institution`}
-          name="institution"
-          label="College / University"
-          value={values.institution ?? ""}
-          onChange={onChange("institution")}
-          placeholder="e.g. RV College of Engineering"
-          autoComplete="organization"
-          icon={<Building2 aria-hidden="true" className="size-4.5" />}
-        />
-
-        <AuthField
-          id={`${idPrefix}-degree`}
-          name="degree"
-          label="Degree / Course"
-          value={values.degree ?? ""}
-          onChange={onChange("degree")}
-          placeholder="e.g. B.Tech Computer Science"
+          id={`${idPrefix}-courseDegree`}
+          name="courseDegree"
+          label="Course / Degree"
+          value={values.courseDegree ?? ""}
+          onChange={onChange("courseDegree")}
+          error={errors.courseDegree}
+          placeholder="e.g. B.Tech Computer Science, BCA, MCA, B.Sc Mathematics"
+          autoComplete="organization-title"
           icon={<BookOpen aria-hidden="true" className="size-4.5" />}
         />
 
         <AuthField
-          id={`${idPrefix}-year`}
-          name="year"
-          label="Year / Semester"
-          value={values.year ?? ""}
-          onChange={onChange("year")}
-          placeholder="e.g. 3rd year / 5th semester"
+          id={`${idPrefix}-semesterYear`}
+          name="semesterYear"
+          label="Semester / Year"
+          value={values.semesterYear ?? ""}
+          onChange={onChange("semesterYear")}
+          error={errors.semesterYear}
+          placeholder="e.g. 3rd Semester, Final Year, 2026 Passout"
           icon={<CalendarDays aria-hidden="true" className="size-4.5" />}
-        />
-
-        <AuthField
-          id={`${idPrefix}-graduationYear`}
-          name="graduationYear"
-          label="Graduation year"
-          value={values.graduationYear ?? ""}
-          onChange={onChange("graduationYear")}
-          error={errors.graduationYear}
-          placeholder="2027"
-          inputMode="numeric"
-          maxLength={4}
-          icon={<CalendarCheck aria-hidden="true" className="size-4.5" />}
-          hint="Four digits — the year you graduated or expect to (for example 2026)."
-        />
-
-        <AuthField
-          id={`${idPrefix}-city`}
-          name="city"
-          label="City"
-          value={values.city ?? ""}
-          onChange={onChange("city")}
-          placeholder="e.g. Bengaluru"
-          autoComplete="address-level2"
-          icon={<MapPin aria-hidden="true" className="size-4.5" />}
-        />
-
-        <AuthField
-          id={`${idPrefix}-state`}
-          name="state"
-          label="State"
-          value={values.state ?? ""}
-          onChange={onChange("state")}
-          placeholder="e.g. Karnataka"
-          autoComplete="address-level1"
-          icon={<Map aria-hidden="true" className="size-4.5" />}
         />
 
         <AuthField
           id={`${idPrefix}-currentRole`}
           name="currentRole"
-          label="Current role"
+          label="Current Role"
           value={values.currentRole ?? ""}
           onChange={onChange("currentRole")}
-          placeholder="e.g. Student, Intern, Software Engineer"
+          error={errors.currentRole}
+          placeholder="Select your current role"
+          options={CURRENT_ROLE_OPTIONS}
           icon={<Briefcase aria-hidden="true" className="size-4.5" />}
-          hint={'Put "Student" if you are studying full time.'}
+        />
+
+        <AuthField
+          id={`${idPrefix}-course`}
+          name="course"
+          label="Course"
+          value={values.course ?? ""}
+          onChange={onChange("course")}
+          error={errors.course}
+          placeholder="Select a course"
+          options={courseSelectOptions}
+          disabled={!courseField.options.length}
+          icon={<GraduationCap aria-hidden="true" className="size-4.5" />}
+          hint={courseStatusMessage}
         />
       </div>
 
-      <fieldset className="rounded-xl border border-brand-border bg-brand-off-white p-4 sm:p-5">
-        <legend className="px-1 text-sm font-semibold text-brand-navy">
-          Choose your specialization
-        </legend>
-        <p className="text-xs leading-relaxed text-brand-text-secondary">
-          Pick the track that interests you most — you can change it any time before your cohort
-          starts. Not decided yet? Choose &ldquo;I&apos;m not sure yet&rdquo; and a mentor will help you
-          pick.
-        </p>
-
-        <div className="mt-3.5 grid gap-2.5 sm:grid-cols-2">
-          {SPECIALIZATION_OPTIONS.map((option) => {
-            const optionId = `${idPrefix}-track-${option.value}`;
-            const isSelected = track === option.value;
-
-            return (
-              <label
-                key={option.value}
-                htmlFor={optionId}
-                className={`flex cursor-pointer items-start gap-3 rounded-xl border bg-brand-white px-3.5 py-3 transition-colors ${
-                  isSelected
-                    ? "border-brand-red ring-2 ring-brand-red/15"
-                    : "border-brand-border hover:border-brand-navy/40"
-                }`}
-              >
-                <input
-                  type="radio"
-                  id={optionId}
-                  name={`${idPrefix}-track`}
-                  value={option.value}
-                  checked={isSelected}
-                  onChange={handleTrackChange}
-                  className="sprint-focus mt-0.5 size-4 shrink-0 accent-brand-red"
-                />
-                <span
-                  className={`text-sm leading-snug ${
-                    isSelected ? "font-semibold text-brand-navy" : "font-medium text-brand-text"
-                  }`}
-                >
-                  {option.label}
-                </span>
-              </label>
-            );
-          })}
-        </div>
-      </fieldset>
     </div>
   );
 }

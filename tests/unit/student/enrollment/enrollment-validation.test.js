@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   compactErrors,
   normalizeMobile,
+  validateDateOfBirthField,
   validateEducationProfile,
   validateGraduationYearField,
   validateMobileField,
@@ -46,6 +47,29 @@ describe("Enrollment validation", () => {
       expect(validateNameField("O'Brien-Kaur")).toBe("");
       expect(validateNameField("  Ananya Sharma  ")).toBe("");
     });
+
+    it("lets the caller name the field in the empty prompt", () => {
+      expect(validateNameField("", "Please enter your first name.")).toBe(
+        "Please enter your first name.",
+      );
+      expect(validateNameField("   ", "Please enter your last name.")).toBe(
+        "Please enter your last name.",
+      );
+      expect(validateNameField("", "Please enter your first name.")).not.toBe(
+        validateNameField(""),
+      );
+    });
+  });
+
+  describe("validateDateOfBirthField", () => {
+    it("asks for the date when the field is empty", () => {
+      expect(validateDateOfBirthField("")).toBe("Please enter your date of birth.");
+      expect(validateDateOfBirthField("   ")).toBe("Please enter your date of birth.");
+    });
+
+    it("accepts any date the picker produced", () => {
+      expect(validateDateOfBirthField("2004-06-15")).toBe("");
+    });
   });
 
   describe("validateMobileField", () => {
@@ -70,8 +94,12 @@ describe("Enrollment validation", () => {
   describe("validatePersonalInformation", () => {
     it("returns one entry per field, valid fields included", () => {
       expect(validatePersonalInformation({})).toEqual({
-        name: "Please enter your full name.",
+        firstName: "Please enter your first name.",
+        lastName: "Please enter your last name.",
         email: "Please enter your email.",
+        dob: "Please enter your date of birth.",
+        country: "Please select your country.",
+        state: "Please select your state.",
         phone: "Please enter your mobile number.",
       });
     });
@@ -81,16 +109,37 @@ describe("Enrollment validation", () => {
       expect(errors.email).toBe("Please enter a valid email address.");
     });
 
+    it("flags a phone number that is not ten digits", () => {
+      const errors = validatePersonalInformation({ phone: "12345" });
+      expect(errors.phone).toBe("Please enter a valid 10-digit mobile number.");
+    });
+
     it("passes a complete step", () => {
       expect(
         compactErrors(
           validatePersonalInformation({
-            name: "Ananya Sharma",
+            firstName: "Ananya",
+            lastName: "Sharma",
             email: "ananya@sprint.co.in",
+            dob: "2004-06-15",
+            country: "India",
+            state: "Karnataka",
             phone: "98765 43210",
           }),
         ),
       ).toEqual({});
+    });
+
+    it("keeps the field order the wizard focuses in", () => {
+      expect(Object.keys(validatePersonalInformation({}))).toEqual([
+        "firstName",
+        "lastName",
+        "email",
+        "dob",
+        "country",
+        "state",
+        "phone",
+      ]);
     });
   });
 

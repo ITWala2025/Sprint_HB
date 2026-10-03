@@ -33,7 +33,7 @@ describe("StudentSidebar", () => {
     });
   });
 
-  it("shows exactly the nine agreed sections in the agreed order", () => {
+  it("shows the eight agreed sections in the agreed order", () => {
     render(<StudentSidebar />);
 
     const expectedLabels = [
@@ -45,7 +45,6 @@ describe("StudentSidebar", () => {
       "Certificate",
       "Result",
       "Help & Support",
-      "Settings",
     ];
 
     /* The JSON config is the single source of truth for the rail. */
@@ -57,6 +56,12 @@ describe("StudentSidebar", () => {
         .getAllByRole("link")
         .map((link) => link.getAttribute("href")),
     ).toEqual(navigation.map((item) => item.href));
+  });
+
+  it("does not show the redundant Student Portal eyebrow", () => {
+    render(<StudentSidebar />);
+
+    expect(screen.queryByText("Student Portal")).not.toBeInTheDocument();
   });
 
   it("drops the sections that are no longer part of the portal", () => {
@@ -95,9 +100,9 @@ describe("StudentSidebar", () => {
       "aria-current",
       "page",
     );
-    expect(screen.getByRole("link", { name: /dashboard/i })).not.toHaveAttribute(
-      "aria-current",
-    );
+    expect(
+      screen.getByRole("link", { name: /dashboard/i }),
+    ).not.toHaveAttribute("aria-current");
   });
 
   it("collapses to icon-only and expands again from the toggle", async () => {
@@ -117,11 +122,15 @@ describe("StudentSidebar", () => {
 
     rerender(<StudentSidebar collapsed onToggleCollapse={onToggleCollapse} />);
 
-    const expandButton = screen.getByRole("button", { name: /expand sidebar/i });
+    const expandButton = screen.getByRole("button", {
+      name: /expand sidebar/i,
+    });
     expect(expandButton).toHaveAttribute("aria-expanded", "false");
 
     // Labels stay available to assistive tech, the visual heading is gone.
-    expect(screen.getByRole("link", { name: /dashboard/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /dashboard/i }),
+    ).toBeInTheDocument();
     expect(screen.queryByText("Student Portal")).not.toBeInTheDocument();
     // The collapsed badge is dropped to keep the rail 76px wide.
     expect(screen.queryByText("2")).not.toBeInTheDocument();

@@ -12,7 +12,6 @@ import {
   LifeBuoy,
   PanelLeftClose,
   PanelLeftOpen,
-  Settings,
   UserRound,
 } from "lucide-react";
 
@@ -28,7 +27,6 @@ const ICONS = {
   graduationCap: GraduationCap,
   layoutDashboard: LayoutDashboard,
   lifeBuoy: LifeBuoy,
-  settings: Settings,
   userRound: UserRound,
 };
 
@@ -48,24 +46,20 @@ export default function StudentSidebar({
   className = "",
 }) {
   const pathname = usePathname() ?? "";
-  const isActive = (href) => pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = (href) =>
+    pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <nav
       aria-label="Student portal navigation"
       className={`flex flex-col gap-1 rounded-3xl border border-brand-border bg-brand-white p-3 shadow-sm ${className}`}
     >
-      <div
-        className={`flex items-center gap-2 px-1 pb-3 ${
-          collapsed ? "justify-center" : "justify-between"
-        }`}
-      >
-        {!collapsed ? (
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">
-            Student Portal
-          </p>
-        ) : null}
-        {onToggleCollapse && variant === "sidebar" ? (
+      {onToggleCollapse && variant === "sidebar" ? (
+        <div
+          className={`flex items-center gap-2 px-1 pb-3 ${
+            collapsed ? "justify-center" : "justify-between"
+          }`}
+        >
           <button
             type="button"
             onClick={onToggleCollapse}
@@ -79,8 +73,8 @@ export default function StudentSidebar({
               <PanelLeftClose className="size-4.5" aria-hidden="true" />
             )}
           </button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
       <ul className="flex flex-col gap-1">
         {navigation.map((item) => {
@@ -110,7 +104,9 @@ export default function StudentSidebar({
                   }`}
                   aria-hidden="true"
                 />
-                <span className={collapsed ? "sr-only" : "min-w-0 flex-1 truncate"}>
+                <span
+                  className={collapsed ? "sr-only" : "min-w-0 flex-1 truncate"}
+                >
                   {item.label}
                 </span>
                 {!collapsed && item.badge ? (

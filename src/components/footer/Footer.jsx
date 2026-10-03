@@ -22,7 +22,7 @@ const exploreLinks = [
 
 const portalLinks = [
   { label: "Student Login", href: "/student/login", outbound: true },
-  { label: "New Enrollment", href: "/register" },
+  { label: "New Enrollment", href: "/student/enroll" },
   { label: "Scholarship Aid", href: "/courses#scholarship" },
 ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 import StudentSidebar from "./StudentSidebar";
@@ -21,6 +22,8 @@ const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
  *         portal bar. No auth, no route guards — this pass is UI only.
  */
 export default function StudentLayout({ children }) {
+  const pathname = usePathname() ?? "";
+  const isDashboard = pathname === "/student/dashboard";
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -73,9 +76,11 @@ export default function StudentLayout({ children }) {
             <Menu className="size-5" aria-hidden="true" />
             <span className="sr-only">Open student portal navigation</span>
           </button>
-          <p className="min-w-0 flex-1 truncate font-display text-sm font-bold text-brand-navy">
-            Student Portal
-          </p>
+          {!isDashboard ? (
+            <p className="min-w-0 flex-1 truncate font-display text-sm font-bold text-brand-navy">
+              Student Portal
+            </p>
+          ) : null}
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-navy text-[11px] font-bold text-white">
             {mockStudent.initials}
           </span>
@@ -93,7 +98,7 @@ export default function StudentLayout({ children }) {
           <div className="sprint-mobile-drawer absolute inset-x-0 top-0 max-h-[88vh] overflow-y-auto rounded-b-3xl border-b border-brand-border bg-brand-white p-4 shadow-2xl">
             <div className="flex items-center justify-between gap-3 pb-3">
               <p className="font-display text-sm font-bold text-brand-navy">
-                Student Portal
+                {isDashboard ? "Navigation" : "Student Portal"}
               </p>
               <button
                 type="button"

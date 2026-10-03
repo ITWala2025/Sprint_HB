@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { redirect } from "next/navigation";
 
 import StudentApplyCoursesPage from "@/app/student/(portal)/apply-course/page";
 import StudentCertificatesPage from "@/app/student/(portal)/certificates/page";
@@ -15,6 +16,7 @@ vi.mock("next/link", () => ({
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/student/profile",
+  redirect: vi.fn(),
 }));
 
 describe("Student portal placeholder routes", () => {
@@ -25,16 +27,39 @@ describe("Student portal placeholder routes", () => {
     ["Certificate", StudentCertificatesPage],
     ["Result", StudentResultPage],
     ["Help & Support", StudentHelpSupportPage],
-    ["Settings", StudentSettingsPage],
-  ])("renders the %s section shell with a way back to the dashboard", (title, Page) => {
-    render(<Page />);
+  ])(
+    "renders the %s section shell with a way back to the dashboard",
+    (title, Page) => {
+      render(<Page />);
+
+      expect(
+        screen.getByRole("heading", { level: 1, name: title }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("This section is being built"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("link", { name: /back to dashboard/i }),
+      ).toHaveAttribute("href", "/student/dashboard");
+    },
+  );
+
+  it("includes account settings inside the Profile page", () => {
+    render(<StudentProfilePage />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: title }),
+      screen.getByRole("heading", { name: "Settings" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("This section is being built")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /back to dashboard/i }),
-    ).toHaveAttribute("href", "/student/dashboard");
+      screen.getByText(
+        /account preferences, notification channels, password and privacy controls/i,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("redirects the old Settings route to the embedded Profile section", () => {
+    StudentSettingsPage();
+
+    expect(redirect).toHaveBeenCalledWith("/student/profile#settings");
   });
 });

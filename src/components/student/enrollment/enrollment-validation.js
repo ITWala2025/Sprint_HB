@@ -18,6 +18,7 @@
 import {
   EMAIL_PATTERN,
   validateEmailField as validateAuthEmailField,
+  validateRequiredField,
 } from "@/components/student/auth/auth-validation";
 
 export { EMAIL_PATTERN };
@@ -44,10 +45,14 @@ export function normalizeMobile(value = "") {
   return digits;
 }
 
-/** @returns {string} an inline error message, or "" when the field is valid. */
-export function validateNameField(value = "") {
+/**
+ * @returns {string} an inline error message, or "" when the field is valid.
+ * `emptyMessage` lets each caller name its own field — First Name and Last Name
+ * share every rule with the old single name field but need their own prompt.
+ */
+export function validateNameField(value = "", emptyMessage = "Please enter your full name.") {
   const trimmed = String(value).trim();
-  if (!trimmed) return "Please enter your full name.";
+  if (!trimmed) return emptyMessage;
   if (trimmed.length < 2) return "Your name needs at least 2 characters.";
   if (!NAME_PATTERN.test(trimmed)) {
     return "Please use letters only — spaces, hyphens and apostrophes are fine.";
@@ -65,11 +70,27 @@ export function validateMobileField(value = "") {
   return "";
 }
 
-/** Step 1 — Personal Information. */
+/** Date of birth — presence is the only rule; the input already restricts shape. */
+export function validateDateOfBirthField(value = "") {
+  if (!String(value).trim()) return "Please enter your date of birth.";
+  return "";
+}
+
+/**
+ * Step 1 — Personal Information.
+ *
+ * Seven required fields in the order they appear on the page, so the wizard's
+ * "focus the first invalid field" walk matches the visual left-to-right,
+ * top-to-bottom reading order.
+ */
 export function validatePersonalInformation(values = {}) {
   return {
-    name: validateNameField(values.name ?? ""),
+    firstName: validateNameField(values.firstName ?? "", "Please enter your first name."),
+    lastName: validateNameField(values.lastName ?? "", "Please enter your last name."),
     email: validateAuthEmailField(values.email ?? ""),
+    dob: validateDateOfBirthField(values.dob ?? ""),
+    country: validateRequiredField(values.country ?? "", "Please select your country."),
+    state: validateRequiredField(values.state ?? "", "Please select your state."),
     phone: validateMobileField(values.phone ?? ""),
   };
 }
@@ -112,9 +133,9 @@ export function validateEducationProfile(values = {}) {
 }
 
 /**
- * Steps 3-5 are scaffolded in this phase, so there is nothing to validate yet.
- * They share this no-op so the registry keeps a uniform `validate` contract and
- * the wizard stays generic.
+ * The last step — Account — is scaffolded in this phase, so there is nothing to
+ * validate yet. It uses this no-op so the registry keeps a uniform `validate`
+ * contract and the wizard stays generic.
  */
 export const validateNoFieldsYet = () => ({});
 
