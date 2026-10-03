@@ -65,17 +65,33 @@ describe("DesktopNavigation", () => {
     expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("aria-current", "page");
   });
 
-  it("applies active styling class to the active link", () => {
-    render(<DesktopNavigation pathname="/courses" />);
-    const activeLink = screen.getByRole("link", { name: "Courses" });
-    expect(activeLink).toHaveClass("bg-brand-navy");
+  it.each([
+    ["/home", "Home"],
+    ["/courses", "Courses"],
+    ["/about", "About Us"],
+    ["/contact", "Contact"],
+  ])("applies the ticker gradient to %s", (pathname, label) => {
+    render(<DesktopNavigation pathname={pathname} />);
+    const activeLink = screen.getByRole("link", { name: label });
+    expect(activeLink).toHaveAttribute("aria-current", "page");
+    expect(activeLink).toHaveClass(
+      "bg-[linear-gradient(90deg,#163f68_0%,var(--color-brand-navy-dark)_50%,#163f68_100%)]",
+    );
     expect(activeLink).toHaveClass("text-white");
+    expect(activeLink).toHaveClass("items-center");
+    expect(activeLink).toHaveClass("px-4");
+    expect(activeLink).toHaveClass("text-sm");
+    expect(screen.getByRole("navigation", { name: /Main navigation/i })).toHaveClass(
+      "px-[2.1rem]",
+    );
   });
 
   it("applies inactive styling class to non-active links", () => {
     render(<DesktopNavigation pathname="/courses" />);
     const inactiveLink = screen.getByRole("link", { name: "Home" });
     expect(inactiveLink).toHaveClass("text-brand-navy");
-    expect(inactiveLink).not.toHaveClass("bg-brand-navy");
+    expect(inactiveLink).not.toHaveClass(
+      "bg-[linear-gradient(90deg,#163f68_0%,var(--color-brand-navy-dark)_50%,#163f68_100%)]",
+    );
   });
 });
