@@ -12,6 +12,9 @@ import Footer from "@/components/footer/Footer";
  * header, campus ticker, footer and floating WhatsApp bubble.
  */
 const FOCUSED_ROUTES = [
+  "/login",
+  "/forgot-password",
+  "/set-password",
   "/student/login",
   "/student/forgot-password",
   "/student/check-email",

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import SignupModal from "@/components/student/auth/SignupModal";
 
 import "./login.css";
 
@@ -23,12 +24,63 @@ export default function StudentLoginPage() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
 
   useEffect(() => {
     document.body.classList.add("student-auth-page");
 
     return () => {
       document.body.classList.remove("student-auth-page");
+    };
+  }, []);
+
+  /*
+   * Seamless portal entry: when an already-signed-in student opens the Sign In
+   * page (e.g. via the "Student Portal" header button) they are sent straight
+   * to the dashboard. Any other session is cleared so the form stays usable.
+   * The middleware performs this redirect server-side; this is the client-side
+   * fallback for transitions that never hit the network.
+   */
+  useEffect(() => {
+    let mounted = true;
+
+    const checkExistingSession = async () => {
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!mounted || !user) {
+          return;
+        }
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role, status")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        if (!mounted) {
+          return;
+        }
+
+        if (profile?.role === "student" && profile?.status === "active") {
+          window.location.href = "/student/dashboard";
+          return;
+        }
+
+        // A session without an active student profile is stale on this screen.
+        await supabase.auth.signOut();
+      } catch {
+        // Treat any failure as a fresh sign-in flow.
+      }
+    };
+
+    checkExistingSession();
+
+    return () => {
+      mounted = false;
     };
   }, []);
 
@@ -54,14 +106,67 @@ export default function StudentLoginPage() {
     try {
       const supabase = createClient();
 
-      const { error: signInError } =
+      const { data, error: signInError } =
         await supabase.auth.signInWithPassword({
           email: trimmedEmail,
           password,
         });
 
       if (signInError) {
-        setError("Invalid email or password.");
+        const message = `${signInError.message}`.toLowerCase();
+
+        if (message.includes("email not confirmed")) {
+          setError(
+            "Please confirm your email before signing in. Check your inbox for the confirmation link."
+          );
+        } else if (message.includes("rate limit")) {
+          setError("Too many attempts. Please try again in a moment.");
+        } else {
+          setError(
+            "Invalid email or password. Please try again."
+          );
+        }
+        return;
+      }
+
+      const userId = data.user?.id;
+
+      if (!userId) {
+        setError("We couldn't sign you in right now. Please try again.");
+        return;
+      }
+
+      /*
+       * Verify the student profile before granting access — the dashboard is
+       * only reachable for role = "student" with status = "active".
+       */
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role, status")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (profileError || !profile) {
+        await supabase.auth.signOut();
+        setError(
+          "We couldn't find your student profile. Please contact support."
+        );
+        return;
+      }
+
+      if (profile.role !== "student") {
+        await supabase.auth.signOut();
+        setError(
+          "This account does not have Student Portal access. Please sign in with a student account."
+        );
+        return;
+      }
+
+      if (profile.status !== "active") {
+        await supabase.auth.signOut();
+        setError(
+          "Your account is currently inactive. Please contact SPRINT support."
+        );
         return;
       }
 
@@ -115,10 +220,15 @@ export default function StudentLoginPage() {
             <div className="student-login-top-link">
               <span>Don't have an account?</span>
 
-              <Link href="/student/enroll">
+              <button
+                type="button"
+                className="student-login-top-enroll"
+                onClick={() => setIsSignupOpen(true)}
+                disabled={loading}
+              >
                 Enroll Now
                 <ArrowRight size={14} strokeWidth={2} />
-              </Link>
+              </button>
             </div>
 
             {/* Heading */}
@@ -243,7 +353,7 @@ export default function StudentLoginPage() {
                   <span>Remember me</span>
                 </label>
 
-                <Link href="/student/forgot-password">
+                <Link href="/forgot-password">
                   Forgot Password?
                 </Link>
               </div>
@@ -288,9 +398,14 @@ export default function StudentLoginPage() {
             <p className="student-login-enroll">
               Don't have a SPRINT account?
 
-              <Link href="/student/enroll">
+              <button
+                type="button"
+                className="student-login-enroll-btn"
+                onClick={() => setIsSignupOpen(true)}
+                disabled={loading}
+              >
                 Enroll Now
-              </Link>
+              </button>
             </p>
 
             {/* Security */}
@@ -314,6 +429,12 @@ export default function StudentLoginPage() {
           </div>
         </section>
       </section>
+
+      {/* Signup opens as a modal on top of Sign In — no separate route. */}
+      <SignupModal
+        isOpen={isSignupOpen}
+        onClose={() => setIsSignupOpen(false)}
+      />
     </main>
   );
 }

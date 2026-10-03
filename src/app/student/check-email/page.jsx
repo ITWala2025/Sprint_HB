@@ -79,7 +79,7 @@ export default function CheckEmailPage() {
       const supabase = createClient();
 
       const redirectTo =
-        `${window.location.origin}/student/reset-password`;
+        `${window.location.origin}/set-password`;
 
       const { error } = await supabase.auth.resetPasswordForEmail(
         email,

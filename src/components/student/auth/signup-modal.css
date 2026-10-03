@@ -1,0 +1,452 @@
+/* =========================================================
+   SPRINT STUDENT SIGNUP MODAL
+   Visual system shared with the Student Login screen
+   (same navy / red / slate tokens, radii and spacing).
+========================================================= */
+
+/* =========================================================
+   BACKDROP
+========================================================= */
+
+.student-signup-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(1, 31, 62, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* =========================================================
+   DIALOG
+========================================================= */
+
+.student-signup-dialog {
+  width: min(560px, 100%);
+  max-height: calc(100vh - 48px);
+
+  overflow-y: auto;
+
+  border: 1px solid rgba(1, 31, 62, 0.08);
+  border-radius: 24px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 24px 70px rgba(1, 31, 62, 0.22),
+    0 6px 20px rgba(1, 31, 62, 0.1);
+}
+
+/* =========================================================
+   HEAD
+========================================================= */
+
+.student-signup-head {
+  position: relative;
+
+  padding: 26px 30px 8px;
+}
+
+.student-signup-eyebrow {
+  display: inline-block;
+
+  color: #f81529;
+
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.student-signup-heading-title {
+  margin: 9px 0 0;
+
+  color: #011f3e;
+
+  font-size: clamp(22px, 2.4vw, 27px);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.student-signup-heading-title strong {
+  font-weight: 800;
+}
+
+.student-signup-description {
+  margin: 9px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.student-signup-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+
+  width: 34px;
+  height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #f2f5f8;
+
+  color: #011f3e;
+
+  cursor: pointer;
+
+  transition:
+    color 180ms ease,
+    background 180ms ease;
+}
+
+.student-signup-close:hover {
+  color: #011f3e;
+  background: #e8edf2;
+}
+
+.student-signup-close:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* =========================================================
+   SUCCESS STATE
+========================================================= */
+
+.student-signup-success {
+  padding: 38px 30px;
+
+  text-align: center;
+}
+
+.student-signup-success-icon {
+  width: 66px;
+  height: 66px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e8f7ee;
+
+  color: #0b6b3a;
+}
+
+.student-signup-success-head .student-signup-heading-title {
+  margin-top: 20px;
+}
+
+.student-signup-success .student-signup-description {
+  font-weight: 700;
+
+  color: #011f3e;
+}
+
+.student-signup-success-note {
+  margin: 10px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.student-signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+
+  padding: 12px 30px 26px;
+}
+
+.student-signup-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.student-signup-field label {
+  color: #172b4d;
+
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.student-signup-input {
+  min-height: 48px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 14px;
+
+  border: 1px solid #d9e1eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.student-signup-input:focus-within {
+  border-color: #4f8df7;
+
+  box-shadow:
+    0 0 0 3px rgba(79, 141, 247, 0.11);
+}
+
+.student-signup-input.has-error {
+  border-color: #b42318;
+
+  box-shadow:
+    0 0 0 3px rgba(180, 35, 24, 0.09);
+}
+
+.student-signup-input > svg {
+  flex: 0 0 auto;
+  color: #7890aa;
+}
+
+.student-signup-input input {
+  width: 100%;
+  min-width: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #011f3e;
+
+  font: inherit;
+  font-size: 14px;
+}
+
+.student-signup-input input::placeholder {
+  color: #9aa9ba;
+}
+
+.student-signup-input input:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.student-signup-field-error {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  color: #b42318;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.student-signup-field-error svg {
+  flex: 0 0 auto;
+}
+
+/* =========================================================
+   FORM ERROR BANNER
+========================================================= */
+
+.student-signup-error {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 8px;
+
+  padding: 11px 13px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fff5f5;
+
+  color: #b42318;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.student-signup-error svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.student-signup-primary {
+  width: 100%;
+  min-height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #f81529;
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 18px rgba(248, 21, 41, 0.18);
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.student-signup-primary:hover:not(:disabled) {
+  background: #d91024;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 11px 22px rgba(248, 21, 41, 0.23);
+}
+
+.student-signup-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.student-signup-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.student-signup-cancel {
+  width: 100%;
+  min-height: 46px;
+
+  border: 1px solid #d9e1eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #011f3e;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    color 180ms ease,
+    background 180ms ease;
+}
+
+.student-signup-cancel:hover:not(:disabled) {
+  color: #f81529;
+  background: #f7f9fc;
+}
+
+.student-signup-cancel:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* =========================================================
+   SECURITY NOTE
+========================================================= */
+
+.student-signup-security {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  color: #8a98a8;
+
+  font-size: 10px;
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+.student-signup-security svg {
+  flex: 0 0 auto;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+  .student-signup-backdrop {
+    padding: 16px;
+  }
+
+  .student-signup-dialog {
+    width: 100%;
+    border-radius: 18px;
+  }
+
+  .student-signup-head,
+  .student-signup-form {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .student-signup-success {
+    padding: 30px 20px;
+  }
+
+  .student-signup-close {
+    top: 14px;
+    right: 14px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .student-signup-input,
+  .student-signup-primary,
+  .student-signup-cancel,
+  .student-signup-close {
+    transition: none;
+  }
+}

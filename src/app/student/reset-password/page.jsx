@@ -9,6 +9,7 @@ import {
   Check,
   CircleAlert,
   LockKeyhole,
+  Mail,
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
@@ -66,6 +67,13 @@ export default function ResetPasswordPage() {
     useState(false);
 
   const [error, setError] = useState("");
+
+  /*
+   * True once the screen knows this visit cannot succeed — the emailed link
+   * is gone, expired or already used. Surfaces the "request a new link" escape
+   * hatch so the student is never stranded on a dead form.
+   */
+  const [linkExpired, setLinkExpired] = useState(false);
 
   const passwordRules = useMemo(() => {
     return PASSWORD_RULES.map((rule) => ({
@@ -201,8 +209,9 @@ export default function ResetPasswordPage() {
           sessionError
         );
 
+        setLinkExpired(true);
         setError(
-          "We couldn't verify your password reset session. Please open the reset link from your email again."
+          "We couldn't verify your password reset session. Please open the most recent link from your email, or request a new one."
         );
 
         return;
@@ -211,6 +220,7 @@ export default function ResetPasswordPage() {
       if (!session) {
         setHasRecoverySession(false);
 
+        setLinkExpired(true);
         setError(
           "This password reset link is invalid or has expired. Please request a new reset link."
         );
@@ -219,6 +229,7 @@ export default function ResetPasswordPage() {
       }
 
       setHasRecoverySession(true);
+      setLinkExpired(false);
 
       /*
        * Update password.
@@ -254,9 +265,31 @@ export default function ResetPasswordPage() {
 
       /*
        * Password successfully updated.
+       *
+       * When a valid recovery/student session exists, take the student
+       * straight to the dashboard. Otherwise send them back to Sign In.
        */
-      window.location.href =
-        "/student/password-reset-success";
+      const {
+        data: { session: freshSession },
+      } = await supabase.auth.getSession();
+
+      if (freshSession?.user) {
+        const { data: freshProfile } = await supabase
+          .from("profiles")
+          .select("role, status")
+          .eq("id", freshSession.user.id)
+          .maybeSingle();
+
+        if (
+          freshProfile?.role === "student" &&
+          freshProfile?.status === "active"
+        ) {
+          window.location.href = "/student/dashboard";
+          return;
+        }
+      }
+
+      window.location.href = "/login";
     } catch (resetError) {
       console.error(
         "Unexpected password reset error:",
@@ -530,6 +563,31 @@ export default function ResetPasswordPage() {
                   />
 
                   <span>{error}</span>
+                </div>
+              )}
+
+              {/* Expired / already-used link: give the student a way forward. */}
+              {linkExpired && (
+                <div className="student-reset-resend">
+                  <p>
+                    Password links are single-use and expire quickly for your
+                    security. Email a fresh one to get back on track.
+                  </p>
+
+                  <Link
+                    href="/forgot-password"
+                    className="student-reset-resend-link"
+                  >
+                    <Mail size={16} strokeWidth={1.9} aria-hidden="true" />
+                    <span>Request a new link</span>
+                  </Link>
+
+                  <Link
+                    href="/login"
+                    className="student-reset-resend-back"
+                  >
+                    Back to Sign In
+                  </Link>
                 </div>
               )}
 

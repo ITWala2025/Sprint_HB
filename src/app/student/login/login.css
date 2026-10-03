@@ -105,14 +105,24 @@
   color: #64748b;
 }
 
-.student-login-top-link a {
+.student-login-top-link a,
+.student-login-top-enroll {
   display: inline-flex;
   align-items: center;
   gap: 3px;
 
   color: #011f3e;
 
+  font: inherit;
+  font-size: 13px;
   font-weight: 700;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  cursor: pointer;
 
   text-decoration: none;
 
@@ -121,9 +131,15 @@
     gap 180ms ease;
 }
 
-.student-login-top-link a:hover {
+.student-login-top-link a:hover,
+.student-login-top-enroll:hover:not(:disabled) {
   color: #f81529;
   gap: 5px;
+}
+
+.student-login-top-enroll:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* =========================================================
@@ -490,19 +506,38 @@
   line-height: 1.6;
 }
 
-.student-login-enroll a {
+.student-login-enroll a,
+.student-login-enroll button {
   margin-left: 4px;
+
+  display: inline-flex;
+  align-items: center;
 
   color: #315f9e;
 
+  font: inherit;
+  font-size: 13px;
   font-weight: 800;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  cursor: pointer;
 
   text-decoration: none;
 }
 
-.student-login-enroll a:hover {
+.student-login-enroll a:hover,
+.student-login-enroll button:hover:not(:disabled) {
   color: #f81529;
   text-decoration: underline;
+}
+
+.student-login-enroll button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* =========================================================

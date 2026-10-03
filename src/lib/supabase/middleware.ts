@@ -1,6 +1,24 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+/**
+ * Every portal page that requires a signed-in student. These are the URL
+ * segments under the `(portal)` route group — keep in sync with
+ * `src/config/student-navigation.json` and `src/data/student.js`.
+ */
+const PORTAL_ROUTE_PREFIXES = [
+  "/student/dashboard",
+  "/student/my-course",
+  "/student/apply-course",
+  "/student/assignments",
+  "/student/certificates",
+  "/student/profile",
+  "/student/resources",
+  "/student/result",
+  "/student/settings",
+  "/student/help-support",
+];
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -38,6 +56,11 @@ export async function updateSession(request: NextRequest) {
   const isLoginPage = pathname === "/admin";
   const isAdminSubRoute = pathname.startsWith("/admin/") && !isLoginPage;
 
+  const isStudentLogin = pathname === "/student/login";
+  const isStudentPortalRoute = PORTAL_ROUTE_PREFIXES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+
   // 1. If an unauthenticated visitor tries to reach /admin/dashboard or subroutes, bounce to /admin
   if (!user && isAdminSubRoute) {
     const url = request.nextUrl.clone();
@@ -45,15 +68,24 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 2. If already logged in, check role for admin authorization
+  // 2. If an unauthenticated visitor tries to open a student portal page, send them to Sign In.
+  if (!user && isStudentPortalRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/student/login";
+    return NextResponse.redirect(url);
+  }
+
+  // 3. If already logged in, check role/status for authorization
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role")
+      .select("role, status")
       .eq("id", user.id)
       .maybeSingle();
 
     const isAdmin = profile?.role === "admin";
+    const isActiveStudent =
+      profile?.role === "student" && profile?.status === "active";
 
     // Non-admin logged-in users cannot access any /admin routes
     if (!isAdmin && (isLoginPage || isAdminSubRoute)) {
@@ -66,6 +98,25 @@ export async function updateSession(request: NextRequest) {
     if (isAdmin && isLoginPage) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin/dashboard";
+      return NextResponse.redirect(url);
+    }
+
+    /*
+     * Student portal protection:
+     * - An authenticated user without an active student profile cannot stay on
+     *   any portal page (the Sign In screen clears the stale session).
+     * - An already-signed-in active student who opens /student/login is sent
+     *   straight to the dashboard — a seamless "Student Portal" entry.
+     */
+    if (isStudentPortalRoute && !isActiveStudent) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/student/login";
+      return NextResponse.redirect(url);
+    }
+
+    if (isStudentLogin && isActiveStudent) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/student/dashboard";
       return NextResponse.redirect(url);
     }
   }
