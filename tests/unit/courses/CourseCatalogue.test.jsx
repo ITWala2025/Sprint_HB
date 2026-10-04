@@ -109,7 +109,7 @@ describe("CourseCatalogue Supabase integration", () => {
                     .getByText("SPRINT RISE")
                     .closest(".courses-signature-programs__panel"),
             ).getByRole("link", { name: /Explore Program/ }),
-        ).toHaveAttribute("href", "#individual-modular-courses");
+        ).toHaveAttribute("href", "/programs/sprint-rise");
     });
 
     it("renders the SPRINT 3-Year journey stages in order with their year labels", () => {
@@ -150,5 +150,35 @@ describe("CourseCatalogue Supabase integration", () => {
             "Outperform · Year 3",
         ]);
         expect(stages.querySelectorAll("img")).toHaveLength(3);
+    });
+
+    it("keeps the audience selector above signature programs and separates catalogue groups", () => {
+        render(<CourseCatalogue items={catalogueItems} />);
+
+        const root = document.querySelector(".courses-page");
+        const sectionOrder = Array.from(root.children)
+            .map((element) => element.classList[0])
+            .filter((className) =>
+                [
+                    "courses-hero",
+                    "course-audience",
+                    "courses-signature-programs",
+                    "courses-content",
+                    "courses-cta",
+                ].includes(className),
+            );
+        const groups = Array.from(
+            root.querySelectorAll(".courses-results__group-heading"),
+        ).map((heading) => heading.textContent);
+
+        expect(sectionOrder).toEqual([
+            "courses-hero",
+            "course-audience",
+            "courses-signature-programs",
+            "courses-content",
+            "courses-cta",
+        ]);
+        expect(groups).toEqual(["Career Bundles", "Individual & Modular Courses"]);
+        expect(root.querySelectorAll(".course-audience")).toHaveLength(1);
     });
 });

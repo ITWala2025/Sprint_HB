@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import {
-  audienceCopy,
   audienceOptions,
 } from "@/data/courses";
 
@@ -271,7 +270,7 @@ function FeaturedPrograms() {
         </p>
       </div>
 
-      <div className="courses-signature-programs__panel">
+      <div className="courses-signature-programs__panel courses-signature-programs__panel--rise">
         <div className="courses-signature-programs__overview">
           <p className="courses-signature-programs__name">SPRINT RISE</p>
           <h3>Campus to Corporate in 6 Months</h3>
@@ -297,7 +296,7 @@ function FeaturedPrograms() {
           </ul>
 
           <Link
-            href="#individual-modular-courses"
+            href="/programs/sprint-rise"
             className="courses-signature-programs__cta"
           >
             Explore Program
@@ -531,8 +530,6 @@ export default function CourseCatalogue({ items }) {
     [catalogueItems, query]
   );
 
-  const activeAudience = audienceCopy[audience];
-
   return (
     <div className="courses-page">
       <section
@@ -642,8 +639,6 @@ export default function CourseCatalogue({ items }) {
         </div>
       </section>
 
-      <FeaturedPrograms />
-
       <section
         className="course-audience"
         aria-label="Choose your audience"
@@ -710,22 +705,10 @@ export default function CourseCatalogue({ items }) {
         </div>
       </section>
 
+      <FeaturedPrograms />
+
       <main id="individual-modular-courses" className="courses-content">
         <div className="courses-results">
-          <div className="courses-results__heading">
-            <div>
-              {/* <p className="courses-eyebrow">
-                {audienceOptions.find(
-                  (option) => option.value === audience
-                ).label}
-              </p> */}
-
-              <h2>{activeAudience.title}</h2>
-
-              {/* <p>{activeAudience.description}</p> */}
-            </div>
-          </div>
-
           <div className="courses-results__meta">
             <span>
               {visibleItems.length} learning options
@@ -744,15 +727,57 @@ export default function CourseCatalogue({ items }) {
           </div>
 
           {visibleItems.length ? (
-            <div className="course-grid">
-              {visibleItems.map((item) => (
-                <CourseTile
-                  key={`${item.kind}-${item.slug}`}
-                  item={item}
-                  audience={audience}
-                />
-              ))}
-            </div>
+            <>
+              {visibleItems.some((item) => item.kind === "bundle") ? (
+                <section
+                  className="courses-results__group"
+                  aria-labelledby="career-bundles-heading"
+                >
+                  <h2
+                    className="courses-results__group-heading"
+                    id="career-bundles-heading"
+                  >
+                    Career Bundles
+                  </h2>
+                  <div className="course-grid">
+                    {visibleItems
+                      .filter((item) => item.kind === "bundle")
+                      .map((item) => (
+                        <CourseTile
+                          key={`${item.kind}-${item.slug}`}
+                          item={item}
+                          audience={audience}
+                        />
+                      ))}
+                  </div>
+                </section>
+              ) : null}
+
+              {visibleItems.some((item) => item.kind !== "bundle") ? (
+                <section
+                  className="courses-results__group"
+                  aria-labelledby="individual-courses-heading"
+                >
+                  <h2
+                    className="courses-results__group-heading"
+                    id="individual-courses-heading"
+                  >
+                    Individual &amp; Modular Courses
+                  </h2>
+                  <div className="course-grid">
+                    {visibleItems
+                      .filter((item) => item.kind !== "bundle")
+                      .map((item) => (
+                        <CourseTile
+                          key={`${item.kind}-${item.slug}`}
+                          item={item}
+                          audience={audience}
+                        />
+                      ))}
+                  </div>
+                </section>
+              ) : null}
+            </>
           ) : (
             <div className="courses-empty">
               <h2>No matching learning options</h2>

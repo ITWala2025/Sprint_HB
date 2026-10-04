@@ -158,6 +158,33 @@ a {
   }
 }
 
+  .program-detail__headline {
+    margin: 0.9rem 0 0;
+    color: #4f26d7;
+    font: 700 clamp(1.35rem, 2.5vw, 2rem) / 1.2 var(--font-display);
+    letter-spacing: -0.035em;
+  }
+
+  .program-detail__layout {
+    align-items: start;
+  }
+
+  .program-detail__layout main {
+    min-width: 0;
+  }
+
+  .program-detail__aside dl div:first-child {
+    border-top: 0;
+  }
+
+  .program-detail__aside dd {
+    overflow-wrap: anywhere;
+  }
+
+  .program-detail__aside > div:first-child {
+    position: static;
+  }
+
 @media (max-width: 767px) {
   .whatsapp-float {
     right: clamp(0.75rem, 3vw, 1.25rem);
@@ -5326,6 +5353,36 @@ a {
   margin-top: 1.25rem;
 }
 
+.courses-signature-programs__panel--three-year
+  .courses-signature-programs__overview {
+  padding: 1.75rem 1.25rem;
+}
+
+.courses-signature-programs__panel--three-year
+  .courses-signature-programs__overview h3 {
+  margin-top: 0.25rem;
+}
+
+.courses-signature-programs__panel--three-year
+  .courses-signature-programs__description {
+  margin-top: 0.35rem;
+}
+
+.courses-signature-programs__panel--three-year .courses-signature-programs__cta {
+  margin-top: 0.55rem;
+}
+
+.courses-results__group + .courses-results__group {
+  margin-top: 2.5rem;
+}
+
+.courses-results__group-heading {
+  margin: 0 0 1rem;
+  color: var(--color-brand-navy);
+  font: 700 clamp(1.4rem, 2.4vw, 2rem) / 1.12 var(--font-display);
+  letter-spacing: -0.035em;
+}
+
 .courses-signature-programs__overview {
   display: flex;
   flex-direction: column;
@@ -5502,13 +5559,108 @@ a {
   white-space: nowrap;
 }
 
+@media (min-width: 1200px) {
+  .courses-signature-programs__panel--rise {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__overview {
+    display: flex;
+    padding: 0.35rem 1.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__overview h3 {
+    margin-top: 0.15rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__description {
+    margin-top: 0.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__metadata {
+    grid-template-columns: repeat(3, max-content);
+    gap: 0.3rem 0.65rem;
+    margin-top: 0.35rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__cta {
+    align-self: start;
+    margin-top: 0.35rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__milestone {
+    flex-basis: clamp(8.5rem, 25%, 10rem);
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__milestone-image {
+    height: 3.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__milestone-content {
+    padding: 0.45rem 0.55rem 0.5rem;
+  }
+}
+
 @media (max-width: 1023px) {
   .courses-signature-programs__panel {
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   }
 
+  .courses-signature-programs__panel--three-year
+    .courses-signature-programs__overview {
+    padding: 1.25rem;
+  }
+
+  .courses-signature-programs__panel--three-year
+    .courses-signature-programs__overview h3,
+  .courses-signature-programs__panel--three-year
+    .courses-signature-programs__description {
+    margin-top: 0.45rem;
+  }
+
+  .courses-signature-programs__panel--three-year
+    .courses-signature-programs__cta {
+    margin-top: 0.75rem;
+  }
+
   .courses-signature-programs__overview {
     padding: 1.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__overview {
+    display: flex;
+    gap: 0;
+    padding: 1.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__overview h3 {
+    margin-top: 0.45rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__description {
+    margin-top: 0.65rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__metadata {
+    grid-template-columns: 1fr;
+    margin-top: 0.8rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__cta {
+    margin-top: 0.85rem;
   }
 
   .courses-signature-programs__metadata {
@@ -6620,4 +6772,23 @@ a {
     transform: none;
   }
 }
+}
+
+@media (max-width: 767px) {
+  .program-detail .program-detail__aside {
+    display: block;
+    margin-top: 1rem;
+  }
+
+  .program-detail .program-detail__aside > div:first-child {
+    position: static;
+    padding: 1.3rem;
+    border: 1px solid var(--color-brand-border);
+    box-shadow: none;
+  }
+
+  .program-detail .program-detail__aside > div:first-child h2,
+  .program-detail .program-detail__aside > div:first-child dl {
+    display: block;
+  }
 }
