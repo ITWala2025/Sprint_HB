@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
       // 2. Fetch role from public.profiles
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, is_active, roles(name, is_active)")
         .eq("id", data.user.id)
         .maybeSingle();
 
@@ -49,11 +49,16 @@ export default function AdminLoginPage() {
         throw new Error(`Profile check failed: ${profileError.message}`);
       }
 
-      if (!profile || profile.role !== "admin") {
+      const assignedRole = Array.isArray(profile?.roles)
+        ? profile.roles[0]
+        : profile?.roles;
+      const hasAdminAccess = profile?.role === "admin" || Boolean(
+        profile?.is_active && assignedRole?.name && assignedRole.is_active !== false
+      );
+
+      if (!profile || !hasAdminAccess) {
         await supabase.auth.signOut();
-        throw new Error(
-          `Access denied: Your account role is "${profile?.role || "none"}". Admin access required.`
-        );
+        throw new Error("Access denied: your account does not have an active admin role assigned.");
       }
 
       // 3. Hard navigation ensures fresh Supabase SSR cookies are sent to middleware
