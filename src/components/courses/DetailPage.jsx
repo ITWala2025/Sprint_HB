@@ -29,9 +29,9 @@ function ProgramDetailPage({ item }) {
 
       <section className="course-detail-hero">
         <div className="course-detail-hero__copy">
-          <p className="courses-eyebrow">SPRINT Program</p>
+          <p className="courses-eyebrow">{item.badgeLabel || "SPRINT Program"}</p>
           <h1>{item.title}</h1>
-          <h2 className="program-detail__headline">{item.headline}</h2>
+          <h2 className="program-detail__headline">{item.tagline || item.headline}</h2>
           <p>{item.description}</p>
 
           <Link
@@ -45,7 +45,7 @@ function ProgramDetailPage({ item }) {
 
         <div className="course-detail-hero__art">
           <Image
-            src={item.image}
+            src={item.image || "/images/courses/abstract-code.svg"}
             alt=""
             fill
             priority
@@ -91,9 +91,68 @@ function ProgramDetailPage({ item }) {
   );
 }
 
+function FlagshipDetailPage({ item }) {
+  const stages = item.roadmap?.length ? item.roadmap : item.curriculum || [];
+  return (
+    <div className="course-detail program-detail">
+      <nav className="course-breadcrumb" aria-label="Breadcrumb">
+        <Link href="/courses">Courses</Link>
+        <span aria-hidden="true">&gt;</span>
+        <span aria-current="page">{item.title}</span>
+      </nav>
+
+      <section className="course-detail-hero">
+        <div className="course-detail-hero__copy">
+          <p className="courses-eyebrow">{item.badgeLabel || "Flagship Program"}</p>
+          <h1>{item.title}</h1>
+          {item.tagline ? <h2 className="program-detail__headline">{item.tagline}</h2> : null}
+          <p>{item.description}</p>
+          <div className="course-detail-hero__facts">
+            {item.duration ? <span><Clock3 size={18} />{item.duration}</span> : null}
+            {item.trainingMode ? <span><GraduationCap size={18} />{item.trainingMode}</span> : null}
+          </div>
+          <Link className="course-detail-hero__cta" href="#rise-curriculum">
+            Explore roadmap <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
+        <div className="course-detail-hero__art">
+          <Image src={item.image || "/images/courses/abstract-code.svg"} alt="" fill priority className="object-cover" />
+        </div>
+      </section>
+
+      <div className="course-detail-layout program-detail__layout">
+        <main>
+          <section className="course-detail-section" id="rise-curriculum" aria-labelledby="flagship-roadmap-heading">
+            <p className="courses-eyebrow">Roadmap</p>
+            <h2 id="flagship-roadmap-heading">A structured path to industry readiness</h2>
+            {stages.length ? <CourseCurriculum curriculum={stages} /> : <p>Program roadmap coming soon.</p>}
+          </section>
+          {item.highlights?.length ? <section className="course-detail-section">
+            <p className="courses-eyebrow">Program Highlights</p>
+            <h2>What makes this pathway distinctive</h2>
+            <ul className="course-outcomes">{item.highlights.map((highlight) => <li key={highlight}><CheckCircle2 size={19} />{highlight}</li>)}</ul>
+          </section> : null}
+          {item.longDescription ? <section className="course-detail-section"><p className="courses-eyebrow">Program Vision</p><h2>Designed for sustained progress</h2><p>{item.longDescription}</p></section> : null}
+        </main>
+        <aside className="course-detail-aside program-detail__aside" aria-label="Program information">
+          <div><h2>Program information</h2><dl>
+            {item.duration ? <div><dt>Duration</dt><dd>{item.duration}</dd></div> : null}
+            {item.trainingMode ? <div><dt>Training mode</dt><dd>{item.trainingMode}</dd></div> : null}
+            {item.eligibility ? <div><dt>Eligibility</dt><dd>{item.eligibility}</dd></div> : null}
+            {item.audienceLabel ? <div><dt>Target audience</dt><dd>{item.audienceLabel}</dd></div> : null}
+          </dl><Link href="/register">Register interest <ArrowRight size={16} /></Link></div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
 export default async function DetailPage({ item, searchParams }) {
   if (item.kind === "program") {
     return <ProgramDetailPage item={item} />;
+  }
+  if (item.kind === "flagship") {
+    return <FlagshipDetailPage item={item} />;
   }
 
   const label = item.kind === "bundle" ? "Learning package" : "Course";
@@ -127,15 +186,14 @@ export default async function DetailPage({ item, searchParams }) {
 
       <section className="course-detail-hero">
         <div className="course-detail-hero__copy">
+          {item.kind !== "bundle" ? <p className="courses-eyebrow">{item.badgeLabel || "Course"}</p> : null}
           {item.kind === "bundle" ? (
-            <p className="courses-eyebrow">
-              {label} · {item.category}
-            </p>
+            <p className="courses-eyebrow">{label} · {item.category}</p>
           ) : null}
 
           <h1>{item.title}</h1>
 
-          <p>{item.longDescription}</p>
+          <p>{item.description}</p>
 
           <div className="course-detail-hero__facts">
             <span>
@@ -168,7 +226,7 @@ export default async function DetailPage({ item, searchParams }) {
 
         <div className="course-detail-hero__art">
           <Image
-            src={item.image}
+            src={item.image || "/images/courses/abstract-code.svg"}
             alt=""
             fill
             priority
@@ -179,11 +237,11 @@ export default async function DetailPage({ item, searchParams }) {
 
       <div className="course-detail-layout">
         <main>
-          {/* <section className="course-detail-section">
+          <section className="course-detail-section">
             <p className="courses-eyebrow">Overview</p>
             <h2>Learn with purpose and practical context.</h2>
-            <p>{item.description}</p>
-          </section> */}
+            <p>{item.longDescription || item.description}</p>
+          </section>
 
           <section className="course-detail-section">
             <p className="courses-eyebrow">Course pathway</p>
@@ -193,6 +251,9 @@ export default async function DetailPage({ item, searchParams }) {
               every stage.
             </p>
           </section>
+
+          {item.tools?.length ? <section className="course-detail-section"><p className="courses-eyebrow">Tools</p><h2>Tools you will use</h2><ul className="course-outcomes">{item.tools.map((tool) => <li key={tool}><CheckCircle2 size={19} />{tool}</li>)}</ul></section> : null}
+          {item.targetRoles?.length ? <section className="course-detail-section"><p className="courses-eyebrow">Target roles</p><h2>Roles this course supports</h2><ul className="course-outcomes">{item.targetRoles.map((role) => <li key={role}><CheckCircle2 size={19} />{role}</li>)}</ul></section> : null}
 
           <section className="course-detail-section">
             <p className="courses-eyebrow">Curriculum</p>
@@ -222,7 +283,7 @@ export default async function DetailPage({ item, searchParams }) {
             <dl>
               <div>
                 <dt>Format</dt>
-                <dd>Guided learning</dd>
+                <dd>{item.delivery || "Guided learning"}</dd>
               </div>
 
               <div>
@@ -235,10 +296,6 @@ export default async function DetailPage({ item, searchParams }) {
                 <dd>{item.prerequisites}</dd>
               </div>
 
-              <div>
-                <dt>Price</dt>
-                <dd>{item.price}</dd>
-              </div>
             </dl>
 
             <Link href="/register">
