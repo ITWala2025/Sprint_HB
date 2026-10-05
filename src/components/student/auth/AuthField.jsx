@@ -36,6 +36,7 @@ export default function AuthField({
   error,
   hint,
   icon,
+  showIcon = true,
   trailing,
   options,
   prefix,
@@ -67,7 +68,7 @@ export default function AuthField({
     );
 
   const fieldClasses = `sprint-focus h-12 w-full rounded-xl border bg-brand-white text-sm text-brand-text shadow-sm outline-none transition-colors placeholder:text-brand-text-muted focus:ring-4 disabled:cursor-not-allowed disabled:bg-brand-surface ${
-    icon ? "pl-11" : "pl-4"
+    icon && showIcon ? "pl-11" : "pl-4"
   } ${trailingSlot ? "pr-12" : "pr-4"} ${
     error
       ? "border-brand-red focus:border-brand-red focus:ring-brand-red/15"
@@ -89,7 +90,7 @@ export default function AuthField({
       </div>
 
       <div className="relative mt-2">
-        {icon ? (
+        {icon && showIcon && !prefix ? (
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-y-0 left-0 grid w-11 place-items-center text-brand-text-muted"
@@ -108,7 +109,7 @@ export default function AuthField({
               {prefix}
             </span>
             <div className="relative min-w-0 flex-1">
-              {icon ? (
+              {icon && showIcon ? (
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-y-0 left-0 grid w-11 place-items-center text-brand-text-muted"
