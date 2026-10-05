@@ -471,6 +471,22 @@ function emptyCourse(): CoursePayload {
     };
 }
 
+function TopicsInput({ topics, onChange }: { topics: string[]; onChange: (topics: string[]) => void }) {
+    const [value, setValue] = useState(topics.join(", "));
+
+    return <input
+        type="text"
+        value={value}
+        onChange={(event) => {
+            const rawValue = event.target.value;
+            setValue(rawValue);
+            onChange(rawValue.split(",").map((topic) => topic.trim()).filter(Boolean));
+        }}
+        className={inputClass}
+        placeholder="e.g., Data pre-processing, Feature scaling, Model evaluation"
+    />;
+}
+
 function CourseModal({ course, isSaving, onClose, onSave }: { course: CourseItem | null; isSaving: boolean; onClose: () => void; onSave: (payload: CoursePayload) => Promise<boolean> }) {
     const [form, setForm] = useState<CoursePayload>(() => course ? {
         ...course,
@@ -556,7 +572,7 @@ function CourseModal({ course, isSaving, onClose, onSave }: { course: CourseItem
                                 <label className={labelClass}>Sessions<input type="number" min="0" value={module.sessions} onChange={(event) => updateModule(index, { sessions: Number(event.target.value) })} className={inputClass} /></label>
                                 <button type="button" onClick={() => setField("curriculum", form.curriculum.filter((_, moduleIndex) => moduleIndex !== index))} className="sprint-focus mt-5 inline-flex h-10 items-center justify-center gap-1 rounded-lg px-3 text-xs font-bold text-brand-red hover:bg-brand-red-light"><Trash2 className="size-4" aria-hidden="true" />Remove</button>
                             </div>
-                            <label className={labelClass}>Topics<input value={(module.topics || []).join(", ")} onChange={(event) => updateModule(index, { topics: event.target.value.split(",").map((topic) => topic.trim()).filter(Boolean) })} className={inputClass} placeholder="Foundations, guided labs, project work" /></label>
+                            <label className={labelClass}>Topics<TopicsInput topics={module.topics || []} onChange={(topics) => updateModule(index, { topics })} /></label>
                         </div>)}
                             <button type="button" onClick={() => setField("curriculum", [...form.curriculum, { title: "", sessions: 0, topics: [] }])} className="sprint-focus inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-brand-navy hover:bg-slate-50"><Plus className="size-4" aria-hidden="true" />Add Module</button>
                         </div>
