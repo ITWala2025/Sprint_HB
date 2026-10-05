@@ -407,6 +407,23 @@
   line-height: 1.5;
 }
 
+/* Neutral confirmation (the signed-out notice). Same shape as the error
+   banner but deliberately not red, so a success message is never mistaken
+   for a failure. */
+.student-login-notice {
+  padding: 11px 13px;
+
+  border: 1px solid #c7d7ea;
+  border-radius: 8px;
+
+  background: #f1f5f9;
+
+  color: #062c52;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 /* =========================================================
    SUBMIT
 ========================================================= */
