@@ -17,6 +17,7 @@ import {
 
 import navigation from "@/config/student-navigation.json";
 import { mockStudent } from "@/data/student";
+import LogoutButton from "./LogoutButton";
 
 /* Icon registry — the nav config stays JSON-only (SSOT) while icons stay typed. */
 const ICONS = {
@@ -146,6 +147,9 @@ export default function StudentSidebar({
             </span>
           ) : null}
         </div>
+
+        {/* Session control sits with the identity, as in the admin shell. */}
+        <LogoutButton collapsed={collapsed} className="mt-1" />
       </div>
     </nav>
   );

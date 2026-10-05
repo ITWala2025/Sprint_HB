@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { consumeStudentSignOutFlag } from "@/components/student/student-session";
 import SignupModal from "@/components/student/auth/SignupModal";
 
 import "./login.css";
@@ -25,6 +26,7 @@ export default function StudentLoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [signedOutNotice, setSignedOutNotice] = useState("");
 
   useEffect(() => {
     document.body.classList.add("student-auth-page");
@@ -32,6 +34,17 @@ export default function StudentLoginPage() {
     return () => {
       document.body.classList.remove("student-auth-page");
     };
+  }, []);
+
+  /*
+   * Arriving here straight from the portal's Logout button shows a
+   * confirmation, so the student knows the session was ended rather than
+   * the page simply having thrown them out.
+   */
+  useEffect(() => {
+    if (consumeStudentSignOutFlag()) {
+      setSignedOutNotice("You have been signed out. Please sign in again.");
+    }
   }, []);
 
   /*
@@ -357,6 +370,17 @@ export default function StudentLoginPage() {
                   Forgot Password?
                 </Link>
               </div>
+
+              {/* Signed-out confirmation (see LogoutButton) */}
+              {signedOutNotice && (
+                <div
+                  className="student-login-notice"
+                  role="status"
+                  aria-live="polite"
+                >
+                  {signedOutNotice}
+                </div>
+              )}
 
               {/* Error */}
               {error && (
