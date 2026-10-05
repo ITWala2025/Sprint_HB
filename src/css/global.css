@@ -158,6 +158,33 @@ a {
   }
 }
 
+  .program-detail__headline {
+    margin: 0.9rem 0 0;
+    color: #4f26d7;
+    font: 700 clamp(1.35rem, 2.5vw, 2rem) / 1.2 var(--font-display);
+    letter-spacing: -0.035em;
+  }
+
+  .program-detail__layout {
+    align-items: start;
+  }
+
+  .program-detail__layout main {
+    min-width: 0;
+  }
+
+  .program-detail__aside dl div:first-child {
+    border-top: 0;
+  }
+
+  .program-detail__aside dd {
+    overflow-wrap: anywhere;
+  }
+
+  .program-detail__aside > div:first-child {
+    position: static;
+  }
+
 @media (max-width: 767px) {
   .whatsapp-float {
     right: clamp(0.75rem, 3vw, 1.25rem);
@@ -5290,6 +5317,418 @@ a {
   color: var(--color-brand-text);
 }
 
+/* Courses: Signature Programs */
+.courses-signature-programs {
+  width: min(100% - 2rem, 1200px);
+  margin: clamp(2.75rem, 6vw, 5.5rem) auto;
+}
+
+.courses-signature-programs__heading h2 {
+  margin: 0;
+  color: var(--color-brand-navy);
+  font: 700 clamp(1.9rem, 3.5vw, 3.15rem) / 1.08 var(--font-display);
+  letter-spacing: -0.04em;
+}
+
+.courses-signature-programs__heading p {
+  margin: 0.7rem 0 0;
+  color: var(--color-brand-text-secondary);
+  font: 400 clamp(1rem, 1.7vw, 1.2rem) / 1.55 var(--font-body);
+}
+
+.courses-signature-programs__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  margin-top: clamp(1.5rem, 3vw, 2.4rem);
+  overflow: hidden;
+  border: 1px solid #ddd6fe;
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 10% 8%, rgba(255, 255, 255, 0.95), transparent 38%),
+    linear-gradient(118deg, #f8f8ff 0%, #f3f7ff 54%, #faf7ff 100%);
+  box-shadow: 0 18px 42px -36px rgba(75, 52, 170, 0.55);
+}
+
+.courses-signature-programs__panel--three-year {
+  margin-top: 1.25rem;
+}
+
+.courses-signature-programs__panel--three-year
+  .courses-signature-programs__overview {
+  padding: 1.75rem 1.25rem;
+}
+
+.courses-signature-programs__panel--three-year
+  .courses-signature-programs__overview h3 {
+  margin-top: 0.25rem;
+}
+
+.courses-signature-programs__panel--three-year
+  .courses-signature-programs__description {
+  margin-top: 0.35rem;
+}
+
+.courses-signature-programs__panel--three-year .courses-signature-programs__cta {
+  margin-top: 0.55rem;
+}
+
+.courses-results__group + .courses-results__group {
+  margin-top: 2.5rem;
+}
+
+.courses-results__group-heading {
+  margin: 0 0 1rem;
+  color: var(--color-brand-navy);
+  font: 700 clamp(1.4rem, 2.4vw, 2rem) / 1.12 var(--font-display);
+  letter-spacing: -0.035em;
+}
+
+.courses-signature-programs__overview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.courses-signature-programs__name {
+  margin: 0;
+  color: var(--color-brand-navy);
+  font: 800 clamp(1.55rem, 3vw, 2.45rem) / 1 var(--font-display);
+  letter-spacing: -0.045em;
+}
+
+.courses-signature-programs__overview h3 {
+  margin: 0.45rem 0 0;
+  color: #4f26d7;
+  font: 700 clamp(1.25rem, 2.4vw, 2rem) / 1.18 var(--font-display);
+  letter-spacing: -0.035em;
+}
+
+.courses-signature-programs__description {
+  max-width: 34rem;
+  margin: 0.65rem 0 0;
+  color: var(--color-brand-text-secondary);
+  font: 400 clamp(0.94rem, 1.5vw, 1.08rem) / 1.6 var(--font-body);
+}
+
+.courses-signature-programs__metadata {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  gap: 0.45rem 1.25rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.courses-signature-programs__metadata li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #49658e;
+  font: 600 0.88rem / 1.35 var(--font-body);
+}
+
+.courses-signature-programs__metadata svg {
+  flex: 0 0 auto;
+  color: var(--color-brand-navy);
+}
+
+.courses-signature-programs__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: fit-content;
+  min-height: 3rem;
+  margin-top: 0.85rem;
+  padding: 0.75rem 1.15rem;
+  border: 1px solid var(--color-brand-navy);
+  border-radius: 0.6rem;
+  background: var(--color-brand-navy);
+  color: var(--color-brand-white);
+  font: 800 0.9rem var(--font-body);
+  text-decoration: none;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+.courses-signature-programs__cta:hover {
+  border-color: var(--color-brand-red);
+  background: var(--color-brand-red);
+  transform: translateY(-1px);
+}
+
+.courses-signature-programs__cta:focus-visible {
+  outline: 3px solid var(--color-brand-red);
+  outline-offset: 3px;
+}
+
+.courses-signature-programs__journey {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 0.75rem 1.25rem;
+  border-left: 1px solid #d8d4f4;
+}
+
+.courses-signature-programs__journey-heading {
+  margin: 0 0 0.65rem;
+  color: var(--color-brand-navy);
+  font: 800 0.75rem / 1.3 var(--font-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.courses-signature-programs__milestones {
+  display: flex;
+  gap: 0.75rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 0.35rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  list-style: none;
+  scroll-padding-inline: 0.25rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.courses-signature-programs__milestones:focus-visible {
+  outline: 2px solid var(--color-brand-red);
+  outline-offset: 3px;
+}
+
+.courses-signature-programs__milestone {
+  flex: 0 0 clamp(10rem, 26%, 12rem);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #ddd6fe;
+  border-radius: 0.85rem;
+  background: #fff;
+  box-shadow: 0 10px 24px -20px rgba(75, 52, 170, 0.6);
+  scroll-snap-align: start;
+}
+
+.courses-signature-programs__milestone-image {
+  position: relative;
+  height: 5.5rem;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e8efff, #f7f8ff 58%, #f6edff);
+}
+
+.courses-signature-programs__milestone-content {
+  padding: 0.75rem 0.8rem 0.85rem;
+}
+
+.courses-signature-programs__milestone h4 {
+  margin: 0;
+  color: var(--color-brand-navy);
+  font: 700 0.9rem / 1.3 var(--font-display);
+}
+
+.courses-signature-programs__milestone p {
+  margin: 0.4rem 0 0;
+  color: var(--color-brand-text-secondary);
+  font: 400 0.78rem / 1.45 var(--font-body);
+}
+
+.courses-signature-programs__milestones--three-year
+  .courses-signature-programs__milestone {
+  flex-basis: calc((100% - 1.5rem) / 3);
+}
+
+.courses-signature-programs__milestone-content--stage {
+  display: flex;
+  justify-content: center;
+  padding: 0.6rem 0.5rem 0.7rem;
+}
+
+.courses-signature-programs__stage-label {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 0.38rem 0.65rem;
+  border: 1px solid #e4dcff;
+  border-radius: 999px;
+  background: #f5f1ff;
+  color: #4f26d7;
+  font: 700 0.72rem / 1.2 var(--font-body);
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (min-width: 1200px) {
+  .courses-signature-programs__panel--rise {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__overview {
+    display: flex;
+    padding: 0.35rem 1.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__overview h3 {
+    margin-top: 0.15rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__description {
+    margin-top: 0.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__metadata {
+    grid-template-columns: repeat(3, max-content);
+    gap: 0.3rem 0.65rem;
+    margin-top: 0.35rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__cta {
+    align-self: start;
+    margin-top: 0.35rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__milestone {
+    flex-basis: clamp(8.5rem, 25%, 10rem);
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__milestone-image {
+    height: 3.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__milestone-content {
+    padding: 0.45rem 0.55rem 0.5rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .courses-signature-programs__panel {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+
+  .courses-signature-programs__panel--three-year
+    .courses-signature-programs__overview {
+    padding: 1.25rem;
+  }
+
+  .courses-signature-programs__panel--three-year
+    .courses-signature-programs__overview h3,
+  .courses-signature-programs__panel--three-year
+    .courses-signature-programs__description {
+    margin-top: 0.45rem;
+  }
+
+  .courses-signature-programs__panel--three-year
+    .courses-signature-programs__cta {
+    margin-top: 0.75rem;
+  }
+
+  .courses-signature-programs__overview {
+    padding: 1.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__overview {
+    display: flex;
+    gap: 0;
+    padding: 1.25rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__overview h3 {
+    margin-top: 0.45rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__description {
+    margin-top: 0.65rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__metadata {
+    grid-template-columns: 1fr;
+    margin-top: 0.8rem;
+  }
+
+  .courses-signature-programs__panel--rise
+    .courses-signature-programs__cta {
+    margin-top: 0.85rem;
+  }
+
+  .courses-signature-programs__metadata {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .courses-signature-programs__milestones--three-year
+    .courses-signature-programs__milestone {
+    flex-basis: 9.25rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .courses-signature-programs {
+    margin: 2.5rem auto;
+  }
+
+  .courses-signature-programs__panel {
+    grid-template-columns: 1fr;
+  }
+
+  .courses-signature-programs__panel--three-year {
+    margin-top: 1rem;
+  }
+
+  .courses-signature-programs__overview {
+    padding: 1.25rem;
+  }
+
+  .courses-signature-programs__metadata {
+    grid-template-columns: 1fr;
+  }
+
+  .courses-signature-programs__cta {
+    width: 100%;
+  }
+
+  .courses-signature-programs__journey {
+    padding: 0.9rem 1.25rem;
+    border-top: 1px solid #d8d4f4;
+    border-left: 0;
+  }
+
+  .courses-signature-programs__milestone {
+    flex-basis: min(74%, 16rem);
+  }
+
+  .courses-signature-programs__milestones--three-year
+    .courses-signature-programs__milestone {
+    flex-basis: min(74%, 16rem);
+  }
+
+  .courses-signature-programs__stage-label {
+    font-size: 0.68rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .courses-signature-programs__cta {
+    transition: none;
+  }
+
+  .courses-signature-programs__cta:hover {
+    transform: none;
+  }
+}
+
 .courses-hero {
   position: relative;
   isolation: isolate;
@@ -5419,7 +5858,8 @@ a {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  max-width: 670px;
+  width: 100%;
+  max-width: 400px;
   margin-top: 2rem;
   padding: 0.2rem 0.9rem;
   border: 1px solid #cbd5e1;
@@ -5486,6 +5926,11 @@ a {
   backdrop-filter: blur(12px);
 }
 .course-audience__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   width: min(100% - 2rem, 1200px);
   margin: auto;
   padding: 0.85rem 0;
@@ -5523,11 +5968,28 @@ a {
 
 .course-audience__mobile {
   display: none;
+  flex: 1 1 15rem;
+  min-width: 0;
+}
+
+.course-filter-trigger {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--color-brand-border);
+  border-radius: 0.55rem;
+  background: #fff;
+  color: var(--color-brand-navy);
+  cursor: pointer;
+  font: 700 0.75rem var(--font-body);
 }
 
 .courses-content {
   display: grid;
-  grid-template-columns: 235px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(2rem, 4vw, 4.5rem);
   width: min(100% - 2rem, 1200px);
   margin: 0 auto;
@@ -5769,10 +6231,6 @@ a {
   color: #fff;
 }
 
-.course-filter-trigger {
-  display: none;
-}
-
 .courses-empty {
   padding: 3.5rem 1rem;
   border: 1px dashed #cbd5e1;
@@ -5792,7 +6250,23 @@ a {
 }
 
 .course-filter-drawer {
-  display: none;
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(1, 31, 62, 0.48);
+}
+
+.course-filter-drawer__panel {
+  width: min(100%, 28rem);
+  max-height: 82vh;
+  overflow: auto;
+  padding: 1.3rem 1.25rem 1.4rem;
+  border-radius: 1.25rem;
+  background: #fff;
 }
 
 .courses-cta {
@@ -6167,19 +6641,6 @@ a {
     font-size: 1.9rem;
   }
 
-  .course-filter-trigger {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.7rem 0.75rem;
-    border: 1px solid var(--color-brand-border);
-    border-radius: 0.55rem;
-    background: #fff;
-    color: var(--color-brand-navy);
-    font: 700 0.75rem var(--font-body);
-  }
-
   .course-grid {
     grid-template-columns: 1fr;
   }
@@ -6193,21 +6654,13 @@ a {
   }
 
   .course-filter-drawer {
-    position: fixed;
-    z-index: 100;
-    inset: 0;
-    display: flex;
     align-items: end;
-    background: rgba(1, 31, 62, 0.48);
+    padding: 0;
   }
 
   .course-filter-drawer__panel {
     width: 100%;
-    max-height: 82vh;
-    overflow: auto;
-    padding: 1.3rem 1.25rem 1.4rem;
     border-radius: 1.25rem 1.25rem 0 0;
-    background: #fff;
   }
 
   .course-filter-drawer__apply {
@@ -6319,4 +6772,23 @@ a {
     transform: none;
   }
 }
+}
+
+@media (max-width: 767px) {
+  .program-detail .program-detail__aside {
+    display: block;
+    margin-top: 1rem;
+  }
+
+  .program-detail .program-detail__aside > div:first-child {
+    position: static;
+    padding: 1.3rem;
+    border: 1px solid var(--color-brand-border);
+    box-shadow: none;
+  }
+
+  .program-detail .program-detail__aside > div:first-child h2,
+  .program-detail .program-detail__aside > div:first-child dl {
+    display: block;
+  }
 }

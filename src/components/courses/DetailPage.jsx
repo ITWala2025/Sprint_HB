@@ -11,7 +11,91 @@ import {
 import CourseCurriculum from "./CourseDetail";
 import { audienceOptions } from "@/data/courses";
 
+function ProgramDetailPage({ item }) {
+  const facts = [
+    ["Duration", item.duration],
+    ["Level", item.level],
+    ["Delivery", item.delivery],
+    ["Credential", item.certification],
+  ].filter(([, value]) => value);
+
+  return (
+    <div className="course-detail program-detail">
+      <nav className="course-breadcrumb" aria-label="Breadcrumb">
+        <Link href="/courses">Courses</Link>
+        <span aria-hidden="true">&gt;</span>
+        <span aria-current="page">{item.title}</span>
+      </nav>
+
+      <section className="course-detail-hero">
+        <div className="course-detail-hero__copy">
+          <p className="courses-eyebrow">SPRINT Program</p>
+          <h1>{item.title}</h1>
+          <h2 className="program-detail__headline">{item.headline}</h2>
+          <p>{item.description}</p>
+
+          <Link
+            className="course-detail-hero__cta"
+            href="#rise-curriculum"
+          >
+            Explore curriculum
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
+
+        <div className="course-detail-hero__art">
+          <Image
+            src={item.image}
+            alt=""
+            fill
+            priority
+            className="object-cover"
+          />
+        </div>
+      </section>
+
+      <div className="course-detail-layout program-detail__layout">
+        <main>
+          <section
+            className="course-detail-section"
+            id="rise-curriculum"
+            aria-labelledby="rise-curriculum-heading"
+          >
+            <p className="courses-eyebrow">Curriculum</p>
+            <h2 id="rise-curriculum-heading">Program Stage</h2>
+            <p>
+              Learning Board topics and activities have not yet been provided.
+            </p>
+            <CourseCurriculum curriculum={item.curriculum} />
+          </section>
+        </main>
+
+        <aside
+          className="course-detail-aside program-detail__aside"
+          aria-labelledby="rise-facts-heading"
+        >
+          <div>
+            <h2 id="rise-facts-heading">Program facts</h2>
+            <dl>
+              {facts.map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
 export default async function DetailPage({ item, searchParams }) {
+  if (item.kind === "program") {
+    return <ProgramDetailPage item={item} />;
+  }
+
   const label = item.kind === "bundle" ? "Learning package" : "Course";
 
   const query =

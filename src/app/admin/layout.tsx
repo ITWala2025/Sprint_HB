@@ -10,6 +10,8 @@ import {
     Menu, Megaphone, PhoneCall, Search, School, ShieldAlert, ShieldCheck, UserCheck, Users,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { canAccessAdminRoute, type AdminPermissionMap } from "@/app/admin/authorization";
+import ForcePasswordChangeModal from "@/components/admin/auth/ForcePasswordChangeModal";
 
 
 type Icon = typeof LayoutDashboard;
@@ -25,6 +27,7 @@ const directItems: NavigationItem[] = [
 const navigationGroups: NavigationGroup[] = [
     {
         label: "Admissions & Enquiries", icon: PhoneCall, items: [
+            { label: "Enquiries", href: "/admin/enquiries", icon: PhoneCall },
             { label: "Std/Emp Enquiries", href: "/admin/admissions/students", icon: PhoneCall, badge: "14" },
             { label: "Partner Company Enquiries", href: "/admin/admissions/companies", icon: Building2 },
             { label: "Partner College Enquiries", href: "/admin/admissions/colleges", icon: School },
@@ -81,6 +84,7 @@ const navigationGroups: NavigationGroup[] = [
         label: "Access Management",
         icon: ShieldCheck,
         items: [
+            { label: "Staff & User Directory", href: "/admin/users", icon: Users },
             { label: "Roles & Permissions", href: "/admin/roles", icon: ShieldCheck },
         ]
     },
@@ -98,41 +102,15 @@ function isActive(pathname: string, href: string) {
     return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-const itemPermission: Record<string, string> = {
-    "/admin/admissions": "admissions",
-    "/admin/cms/home": "cms_home",
-    "/admin/cms/about": "cms_about",
-    "/admin/cms/courses": "cms_courses",
-    "/admin/cms/contact": "cms_contact",
-    "/admin/cms/careers": "cms_careers",
-    "/admin/cms/announcements": "cms_announcements",
-    "/admin/cms/legal": "cms_legal",
-    "/admin/courses": "academics",
-    "/admin/students": "student_ops",
-    "/admin/academics": "academics",
-    "/admin/partners/companies": "partners",
-    "/admin/partners/colleges": "partners",
-    "/admin/trainers": "trainers",
-    "/admin/updates": "cms_announcements",
-    "/admin/roles": "access_control",
-};
-
-function hasFullAccess(permissionMap: PermissionMap | null, roleName?: string | null, isAdmin = false) {
-    if (isAdmin || roleName?.toLowerCase() === "super admin" || roleName?.toLowerCase() === "admin" || permissionMap?.full_access) return true;
-    const requiredModules = ["cms_home", "cms_about", "cms_courses", "cms_contact", "cms_careers", "cms_announcements", "cms_legal", "admissions", "student_ops", "academics", "trainers", "partners", "access_control"];
-    const requiredCapabilities = ["view", "create", "edit", "delete", "export"];
-    return Boolean(permissionMap && requiredModules.every((module) => requiredCapabilities.every((capability) => permissionMap[module]?.[capability as keyof Permission] === true)));
+function canViewItem(item: NavigationItem, permissionMap: PermissionMap | null, profileRole: string | null, roleName: string | null, isAdmin: boolean, isLoading: boolean) {
+    if (isLoading || !item.href.startsWith("/admin/")) return true;
+    return canAccessAdminRoute(item.href, permissionMap, profileRole, roleName);
 }
 
-function canViewItem(item: NavigationItem, permissionMap: PermissionMap | null, roleName?: string | null, isAdmin = false, isLoading = false) {
-    const permissionKey = itemPermission[item.href];
-    return !permissionKey || isLoading || hasFullAccess(permissionMap, roleName, isAdmin) || permissionMap?.[permissionKey]?.view === true;
-}
-
-function Sidebar({ pathname, onNavigate, permissionMap, roleName, isAdmin, isLoading }: { pathname: string; onNavigate?: () => void; permissionMap: PermissionMap | null; roleName: string | null; isAdmin: boolean; isLoading: boolean }) {
-    const showStandardNavigation = isLoading || isAdmin;
-    const visibleGroups = useMemo(() => showStandardNavigation ? navigationGroups : navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => canViewItem(item, permissionMap, roleName, isAdmin, isLoading)) })).filter((group) => group.items.length > 0), [isAdmin, isLoading, permissionMap, roleName, showStandardNavigation]);
-    const visibleLegalGroup = showStandardNavigation ? legalGroup : { ...legalGroup, items: legalGroup.items.filter((item) => canViewItem(item, permissionMap, roleName, isAdmin, isLoading)) };
+function Sidebar({ pathname, onNavigate, permissionMap, profileRole, roleName, isAdmin, isLoading }: { pathname: string; onNavigate?: () => void; permissionMap: PermissionMap | null; profileRole: string | null; roleName: string | null; isAdmin: boolean; isLoading: boolean }) {
+    const showStandardNavigation = isLoading || isAdmin || roleName?.toLowerCase() === "super admin" || permissionMap?.full_access === true;
+    const visibleGroups = useMemo(() => showStandardNavigation ? navigationGroups : navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => canViewItem(item, permissionMap, profileRole, roleName, isAdmin, isLoading)) })).filter((group) => group.items.length > 0), [isAdmin, isLoading, permissionMap, profileRole, roleName, showStandardNavigation]);
+    const visibleLegalGroup = showStandardNavigation ? legalGroup : { ...legalGroup, items: legalGroup.items.filter((item) => canViewItem(item, permissionMap, profileRole, roleName, isAdmin, isLoading)) };
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
         Object.fromEntries([...navigationGroups, legalGroup].map((group) => [group.label, group.items.some((item) => isActive(pathname, item.href))])),
     );
@@ -164,7 +142,7 @@ function Sidebar({ pathname, onNavigate, permissionMap, roleName, isAdmin, isLoa
                 {directItems.map((item) => renderLink(item))}
                 <p className="mb-3 mt-7 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">Management</p>
                 {visibleGroups.map(renderGroup)}
-                {(showStandardNavigation || canViewItem(updatesItem, permissionMap, roleName, isAdmin, isLoading)) && <div className="space-y-1 pt-1">{renderLink(updatesItem)}</div>}
+                {(showStandardNavigation || canViewItem(updatesItem, permissionMap, profileRole, roleName, isAdmin, isLoading)) && <div className="space-y-1 pt-1">{renderLink(updatesItem)}</div>}
                 <div className="mt-auto border-t border-slate-200 pt-5">
                     <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">System</p>
                     {visibleLegalGroup.items.length > 0 && renderGroup(visibleLegalGroup)}
@@ -181,43 +159,66 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     const supabase = useMemo(() => createClient(), []);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [permissionMap, setPermissionMap] = useState<PermissionMap | null>(null);
+    const [profileRole, setProfileRole] = useState<string | null>(null);
     const [roleName, setRoleName] = useState<string | null>(null);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [mustChangePassword, setMustChangePassword] = useState(false);
+    const [isAuthorized, setIsAuthorized] = useState(false);
+    const [accessError, setAccessError] = useState("");
     const [isAccessLoading, setIsAccessLoading] = useState(true);
+    const [verifiedPath, setVerifiedPath] = useState("");
 
     useEffect(() => {
         let isMounted = true;
         async function loadAccess() {
-            const { data: userData } = await supabase.auth.getUser();
-            if (!userData.user) { setIsAccessLoading(false); return; }
-            const { data: profile } = await supabase
+            if (pathname === "/admin") {
+                setVerifiedPath(pathname);
+                setIsAccessLoading(false);
+                return;
+            }
+
+            setIsAccessLoading(true);
+            const { data: userData, error: authError } = await supabase.auth.getUser();
+            if (authError || !userData.user) {
+                if (!isMounted) return;
+                setIsAuthorized(false);
+                setIsAccessLoading(false);
+                setVerifiedPath(pathname);
+                router.replace("/admin");
+                return;
+            }
+
+            const { data: profile, error: profileError } = await supabase
                 .from("profiles")
-                .select("role")
+                .select("role, is_active, must_change_password, roles(name, permissions, is_active)")
                 .eq("id", userData.user.id)
                 .maybeSingle();
             if (!isMounted) return;
-            if (!profile) { setIsAccessLoading(false); return; }
+            if (profileError || !profile || profile.is_active !== true) {
+                setAccessError(profileError?.message ?? "An active staff profile could not be verified.");
+                setIsAuthorized(false);
+                setIsAccessLoading(false);
+                setVerifiedPath(pathname);
+                return;
+            }
+
+            const assignedRole = Array.isArray(profile.roles) ? profile.roles[0] : profile.roles;
             const legacyAdmin = profile.role === "admin";
             setIsAdmin(legacyAdmin);
+            setProfileRole(profile.role ?? null);
+            setMustChangePassword(profile.must_change_password === true && profile.role !== "admin");
             setRoleName(profile.role ?? null);
-
-            if (!legacyAdmin) {
-                const { data: assignedProfile } = await supabase
-                    .from("profiles")
-                    .select("role_id, roles(name, permissions)")
-                    .eq("id", userData.user.id)
-                    .maybeSingle();
-                const role = Array.isArray(assignedProfile?.roles) ? assignedProfile.roles[0] : assignedProfile?.roles;
-                setRoleName(role?.name ?? profile.role ?? null);
-                setPermissionMap((role?.permissions as PermissionMap | null) ?? null);
-            }
+            const validAssignedRole = Boolean(assignedRole?.name && assignedRole.is_active !== false);
+            setRoleName(assignedRole?.name ?? profile.role ?? null);
+            setPermissionMap((assignedRole?.permissions as AdminPermissionMap | null) ?? null);
+            setIsAuthorized(legacyAdmin || validAssignedRole);
+            setAccessError(legacyAdmin || validAssignedRole ? "" : "This account does not have an active admin role assigned.");
             setIsAccessLoading(false);
+            setVerifiedPath(pathname);
         }
         void loadAccess();
         return () => { isMounted = false; };
-    }, [supabase]);
-
-    if (pathname === "/admin") return children;
+    }, [pathname, router, supabase]);
 
     async function handleSignOut() {
         await supabase.auth.signOut();
@@ -225,10 +226,39 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         router.refresh();
     }
 
+    if (pathname === "/admin") return children;
+
+    if (isAccessLoading || verifiedPath !== pathname) {
+        return <main className="flex min-h-screen items-center justify-center bg-brand-off-white" role="status" aria-live="polite"><p className="text-sm font-medium text-brand-text-secondary">Verifying staff access...</p></main>;
+    }
+
+    if (!isAuthorized || !canAccessAdminRoute(pathname, permissionMap as AdminPermissionMap | null, profileRole, roleName)) {
+        return (
+            <>
+                <main className="flex min-h-screen items-center justify-center bg-brand-off-white px-4 py-12">
+                    <section className="w-full max-w-lg rounded-xl border border-brand-border bg-white p-8 text-center shadow-brand-card" aria-labelledby="admin-access-denied-title">
+                        <ShieldAlert className="mx-auto size-10 text-brand-red" aria-hidden="true" />
+                        <h1 id="admin-access-denied-title" className="mt-4 font-display text-2xl font-bold text-brand-navy">Access Denied</h1>
+                        <p className="mt-2 text-sm leading-6 text-brand-text-secondary">{accessError || "Your assigned role does not have permission to view this page."}</p>
+                        <div className="mt-6 flex justify-center gap-3">
+                            {isAuthorized && <Link href="/admin/dashboard" className="rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-bold text-white">Return to dashboard</Link>}
+                            <button type="button" onClick={handleSignOut} className="rounded-lg border border-brand-border px-4 py-2.5 text-sm font-bold text-brand-navy">Sign out</button>
+                        </div>
+                    </section>
+                </main>
+                {mustChangePassword && <ForcePasswordChangeModal onSuccess={() => { setMustChangePassword(false); router.refresh(); }} />}
+            </>
+        );
+    }
+
     const currentLabel =
-        pathname === "/admin/dashboard" ? "Dashboard" : "Admin Console";
+        pathname === "/admin/dashboard" ? "Dashboard"
+            : pathname === "/admin/users" ? "Staff & User Directory"
+                : pathname === "/admin/enquiries" ? "Enquiries"
+                    : pathname === "/admin/roles" ? "Roles & Permissions" : "Admin Console";
 
     return (
+        <>
         <div className="min-h-[calc(100vh-5rem)] bg-slate-50 lg:flex">
             {/* Mobile Backdrop */}
             <div
@@ -243,7 +273,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 className={`fixed inset-y-0 left-0 z-[70] transition-transform duration-300 lg:static lg:translate-x-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
             >
-                <Sidebar pathname={pathname} onNavigate={() => setIsMobileOpen(false)} permissionMap={permissionMap} roleName={roleName} isAdmin={isAdmin} isLoading={isAccessLoading} />
+                <Sidebar pathname={pathname} onNavigate={() => setIsMobileOpen(false)} permissionMap={permissionMap} profileRole={profileRole} roleName={roleName} isAdmin={isAdmin} isLoading={isAccessLoading} />
             </div>
 
             {/* Main Content Area */}
@@ -327,5 +357,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 </main>
             </div>
         </div>
+        {mustChangePassword && <ForcePasswordChangeModal onSuccess={() => { setMustChangePassword(false); router.refresh(); }} />}
+        </>
     );
 }

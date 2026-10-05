@@ -41,6 +41,9 @@ export const moduleCategories = [
     {
         title: "Student & Academic Operations",
         modules: [
+            ["courses", "Courses", "Manage the course library and course operations."],
+            ["instructors", "Instructors", "Manage instructor access and workflows."],
+            ["academic_ops", "Academic Operations", "Manage academic operations and assessments."],
             ["admissions", "Admissions", "Review enquiries and enrollment applications."],
             ["student_ops", "Student Operations", "Manage student records, attendance, and workflows."],
             ["academics", "Academics", "Manage courses, assessments, and results."],
@@ -49,8 +52,18 @@ export const moduleCategories = [
         ],
     },
     {
+        title: "Communications & Support",
+        modules: [
+            ["marketing", "Marketing", "Manage marketing and public-facing communications."],
+            ["support", "Support", "Manage support and enquiry workflows."],
+        ],
+    },
+    {
         title: "System & Administration",
-        modules: [["access_control", "Access Control", "Manage roles, permissions, and staff access."]],
+        modules: [
+            ["access_control", "Access Control", "Manage roles, permissions, and staff access."],
+            ["user_management", "User Management", "Provision and manage staff accounts."],
+        ],
     },
 ] as const;
 
