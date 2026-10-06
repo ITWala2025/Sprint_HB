@@ -17,7 +17,10 @@ function ProgramDetailPage({ item }) {
     ["Level", item.level],
     ["Delivery", item.delivery],
     ["Credential", item.certification],
+    ["Designed for", item.audience],
   ].filter(([, value]) => value);
+  const curriculumAnchor = item.curriculumAnchor ?? "program-curriculum";
+  const curriculumHeading = item.curriculum?.[0]?.label ?? "Program Stage";
 
   return (
     <div className="course-detail program-detail">
@@ -34,10 +37,7 @@ function ProgramDetailPage({ item }) {
           <h2 className="program-detail__headline">{item.headline}</h2>
           <p>{item.description}</p>
 
-          <Link
-            className="course-detail-hero__cta"
-            href="#rise-curriculum"
-          >
+          <Link className="course-detail-hero__cta" href={`#${curriculumAnchor}`}>
             Explore curriculum
             <ArrowRight size={18} aria-hidden="true" />
           </Link>
@@ -58,11 +58,11 @@ function ProgramDetailPage({ item }) {
         <main>
           <section
             className="course-detail-section"
-            id="rise-curriculum"
-            aria-labelledby="rise-curriculum-heading"
+            id={curriculumAnchor}
+            aria-labelledby={`${curriculumAnchor}-heading`}
           >
             <p className="courses-eyebrow">Curriculum</p>
-            <h2 id="rise-curriculum-heading">Program Stage</h2>
+            <h2 id={`${curriculumAnchor}-heading`}>{curriculumHeading}</h2>
             <p>
               Learning Board topics and activities have not yet been provided.
             </p>
@@ -70,22 +70,24 @@ function ProgramDetailPage({ item }) {
           </section>
         </main>
 
-        <aside
-          className="course-detail-aside program-detail__aside"
-          aria-labelledby="rise-facts-heading"
-        >
-          <div>
-            <h2 id="rise-facts-heading">Program facts</h2>
-            <dl>
-              {facts.map(([label, value]) => (
-                <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </aside>
+        {facts.length > 0 ? (
+          <aside
+            className="course-detail-aside program-detail__aside"
+            aria-labelledby="program-facts-heading"
+          >
+            <div>
+              <h2 id="program-facts-heading">Program facts</h2>
+              <dl>
+                {facts.map(([label, value]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </aside>
+        ) : null}
       </div>
     </div>
   );

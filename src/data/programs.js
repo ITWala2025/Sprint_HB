@@ -13,10 +13,10 @@ const riseStages = [
   { id: "industry-ready", title: "Industry-Ready" },
 ];
 
-const threeYearStages = [
-  { id: "year-1", title: "Year 1 — Foundations" },
-  { id: "year-2", title: "Year 2 — Ignite" },
-  { id: "year-3", title: "Year 3 — Outperform" },
+const careerAcceleratorPhases = [
+  { id: "phase-1-foundations", title: "Phase 1 — Foundations" },
+  { id: "phase-2-ignite", title: "Phase 2 — Ignite" },
+  { id: "phase-3-outperform", title: "Phase 3 — Outperform" },
 ];
 
 export const programs = [
@@ -25,6 +25,7 @@ export const programs = [
     kind: "program",
     title: "SPRINT RISE",
     headline: "Campus to Corporate in 6 Months",
+    curriculumAnchor: "rise-curriculum",
     description:
       "An intensive, industry-focused program to build in-demand skills in Cloud, AI, DevOps and more with hands-on projects and expert mentorship.",
     duration: "6 months",
@@ -46,17 +47,26 @@ export const programs = [
     })),
   },
   {
-    slug: "sprint-3-year-program",
+    slug: "career-accelerator",
     kind: "program",
-    title: "SPRINT 3-Year Program",
-    headline: "A three-year learning journey",
+    title: "SPRINT Career Accelerator",
+    headline: "From campus to corporate, with confidence.",
     description:
-      "Progress through Foundations in Year 1, Ignite in Year 2, and Outperform in Year 3.",
+      "A career-development program for B.Tech and MCA students, progressing through the phases of Foundations, Ignite, and Outperform.",
+    audience: "B.Tech and MCA students",
+    curriculumAnchor: "career-accelerator-curriculum",
     image: "/images/courses/abstract-code.svg",
-    curriculum: threeYearStages.map((stage) => ({
-      ...stage,
-      label: "Year",
-      children: [],
+    curriculum: careerAcceleratorPhases.map((phase) => ({
+      ...phase,
+      label: "Program Phase",
+      children: [
+        {
+          id: `${phase.id}-learning-board`,
+          label: "Learning Board",
+          title: "",
+          children: [],
+        },
+      ],
     })),
   },
 ];

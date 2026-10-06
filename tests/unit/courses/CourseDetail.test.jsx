@@ -113,7 +113,7 @@ describe("CourseCurriculum", () => {
 
   it("renders confirmed program data without adding curriculum topics", () => {
     const rise = getProgram("sprint-rise");
-    const threeYear = getProgram("sprint-3-year-program");
+    const careerAccelerator = getProgram("career-accelerator");
 
     expect(programs).toHaveLength(2);
     expect(rise.curriculum.map((stage) => stage.title)).toEqual([
@@ -124,10 +124,12 @@ describe("CourseCurriculum", () => {
       "Internship (90 hours)",
       "Industry-Ready",
     ]);
-    expect(threeYear.curriculum.map((year) => year.title)).toEqual([
-      "Year 1 — Foundations",
-      "Year 2 — Ignite",
-      "Year 3 — Outperform",
+    expect(careerAccelerator.title).toBe("SPRINT Career Accelerator");
+    expect(careerAccelerator.duration).toBeUndefined();
+    expect(careerAccelerator.curriculum.map((phase) => phase.title)).toEqual([
+      "Phase 1 — Foundations",
+      "Phase 2 — Ignite",
+      "Phase 3 — Outperform",
     ]);
     expect(
       rise.curriculum.every(
@@ -141,25 +143,70 @@ describe("CourseCurriculum", () => {
       ),
     ).toBe(true);
     expect(
-      threeYear.curriculum.every(
-        (year) => year.children.length === 0 && !("topics" in year),
+      careerAccelerator.curriculum.every(
+        (phase) =>
+          phase.label === "Program Phase" &&
+          phase.children.length === 1 &&
+          phase.children[0].label === "Learning Board" &&
+          phase.children[0].title === "" &&
+          phase.children[0].children.length === 0 &&
+          !("topics" in phase.children[0]),
       ),
     ).toBe(true);
+    expect(getProgram("sprint-3-year-program")).toBeUndefined();
 
     render(
       <>
         <CourseCurriculum curriculum={rise.curriculum} />
-        <CourseCurriculum curriculum={threeYear.curriculum} />
+        <CourseCurriculum curriculum={careerAccelerator.curriculum} />
       </>,
     );
 
     expect(screen.getAllByText("Program Stage")).toHaveLength(6);
-    expect(screen.getAllByText("Learning Board")).toHaveLength(6);
-    expect(screen.getAllByText("Year")).toHaveLength(3);
+    expect(screen.getAllByText("Program Phase")).toHaveLength(3);
+    expect(screen.getAllByText("Learning Board")).toHaveLength(9);
+    expect(screen.queryByText(/Year [123]/)).not.toBeInTheDocument();
     expect(
-      within(screen.getByText("Year 1 — Foundations").parentElement)
-        .getByText("Year"),
+      within(
+        screen.getByRole("button", {
+          name: /Program Phase Phase 1 — Foundations/,
+        }),
+      ).getByText("Phase 1 — Foundations"),
     ).toBeInTheDocument();
+  });
+
+  it("renders the Career Accelerator detail using only confirmed program information", async () => {
+    const program = getProgram("career-accelerator");
+    const { container } = render(await DetailPage({ item: program }));
+
+    expect(
+      screen.getByRole("navigation", { name: "Breadcrumb" }),
+    ).toHaveTextContent("Courses>SPRINT Career Accelerator");
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "SPRINT Career Accelerator",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("From campus to corporate, with confidence."),
+    ).toBeInTheDocument();
+    expect(screen.getByText(program.description)).toBeInTheDocument();
+    expect(screen.getByText("B.Tech and MCA students")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Program Phase" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Explore curriculum" })).toHaveAttribute(
+      "href",
+      "#career-accelerator-curriculum",
+    );
+    expect(screen.queryByText(/Duration/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Year [123]|3-Year Program/)).not.toBeInTheDocument();
+    expect(screen.queryByText("Outcomes")).not.toBeInTheDocument();
+    expect(container.querySelectorAll(".course-curriculum__item")).toHaveLength(6);
+    expect(
+      screen.getByRole("button", {
+        name: /Program Phase Phase 1 — Foundations/,
+      }),
+    ).toHaveAttribute("aria-expanded", "true");
   });
 
   it("renders the SPRINT RISE program detail from the shared detail component", async () => {

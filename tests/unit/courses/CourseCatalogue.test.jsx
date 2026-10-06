@@ -112,10 +112,10 @@ describe("CourseCatalogue Supabase integration", () => {
         ).toHaveAttribute("href", "/programs/sprint-rise");
     });
 
-    it("renders the SPRINT 3-Year journey stages in order with their year labels", () => {
+    it("renders the Career Accelerator phases and links to its detail page", () => {
         render(<CourseCatalogue items={catalogueItems} />);
 
-        const programName = screen.getByText("SPRINT 3-Year Program");
+        const programName = screen.getByText("SPRINT Career Accelerator");
         const panel = programName.closest(
             ".courses-signature-programs__panel--three-year",
         );
@@ -123,31 +123,29 @@ describe("CourseCatalogue Supabase integration", () => {
         expect(panel).not.toBeNull();
         expect(
             within(panel).getByRole("heading", {
-                name: "A three-year learning journey",
+                name: "From campus to corporate, with confidence.",
             }),
         ).toBeInTheDocument();
         expect(
-            within(panel).getByText(
-                "Progress through Foundations in Year 1, Ignite in Year 2, and Outperform in Year 3.",
-            ),
+            within(panel).getByText(/career-development program for B\.Tech and MCA students/),
         ).toBeInTheDocument();
         expect(
             within(panel).getByRole("link", { name: /Explore Program/ }),
-        ).toHaveAttribute("href", "#individual-modular-courses");
+        ).toHaveAttribute("href", "/programs/career-accelerator");
         const journey = within(panel).getByRole("region", {
-            name: "3-Year Program Journey",
+            name: "Career Accelerator Journey",
         });
         const stages = within(journey).getByRole("list", {
-            name: "SPRINT 3-Year Program stages",
+            name: "SPRINT Career Accelerator phases",
         });
         const stageCards = within(stages).getAllByRole("listitem");
 
         expect(
             stageCards.map((card) => card.textContent.replace(/\s+/g, " ").trim()),
         ).toEqual([
-            "Foundations · Year 1",
-            "Ignite · Year 2",
-            "Outperform · Year 3",
+            "Phase 1 — Foundations",
+            "Phase 2 — Ignite",
+            "Phase 3 — Outperform",
         ]);
         expect(stages.querySelectorAll("img")).toHaveLength(3);
     });

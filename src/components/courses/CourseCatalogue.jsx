@@ -239,20 +239,20 @@ function FeaturedPrograms() {
       image: "/images/courses/abstract-security.svg",
     },
   ];
-  const threeYearStages = [
+  const careerAcceleratorPhases = [
     {
       title: "Foundations",
-      year: "Year 1",
+      phase: "Phase 1",
       image: "/images/courses/abstract-code.svg",
     },
     {
       title: "Ignite",
-      year: "Year 2",
+      phase: "Phase 2",
       image: "/images/courses/abstract-data.svg",
     },
     {
       title: "Outperform",
-      year: "Year 3",
+      phase: "Phase 3",
       image: "/images/courses/abstract-web.svg",
     },
   ];
@@ -348,15 +348,15 @@ function FeaturedPrograms() {
       >
         <div className="courses-signature-programs__overview">
           <p className="courses-signature-programs__name">
-            SPRINT 3-Year Program
+            SPRINT Career Accelerator
           </p>
-          <h3>A three-year learning journey</h3>
+          <h3>From campus to corporate, with confidence.</h3>
           <p className="courses-signature-programs__description">
-            Progress through Foundations in Year 1, Ignite in Year 2, and
-            Outperform in Year 3.
+            A career-development program for B.Tech and MCA students, progressing
+            through Foundations, Ignite, and Outperform.
           </p>
           <Link
-            href="#individual-modular-courses"
+            href="/programs/career-accelerator"
             className="courses-signature-programs__cta"
           >
             Explore Program
@@ -365,23 +365,23 @@ function FeaturedPrograms() {
         </div>
         <section
           className="courses-signature-programs__journey"
-          aria-labelledby="three-year-journey-heading"
+          aria-labelledby="career-accelerator-journey-heading"
         >
           <h3
-            id="three-year-journey-heading"
+            id="career-accelerator-journey-heading"
             className="courses-signature-programs__journey-heading"
           >
-            3-Year Program Journey
+            Career Accelerator Journey
           </h3>
           <ol
             className="courses-signature-programs__milestones courses-signature-programs__milestones--three-year"
-            aria-label="SPRINT 3-Year Program stages"
+            aria-label="SPRINT Career Accelerator phases"
             tabIndex={0}
           >
-            {threeYearStages.map((stage) => (
+            {careerAcceleratorPhases.map((stage) => (
               <li
                 className="courses-signature-programs__milestone courses-signature-programs__milestone--three-year"
-                key={stage.year}
+                key={stage.phase}
               >
                 <div className="courses-signature-programs__milestone-image">
                   <Image
@@ -394,7 +394,7 @@ function FeaturedPrograms() {
                 </div>
                 <div className="courses-signature-programs__milestone-content courses-signature-programs__milestone-content--stage">
                   <span className="courses-signature-programs__stage-label">
-                    {stage.title} · {stage.year}
+                    {stage.phase} — {stage.title}
                   </span>
                 </div>
               </li>
