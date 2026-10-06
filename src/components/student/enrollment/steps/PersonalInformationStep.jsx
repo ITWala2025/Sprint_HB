@@ -101,6 +101,7 @@ export default function PersonalInformationStep({ idPrefix, values = {}, errors 
           error={errors.dob}
           autoComplete="bday"
           icon={<CalendarDays aria-hidden="true" className="size-4.5" />}
+          showIcon={false}
           required
         />
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import {
-    BookOpen, Check, Clock, Edit3, Eye, LayoutGrid, List, Plus, Search, Star, Trash2, X,
+    BookOpen, Check, CheckCircle2, Clock, Edit3, Eye, Layers, LayoutGrid, List, Plus, Search, Sparkles, Star, Tag, Trash2, X,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -24,10 +24,12 @@ export interface CourseItem {
     duration: string;
     description: string;
     long_description: string | null;
+    badge_label: string;
     prerequisites: string | null;
     tools: string[];
     curriculum: SyllabusModule[];
     outcomes: string[];
+    target_roles: string[];
     is_featured: boolean;
     is_published: boolean;
     pathway: string | null;
@@ -37,8 +39,28 @@ export interface CourseItem {
 }
 
 type CoursePayload = Omit<CourseItem, "id">;
+type RoadmapStage = { title: string; duration: string; subjects: string[] };
+type BundleItem = {
+    id: string;
+    slug: string;
+    title: string;
+    badge_label: string;
+    tagline: string;
+    description: string;
+    long_description: string;
+    audience: "undergraduate" | "working_professional";
+    duration: string;
+    training_mode: "Hybrid" | "Online" | "Offline";
+    eligibility: string;
+    highlights: string[];
+    roadmap: RoadmapStage[];
+    is_published: boolean;
+    is_featured: boolean;
+};
+type BundlePayload = Omit<BundleItem, "id">;
 type Notice = { type: "success" | "error"; message: string };
 type CatalogView = "grid" | "table";
+type DashboardView = "courses" | "bundles";
 
 const categories = [
     "Artificial Intelligence & ML",
@@ -74,22 +96,41 @@ function normalizeCourse(row: CourseItem): CourseItem {
     const curriculum = Array.isArray(row.curriculum) ? row.curriculum : [];
     const audience = row.audience_type || row.audience || "undergraduate";
     return {
-        ...row,
+        id: row.id,
+        slug: row.slug,
+        title: row.title,
+        category: row.category,
+        difficulty_level: row.difficulty_level || "Beginner",
         audience,
         audience_type: audience,
+        delivery_method: row.delivery_method || "Hybrid",
+        duration: row.duration || "",
+        description: row.description || "",
+        long_description: row.long_description || "",
+        badge_label: row.badge_label || "Course",
+        prerequisites: row.prerequisites || "",
         tools: Array.isArray(row.tools) ? row.tools : [],
         outcomes: Array.isArray(row.outcomes) ? row.outcomes : [],
+        target_roles: Array.isArray(row.target_roles) ? row.target_roles : row.target_role ? [row.target_role] : [],
         curriculum: curriculum.map((module) => ({
             ...module,
             title: module.title ?? "",
             sessions: Number(module.sessions) || module.topics?.length || 0,
         })),
+        is_featured: Boolean(row.is_featured),
+        is_published: Boolean(row.is_published),
+        pathway: row.pathway || null,
+        target_role: row.target_role || null,
+        certificate_included: Boolean(row.certificate_included),
+        thumbnail_url: row.thumbnail_url || null,
     };
 }
 
 export default function CourseManagementPage() {
     const supabase = useMemo(() => createClient(), []);
     const [courses, setCourses] = useState<CourseItem[]>([]);
+    const [bundles, setBundles] = useState<BundleItem[]>([]);
+    const [dashboardView, setDashboardView] = useState<DashboardView>("courses");
     const [search, setSearch] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("all");
     const [difficultyFilter, setDifficultyFilter] = useState("all");
@@ -99,13 +140,14 @@ export default function CourseManagementPage() {
     const [savingId, setSavingId] = useState<string | null>(null);
     const [notice, setNotice] = useState<Notice | null>(null);
     const [editingCourse, setEditingCourse] = useState<CourseItem | null | undefined>(undefined);
+    const [editingBundle, setEditingBundle] = useState<BundleItem | null | undefined>(undefined);
     const [viewingCourse, setViewingCourse] = useState<CourseItem | null>(null);
 
     useEffect(() => {
         let active = true;
         async function loadCourses() {
             setIsLoading(true);
-            const { data, error } = await supabase.from("courses").select("*").order("title");
+            const { data, error } = await supabase.from("courses").select("id,slug,title,category,difficulty_level,audience,audience_type,delivery_method,duration,description,long_description,badge_label,prerequisites,tools,curriculum,outcomes,target_roles,is_featured,is_published,pathway,target_role,certificate_included,thumbnail_url").order("title");
             if (!active) return;
             if (error) {
                 setNotice({ type: "error", message: `Courses could not be loaded: ${error.message}` });
@@ -117,6 +159,31 @@ export default function CourseManagementPage() {
         void loadCourses();
         return () => { active = false; };
     }, [supabase]);
+
+    useEffect(() => {
+        if (dashboardView !== "bundles") return;
+        let active = true;
+        async function loadBundles() {
+            setIsLoading(true);
+            const { data, error } = await supabase.from("course_bundles").select("id,slug,title,badge_label,tagline,description,long_description,audience,duration,training_mode,eligibility,highlights,roadmap,is_published,is_featured,created_at").order("created_at", { ascending: false });
+            if (!active) return;
+            if (error) setNotice({ type: "error", message: `Flagship programs could not be loaded: ${error.message}` });
+            else setBundles(((data ?? []) as BundleItem[]).map((bundle) => ({
+                ...bundle,
+                badge_label: bundle.badge_label || "Flagship Program",
+                tagline: bundle.tagline || "",
+                audience: bundle.audience || "undergraduate",
+                duration: bundle.duration || "",
+                training_mode: bundle.training_mode || "Hybrid",
+                eligibility: bundle.eligibility || "",
+                highlights: Array.isArray(bundle.highlights) ? bundle.highlights : [],
+                roadmap: Array.isArray(bundle.roadmap) ? bundle.roadmap : [],
+            })));
+            setIsLoading(false);
+        }
+        void loadBundles();
+        return () => { active = false; };
+    }, [dashboardView, supabase]);
 
     const filteredCourses = useMemo(() => {
         const query = search.trim().toLowerCase();
@@ -159,6 +226,50 @@ export default function CourseManagementPage() {
         setEditingCourse(undefined);
         setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
         return true;
+    }
+
+    async function saveBundle(payload: BundlePayload, id?: string) {
+        setSavingId(id ?? "new-bundle");
+        setNotice(null);
+        const upsertPayload = { ...payload, ...(id ? { id } : {}) };
+        const { data, error } = await supabase.from("course_bundles").upsert(upsertPayload as BundlePayload).select("*").single();
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Flagship program could not be saved: ${error.message}` });
+            return false;
+        }
+        const saved = data as BundleItem;
+        setBundles((current) => id
+            ? current.map((bundle) => bundle.id === id ? saved : bundle)
+            : [saved, ...current]);
+        setEditingBundle(undefined);
+        setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
+        return true;
+    }
+
+    async function deleteBundle(bundle: BundleItem) {
+        if (!window.confirm(`Delete “${bundle.title}”? This cannot be undone.`)) return;
+        setSavingId(bundle.id);
+        const { error } = await supabase.from("course_bundles").delete().eq("id", bundle.id);
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Flagship program could not be deleted: ${error.message}` });
+            return;
+        }
+        setBundles((current) => current.filter((item) => item.id !== bundle.id));
+        setNotice({ type: "success", message: `${bundle.title} deleted.` });
+    }
+
+    async function toggleBundle(bundle: BundleItem, field: "is_published" | "is_featured") {
+        setSavingId(bundle.id);
+        const nextValue = !bundle[field];
+        const { error } = await supabase.from("course_bundles").update({ [field]: nextValue }).eq("id", bundle.id);
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Program status could not be changed: ${error.message}` });
+            return;
+        }
+        setBundles((current) => current.map((item) => item.id === bundle.id ? { ...item, [field]: nextValue } : item));
     }
 
     async function toggleFeatured(course: CourseItem) {
@@ -210,22 +321,27 @@ export default function CourseManagementPage() {
                         <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Course Management</h2>
                         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Manage SPRINT technology pathways, learning outcomes, and catalogue visibility.</p>
                     </div>
-                    <button type="button" onClick={() => setEditingCourse(null)} className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-red px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">
-                        <Plus className="size-4" aria-hidden="true" /> Add Course
+                    <button type="button" onClick={() => dashboardView === "courses" ? setEditingCourse(null) : setEditingBundle(null)} className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-red px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">
+                        <Plus className="size-4" aria-hidden="true" /> {dashboardView === "courses" ? "Add Course" : "Add Flagship Program"}
                     </button>
                 </div>
             </section>
 
+            <div className="inline-flex max-w-full rounded-lg border border-slate-200 bg-white p-1" role="tablist" aria-label="Course management views">
+                <button type="button" role="tab" aria-selected={dashboardView === "courses"} onClick={() => setDashboardView("courses")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "courses" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><BookOpen className="size-4" aria-hidden="true" />Standard Courses</button>
+                <button type="button" role="tab" aria-selected={dashboardView === "bundles"} onClick={() => setDashboardView("bundles")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "bundles" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><Layers className="size-4" aria-hidden="true" />Flagship Programs &amp; Bundles</button>
+            </div>
+
             {notice && <div className="fixed right-4 top-24 z-[120] w-[min(36rem,calc(100vw-2rem))]"><NoticeBanner notice={notice} onDismiss={() => setNotice(null)} /></div>}
 
-            <section aria-label="Course summary metrics" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {dashboardView === "courses" && <section aria-label="Course summary metrics" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <MetricCard label="Total Courses" value={courses.length} note="Programs in the catalogue" icon={BookOpen} />
                 <MetricCard label="Published on Site" value={publishedCount} note="Visible in the public catalogue" icon={Check} />
                 <MetricCard label="Featured Pathways" value={featuredCount} note="Highlighted on the homepage" icon={Star} />
                 <MetricCard label="Active Categories" value={activeCategoryCount} note="Categories with courses" icon={BookOpen} />
-            </section>
+            </section>}
 
-            <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Courses">
+            {dashboardView === "courses" && <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Courses">
                 <div className="flex flex-col gap-3 border-b border-slate-200 p-5 sm:px-6">
                     <label className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-brand-text-muted sm:max-w-md">
                         <Search className="size-4 shrink-0" aria-hidden="true" />
@@ -279,9 +395,14 @@ export default function CourseManagementPage() {
                 </div>}
                 {catalogView === "grid" && <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">{isLoading ? <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">Loading courses…</p> : filteredCourses.length ? filteredCourses.map((course) => <AdminCourseCard key={course.id} course={course} isBusy={savingId === course.id} onEdit={() => setEditingCourse(course)} onTogglePublished={() => void togglePublished(course)} onDelete={() => void deleteCourse(course)} />) : <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</p>}</div>}
                 <div className="border-t border-slate-100 px-5 py-3 text-xs text-brand-text-muted sm:px-6">Showing {filteredCourses.length} of {courses.length} courses</div>
-            </section>
+            </section>}
+
+            {dashboardView === "bundles" && <section aria-label="Flagship programs and bundles" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {isLoading ? <p className="col-span-full py-16 text-center text-sm text-brand-text-muted">Loading flagship programs…</p> : bundles.length ? bundles.map((bundle) => <BundleCard key={bundle.id} bundle={bundle} isBusy={savingId === bundle.id} onEdit={() => setEditingBundle(bundle)} onDelete={() => void deleteBundle(bundle)} onToggle={(field) => void toggleBundle(bundle, field)} />) : <div className="col-span-full rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center"><Sparkles className="mx-auto size-7 text-brand-red" aria-hidden="true" /><p className="mt-3 font-display font-bold text-brand-navy">No flagship programs yet</p><p className="mt-1 text-sm text-brand-text-muted">Add SPRINT RISE or a degree-integrated pathway to begin.</p></div>}
+            </section>}
 
             {editingCourse !== undefined && <CourseModal course={editingCourse} isSaving={savingId === (editingCourse?.id ?? "new")} onClose={() => setEditingCourse(undefined)} onSave={(payload) => saveCourse(payload, editingCourse?.id)} />}
+            {editingBundle !== undefined && <BundleModal bundle={editingBundle} isSaving={savingId === (editingBundle?.id ?? "new-bundle")} onClose={() => setEditingBundle(undefined)} onSave={(payload) => saveBundle(payload, editingBundle?.id)} />}
             {viewingCourse && <CourseDetailsModal course={viewingCourse} onClose={() => setViewingCourse(null)} onEdit={() => { setViewingCourse(null); setEditingCourse(viewingCourse); }} />}
         </div>
     );
@@ -304,7 +425,7 @@ function NoticeBanner({ notice, onDismiss }: { notice: Notice; onDismiss: () => 
 function AdminCourseCard({ course, isBusy, onEdit, onTogglePublished, onDelete }: { course: CourseItem; isBusy: boolean; onEdit: () => void; onTogglePublished: () => void; onDelete: () => void }) {
     return <article className="course-tile">
         <div className="course-tile__art" style={course.thumbnail_url ? { backgroundImage: `linear-gradient(0deg, rgba(1,31,62,.22), rgba(1,31,62,.05)), url("${course.thumbnail_url}")`, backgroundPosition: "center", backgroundSize: "cover" } : undefined}>
-            <span className="course-tile__type">Course</span>
+            <span className="course-tile__type">{course.badge_label || "Course"}</span>
             <span className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold ${course.is_published ? "bg-emerald-50 text-emerald-700" : "bg-white/95 text-slate-600"}`}>{course.is_published ? "Published" : "Draft"}</span>
         </div>
         <div className="course-tile__body">
@@ -344,10 +465,26 @@ function CourseRow({ course, isBusy, onView, onEdit, onDelete, onToggleFeatured 
 function emptyCourse(): CoursePayload {
     return {
         slug: "", title: "", category: categories[0], difficulty_level: "Beginner", audience: "undergraduate", audience_type: "undergraduate", delivery_method: "Hybrid",
-        duration: "", description: "", long_description: "", prerequisites: "",
-        tools: [], curriculum: [], outcomes: [], is_featured: false, is_published: false,
+        duration: "", description: "", long_description: "", badge_label: "Course", prerequisites: "",
+        tools: [], curriculum: [], outcomes: [], target_roles: [], is_featured: false, is_published: false,
         pathway: null, target_role: null, certificate_included: true, thumbnail_url: null,
     };
+}
+
+function TopicsInput({ topics, onChange }: { topics: string[]; onChange: (topics: string[]) => void }) {
+    const [value, setValue] = useState(topics.join(", "));
+
+    return <input
+        type="text"
+        value={value}
+        onChange={(event) => {
+            const rawValue = event.target.value;
+            setValue(rawValue);
+            onChange(rawValue.split(",").map((topic) => topic.trim()).filter(Boolean));
+        }}
+        className={inputClass}
+        placeholder="e.g., Data pre-processing, Feature scaling, Model evaluation"
+    />;
 }
 
 function CourseModal({ course, isSaving, onClose, onSave }: { course: CourseItem | null; isSaving: boolean; onClose: () => void; onSave: (payload: CoursePayload) => Promise<boolean> }) {
@@ -356,10 +493,12 @@ function CourseModal({ course, isSaving, onClose, onSave }: { course: CourseItem
         audience: course.audience_type || course.audience || "undergraduate",
         audience_type: course.audience_type || course.audience || "undergraduate",
         curriculum: course.curriculum.map((module) => ({ ...module })),
-        tools: [...course.tools], outcomes: [...course.outcomes],
+        tools: [...course.tools], outcomes: [...course.outcomes], target_roles: [...course.target_roles],
     } : emptyCourse());
     const [slugEdited, setSlugEdited] = useState(Boolean(course));
     const [toolInput, setToolInput] = useState("");
+    const [outcomeInput, setOutcomeInput] = useState("");
+    const [roleInput, setRoleInput] = useState("");
     const closeRef = useRef<HTMLButtonElement>(null);
     const categoryOptions = form.category && !categories.includes(form.category) ? [form.category, ...categories] : categories;
 
@@ -383,6 +522,17 @@ function CourseModal({ course, isSaving, onClose, onSave }: { course: CourseItem
         setToolInput("");
     }
 
+    function addCourseTag(field: "outcomes" | "target_roles", value: string, clear: (value: string) => void) {
+        const tag = value.trim();
+        if (!tag || form[field].some((item) => item.toLowerCase() === tag.toLowerCase())) return;
+        setField(field, [...form[field], tag]);
+        clear("");
+    }
+
+    function updateModule(index: number, patch: Partial<SyllabusModule>) {
+        setField("curriculum", form.curriculum.map((module, moduleIndex) => moduleIndex === index ? { ...module, ...patch } : module));
+    }
+
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         await onSave(form);
@@ -399,6 +549,7 @@ function CourseModal({ course, isSaving, onClose, onSave }: { course: CourseItem
                             <label className={labelClass}>Slug<div className="flex gap-2"><input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={form.slug} onChange={(event) => { setSlugEdited(true); setField("slug", generateSlug(event.target.value)); }} className={`${inputClass} mt-1.5`} placeholder="docker-and-kubernetes" /><button type="button" onClick={() => { setSlugEdited(false); setField("slug", generateSlug(form.title)); }} className="sprint-focus mt-1.5 shrink-0 rounded-lg border border-slate-200 px-3 text-xs font-bold text-brand-navy hover:bg-brand-surface">Reset</button></div></label>
                             <label className={labelClass}>Category<select value={form.category} onChange={(event) => setField("category", event.target.value)} className={inputClass}>{categoryOptions.map((category) => <option key={category} value={category}>{category}</option>)}</select></label>
                             <label className={labelClass}>Audience Type<select value={form.audience_type} onChange={(event) => { const audience = event.target.value as CoursePayload["audience_type"]; setField("audience", audience); setField("audience_type", audience); }} className={inputClass}>{audiences.map((audience) => <option key={audience.value} value={audience.value}>{audience.label}</option>)}</select></label>
+                            <label className={labelClass}>Badge Label<input value={form.badge_label} onChange={(event) => setField("badge_label", event.target.value)} className={inputClass} placeholder="Course" /></label>
                         </div>
                     </FormSection>
                     <FormSection title="Delivery & Specs">
@@ -411,6 +562,24 @@ function CourseModal({ course, isSaving, onClose, onSave }: { course: CourseItem
                     <FormSection title="Short Description">
                         <label className={labelClass}>Catalogue Card Description<textarea required rows={3} value={form.description} onChange={(event) => setField("description", event.target.value)} className={inputClass} placeholder="A concise overview for course cards" /></label>
                     </FormSection>
+                    <FormSection title="Detailed Description & Overview">
+                        <label className={labelClass}>Detailed Description<textarea rows={6} value={form.long_description || ""} onChange={(event) => setField("long_description", event.target.value)} className={inputClass} placeholder="Describe the course experience, scope, and practical context" /></label>
+                    </FormSection>
+                    <FormSection title="Curriculum & Syllabus">
+                        <div className="space-y-3">{form.curriculum.map((module, index) => <div key={`module-${index}`} className="rounded-lg border border-slate-200 p-3">
+                            <div className="grid gap-3 sm:grid-cols-[1fr_8rem_auto]">
+                                <label className={labelClass}>Module Title<input value={module.title} onChange={(event) => updateModule(index, { title: event.target.value })} className={inputClass} /></label>
+                                <label className={labelClass}>Sessions<input type="number" min="0" value={module.sessions} onChange={(event) => updateModule(index, { sessions: Number(event.target.value) })} className={inputClass} /></label>
+                                <button type="button" onClick={() => setField("curriculum", form.curriculum.filter((_, moduleIndex) => moduleIndex !== index))} className="sprint-focus mt-5 inline-flex h-10 items-center justify-center gap-1 rounded-lg px-3 text-xs font-bold text-brand-red hover:bg-brand-red-light"><Trash2 className="size-4" aria-hidden="true" />Remove</button>
+                            </div>
+                            <label className={labelClass}>Topics<TopicsInput topics={module.topics || []} onChange={(topics) => updateModule(index, { topics })} /></label>
+                        </div>)}
+                            <button type="button" onClick={() => setField("curriculum", [...form.curriculum, { title: "", sessions: 0, topics: [] }])} className="sprint-focus inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-brand-navy hover:bg-slate-50"><Plus className="size-4" aria-hidden="true" />Add Module</button>
+                        </div>
+                    </FormSection>
+                    <FormSection title="Prerequisites"><label className={labelClass}>Prerequisites<input value={form.prerequisites || ""} onChange={(event) => setField("prerequisites", event.target.value)} className={inputClass} placeholder="Basic Python knowledge or programming foundations" /></label></FormSection>
+                    <TagSection title="Learning Outcomes" tags={form.outcomes} value={outcomeInput} onChange={setOutcomeInput} onAdd={() => addCourseTag("outcomes", outcomeInput, setOutcomeInput)} onRemove={(tag) => setField("outcomes", form.outcomes.filter((item) => item !== tag))} placeholder="Build and evaluate practical models…" />
+                    <TagSection title="Target Job Roles" tags={form.target_roles} value={roleInput} onChange={setRoleInput} onAdd={() => addCourseTag("target_roles", roleInput, setRoleInput)} onRemove={(tag) => setField("target_roles", form.target_roles.filter((item) => item !== tag))} placeholder="ML Engineer, Data Scientist…" />
                     <TagSection title="Tools Taught" tags={form.tools} value={toolInput} onChange={setToolInput} onAdd={addTool} onRemove={(tag) => setField("tools", form.tools.filter((item) => item !== tag))} placeholder="Docker, Kubernetes, PyTorch…" />
                     <FormSection title="Program Status">
                         <div className="flex flex-col gap-3 sm:flex-row sm:gap-8">
@@ -455,6 +624,7 @@ function CourseDetailsModal({ course, onClose, onEdit }: { course: CourseItem; o
                 <DetailSection title="Short Description"><p className="text-sm leading-6 text-brand-text-secondary">{course.description || "No short description provided."}</p></DetailSection>
                 <DetailSection title="Detailed Description"><p className="whitespace-pre-wrap text-sm leading-6 text-brand-text-secondary">{course.long_description || "No detailed description provided."}</p></DetailSection>
                 <DetailSection title="Prerequisites"><p className="whitespace-pre-wrap text-sm leading-6 text-brand-text-secondary">{course.prerequisites || "No formal prerequisites"}</p></DetailSection>
+                <DetailSection title="Target Job Roles"><TagList items={course.target_roles} empty="No target roles listed." /></DetailSection>
                 <DetailSection title="Curriculum">
                     {course.curriculum.length ? <ol className="space-y-2">{course.curriculum.map((module, index) => <li key={`${module.title}-${index}`} className="rounded-lg border border-slate-200 p-3"><div className="flex justify-between gap-3"><p className="text-sm font-semibold text-brand-navy">{index + 1}. {module.title}</p><span className="whitespace-nowrap text-xs text-brand-text-muted">{module.sessions} sessions</span></div>{module.topics?.length ? <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-brand-text-secondary">{module.topics.map((topic) => <li key={topic}>{topic}</li>)}</ul> : null}</li>)}</ol> : <p className="text-sm text-brand-text-muted">No modules added.</p>}
                 </DetailSection>
@@ -476,4 +646,76 @@ function DetailSection({ title, children }: { title: string; children: ReactNode
 
 function TagList({ items, empty }: { items: string[]; empty: string }) {
     return items.length ? <ul className="flex flex-wrap gap-2">{items.map((item) => <li key={item} className="rounded-full bg-brand-surface px-3 py-1 text-xs font-semibold text-brand-navy">{item}</li>)}</ul> : <p className="text-sm text-brand-text-muted">{empty}</p>;
+}
+
+function emptyBundle(): BundlePayload {
+    return { slug: "", title: "", badge_label: "Flagship Program", tagline: "", description: "", long_description: "", audience: "undergraduate", duration: "", training_mode: "Hybrid", eligibility: "", highlights: [], roadmap: [], is_published: false, is_featured: false };
+}
+
+function BundleCard({ bundle, isBusy, onEdit, onDelete, onToggle }: { bundle: BundleItem; isBusy: boolean; onEdit: () => void; onDelete: () => void; onToggle: (field: "is_published" | "is_featured") => void }) {
+    return <article className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-t-4 border-brand-red p-5">
+            <div className="flex items-start justify-between gap-3"><span className="inline-flex items-center gap-1.5 rounded-full bg-brand-red/10 px-2.5 py-1 text-[10px] font-bold text-brand-red"><Tag className="size-3" aria-hidden="true" />{bundle.badge_label}</span><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${bundle.is_published ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>{bundle.is_published ? "Published" : "Draft"}</span></div>
+            <h2 className="mt-4 font-display text-xl font-bold text-brand-navy">{bundle.title}</h2>
+            <p className="mt-1 text-sm font-semibold text-brand-red">{bundle.tagline || "Tagline not set"}</p>
+            <p className="mt-3 line-clamp-3 text-sm leading-6 text-brand-text-secondary">{bundle.description || "No short description provided."}</p>
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-brand-text-secondary"><span className="inline-flex items-center gap-1"><Clock className="size-3.5" aria-hidden="true" />{bundle.duration || "Duration not set"}</span><span>{bundle.training_mode}</span></div>
+            <div className="mt-4"><p className="text-[10px] font-bold uppercase text-brand-text-muted">Highlights</p><ul className="mt-2 space-y-1 text-xs text-brand-text-secondary">{bundle.highlights.slice(0, 3).map((highlight) => <li key={highlight} className="flex gap-2"><CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-brand-red" aria-hidden="true" />{highlight}</li>)}{bundle.highlights.length === 0 && <li>No highlights added.</li>}</ul></div>
+            <footer className="mt-5 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
+                <button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-slate-50"><Edit3 className="size-3.5" aria-hidden="true" />Edit</button>
+                <button type="button" disabled={isBusy} onClick={() => onToggle("is_published")} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-slate-50"><Check className="size-3.5" aria-hidden="true" />{bundle.is_published ? "Unpublish" : "Publish"}</button>
+                <button type="button" disabled={isBusy} onClick={() => onToggle("is_featured")} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-slate-50"><Star className="size-3.5" aria-hidden="true" />{bundle.is_featured ? "Unfeature" : "Feature"}</button>
+                <button type="button" disabled={isBusy} onClick={onDelete} className="sprint-focus ml-auto inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-bold text-brand-red hover:bg-brand-red-light"><Trash2 className="size-3.5" aria-hidden="true" />Delete</button>
+            </footer>
+        </div>
+    </article>;
+}
+
+function BundleModal({ bundle, isSaving, onClose, onSave }: { bundle: BundleItem | null; isSaving: boolean; onClose: () => void; onSave: (payload: BundlePayload) => Promise<boolean> }) {
+    const [form, setForm] = useState<BundlePayload>(() => bundle ? { ...emptyBundle(), ...bundle, highlights: [...(bundle.highlights || [])], roadmap: (bundle.roadmap || []).map((stage) => ({ ...stage, subjects: [...(stage.subjects || [])] })) } : emptyBundle());
+    const [slugEdited, setSlugEdited] = useState(Boolean(bundle));
+    const [highlightInput, setHighlightInput] = useState("");
+    const closeRef = useRef<HTMLButtonElement>(null);
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        closeRef.current?.focus();
+        function onKeyDown(event: KeyboardEvent) { if (event.key === "Escape" && !isSaving) onClose(); }
+        document.addEventListener("keydown", onKeyDown);
+        return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", onKeyDown); };
+    }, [isSaving, onClose]);
+    function setField<Key extends keyof BundlePayload>(key: Key, value: BundlePayload[Key]) { setForm((current) => ({ ...current, [key]: value })); }
+    function addHighlight() {
+        const value = highlightInput.trim();
+        if (!value || form.highlights.some((item) => item.toLowerCase() === value.toLowerCase())) return;
+        setField("highlights", [...form.highlights, value]);
+        setHighlightInput("");
+    }
+    function updateStage(index: number, patch: Partial<RoadmapStage>) { setField("roadmap", form.roadmap.map((stage, stageIndex) => stageIndex === index ? { ...stage, ...patch } : stage)); }
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); await onSave(form); }
+    return <div className="fixed inset-0 z-[100] flex items-end justify-center bg-brand-navy/55 p-0 backdrop-blur-sm sm:items-center sm:p-5" onMouseDown={(event) => { if (event.target === event.currentTarget && !isSaving) onClose(); }}>
+        <section role="dialog" aria-modal="true" aria-labelledby="bundle-modal-title" className="flex max-h-[96dvh] w-full max-w-4xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[92vh] sm:rounded-2xl">
+            <header className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7"><div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-red">Flagship Programs &amp; Bundles</p><h2 id="bundle-modal-title" className="mt-1 font-display text-xl font-bold text-brand-navy">{bundle ? "Edit Flagship Program" : "Add Flagship Program"}</h2></div><button ref={closeRef} type="button" onClick={onClose} disabled={isSaving} className={iconButtonClass} aria-label="Close flagship program form"><X className="size-4" aria-hidden="true" /></button></header>
+            <form onSubmit={(event) => void handleSubmit(event)} className="flex min-h-0 flex-1 flex-col">
+                <div className="min-h-0 flex-1 space-y-7 overflow-y-auto px-5 py-5 sm:px-7">
+                    <FormSection title="Basic Information"><div className="grid gap-4 sm:grid-cols-2">
+                        <label className={`${labelClass} sm:col-span-2`}>Title<input required value={form.title} onChange={(event) => { const title = event.target.value; setField("title", title); if (!slugEdited) setField("slug", generateSlug(title)); }} className={inputClass} placeholder="SPRINT RISE" /></label>
+                        <label className={labelClass}>Slug<div className="flex gap-2"><input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={form.slug} onChange={(event) => { setSlugEdited(true); setField("slug", generateSlug(event.target.value)); }} className={`${inputClass} mt-1.5`} /><button type="button" onClick={() => { setSlugEdited(false); setField("slug", generateSlug(form.title)); }} className="sprint-focus mt-1.5 shrink-0 rounded-lg border border-slate-200 px-3 text-xs font-bold text-brand-navy hover:bg-slate-50">Reset</button></div></label>
+                        <label className={labelClass}>Badge Label<input value={form.badge_label} onChange={(event) => setField("badge_label", event.target.value)} className={inputClass} placeholder="Flagship Program" /></label>
+                        <label className={`${labelClass} sm:col-span-2`}>Tagline<input value={form.tagline} onChange={(event) => setField("tagline", event.target.value)} className={inputClass} placeholder="Campus to Corporate in 6 Months" /></label>
+                        <label className={labelClass}>Target Audience<select value={form.audience} onChange={(event) => setField("audience", event.target.value as BundlePayload["audience"])} className={inputClass}>{audiences.map((audience) => <option key={audience.value} value={audience.value}>{audience.label}</option>)}</select></label>
+                        <label className={labelClass}>Duration<input value={form.duration} onChange={(event) => setField("duration", event.target.value)} className={inputClass} placeholder="6 Months Intensive" /></label>
+                        <label className={labelClass}>Training Mode<select value={form.training_mode} onChange={(event) => setField("training_mode", event.target.value as BundlePayload["training_mode"])} className={inputClass}>{modes.map((mode) => <option key={mode}>{mode}</option>)}</select></label>
+                        <label className={`${labelClass} sm:col-span-2`}>Short Description<textarea rows={3} value={form.description} onChange={(event) => setField("description", event.target.value)} className={inputClass} /></label>
+                        <label className={`${labelClass} sm:col-span-2`}>Detailed Description<textarea rows={6} value={form.long_description || ""} onChange={(event) => setField("long_description", event.target.value)} className={inputClass} placeholder="Full roadmap vision" /></label>
+                        <label className={`${labelClass} sm:col-span-2`}>Eligibility<textarea rows={3} value={form.eligibility} onChange={(event) => setField("eligibility", event.target.value)} className={inputClass} /></label>
+                    </div></FormSection>
+                    <TagSection title="Program Highlights" tags={form.highlights} value={highlightInput} onChange={setHighlightInput} onAdd={addHighlight} onRemove={(tag) => setField("highlights", form.highlights.filter((item) => item !== tag))} placeholder="Industry mentorship, internship, applied projects" />
+                    <FormSection title="Multi-Semester Roadmap"><div className="space-y-3">{form.roadmap.map((stage, index) => <div key={`stage-${index}`} className="rounded-lg border border-slate-200 p-3"><div className="grid gap-3 sm:grid-cols-2"><label className={labelClass}>Stage / Semester<input value={stage.title} onChange={(event) => updateStage(index, { title: event.target.value })} className={inputClass} placeholder="Semester 1" /></label><label className={labelClass}>Duration<input value={stage.duration} onChange={(event) => updateStage(index, { duration: event.target.value })} className={inputClass} placeholder="6 months" /></label></div><label className={labelClass}>Subjects<input value={stage.subjects.join(", ")} onChange={(event) => updateStage(index, { subjects: event.target.value.split(",").map((subject) => subject.trim()).filter(Boolean) })} className={inputClass} placeholder="Foundations, AI, Cloud" /></label><button type="button" onClick={() => setField("roadmap", form.roadmap.filter((_, stageIndex) => stageIndex !== index))} className="sprint-focus mt-2 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-brand-red hover:bg-brand-red-light"><Trash2 className="size-3.5" aria-hidden="true" />Remove Stage</button></div>)}<button type="button" onClick={() => setField("roadmap", [...form.roadmap, { title: "", duration: "", subjects: [] }])} className="sprint-focus inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-brand-navy hover:bg-slate-50"><Plus className="size-4" aria-hidden="true" />Add Stage / Semester</button></div></FormSection>
+                    <FormSection title="Program Status"><div className="flex flex-col gap-3 sm:flex-row sm:gap-8"><label className="inline-flex items-center gap-2.5 text-sm font-semibold text-brand-navy"><input type="checkbox" checked={form.is_published} onChange={(event) => setField("is_published", event.target.checked)} className="size-4 accent-brand-red" />Visible on Website</label><label className="inline-flex items-center gap-2.5 text-sm font-semibold text-brand-navy"><input type="checkbox" checked={form.is_featured} onChange={(event) => setField("is_featured", event.target.checked)} className="size-4 accent-brand-red" />Highlight as Featured</label></div></FormSection>
+                </div>
+                <footer className="flex justify-end gap-2 border-t border-slate-200 bg-white px-5 py-4 sm:px-7"><button type="button" onClick={onClose} disabled={isSaving} className="sprint-focus rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-brand-navy hover:bg-slate-50">Cancel</button><button type="submit" disabled={isSaving} className="sprint-focus inline-flex min-w-32 items-center justify-center gap-2 rounded-lg bg-brand-red px-4 py-2.5 text-sm font-bold text-white hover:brightness-110 disabled:opacity-70">{isSaving ? "Saving…" : "Save Program"}</button></footer>
+            </form>
+        </section>
+    </div>;
 }

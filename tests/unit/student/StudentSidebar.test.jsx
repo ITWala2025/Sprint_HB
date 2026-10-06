@@ -16,6 +16,15 @@ vi.mock("next/link", () => ({
   default: ({ children, ...props }) => <a {...props}>{children}</a>,
 }));
 
+/* The sidebar now hosts the session control, which reaches Supabase on click. */
+const { supabaseMock } = vi.hoisted(() => ({
+  supabaseMock: { auth: { signOut: vi.fn() } },
+}));
+
+vi.mock("@/lib/supabase/client", () => ({
+  createClient: () => supabaseMock,
+}));
+
 const getNav = () =>
   screen.getByRole("navigation", { name: /student portal navigation/i });
 
@@ -142,5 +151,38 @@ describe("StudentSidebar", () => {
     expect(screen.getByText(mockStudent.fullName)).toBeInTheDocument();
     expect(screen.getByText(mockStudent.id)).toBeInTheDocument();
     expect(screen.getByText(mockStudent.initials)).toBeInTheDocument();
+  });
+
+  it("offers a Logout control alongside the student identity", () => {
+    render(<StudentSidebar />);
+
+    const nav = getNav();
+    const logout = within(nav).getByRole("button", { name: /logout/i });
+
+    expect(logout).toBeInTheDocument();
+    /* It is an action, not a destination, so the nav link count is unchanged. */
+    expect(nav.querySelectorAll("a")).toHaveLength(navigation.length);
+    expect(within(nav).queryByRole("link", { name: /logout/i })).toBeNull();
+  });
+
+  it("keeps the Logout control reachable in the mobile drawer variant", () => {
+    render(<StudentSidebar variant="drawer" />);
+
+    expect(
+      within(getNav()).getByRole("button", { name: /logout/i }),
+    ).toBeInTheDocument();
+    /* The drawer is never collapsed, so it has no collapse toggle. */
+    expect(
+      screen.queryByRole("button", { name: /collapse sidebar/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps Logout labelled when the rail is collapsed to icons", () => {
+    render(<StudentSidebar collapsed />);
+
+    const logout = within(getNav()).getByRole("button", { name: /logout/i });
+    expect(logout).toBeInTheDocument();
+    /* Icon-only visually, but still named for assistive technology. */
+    expect(logout.querySelector("span")).toHaveClass("sr-only");
   });
 });

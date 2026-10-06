@@ -109,6 +109,15 @@ describe("PersonalInformationStep", () => {
     expect(screen.getByLabelText(/^state/i)).toHaveAttribute("autocomplete", "address-level1");
   });
 
+  it("keeps the native date input without rendering the custom calendar icon", () => {
+    renderStep();
+
+    const dob = screen.getByLabelText(/date of birth/i);
+    expect(dob).toHaveAttribute("type", "date");
+    expect(dob).toHaveClass("pl-4");
+    expect(dob.closest(".relative.mt-2").querySelector("svg.lucide-calendar-days")).toBeNull();
+  });
+
   it("shows the +91 prefix box next to the phone input", () => {
     renderStep();
 
@@ -116,6 +125,16 @@ describe("PersonalInformationStep", () => {
     const phone = screen.getByLabelText(/phone number/i);
     // The prefix sits in the same row as the input it labels.
     expect(phone.closest(".flex")).toContainElement(screen.getByText("+91"));
+  });
+
+  it("keeps the phone icon inside the number input, clear of the +91 prefix", () => {
+    renderStep();
+
+    const phone = screen.getByLabelText(/phone number/i);
+    const field = phone.closest(".relative.mt-2");
+
+    expect(field.querySelectorAll("svg.lucide-phone")).toHaveLength(1);
+    expect(phone.parentElement).toContainElement(field.querySelector("svg.lucide-phone"));
   });
 
   it("links each hint to its input so screen readers read it with the field", () => {

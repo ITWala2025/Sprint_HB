@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SPRINT — Wireframes (current state)</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f8fafc;--card:#fff;--line:#cbd5e1;--ph:#e2e8f0;--tx:#0f172a;--mu:#64748b;--navy:#011f3e;--red:#f81529;--warn:#fff0f2;--ok:#e8f3ff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--card:#111a2e;--line:#334155;--ph:#1e293b;--tx:#e2e8f0;--mu:#94a3b8;--navy:#e2e8f0;--warn:#3b1219;--ok:#0f2742}}
+:root[data-theme="dark"]{--bg:#0b1220;--card:#111a2e;--line:#334155;--ph:#1e293b;--tx:#e2e8f0;--mu:#94a3b8;--navy:#e2e8f0;--warn:#3b1219;--ok:#0f2742}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:16px;max-width:1100px;margin:auto}
+h1{font-size:20px;margin:0 0 4px}header p{margin:0;color:var(--mu);font-size:13px}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.bar button{border:1px solid var(--line);background:var(--card);color:var(--tx);padding:7px 11px;border-radius:999px;font:inherit;font-size:12.5px;cursor:pointer;min-height:36px}
+.bar button.on{background:var(--navy);color:var(--bg);border-color:var(--navy)}
+.sp{flex:1}
+main{max-width:1100px;margin:auto;padding:0 16px 40px}
+.frame{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:0 auto;transition:max-width .2s;max-width:100%}
+.frame.m{max-width:390px}
+section{display:none}section.on{display:block}
+.note{font-size:12px;color:var(--mu);margin:10px 0}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--warn);color:var(--red);border:1px solid var(--red);vertical-align:middle}
+.tag.ok{background:var(--ok);color:#0b63b6;border-color:#0b63b6}
+.nav{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.logo{font-weight:800;color:var(--red);letter-spacing:.04em}
+.nav .l{display:flex;gap:12px;color:var(--mu);flex:1;justify-content:center}
+.m .nav .l{display:none}.m .nav{justify-content:space-between}
+.tick{background:var(--navy);color:var(--bg);font-size:12px;padding:8px 16px;white-space:nowrap;overflow:hidden}
+.foot{border-top:1px solid var(--line);padding:14px 16px;color:var(--mu);font-size:12px;display:flex;gap:16px;flex-wrap:wrap}
+.pad{padding:18px 16px}
+.btn{display:inline-block;border:1.5px solid var(--navy);padding:7px 14px;border-radius:9px;font-weight:600;font-size:12.5px}
+.btn.r{background:var(--red);border-color:var(--red);color:#fff}
+.ph{background:var(--ph);border-radius:8px;min-height:44px;display:flex;align-items:center;justify-content:center;color:var(--mu);font-size:12px;text-align:center;padding:6px}
+.hero{background:var(--ph);padding:34px 16px;border-bottom:1px solid var(--line)}
+.hero h2{font-size:26px;margin:0 0 6px}
+.box{border:1.5px dashed var(--line);border-radius:10px;padding:12px;background:var(--card)}
+.g2,.g3,.g4{display:grid;gap:10px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.m .g2,.m .g3,.m .g4{grid-template-columns:1fr}.m .g4.keep{grid-template-columns:1fr 1fr}
+.side{display:grid;grid-template-columns:230px 1fr;gap:14px}.m .side{grid-template-columns:1fr}
+.sb{border-right:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
+.m .sb{border-right:0;border-bottom:1px solid var(--line);flex-direction:row;flex-wrap:wrap}
+.sb span{padding:7px 10px;border-radius:8px;font-size:12.5px}.sb .a{background:var(--navy);color:var(--bg)}
+h3{margin:0 0 8px;font-size:15px}
+.fld{border:1.5px solid var(--line);border-radius:8px;padding:9px;color:var(--mu);font-size:12px;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line)}
+.sc{overflow-x:auto}
+.mb{margin-bottom:12px}
+.au{display:grid;grid-template-columns:42% 58%;min-height:480px}.m .au{grid-template-columns:1fr}.m .au>.ph{display:none}.gl{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;margin:0 2px 0 8px}.bar{max-height:none}
+</style></head><body>
+<header><h1>SPRINT — Wireframes (current state)</h1>
+<p>Lo-fi wireframes of every route in the audit (commit 6df5ef4): public, auth, student portal and admin. Red tags mark broken or inert elements.</p>
+<div class="bar" id="tabs"></div></header>
+<main>
+<div class="note" id="meta"></div>
+<div class="frame" id="frame"></div></main>
+<script>
+var N='<div class="nav"><span class="logo">SPRINT</span><span class="l"><span>Home</span><span>Courses</span><span>About Us</span><span>Contact</span></span><span class="btn">Student Portal</span><span class="btn r">Enroll Now</span></div><div class="tick">📣 Campus updates marquee (hidden on /privacy, /terms)</div>',
+FT='<div class="foot"><span>Explore: Home · Courses · About · Careers · Contact</span><span>Portals: Student Login · New Enrollment · Scholarship</span><span>© SPRINT · Privacy · Terms</span><span>(●) WhatsApp</span></div>',
+HE=function(t,u){return '<div class="hero"><h2>'+t+'</h2><p>'+(u||'')+'</p></div>'},
+H=function(t){return '<h3>'+t+'</h3>'},B=function(t){return '<div class="box mb">'+t+'</div>'},
+G=function(n,a){return '<div class="g'+n+' mb">'+a.map(function(x){return '<div class="ph">'+x+'</div>'}).join('')+'</div>'},
+F=function(a){return a.map(function(x){return '<div class="fld">'+x+'</div>'}).join('')},
+NT=function(t){return '<p class="note">'+t+'</p>'},X=function(t){return ' <span class="tag">'+t+'</span>'},
+BT=function(t,r){return '<span class="btn'+(r?' r':'')+'">'+t+'</span>'},
+T=function(hd,rows){return '<div class="sc mb"><table style="min-width:560px"><tr>'+hd.map(function(c){return '<th>'+c+'</th>'}).join('')+'</tr>'+rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>'}).join('')+'</tr>'}).join('')+'</table></div>'},
+pub=function(c){return N+'<div class="pad">'+c+'</div>'+FT},
+au=function(c){return '<div class="au"><div class="ph" style="border-radius:0">HERO IMAGE (hidden &lt;768px)</div><div class="pad"><span class="logo">SPRINT</span>'+X('chrome-free')+'<br><br>'+c+'<p class="note">© SPRINT</p></div></div>'},
+side=function(items,act,c,ttl){return '<div class="side" style="gap:0"><div class="sb"><b>'+ttl+'</b>'+items.map(function(i){return '<span'+(i[0]===act?' class="a"':'')+'>'+i[1]+'</span>'}).join('')+'</div><div class="pad">'+c+'</div></div>'},
+PI=[['d','▣ Dashboard'],['p','👤 Profile'],['a','📘 Apply Courses'],['m','📖 My Course'],['s','📋 Assignment ②'],['c','🏅 Certificate'],['r','🎓 Result'],['h','🛟 Help &amp; Support']],
+AI=[['d','Dashboard'],['ad','Admissions ▸ ⚠404'],['cm','Website CMS ▸ ⚠404 ×7'],['c','Course Mgmt'],['sc','Scholarships ⚠404'],['e','Enrollments ⑦'],['ac','Academic ▸ ⚠404'],['pt','Partners ▸ ⚠404'],['tr','Trainers ▸ ⚠404'],['r','Roles &amp; Permissions'],['u','Updates ⚠404']],
+portal=function(a,c){return side(PI,a,c,'Student Portal')+'<div class="pad">'+NT('Sidebar 264px, collapsible to 76px rail; mobile: ☰ drawer. Identity card is mock. No logout.')+'</div>'},
+adm=function(a,c){return side(AI,a,c,'▣ SPRINT Admin')},
+stub=function(t,note){return H(t)+'<div class="box" style="text-align:center;padding:30px">▢ icon<br><b>This section is being built</b><br>'+note+'</div><br>'+BT('← Back to Dashboard')+X('placeholder')},
+SC={},S=[],M={};
+function add(g,id,l,m,h){S.push([id,l,g]);M[id]=m;SC[id]=h}
+add('Map','map','Sitemap','All 34 route patterns. 🔒 = middleware protected, ⚠ = referenced but not implemented.',
+'<div class="pad"><div class="g2"><div class="box"><b>Public</b> (header + ticker + footer)<br>/ → /home · /about · /courses · /courses/[slug] ×23 · /bundles/[slug] ×5 · /careers · /contact · /privacy · /terms<br>'+X('⚠ /register, /updates 404')+'<br><br><b>Auth</b> (chrome-free)<br>/student/login (/login) · /student/forgot-password (/forgot-password) · /student/check-email · /student/reset-password (/set-password) · /student/password-reset-success (orphan) · /student/enroll</div><div class="box"><b>Student portal 🔒</b><br>/student/dashboard · profile · apply-course · my-course · assignments · certificates · result · help-support · resources (off-sidebar) · settings → profile#settings<br><br><b>Admin 🔒</b><br>/admin (sign-in) · /admin/dashboard · /admin/courses · /admin/roles · /admin/students/enrollments<br>'+X('23 sidebar targets ⚠ 404')+'</div></div>'+NT('Rules: no user on /admin/* → /admin · no user on portal → /student/login · non-admin on /admin → /home · inactive student → /student/login.')+'</div>');
+add('Public','about','About','/about — all content is sample/placeholder (about.json).',pub(HE('Who is SPRINT?','Home › About Us')+BT('Explore Courses',1)+' '+BT('Our Story ↓')+G(4,['82%','200+','40+','20+'])+H('Our Story / Vision &amp; Mission')+'<div class="g2 mb"><div class="box">¶ ¶ ¶ • Founded 2021 • 3 tracks</div><div class="box">● Vision ● Mission — auto-swap 4s, swipe, dots only</div></div>'+H('Leadership')+G(3,['(AR)','(PV)','(RK)'])+H('Faculty')+G(4,['(SG)','(AS)','(NV)','(AR)'])+H('Industry connection')+'<div class="g2 mb"><div class="box">¶ highlighted box '+BT('View Courses')+'</div>'+G(1,['AI/ML','Cloud','DevOps'])+'</div>'+H('Connect with SPRINT')+B('📞 Call · ✉ Email · 💬 WhatsApp '+X('numbers differ from site config')+' '+BT('Request a callback'))));
+add('Public','careers','Careers','/careers — footer-only entry; 2 hardcoded roles; apply is mailto.',pub(HE('Build the Future of Tech Education','Home › Careers')+BT('View Open Roles ↓')+H('Why join SPRINT')+'<div class="g4 mb"><div class="box">¶ ¶ ¶</div><div class="ph">empty</div><div class="ph">empty</div><div class="ph">empty</div></div>'+H('Open positions')+B('[All | Internships | Full-time]')+'<div class="g2 mb"><div class="box"><b>Agentic AI Developer</b><br>Hazaribagh · INTERNSHIP<br>⌛ 6mo 💰 stipend<br>'+BT('Apply →')+'</div><div class="box"><b>Business Dev Executive</b><br>Hazaribagh · FULL-TIME<br>'+BT('Apply →')+'</div></div>'+NT('Empty: “No roles match” + Show all')+H('Hiring process')+G(4,['① Apply','② Screening','③ Interview','④ Onboarding'])+B('#application-form — “Email your resume →” mailto, no fields'+X('job_applications unused'))+B('<b>Role modal</b> (bottom sheet on mobile): tag · title · meta grid · about · responsibilities · requirements · Apply (mailto). Focus trap, Esc.')));
+add('Public','legal','Privacy / Terms','/privacy (13 sections) and /terms (14) — demo content, ticker suppressed, no ToC.',N.replace('Campus updates marquee (hidden on /privacy, /terms)','ticker suppressed')+'<div class="pad" style="max-width:720px;margin:auto"><h2>Privacy Policy / Terms &amp; Conditions</h2>'+B('ℹ Notice — demo/sample content')+B('## Introduction ¶ · ## Information We Collect • · ## Cookies · ## Data Security · ## Your Rights · ## Educational Demo Disclaimer · ## Changes · ## Contact → mailto:privacy@example.com'+X('placeholder'))+'</div>'+FT);
+add('Public','nf','404 page','31 dead targets (/register, /updates, /admin/login, 23 admin items…) land on the framework default 404. No not-found.tsx, error.tsx or loading.tsx exist.','<div class="pad" style="text-align:center;padding:90px 16px"><h1 style="font-size:44px;margin:0">404</h1><p>This page could not be found.</p>'+X('Next.js default')+'</div>');
+add('Auth','forgot','Forgot password','/student/forgot-password (reached via alias /forgot-password).',au(BT('← Back to Sign In')+'<h2>Forgot Password?</h2>'+NT('ACCOUNT RECOVERY — we’ll send a secure reset link.')+F(['✉ Email address (autofocus)'])+B('⚠ Please enter a valid email address.')+BT('Send Reset Link →',1)+NT('Enumeration-safe: same redirect on error.')));
+add('Auth','check','Check email','/student/check-email — needs sessionStorage from previous step; 30s resend cooldown.',au(BT('← Back to Sign In')+'<h2>Check Your Email</h2>'+B('✉ a••••@example.com')+B('🕐 Didn’t receive it? Check spam…')+BT('⟳ Resend Email / Resend in 24s')+NT('✓ link sent (status) · ⚠ couldn’t resend (alert)')+X('cooldown arms even on error')));
+add('Auth','reset','Reset password','/student/reset-password (= /set-password, the emailed-link target). Form always visible.',au('<h2>Create a new password</h2>'+F(['🔒 New password [Show]'])+B('✓ 8+ characters ✓ uppercase ○ lowercase ○ number ○ special')+F(['🔒 Confirm password'])+NT('⚠ Passwords do not match / ✓ match')+B('⏳ Link expired? '+BT('Request a new link')+' '+BT('Sign In'))+BT('Reset Password →',1)));
+add('Auth','success','Reset success','/student/password-reset-success — orphan: nothing navigates here.',au('<h2>✓ Password Reset Successfully!</h2><p>You can now sign in with your new password.</p>'+BT('Sign In to Student Portal →',1)+' '+BT('Go to Homepage')+X('orphan')));
+add('Auth','enroll','Enrollment wizard','/student/enroll — public, 3 steps, nothing persisted.','<div class="nav"><span class="logo">SPRINT</span><span class="sp"></span><span>Already enrolled? Sign in →</span></div><div class="pad"><h2>Student Enrollment</h2>'+G(3,['① Personal','② Education (optional)','③ Account'])+B('<b>Step 1</b> — first name* · last name* · email* · DOB* · country* · state* · +91 mobile*. Inline alerts; first invalid field focused.')+B('<b>Step 2</b> — course/degree · semester · current role · course ▾ (DB load → local fallback; loading/empty/error)')+B('<b>Step 3</b> — read-only summary; no fields. '+BT('Submit Enrollment')+X('no backend'))+'<div class="box mb">[Back] [Skip for now] [Continue →] — fixed bottom bar on mobile</div><div class="box">✓ Success panel: echoes entered data · “Preview build — nothing has been submitted” · [Review] [Back to homepage]</div></div>');
+add('Auth','signup','Signup modal','Opened from /student/login. No password field; link emailed.',au('<div class="box"><b>Create your account</b> ✕<br><br>'+F(['First name*','Last name*','Email*','Mobile*'])+BT('Create Account',1)+'<br><br>✓ Success: “Check your email to set your password” · [Back to Sign In] [Close]'+X('copy promises auto sign-in')+'</div>'));
+add('Auth','login','Student login','/student/login (alias /login).',au(BT('Enroll Now →',1)+'<p class="note" style="margin-top:20px">STUDENT PORTAL</p><h2 style="margin:0 0 6px">Welcome Back!</h2>'+F(['✉ Email address','🔒 Password [Show]'])+'<p>☑ Remember me (no effect) · Forgot password?</p>'+B('⚠ Invalid email or password.')+BT('Sign In →',1)+NT('── OR ── Don’t have an account? [Enroll Now] → modal')));
+add('Portal','dash','Dashboard','/student/dashboard — only fully built portal page; mock data.',portal('d',HE('Welcome back, Ananya!','◯ 68% learning progress · On track')+B('🔔 Announcements — 2 new')+B('📹 Upcoming Live Classes — ⓘ none scheduled (always empty)')+G(4,['Assignments','Resources','Result','Certificates'])+B('Announcements: ● Capstone review · ● Cloud lab credits · ○ Placement drive')+X('no logout')));
+add('Portal','stub','Portal stubs (7)','my-course, apply-course, assignments, certificates, resources, result, help-support share one placeholder page.',portal('m',H('My Course (or any of the 7)')+stub('','Course records appear here once the enrollment module is connected.')));
+add('Portal','profile','Profile / Settings','/student/profile; /student/settings redirects to /student/profile#settings.',portal('p',H('Profile')+stub('','Profile records and edit controls arrive with the authenticated account.')+B('⚙ Settings (#settings) — static text, no inputs')));
+add('Admin','alogin','Admin sign-in','/admin — no sidebar; 8s timeout; role must be admin.','<div class="pad" style="max-width:380px;margin:30px auto"><div class="box" style="text-align:center"><b>SPRINT Admin Console</b><p class="note">Authorized personnel only.</p>'+F(['Admin Email / ID *','Password *'])+B('⚠ Access denied: role “x”. Admin access required.')+BT('Authenticating…',1)+'</div></div>');
+add('Admin','adash','Admin dashboard','/admin/dashboard — 100% hardcoded.',adm('d',H('Admin Dashboard')+BT('Review callbacks →')+G(4,['248 Students','14 Callbacks','9 B2B leads','8 Evaluations'])+'<div class="g2 mb"><div>'+T(['Name','Program','Status'],[['A','AI/ML','New'],['B','Cloud','Contacted']])+'</div><div class="box">Upcoming assessment schedule ×4</div></div>'+H('Quick shortcuts')+G(3,['Scholarship','Assign assessments','Partner callbacks'])+X('5 links 404')));
+add('Admin','admin','Admin courses','/admin/courses — DB-backed CRUD.',adm('c',H('Course Management')+BT('+ Add Course',1)+G(4,['Total','Published','Featured','Draft'])+B('🔍 Search · Category ▾ · Difficulty ▾ · Audience ▾ · [Table | Grid]')+T(['Course','Category','Mode','Duration','Status','Actions'],[['Title/slug','badge','Hybrid','12w','★ Published','👁 ✏ 🗑'],['Title/slug','badge','Online','8w','Draft','👁 ✏ 🗑']])+NT('Loading / 2 empty variants / toasts. Delete = window.confirm. No pagination.')+B('CourseModal: title* slug* category* audience* delivery* difficulty* duration* description* tools[] ☐visible ☐featured')));
+add('Admin','roles','Roles & permissions','/admin/roles — DB-backed RBAC; audit tab is placeholder.',adm('r',H('Roles &amp; Permissions')+BT('↻ Refresh')+' '+BT('+ New Role',1)+B('[Roles | Users | Permissions Matrix | Audit Log]')+G(3,['● Super Admin','● Instructor','● Read Only'])+T(['User','Role','Status','Actions'],[['Ananya','● Student','Active','▾ 🗑']])+BT('+ Invite / Create User')+B('RoleModal: name · slug · description · colour · 13×5 permission matrix · presets. CreateUserModal → rpc admin_create_staff_user → credentials panel.')+X('audit log: text only')));
+add('Admin','enr','Enrollments','/admin/students/enrollments — 100% hardcoded; buttons inert.',adm('e',H('Enrollment Applications')+X('3 pending')+T(['Applicant','Program','Submitted','Status','Actions'],[['Ananya Sharma','AI/ML','26 Sep','Pending','👁 ✓ ✕'],['Rahul Verma','Cloud','25 Sep','Reviewing','👁 ✓ ✕']])+X('no onClick handlers')));
+add('Public','home','Home','/home — static data; no forms.',pub(HE('We do not teach, We #Empower','Hands-on AI/ML, Cloud &amp; DevOps')+BT('Explore Programs →',1)+G(4,['200+ Learners','30+ Mentors','82% Placement','40+ Partners'])+B('Partner marquee (22 logos)')+H('SPRINT RISE')+G(4,['01 Foundations','02 Specialization','03 Capstone','04 Placement'])+H('More Courses')+G(3,['CourseCard','CourseCard','CourseCard'])+H('Faculty')+G(4,['(AS)','(AS)','(NV)','(AR)'])+B('Testimonials carousel · FAQ ×5')+B('Ready to take the next step? '+BT('Get in Touch',1))));
+add('Public','courses','Courses','/courses — DB merge with static fallback.',pub(HE('Tailored pathways for every career stage','hero carousel')+B('[Students | IT Professionals | Non-IT] (select on mobile)')+'<div class="side"><div class="box">Filters: category ☐ · level ○ (mobile: bottom sheet)</div><div>'+F(['🔍 Search (≤5 suggestions)'])+G(3,['Tile','Tile','Tile'])+NT('Empty: “No matching learning options”')+'</div></div>'));
+add('Public','detail','Course / bundle','/courses/[slug] ×23 and /bundles/[slug] ×5 share DetailPage.',pub(NT('Home › Courses › Audience › Category › Title')+'<div class="g2 mb"><div><h2>Course Title</h2>⌛ 12w 🎓 Intermediate 🏅 Cert<br>'+BT('Sign up',1)+X('/register 404')+'</div><div class="ph" style="min-height:120px">ART</div></div><div class="side" style="grid-template-columns:1fr 240px"><div>'+H('Pathway')+B('▾ Module 1 · ▸ Module 2 · ▸ Module 3')+H('Outcomes')+'✔ ✔</div><div class="box">At a glance: format, duration, prereqs, price '+BT('Sign up',1)+'<br>Mobile: fixed bottom bar</div></div>'));
+add('Public','contact','Contact','/contact — 4 forms, console.log only.',pub(HE('Let’s Build Your Future Together','✓ Quick response ✓ Expert guidance')+BT('Start an Enquiry ↓',1)+'<div class="g2 mb"><div class="box">📞 Call · ✉ Email · 🕐 Hours</div><div class="box">[Student | Working Prof | Institute | Company | Enterprise]<br><br>'+F(['Full name*','Email*','Phone*','Courses* ▾ multi','Message (1000)','☐ I agree*'])+BT('Submit',1)+X('console.log only')+'</div></div>'+H('Find us')+G(3,['📍 Address','Office image','Google Maps'])+B('FAQ: 4 tabs, 30 items')));
+var G2=['Map','Public','Auth','Portal','Admin'],ord=[];G2.forEach(function(g){S.filter(function(s){return s[2]===g}).forEach(function(s){ord.push(s)})});S=ord;
+var fr=document.getElementById('frame');fr.innerHTML=S.map(function(s){return '<section id="'+s[0]+'">'+SC[s[0]]+'</section>'}).join('');
+var t=document.getElementById('tabs'),f=fr,lg='';
+function show(id){S.forEach(function(s){document.getElementById(s[0]).classList.toggle('on',s[0]===id)});[].forEach.call(t.querySelectorAll('button[data-id]'),function(b){b.classList.toggle('on',b.dataset.id===id)});document.getElementById('meta').textContent=M[id];try{sessionStorage.setItem('w2',id)}catch(e){}}
+S.forEach(function(s){if(s[2]!==lg){lg=s[2];var l=document.createElement('span');l.className='gl';l.textContent=lg;t.appendChild(l)}var b=document.createElement('button');b.textContent=s[1];b.dataset.id=s[0];b.onclick=function(){show(s[0])};t.appendChild(b)});
+var sp=document.createElement('span');sp.className='sp';t.appendChild(sp);var d=document.createElement('button');d.textContent='Desktop / Mobile';d.onclick=function(){f.classList.toggle('m')};t.appendChild(d);
+var id='map';try{id=sessionStorage.getItem('w2')||'map'}catch(e){}if(!M[id])id='map';show(id);
+</script></body></html>

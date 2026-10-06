@@ -253,4 +253,34 @@ describe("CourseCurriculum", () => {
     expect(screen.getByText("Learning package · Career Package")).toBeInTheDocument();
     expect(screen.getByText("What you can take forward")).toBeInTheDocument();
   });
+
+  it("renders dynamic flagship details without pricing content", async () => {
+    const item = {
+      kind: "flagship",
+      title: "SPRINT RISE",
+      badgeLabel: "Flagship Program",
+      tagline: "Campus to Corporate in 6 Months",
+      description: "An intensive industry-focused program.",
+      longDescription: "A detailed roadmap vision for the program.",
+      duration: "6 Months Intensive",
+      trainingMode: "Hybrid",
+      eligibility: "Undergraduate students",
+      audienceLabel: "Undergraduate",
+      highlights: ["Industry mentorship"],
+      roadmap: [{ title: "Technical Sessions", duration: "124 hours", subjects: ["Cloud", "AI"] }],
+      curriculum: [],
+      image: "/images/courses/abstract-code.svg",
+    };
+
+    render(await DetailPage({ item }));
+
+    expect(screen.getByRole("heading", { level: 1, name: item.title })).toBeInTheDocument();
+    expect(screen.getByText(item.badgeLabel)).toBeInTheDocument();
+    expect(screen.getByText(item.tagline)).toBeInTheDocument();
+    expect(screen.getByText(item.longDescription)).toBeInTheDocument();
+    expect(screen.getByText(item.highlights[0])).toBeInTheDocument();
+    expect(screen.getByText(item.eligibility)).toBeInTheDocument();
+    expect(screen.getByText("Technical Sessions")).toBeInTheDocument();
+    expect(screen.queryByText(/price|discount|currency/i)).not.toBeInTheDocument();
+  });
 });
