@@ -8,9 +8,9 @@ export default function ContactCTA() {
   return (
     <section className="sprint-cta-bg sprint-section relative overflow-hidden text-brand-navy">
       <div className="mx-auto max-w-[1200px] px-6 py-[2.1rem] text-center md:py-[3.5rem] lg:py-[4.375rem]">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+        {/*<p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
           Start with a conversation
-        </p>
+        </p> */}
         <h2 className="mx-auto mt-3 max-w-3xl font-display text-3xl font-bold tracking-tight sm:text-4xl">
           Ready to Take the Next Step?
         </h2>

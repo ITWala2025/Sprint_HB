@@ -66,44 +66,53 @@ export const partners = [
   },
 ];
 
-// Section 6.4 — Featured Course / Program (one program, 3–4 stages)
+// Section 6.4 — Featured Course / Program
 export const featuredProgramStages = [
   {
     id: "stage-1",
-    stageLabel: "Stage 1",
-    title: "Foundations",
+    stageLabel: "STAGE 1",
+    title: "Foundation & Onboarding",
     description:
-      "Core programming, data structures, and problem-solving fundamentals taught live by working engineers.",
+      "Orientation, personality baseline, core tech modules, Personality Development begins.",
     image: "/images/home/home-featuredprogram-1.png",
     imageAlt: "Programming and software development learning",
   },
   {
     id: "stage-2",
-    stageLabel: "Stage 2",
-    title: "Specialization",
-    description:
-      "Choose a track — full-stack, data, or cloud — and go deep with project-based modules.",
+    stageLabel: "STAGE 2",
+    title: "Core Technical Competency",
+    description: "Cloud & DevOps fundamentals, first workshop, SME connects.",
   },
   {
     id: "stage-3",
-    stageLabel: "Stage 3",
-    title: "Industry Capstone",
-    description:
-      "Build a production-grade project reviewed by mentors from partner companies.",
+    stageLabel: "STAGE 3",
+    title: "Applied Learning",
+    description: "Deeper modules, guest faculty visit, first mock interview.",
   },
   {
     id: "stage-4",
-    stageLabel: "Stage 4",
-    title: "Placement Sprint",
-    description:
-      "Resume reviews, mock interviews, and direct referrals into partner hiring pipelines.",
+    stageLabel: "STAGE 4",
+    title: "Real Projects Begin",
+    description: "Live team builds start, alongside GenAI & Agentic AI.",
+  },
+  {
+    id: "stage-5",
+    stageLabel: "STAGE 5",
+    title: "Industry Immersion",
+    description: "Project reviews, second mock interview, resume overhaul.",
+  },
+  {
+    id: "stage-6",
+    stageLabel: "STAGE 6",
+    title: "Job-Ready",
+    description: "Final assessment, placement preparations and internship.",
   },
 ];
 
 // Sections 6.4 / 6.5 — Featured Course + More Courses share the Course shape
 export const featuredCourse = {
   courseId: "crs-001",
-  title: "SPRINT RISE Program (Fast-Track Employability)",
+  title: "SPRINT RISE Program",
   shortDescription:
     "Designed for pre-final and final year BCA/MCA/B.Tech students needing production-grade portfolio projects, Git workflows, and mock technical defense.",
   thumbnailUrl: "/images/courses/abstract-code.svg",
