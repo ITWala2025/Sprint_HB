@@ -496,142 +496,111 @@ const createBundle = ({
   pathway,
   outcomes,
   imageCategory = "Artificial Intelligence",
-}) => ({
-  slug,
-  title,
-  kind: "bundle",
-  audience,
-  category: "Career Package",
-  level: "Curated pathway",
-  duration: "Guided multi-course path",
-  description,
-  longDescription: `${description} This package groups connected learning into a clear sequence, with the flexibility to focus on each stage as you progress.`,
-  tools: ["Guided pathway", "Practice projects", "Mentor support"],
-  certificate: true,
-  pathway,
-  outcomes,
-  prerequisites: "See the included course requirements",
-  role: "Career pathway",
-  image: visualByCategory[imageCategory],
-  courses: included,
-  curriculum: [
-    {
-      title: "Foundation",
-      topics: [
-        "Build essential knowledge",
-        "Complete guided practice",
-      ],
-    },
-    {
-      title: "Specialize",
-      topics: included,
-    },
-    {
-      title: "Apply",
-      topics: outcomes,
-    },
-  ],
-  price: "Contact for package fee details",
-});
+}) => {
+  const includedCourseTitles = included.map((courseSlug) => {
+    const course = courses.find((entry) => entry.slug === courseSlug);
+    if (!course) {
+      throw new Error(`Bundle "${slug}" references unknown course "${courseSlug}".`);
+    }
+    return course.title;
+  });
+
+  return {
+    slug,
+    title,
+    kind: "bundle",
+    audience,
+    category: "Career Package",
+    level: "Curated pathway",
+    duration: "Guided multi-course path",
+    description,
+    longDescription: `${description} This package groups connected learning into a clear sequence, with the flexibility to focus on each stage as you progress.`,
+    tools: ["Guided pathway", "Practice projects", "Mentor support"],
+    certificate: true,
+    pathway,
+    outcomes,
+    prerequisites: "See the included course requirements",
+    role: "Career pathway",
+    image: visualByCategory[imageCategory],
+    courses: included,
+    curriculum: [
+      {
+        title: "Foundation",
+        topics: [
+          "Build essential knowledge",
+          "Complete guided practice",
+        ],
+      },
+      {
+        title: "Specialize",
+        topics: includedCourseTitles,
+      },
+      {
+        title: "Apply",
+        topics: outcomes,
+      },
+    ],
+    price: "Contact for package fee details",
+  };
+};
 
 export const bundles = [
   createBundle({
     slug: "core-it-employability",
-    title: "Core IT Employability Package",
+    title: "Core IT Employability",
     audience: ["student"],
     description:
-      "A practical route from web foundations through cloud basics and delivery practices.",
+      "Build web foundations, cloud knowledge, and modern container skills.",
     courses: [
-      "Full-Stack Web Foundations",
-      "Cloud Fundamentals",
-      "Docker & Kubernetes",
+      "full-stack-web-foundations",
+      "cloud-fundamentals",
+      "docker-and-kubernetes",
     ],
     pathway: "Student career package",
     outcomes: [
-      "Build a project portfolio",
-      "Understand deployment basics",
-      "Prepare for technical interviews",
+      "Build responsive web applications",
+      "Understand cloud and container fundamentals",
+      "Prepare for entry-level IT roles",
     ],
     imageCategory: "Full-Stack Web",
   }),
 
   createBundle({
     slug: "non-it-to-tech-transition",
-    title: "Non-IT to Tech Transition Package",
+    title: "Non-IT to Tech Transition",
     audience: ["student", "non-it"],
     description:
-      "Build confidence in Python, SQL, and business reporting before choosing a technology specialization.",
+      "Develop Python and AI foundations, learn SQL, and turn data into clear insights.",
     courses: [
-      "Python & AI Foundations",
-      "SQL & Database Systems",
-      "Data Analytics with Power BI",
+      "python-and-ai-foundations",
+      "sql-and-database-systems",
+      "data-analytics-with-power-bi",
     ],
     pathway: "Career transition package",
     outcomes: [
-      "Build a technical foundation",
-      "Work with data",
-      "Plan a next specialization",
+      "Build a foundation in Python and AI",
+      "Query and understand relational data",
+      "Create useful Power BI reports",
     ],
     imageCategory: "Data Analytics",
   }),
 
   createBundle({
-    slug: "ai-ml-generative-ai-master",
-    title: "AI/ML & Generative AI Master Package",
-    audience: ["it-pro"],
+    slug: "school-web-essentials",
+    title: "School + Web Essentials",
+    audience: ["student"],
     description:
-      "A focused pathway through machine learning, generative AI workflows, and practical deployment thinking.",
+      "Start with Python and AI concepts, then apply your skills to building for the web.",
     courses: [
-      "Machine Learning Essentials",
-      "Generative AI for Work",
-      "Cloud Fundamentals",
+      "python-and-ai-foundations",
+      "full-stack-web-foundations",
     ],
-    pathway: "Professional specialization",
+    pathway: "School and web foundations",
     outcomes: [
-      "Build ML understanding",
-      "Use AI productively",
-      "Prepare for advanced AI work",
+      "Understand programming and AI fundamentals",
+      "Build and publish responsive web projects",
     ],
-  }),
-
-  createBundle({
-    slug: "cloud-cybersecurity-defense",
-    title: "Cloud & Cybersecurity Defense Package",
-    audience: ["it-pro"],
-    description:
-      "Strengthen cloud architecture, secure development, and operational security practice.",
-    courses: [
-      "Cloud Fundamentals",
-      "AWS Architecture Practice",
-      "Application Security Testing",
-    ],
-    pathway: "Professional specialization",
-    outcomes: [
-      "Design safer systems",
-      "Understand cloud controls",
-      "Apply security testing",
-    ],
-    imageCategory: "Cybersecurity",
-  }),
-
-  createBundle({
-    slug: "banking-digital-modernization",
-    title: "Banking Digital Modernization Package",
-    audience: ["non-it"],
-    description:
-      "Modernize reporting, workflow, and cyber-awareness practices for financial-services teams.",
-    courses: [
-      "Excel & Workflow Automation",
-      "Digital Office Workflows",
-      "Cybersecurity Basics",
-    ],
-    pathway: "Industry digital pathway",
-    outcomes: [
-      "Improve reporting",
-      "Strengthen workflows",
-      "Practice digital safety",
-    ],
-    imageCategory: "Professional Skills",
+    imageCategory: "Artificial Intelligence",
   }),
 ];
 

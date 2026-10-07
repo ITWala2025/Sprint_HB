@@ -3,8 +3,15 @@ const nextConfig = {
   reactStrictMode: true,
   devIndicators: false,
   images: {
-    // Local placeholder avatars are rendered by the components themselves
-    // (no remote image domains are needed at launch).
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "vrapmahhtmhflaqbubux.supabase.co",
+        port: "",
+        pathname: "/storage/v1/object/public/**",
+        search: "",
+      },
+    ],
     formats: ["image/avif", "image/webp"],
   },
 };

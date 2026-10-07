@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
+import BundleDetailPage from "@/components/courses/BundleDetailPage";
 import DetailPage from "@/components/courses/DetailPage";
-import { bundles, getBundle } from "@/data/courses";
+import { bundles, getBundle, getCourse } from "@/data/courses";
 import { getProgram } from "@/data/programs";
 import { createPublicServerClient } from "@/lib/supabase/public-server";
 
@@ -36,6 +37,9 @@ function toFlagshipItem(bundle) {
 }
 
 async function findBundle(slug) {
+  const localBundle = getBundle(slug);
+  if (localBundle) return localBundle;
+
   const supabase = createPublicServerClient();
   if (supabase) {
     const { data } = await supabase
@@ -46,18 +50,39 @@ async function findBundle(slug) {
     if (data) return data.is_published ? toFlagshipItem(data) : null;
   }
 
-  const fallback = getBundle(slug) || getProgram(slug);
+  const fallback = getProgram(slug);
   return fallback ? toFlagshipItem(fallback) : null;
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const item = await findBundle(slug);
-  return item ? { title: item.title, description: item.description, alternates: { canonical: `/bundles/${item.slug}` } } : {};
+  return item
+    ? {
+        title: item.title,
+        description: item.description,
+        alternates: { canonical: `/bundles/${item.slug}` },
+      }
+    : {};
 }
 export default async function BundlePage({ params }) {
   const { slug } = await params;
   const item = await findBundle(slug);
   if (!item) notFound();
+  if (item.kind === "bundle") {
+    const includedCourses = item.courses.map((courseSlug) => {
+      const course = getCourse(courseSlug);
+      if (!course) {
+        throw new Error(
+          `Bundle "${item.slug}" references unknown course "${courseSlug}".`,
+        );
+      }
+      return course;
+    });
+
+    return (
+      <BundleDetailPage item={item} includedCourses={includedCourses} />
+    );
+  }
   return <DetailPage item={item} />;
 }
