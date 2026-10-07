@@ -5977,11 +5977,26 @@ a {
   flex: 0 0 auto;
   align-items: center;
   gap: 0.4rem;
-  margin-left: auto;
   padding: 0.7rem 0.75rem;
   border: 1px solid var(--color-brand-border);
   border-radius: 0.55rem;
   background: #fff;
+  color: var(--color-brand-navy);
+  cursor: pointer;
+  font: 700 0.75rem var(--font-body);
+}
+
+.course-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
+}
+
+.course-clear-filters {
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--color-brand-navy);
   cursor: pointer;
   font: 700 0.75rem var(--font-body);
