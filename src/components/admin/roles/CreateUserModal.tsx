@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { Check, Copy, Eye, EyeOff, LoaderCircle, UserPlus, X } from "lucide-react";
+import { Check, Copy, Eye, EyeOff, LoaderCircle, RefreshCw, UserPlus, X } from "lucide-react";
 import { provisionStaffUserAction } from "@/app/admin/users/actions";
 
 type ProvisionableRole = { id: string; name: string; is_active?: boolean };
@@ -11,24 +11,34 @@ type CreateUserModalProps = {
     onCreated: () => void;
 };
 
-function generatePassword() {
-    return `${crypto.randomUUID().replaceAll("-", "").slice(0, 10)}!aA9`;
+function generateTemporaryPassword() {
+    const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*";
+    const bytes = crypto.getRandomValues(new Uint8Array(12));
+    return Array.from(bytes, (byte) => alphabet[byte % alphabet.length]).join("");
 }
 
 export default function CreateUserModal({ roles, onClose, onCreated }: CreateUserModalProps) {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState(generatePassword);
+    const [tempPassword, setTempPassword] = useState("");
     const [roleId, setRoleId] = useState(roles[0]?.id ?? "");
-    const [credentials, setCredentials] = useState<{ email: string; password: string } | null>(null);
-    const [copied, setCopied] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [createdAccount, setCreatedAccount] = useState<{
+        email: string;
+        tempPassword: string;
+        loginUrl: string;
+    } | null>(null);
+    const [copied, setCopied] = useState(false);
     const [error, setError] = useState("");
     const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         if (!roles.some((role) => role.id === roleId)) setRoleId(roles[0]?.id ?? "");
     }, [roleId, roles]);
+
+    useEffect(() => {
+        setTempPassword(generateTemporaryPassword());
+    }, []);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -48,7 +58,7 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
                 email,
                 roleId,
                 roleName: selectedRole.name,
-                tempPassword: password,
+                tempPassword,
             });
 
             if (result.success === false) {
@@ -56,43 +66,48 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
                 return;
             }
 
-            setCredentials({ email: email.trim().toLowerCase(), password });
+            setCreatedAccount({
+                email: email.trim().toLowerCase(),
+                tempPassword,
+                loginUrl: result.loginUrl,
+            });
             onCreated();
         } catch {
-            setError("The invitation could not be sent. Check your connection and try again.");
+            setError("The staff account could not be created. Check your connection and try again.");
         } finally {
             setIsSaving(false);
         }
     }
 
-    async function copyCredentials() {
-        if (!credentials) return;
+    async function copyLoginUrl() {
+        if (!createdAccount) return;
         try {
-            await navigator.clipboard.writeText(`Email: ${credentials.email}\nPassword: ${credentials.password}`);
+            await navigator.clipboard.writeText(createdAccount.loginUrl);
             setCopied(true);
         } catch {
-            setError("Clipboard access was blocked. Select the credentials and copy them manually.");
+            setError("Clipboard access was blocked. Select and copy the direct login link manually.");
         }
     }
 
-    if (credentials) {
+    if (createdAccount) {
         return (
             <div className="fixed inset-0 z-[110] flex items-center justify-center bg-brand-navy/60 p-4 backdrop-blur-sm" role="presentation">
                 <section className="w-full max-w-md rounded-xl border border-white/60 bg-white p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="created-user-title">
                     <div className="flex size-11 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><Check className="size-5" aria-hidden="true" /></div>
-                    <h2 id="created-user-title" className="mt-4 font-display text-xl font-bold text-brand-navy">Invitation sent</h2>
-                    <p className="mt-1 text-sm leading-6 text-brand-text-secondary">The account and temporary sign-in details were emailed. The password is shown here only until you close this dialog.</p>
+                    <h2 id="created-user-title" className="mt-4 font-display text-xl font-bold text-brand-navy">Staff account created</h2>
+                    <p className="mt-1 text-sm leading-6 text-brand-text-secondary">Share these login details with the staff member. The direct login link is single-use.</p>
                     <div className="mt-5 space-y-3 rounded-lg border border-brand-border bg-brand-off-white p-4 font-body text-sm">
-                        <p><span className="text-xs font-bold text-brand-text-muted">EMAIL</span><br />{credentials.email}</p>
-                        <p><span className="text-xs font-bold text-brand-text-muted">TEMPORARY PASSWORD</span><br /><span className="break-all font-mono">{credentials.password}</span></p>
+                        <p><span className="text-xs font-bold text-brand-text-muted">EMAIL</span><br />{createdAccount.email}</p>
+                        <p><span className="text-xs font-bold text-brand-text-muted">TEMPORARY PASSWORD</span><br /><span className="break-all font-mono">{createdAccount.tempPassword}</span></p>
+                        <p><span className="text-xs font-bold text-brand-text-muted">DIRECT LOGIN URL</span><br /><a className="break-all text-brand-blue underline" href={createdAccount.loginUrl} target="_blank" rel="noreferrer">{createdAccount.loginUrl}</a></p>
                     </div>
                     {error && <p className="mt-3 text-sm text-brand-red" role="alert">{error}</p>}
                     <div className="mt-5 flex gap-2">
-                        <button type="button" onClick={copyCredentials} className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-bold text-white">
-                            {copied ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
-                            {copied ? "Copied" : "Copy credentials"}
+                        <button type="button" onClick={copyLoginUrl} className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-bold text-white">
+                            <Copy className="size-4" aria-hidden="true" />
+                            {copied ? "Copied login link" : "Copy login link"}
                         </button>
-                        <button type="button" onClick={onClose} className="rounded-lg border border-brand-border px-4 py-2.5 text-sm font-bold text-brand-navy">Done</button>
+                        <button type="button" onClick={onClose} className="w-full rounded-lg border border-brand-border px-4 py-2.5 text-sm font-bold text-brand-navy">Done</button>
                     </div>
                 </section>
             </div>
@@ -126,10 +141,16 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
                         </select>
                     </label>
                     <label className="block text-xs font-bold text-brand-text-secondary">Temporary Password *
-                        <span className="relative mt-2 block">
-                            <input required minLength={8} autoComplete="new-password" type={showPassword ? "text" : "password"} value={password} onChange={(event) => setPassword(event.target.value)} className="sprint-input w-full pr-12" disabled={isSaving} />
-                            <button type="button" onClick={() => setShowPassword((visible) => !visible)} disabled={isSaving} aria-label={showPassword ? "Hide temporary password" : "Show temporary password"} aria-pressed={showPassword} className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-brand-text-muted hover:text-brand-navy disabled:opacity-50">
-                                {showPassword ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
+                        <span className="mt-2 flex gap-2">
+                            <span className="relative min-w-0 flex-1">
+                                <input required minLength={12} autoComplete="new-password" type={showPassword ? "text" : "password"} value={tempPassword} onChange={(event) => setTempPassword(event.target.value)} className="sprint-input w-full pr-11" placeholder="Set temporary password" disabled={isSaving} />
+                                <button type="button" onClick={() => setShowPassword((visible) => !visible)} disabled={isSaving} aria-label={showPassword ? "Hide temporary password" : "Show temporary password"} className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-brand-text-muted hover:text-brand-navy disabled:opacity-50">
+                                    {showPassword ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
+                                </button>
+                            </span>
+                            <button type="button" onClick={() => setTempPassword(generateTemporaryPassword())} disabled={isSaving} className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-brand-border px-3 text-xs font-bold text-brand-navy hover:bg-slate-50 disabled:opacity-50">
+                                <RefreshCw className="size-3.5" aria-hidden="true" />
+                                Generate
                             </button>
                         </span>
                     </label>
@@ -139,7 +160,7 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
 
                 <button type="submit" disabled={isSaving || !roles.length} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-red px-4 py-3 text-sm font-bold text-white transition hover:bg-brand-red-dark disabled:cursor-not-allowed disabled:opacity-60">
                     {isSaving ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <UserPlus className="size-4" aria-hidden="true" />}
-                    {isSaving ? "Creating account and sending email..." : "Create user and send invitation"}
+                    {isSaving ? "Creating account..." : "Create user"}
                 </button>
             </form>
         </div>
