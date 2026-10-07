@@ -2,7 +2,8 @@
 
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export type ProvisionStaffUserInput = {
@@ -14,29 +15,37 @@ export type ProvisionStaffUserInput = {
 };
 
 export type ProvisionStaffUserResult =
-    | { success: true; userId: string }
+    | { success: true; userId: string; loginUrl: string }
     | { success: false; error: string };
 
-function escapeHtml(value: string) {
-    return value.replace(/[&<>"']/g, (character) => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-    })[character] ?? character);
+function roleHasPermission(permissions: unknown, moduleKey: string, capability: string) {
+    if (!permissions || typeof permissions !== "object" || Array.isArray(permissions)) {
+        return false;
+    }
+
+    const permissionMap = permissions as Record<string, unknown>;
+    if (permissionMap.full_access === true) {
+        return true;
+    }
+
+    const modulePermissions = permissionMap[moduleKey];
+    return Boolean(
+        modulePermissions &&
+        typeof modulePermissions === "object" &&
+        !Array.isArray(modulePermissions) &&
+        (modulePermissions as Record<string, unknown>)[capability] === true,
+    );
 }
 
 function createServiceClient() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!supabaseUrl || !serviceKey) return null;
+    if (!url || !serviceKey) return null;
 
-    return createSupabaseClient(supabaseUrl, serviceKey, {
+    return createClient(url, serviceKey, {
         auth: {
             autoRefreshToken: false,
             persistSession: false,
-            detectSessionInUrl: false,
         },
     });
 }
@@ -69,19 +78,25 @@ export async function provisionStaffUserAction(
 ): Promise<ProvisionStaffUserResult> {
     const fullName = typeof input?.fullName === "string" ? input.fullName.trim() : "";
     const email = typeof input?.email === "string" ? input.email.trim().toLowerCase() : "";
-    const roleId = typeof input?.roleId === "string" ? input.roleId : "";
+    const roleId = typeof input?.roleId === "string" ? input.roleId.trim() : "";
     const roleName = typeof input?.roleName === "string" ? input.roleName.trim() : "";
     const tempPassword = typeof input?.tempPassword === "string" ? input.tempPassword : "";
 
-    if (!fullName || !email || !roleId || !roleName || tempPassword.length < 8) {
-        return { success: false, error: "Enter a valid name, email, active role, and temporary password." };
+    if (
+        !fullName ||
+        fullName.length > 120 ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+        email.length > 254 ||
+        !roleId ||
+        !roleName ||
+        tempPassword.length < 12
+    ) {
+        return { success: false, error: "Enter a valid name, email, active role, and temporary password of at least 12 characters." };
     }
 
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.RESEND_FROM_EMAIL;
     const serviceClient = createServiceClient();
-    if (!serviceClient || !resendApiKey || !fromEmail) {
-        return { success: false, error: "Staff provisioning email is not configured on the server." };
+    if (!serviceClient) {
+        return { success: false, error: "Staff account provisioning is not configured on the server." };
     }
 
     const sessionClient = await createSessionClient();
@@ -94,39 +109,48 @@ export async function provisionStaffUserAction(
         return { success: false, error: "Sign in again before creating a staff account." };
     }
 
-    const { data: actor, error: actorError } = await sessionClient
+    const { data: actor, error: actorError } = await serviceClient
         .from("profiles")
-        .select("role, is_active, roles(is_active)")
+        .select("role, is_active, role_id")
         .eq("id", authData.user.id)
         .maybeSingle();
 
-    const actorRole = Array.isArray(actor?.roles) ? actor.roles[0] : actor?.roles;
-    if (
-        actorError ||
-        !actor ||
-        actor.is_active !== true ||
-        (actor.role !== "admin" && actorRole?.is_active !== true)
-    ) {
+    if (actorError) {
+        return { success: false, error: `Your staff profile could not be read: ${actorError.message}` };
+    }
+    if (!actor) {
         return { success: false, error: "Your active staff profile could not be verified." };
     }
 
-    const [userManagementPermission, accessControlPermission] = await Promise.all([
-        sessionClient.rpc("current_user_has_permission", {
-            module_key: "user_management",
-            capability: "create",
-        }),
-        sessionClient.rpc("current_user_has_permission", {
-            module_key: "access_control",
-            capability: "create",
-        }),
-    ]);
+    if (actor.is_active !== true) {
+        return { success: false, error: "Your account is marked inactive." };
+    }
+
     const isLegacyAdmin = actor.role === "admin";
-    if (
-        !isLegacyAdmin &&
-        userManagementPermission.data !== true &&
-        accessControlPermission.data !== true
-    ) {
-        return { success: false, error: "You do not have permission to create staff accounts." };
+    if (!isLegacyAdmin) {
+        if (actor.is_active !== true || !actor.role_id) {
+            return { success: false, error: "Your active staff profile could not be verified." };
+        }
+
+        const { data: actorRole, error: actorRoleError } = await serviceClient
+            .from("roles")
+            .select("id, is_active, permissions")
+            .eq("id", actor.role_id)
+            .maybeSingle();
+
+        if (actorRoleError) {
+            return { success: false, error: `Your assigned staff role could not be verified: ${actorRoleError.message}` };
+        }
+        if (!actorRole || actorRole.is_active !== true) {
+            return { success: false, error: "Your assigned staff role is inactive or unavailable." };
+        }
+
+        if (
+            !roleHasPermission(actorRole.permissions, "user_management", "create") &&
+            !roleHasPermission(actorRole.permissions, "access_control", "create")
+        ) {
+            return { success: false, error: "You do not have permission to create staff accounts." };
+        }
     }
 
     const { data: role, error: roleError } = await serviceClient
@@ -143,72 +167,57 @@ export async function provisionStaffUserAction(
     if (!siteUrl) {
         return { success: false, error: "The public site URL is not configured on the server." };
     }
+    const redirectTo = `${siteUrl.replace(/\/$/, "")}/admin/dashboard`;
 
-    const { data: created, error: createError } = await serviceClient.rpc(
-        "admin_create_staff_user",
-        {
-            p_email: email,
-            p_temp_password: tempPassword,
-            p_role_id: roleId,
-            p_full_name: fullName,
-        },
-    );
-    const createdRecord = Array.isArray(created) ? created[0] : created;
-    const userId = createdRecord?.user_id as string | undefined;
+    const { data: authDataCreated, error: createError } = await serviceClient.auth.admin.createUser({
+        email,
+        password: tempPassword,
+        email_confirm: true,
+        user_metadata: { full_name: fullName },
+    });
 
-    if (createError || !userId) {
+    if (createError || !authDataCreated.user) {
         return { success: false, error: createError?.message ?? "The staff account could not be created." };
     }
 
-    const safeName = escapeHtml(fullName);
-    const safeEmail = escapeHtml(email);
-    const safeRoleName = escapeHtml(role.name);
-    const safePassword = escapeHtml(tempPassword);
-    const signInUrl = `${siteUrl.replace(/\/$/, "")}/admin`;
+    const { error: profileError } = await serviceClient.from("profiles").upsert({
+        id: authDataCreated.user.id,
+        full_name: fullName,
+        email,
+        role_id: roleId,
+        must_change_password: true,
+        is_active: true,
+    });
 
-    try {
-        const response = await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${resendApiKey}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                from: fromEmail,
-                to: [email],
-                subject: "Welcome to SPRINT — Your Account Credentials",
-                html: `
-                    <div style="margin:0;background:#f1f5f9;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
-                      <div style="max-width:560px;margin:0 auto;overflow:hidden;border-radius:16px;background:#ffffff;border:1px solid #e2e8f0">
-                        <div style="background:#011f3e;padding:28px 32px;color:#ffffff">
-                          <p style="margin:0;color:#f81529;font-size:12px;font-weight:700;letter-spacing:2px">SPRINT ADMIN HUB</p>
-                          <h1 style="margin:12px 0 0;font-size:24px">Welcome, ${safeName}</h1>
-                        </div>
-                        <div style="padding:28px 32px">
-                          <p style="margin:0 0 18px;line-height:1.6">Your staff account has been created with the following role:</p>
-                          <p style="margin:0 0 20px;padding:12px 14px;border-left:3px solid #f81529;background:#f8fafc;font-weight:700">${safeRoleName}</p>
-                          <p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#64748b">EMAIL</p>
-                          <p style="margin:0 0 16px">${safeEmail}</p>
-                          <p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#64748b">TEMPORARY PASSWORD</p>
-                          <p style="margin:0 0 20px;padding:12px 14px;border-radius:8px;background:#f1f5f9;font-family:monospace;word-break:break-all">${safePassword}</p>
-                          <p style="margin:0 0 24px;line-height:1.6">This temporary credential expires after your first sign-in. You must set a permanent password before continuing.</p>
-                          <a href="${escapeHtml(signInUrl)}" style="display:inline-block;border-radius:8px;background:#f81529;padding:13px 20px;color:#ffffff;text-decoration:none;font-weight:700">Sign in to SPRINT</a>
-                        </div>
-                      </div>
-                    </div>`,
-            }),
-        });
-
-        if (!response.ok) throw new Error("Email provider rejected the message");
-    } catch {
-        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(userId);
+    if (profileError) {
+        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(authDataCreated.user.id);
         return {
             success: false,
             error: cleanupError
-                ? "Email delivery failed and the new account could not be rolled back. Contact a system administrator."
-                : "Email delivery failed. The new account was rolled back; verify the mail configuration and try again.",
+                ? `${profileError.message} The newly created auth user could not be removed; contact a system administrator.`
+                : profileError.message,
         };
     }
 
-    return { success: true, userId };
+    const { data: linkData, error: linkError } = await serviceClient.auth.admin.generateLink({
+        type: "magiclink",
+        email,
+        options: {
+            redirectTo,
+        },
+    });
+
+    const loginUrl = linkData.properties?.action_link;
+    if (linkError || !loginUrl) {
+        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(authDataCreated.user.id);
+        return {
+            success: false,
+            error: cleanupError
+                ? `${linkError?.message ?? "A direct login link could not be generated."} The newly created auth user could not be removed; contact a system administrator.`
+                : linkError?.message ?? "A direct login link could not be generated.",
+        };
+    }
+
+    revalidatePath("/admin/users");
+    return { success: true, userId: authDataCreated.user.id, loginUrl };
 }

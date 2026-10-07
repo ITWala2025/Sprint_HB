@@ -690,14 +690,28 @@ export default function CourseCatalogue({ items }) {
             />
           </label>
 
-          <button
-            type="button"
-            className="course-filter-trigger"
-            onClick={() => setDrawerOpen(true)}
-          >
-            <SlidersHorizontal size={17} />
-            Filter &amp; sort
-          </button>
+          <div className="course-filter-actions">
+            <button
+              type="button"
+              className="course-filter-trigger"
+              onClick={() => setDrawerOpen(true)}
+            >
+              <SlidersHorizontal size={17} />
+              Filter &amp; sort
+            </button>
+
+            <button
+              type="button"
+              className="course-clear-filters"
+              onClick={() => {
+                setQuery("");
+                setSelectedCategories([]);
+                setSelectedLevel("");
+              }}
+            >
+              Clear filters
+            </button>
+          </div>
         </div>
       </section>
 
@@ -709,17 +723,6 @@ export default function CourseCatalogue({ items }) {
             <span>
               {visibleItems.length} learning options
             </span>
-
-            <button
-              type="button"
-              onClick={() => {
-                setQuery("");
-                setSelectedCategories([]);
-                setSelectedLevel("");
-              }}
-            >
-              Clear filters
-            </button>
           </div>
 
           {visibleItems.length ? (

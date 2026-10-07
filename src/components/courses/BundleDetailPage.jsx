@@ -29,7 +29,7 @@ export default function BundleDetailPage({ item, includedCourses }) {
 
       <section className="course-detail-hero">
         <div className="course-detail-hero__copy">
-          <p className="courses-eyebrow">CAREER BUNDLE</p>
+          {/* <p className="courses-eyebrow">CAREER BUNDLE</p> */}
           <h1>{item.title}</h1>
           <p>{item.description}</p>
           <div className="course-detail-hero__facts">
