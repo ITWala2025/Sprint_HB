@@ -16,6 +16,7 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
+import JourneyScroller from "@/components/courses/JourneyScroller";
 import { createClient } from "@/lib/supabase/client";
 import {
   audienceOptions,
@@ -314,11 +315,7 @@ function FeaturedPrograms() {
           >
             Program Journey
           </h3>
-          <ol
-            className="courses-signature-programs__milestones"
-            aria-label="Program milestones"
-            tabIndex={0}
-          >
+          <JourneyScroller label="Program milestones">
             {milestones.map((milestone) => (
               <li
                 className="courses-signature-programs__milestone"
@@ -339,7 +336,7 @@ function FeaturedPrograms() {
                 </div>
               </li>
             ))}
-          </ol>
+          </JourneyScroller>
         </section>
       </div>
 
@@ -373,10 +370,9 @@ function FeaturedPrograms() {
           >
             Career Accelerator Journey
           </h3>
-          <ol
-            className="courses-signature-programs__milestones courses-signature-programs__milestones--three-year"
-            aria-label="SPRINT Career Accelerator phases"
-            tabIndex={0}
+          <JourneyScroller
+            label="SPRINT Career Accelerator phases"
+            listClassName="courses-signature-programs__milestones--three-year"
           >
             {careerAcceleratorPhases.map((stage) => (
               <li
@@ -399,7 +395,7 @@ function FeaturedPrograms() {
                 </div>
               </li>
             ))}
-          </ol>
+          </JourneyScroller>
         </section>
       </div>
     </section>
