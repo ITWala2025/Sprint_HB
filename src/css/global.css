@@ -5386,6 +5386,248 @@ a {
   letter-spacing: -0.035em;
 }
 
+.role-pathways__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.role-pathways__heading .courses-eyebrow {
+  margin: 0 0 0.45rem;
+}
+
+.role-pathways__heading .courses-results__group-heading {
+  margin-bottom: 0;
+}
+
+.role-pathways__heading > p {
+  max-width: 25rem;
+  margin: 0 0 0.15rem;
+  color: var(--color-brand-text-secondary);
+  font: 400 0.88rem/1.5 var(--font-body);
+}
+
+.role-pathways__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.role-pathway {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--color-brand-border);
+  border-radius: 1rem;
+  background: linear-gradient(120deg, var(--color-brand-surface), #fff 70%);
+  box-shadow: 0 8px 24px rgba(1, 31, 62, 0.045);
+}
+
+.role-pathway__header {
+  position: relative;
+  padding-right: 8.5rem;
+}
+
+.role-pathway__eyebrow,
+.role-pathway__count {
+  color: var(--color-brand-text-muted);
+  font: 700 0.65rem/1.3 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.role-pathway__header h3 {
+  margin: 0.35rem 0 0;
+  color: var(--color-brand-navy);
+  font: 700 1.25rem/1.2 var(--font-display);
+}
+
+.role-pathway__count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: var(--color-brand-blue);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.role-pathway__progress {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+
+.role-pathway__progress span {
+  height: 0.3rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-blue),
+    var(--color-brand-red)
+  );
+}
+
+.role-pathway__hours {
+  margin: 0.55rem 0 0;
+  color: var(--color-brand-text-secondary);
+  font: 600 0.76rem var(--font-body);
+}
+
+.role-pathway__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  margin-top: 0.85rem;
+  color: var(--color-brand-blue);
+  font: 700 0.78rem var(--font-body);
+  text-decoration: none;
+}
+
+.role-pathway__link svg {
+  transition: transform 150ms ease;
+}
+
+.role-pathway__link:hover svg,
+.role-pathway__link:focus-visible svg {
+  transform: translateX(3px);
+}
+
+.role-pathway__link:focus-visible {
+  border-radius: 0.2rem;
+  outline: 2px solid var(--color-brand-red);
+  outline-offset: 3px;
+}
+
+.learning-path-detail {
+  width: min(100% - 2rem, 1200px);
+  margin: 0 auto;
+}
+
+.learning-path-detail__hero {
+  padding: clamp(2rem, 5vw, 4rem) 0;
+}
+
+.learning-path-detail__hero h1 {
+  margin: 0.5rem 0 0;
+  color: var(--color-brand-navy);
+  font: 700 clamp(2rem, 4vw, 3.25rem)/1.1 var(--font-display);
+  letter-spacing: -0.04em;
+}
+
+.learning-path-detail__summary {
+  margin: 0.8rem 0 0;
+  color: var(--color-brand-text-secondary);
+  font: 500 1rem/1.6 var(--font-body);
+}
+
+.learning-path-detail__stages {
+  display: grid;
+  gap: 1rem;
+  padding-bottom: 3rem;
+}
+
+.learning-path-detail__stage {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border: 1px solid var(--color-brand-border);
+  border-radius: 1rem;
+  background: var(--color-brand-white);
+  box-shadow: 0 8px 24px rgba(1, 31, 62, 0.045);
+}
+
+.learning-path-detail__stage-number {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-brand-blue);
+  color: #fff;
+  font: 700 0.85rem var(--font-body);
+}
+
+.learning-path-detail__stage-content {
+  min-width: 0;
+}
+
+.learning-path-detail__stage-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.learning-path-detail__stage-heading h2 {
+  margin: 0;
+  color: var(--color-brand-navy);
+  font: 700 clamp(1.05rem, 2vw, 1.35rem)/1.3 var(--font-display);
+}
+
+.learning-path-detail__duration {
+  color: var(--color-brand-blue);
+  font: 700 0.78rem var(--font-body);
+  white-space: nowrap;
+}
+
+.learning-path-detail__stage-content h3 {
+  margin: 1rem 0 0.3rem;
+  color: var(--color-brand-navy);
+  font: 700 0.72rem var(--font-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.learning-path-detail__stage-content p {
+  margin: 0;
+  color: var(--color-brand-text-secondary);
+  font: 400 0.9rem/1.6 var(--font-body);
+}
+
+.learning-path-detail__back {
+  padding: 0 0 2.5rem;
+}
+
+.learning-path-detail__back a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-brand-blue);
+  font: 700 0.82rem var(--font-body);
+  text-decoration: none;
+}
+
+.role-pathways__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.role-pathways__heading .courses-eyebrow {
+  margin: 0 0 0.45rem;
+}
+
+.role-pathways__heading .courses-results__group-heading {
+  margin-bottom: 0;
+}
+
+.role-pathways__heading > p {
+  max-width: 25rem;
+  margin: 0 0 0.15rem;
+  color: var(--color-brand-text-secondary);
+  font: 400 0.88rem/1.5 var(--font-body);
+}
+
 .courses-signature-programs__overview {
   display: flex;
   flex-direction: column;
@@ -6492,6 +6734,50 @@ a {
 }
 
 @media (max-width: 767px) {
+  .role-pathways__heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .role-pathways__heading > p {
+    max-width: none;
+  }
+
+  .role-pathways__grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .role-pathway {
+    padding: 1rem;
+  }
+
+  .role-pathway__header {
+    padding-right: 0;
+  }
+
+  .role-pathway__count {
+    position: static;
+    display: inline-block;
+    margin-top: 0.55rem;
+  }
+
+  .learning-path-detail__stage {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 0.9rem;
+  }
+
+  .learning-path-detail__stage-number {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .learning-path-detail__stage-content p {
+    overflow-wrap: anywhere;
+  }
+
   .courses-hero__controls {
     right: 1rem;
   }

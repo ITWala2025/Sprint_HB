@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import JourneyScroller from "@/components/courses/JourneyScroller";
+import RoleBasedLearningPaths from "@/components/courses/RoleBasedLearningPaths";
 import { createClient } from "@/lib/supabase/client";
 import {
   audienceOptions,
@@ -724,6 +725,8 @@ export default function CourseCatalogue({ items }) {
               {visibleItems.length} learning options
             </span>
           </div>
+
+          <RoleBasedLearningPaths />
 
           {visibleItems.length ? (
             <>
