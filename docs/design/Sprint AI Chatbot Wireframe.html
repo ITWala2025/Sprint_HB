@@ -1,0 +1,707 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprint AI Chatbot Wireframe</title>
+  <style>
+    :root {
+      --bg: #f7f3ee;
+      --panel: #fffdf9;
+      --panel-2: #f2efe8;
+      --stroke: #dfe4e5;
+      --ink: #1c1d1f;
+      --muted: #69717b;
+      --muted-2: #8a939d;
+      --navy: #102d48;
+      --navy-soft: #dfeef8;
+      --red: #d62b2b;
+      --red-soft: #ffe9ea;
+      --sage: #eaf7ef;
+      --gold: #f9f1d8;
+      --shadow: 0 18px 40px rgba(17, 31, 48, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      padding: 32px 20px 56px;
+    }
+
+    .page {
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    .intro {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px 18px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 8px 0 0;
+      font-size: clamp(32px, 4vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.7);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--stroke);
+      border-radius: 22px;
+      padding: 14px 14px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .device {
+      width: 100%;
+      max-width: 390px;
+      margin: 0 auto;
+      border-radius: 28px;
+      border: 1px solid #d5dbe0;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(16, 45, 72, 0.03);
+    }
+
+    .device-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 12px;
+      background: #f6f8f9;
+      border-bottom: 1px solid var(--stroke);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .status-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d6d9dd;
+      display: block;
+    }
+
+    .status-dots span:nth-child(1) { background: #ffb86e; }
+    .status-dots span:nth-child(2) { background: #8bcf8d; }
+    .status-dots span:nth-child(3) { background: #aeb6bf; }
+
+    .device-body {
+      padding: 14px 16px 18px;
+      background: linear-gradient(180deg, #fbfaf7 0%, #fff 100%);
+      min-height: 744px;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .chat-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg, var(--navy), #395d81);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--red);
+      background: var(--red-soft);
+      border: 1px solid rgba(214, 43, 43, 0.2);
+      border-radius: 999px;
+      padding: 5px 8px;
+    }
+
+    .prompt-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 16px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #f3f5f7;
+      border: 1px solid var(--stroke);
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .bubble {
+      display: inline-block;
+      max-width: 82%;
+      padding: 12px 13px;
+      border-radius: 16px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .bubble.user {
+      margin-left: auto;
+      background: var(--navy);
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+
+    .bubble.bot {
+      background: #f3f5f6;
+      color: var(--ink);
+      border-bottom-left-radius: 6px;
+    }
+
+    .card {
+      border: 1px solid var(--stroke);
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px;
+      margin-top: 12px;
+      box-shadow: 0 6px 18px rgba(10, 18, 28, 0.04);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mini-tile {
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 10px 8px;
+      background: linear-gradient(180deg, #ffffff, #f7f9fb);
+    }
+
+    .mini-tile strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .mini-tile span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      align-items: start;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .step .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 800;
+      background: var(--navy-soft);
+      color: var(--navy);
+      border: 1px solid rgba(16, 45, 72, 0.15);
+    }
+
+    .step strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 3px;
+      font-size: 12.5px;
+    }
+
+    .composer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--stroke);
+      border-radius: 999px;
+      background: #f7f8f9;
+      padding: 8px 10px 8px 12px;
+      margin-top: 16px;
+    }
+
+    .composer span {
+      flex: 1;
+      color: var(--muted-2);
+      font-size: 12px;
+    }
+
+    .send {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .system-panel {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--stroke);
+      border-radius: 22px;
+      padding: 14px 14px 18px;
+      box-shadow: var(--shadow);
+      margin-top: 0;
+    }
+
+    .system-panel h2 {
+      margin: 0 0 14px;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .system-flow {
+      background: #fff;
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr 1fr 1.3fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .node {
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff, #f8f9fa);
+      padding: 16px 14px;
+      text-align: center;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .node .label {
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .node .meta {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .node.primary {
+      background: linear-gradient(135deg, #102d48, #1d4375);
+      color: white;
+      border-color: rgba(16,45,72,0.65);
+    }
+
+    .node.primary .meta { color: rgba(255,255,255,0.76); }
+
+    .node.agent {
+      background: linear-gradient(180deg, #fff7f5, #ffe9ea);
+      border-color: rgba(214,43,43,0.2);
+    }
+
+    .node.golden {
+      background: linear-gradient(180deg, #fffaf0, #fdf4d8);
+    }
+
+    .node.green {
+      background: linear-gradient(180deg, #f0fbf3, #eaf7ef);
+    }
+
+    .arrow {
+      position: relative;
+      height: 2px;
+      background: linear-gradient(90deg, var(--navy), rgba(16,45,72,0.2));
+      border-radius: 999px;
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid var(--navy);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stack .node {
+      min-height: 84px;
+    }
+
+    @media (max-width: 1100px) {
+      .board { grid-template-columns: 1fr; }
+      .system-flow { overflow-x: auto; }
+      .flow-grid { min-width: 980px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <div>
+        <div class="eyebrow">Sprint AI</div>
+        <h1>Chatbot concept wireframes</h1>
+      </div>
+      <div class="tag">3 AI agents + system architecture</div>
+    </header>
+
+    <p class="subtitle">
+      Conversational support for student discovery, career guidance, and pathway planning across SPRINT programs,
+      content, and admissions.
+    </p>
+
+    <section class="board" aria-label="Chatbot wireframes">
+      <article class="panel">
+        <h2>1. Career Agent</h2>
+        <div class="device" role="img" aria-label="Career Agent chatbot wireframe">
+          <div class="device-header">
+            <div class="status-dots"><span></span><span></span><span></span></div>
+            <span>9:41</span>
+          </div>
+
+          <div class="device-body">
+            <div class="chat-header">
+              <div class="chat-brand">
+                <div class="avatar">S</div>
+                <span>Career Agent</span>
+              </div>
+              <span class="badge">Live</span>
+            </div>
+
+            <div class="prompt-row">
+              <span class="chip">career advice</span>
+              <span class="chip">skills</span>
+              <span class="chip">jobs</span>
+            </div>
+
+            <div class="bubble user">Can you help me choose a path in AI and software engineering?</div>
+            <div class="bubble bot">Absolutely. Based on your profile, you are a strong fit for AI/ML, full-stack engineering, or cloud engineering depending on your interests.</div>
+
+            <div class="card">
+              <h3>Recommended tracks</h3>
+              <div class="mini-grid">
+                <div class="mini-tile">
+                  <strong>AI/ML</strong>
+                  <span>Python + data</span>
+                </div>
+                <div class="mini-tile">
+                  <strong>Cloud</strong>
+                  <span>DevOps + infra</span>
+                </div>
+                <div class="mini-tile">
+                  <strong>Full-stack</strong>
+                  <span>MERN + systems</span>
+                </div>
+                <div class="mini-tile">
+                  <strong>Placement</strong>
+                  <span>Career coaching</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="composer" aria-label="Type a message">
+              <span>Ask about programs, skills, or careers</span>
+              <div class="send">➤</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>2. Recommender Agent</h2>
+        <div class="device" role="img" aria-label="Recommender Agent chatbot wireframe">
+          <div class="device-header">
+            <div class="status-dots"><span></span><span></span><span></span></div>
+            <span>9:42</span>
+          </div>
+
+          <div class="device-body">
+            <div class="chat-header">
+              <div class="chat-brand">
+                <div class="avatar" style="background: linear-gradient(135deg, #d62b2b, #7b1d1d);">R</div>
+                <span>Recommender</span>
+              </div>
+              <span class="badge">Smart match</span>
+            </div>
+
+            <div class="bubble user">Recommend a learning path for someone new to programming.</div>
+            <div class="bubble bot">I would start with a beginner-friendly foundation, then move into hands-on projects and portfolio builds.</div>
+
+            <div class="card">
+              <h3>Best fit</h3>
+              <div class="stack">
+                <div class="mini-tile">
+                  <strong>SPRINT RISE</strong>
+                  <span>Career bootcamp for beginners</span>
+                </div>
+                <div class="mini-tile">
+                  <strong>Web Foundation</strong>
+                  <span>HTML, CSS, JavaScript, Git</span>
+                </div>
+                <div class="mini-tile">
+                  <strong>Portfolio Sprint</strong>
+                  <span>2 capstone projects</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Why this works</h3>
+              <div class="timeline">
+                <div class="step">
+                  <div class="dot">1</div>
+                  <div><strong>Foundations</strong>Learn core programming concepts.</div>
+                </div>
+                <div class="step">
+                  <div class="dot">2</div>
+                  <div><strong>Build</strong>Complete guided mini-projects.</div>
+                </div>
+                <div class="step">
+                  <div class="dot">3</div>
+                  <div><strong>Placement</strong>Prepare for interview practice.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="composer" aria-label="Type a message">
+              <span>Match me to a program</span>
+              <div class="send">➤</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>3. Roadmap Agent</h2>
+        <div class="device" role="img" aria-label="Roadmap Agent chatbot wireframe">
+          <div class="device-header">
+            <div class="status-dots"><span></span><span></span><span></span></div>
+            <span>9:43</span>
+          </div>
+
+          <div class="device-body">
+            <div class="chat-header">
+              <div class="chat-brand">
+                <div class="avatar" style="background: linear-gradient(135deg, #2f7f5b, #1d5c3c);">P</div>
+                <span>Roadmap Agent</span>
+              </div>
+              <span class="badge">Plan</span>
+            </div>
+
+            <div class="bubble user">Give me a 12-week roadmap to become job-ready in full-stack development.</div>
+            <div class="bubble bot">Here is a structured roadmap: frontend basics, backend APIs, database systems, deployment, and a final capstone judged by mentors.</div>
+
+            <div class="card">
+              <h3>12-week plan</h3>
+              <div class="timeline">
+                <div class="step">
+                  <div class="dot">W1</div>
+                  <div><strong>HTML + CSS</strong>Responsive UI fundamentals.</div>
+                </div>
+                <div class="step">
+                  <div class="dot">W4</div>
+                  <div><strong>JavaScript + React</strong>Interactive front-end.</div>
+                </div>
+                <div class="step">
+                  <div class="dot">W8</div>
+                  <div><strong>Node + MongoDB</strong>API and data layers.</div>
+                </div>
+                <div class="step">
+                  <div class="dot">W12</div>
+                  <div><strong>Capstone</strong>Portfolio and mock interviews.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Quick action</h3>
+              <div class="mini-grid">
+                <div class="mini-tile"><strong>Download</strong><span>PDF roadmap</span></div>
+                <div class="mini-tile"><strong>Share</strong><span>With mentor</span></div>
+              </div>
+            </div>
+
+            <div class="composer" aria-label="Type a message">
+              <span>Generate a plan</span>
+              <div class="send">➤</div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="system-panel" aria-label="System architecture">
+      <h2>System Architecture</h2>
+      <div class="system-flow">
+        <div class="flow-grid">
+          <div class="node">
+            <div class="label">Visitor</div>
+            <div class="meta">website user or student</div>
+          </div>
+
+          <div class="arrow" aria-hidden="true"></div>
+
+          <div class="node primary">
+            <div class="label">Web app</div>
+            <div class="meta">chat widget + conversation UI</div>
+          </div>
+
+          <div class="arrow" aria-hidden="true"></div>
+
+          <div class="node agent">
+            <div class="label">Orchestrator</div>
+            <div class="meta">routing, memory, safety checks</div>
+          </div>
+
+          <div class="arrow" aria-hidden="true"></div>
+
+          <div class="node golden">
+            <div class="label">Career Agent</div>
+            <div class="meta">advice, fit, job pathways</div>
+          </div>
+
+          <div class="node green">
+            <div class="label">Recommender</div>
+            <div class="meta">program matching</div>
+          </div>
+
+          <div class="node green">
+            <div class="label">Roadmap Agent</div>
+            <div class="meta">study plan and milestones</div>
+          </div>
+
+          <div class="node">
+            <div class="label">Knowledge Layer</div>
+            <div class="meta">course catalog, admissions, FAQs</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
