@@ -22,39 +22,47 @@ export const stats = [
 // technology partners so no group reads as a separate block in the marquee.
 // The first eight keep their original ids; newly added logos use p9–p22.
 export const partners = [
-  { id: "p1", name: "Accenture", logoUrl: "/images/home/accenture.webp" },
+  { id: "p1", name: "Accenture", logoUrl: "/images/home/accenture.svg" },
   { id: "p9", name: "Algocirrus", logoUrl: "/images/home/algocirrus.webp" },
-  { id: "p2", name: "Amazon", logoUrl: "/images/home/amazon.webp" },
+  { id: "p2", name: "Amazon", logoUrl: "/images/home/amazon.png" },
+  { id: "p6", name: "TCS", logoUrl: "/images/home/tcs.svg" },
+  { id: "p8", name: "Capgemini", logoUrl: "/images/home/capgeminiBlue.svg" },
+
+
+  { id: "p4", name: "Microsoft", logoUrl: "/images/home/microsoft.png" },
+  { id: "p12", name: "IT-Wala", logoUrl: "/images/home/it-wala.webp" },
+  { id: "p5", name: "IBM", logoUrl: "/images/home/ibm.svg" },
+  { id: "p3", name: "Google", logoUrl: "/images/home/google.svg" },
+  { id: "p17", name: "Dell Technologies", logoUrl: "/images/home/Dell.svg" },
+  
+
+
   {
     id: "p10",
     name: "Eyogi Gurukul",
     logoUrl: "/images/home/eyogi-gurukul.webp",
   },
-  { id: "p3", name: "Google", logoUrl: "/images/home/google.webp" },
+  { id: "p14", name: "Swavlamban", logoUrl: "/images/home/swavlamban.png" },
+
+
+  { id: "p13", name: "Kdadks", logoUrl: "/images/home/kdadks.webp" },
+  { id: "p7", name: "Infosys", logoUrl: "/images/home/infosys.webp" },
+  
   {
     id: "p11",
     name: "Global Medtech Solutions",
     logoUrl: "/images/home/global-medtech-solutions.webp",
   },
-  { id: "p4", name: "Microsoft", logoUrl: "/images/home/microsoft.webp" },
-  { id: "p12", name: "IT-Wala", logoUrl: "/images/home/it-wala.webp" },
-  { id: "p5", name: "IBM", logoUrl: "/images/home/ibm.webp" },
-  { id: "p13", name: "Kdadks", logoUrl: "/images/home/kdadks.webp" },
-  { id: "p6", name: "TCS", logoUrl: "/images/home/tcs.webp" },
-  { id: "p14", name: "Swavlamban", logoUrl: "/images/home/swavlamban.webp" },
-  { id: "p7", name: "Infosys", logoUrl: "/images/home/infosys.webp" },
   {
     id: "p15",
     name: "Vishal Creations",
     logoUrl: "/images/home/vishal-creations.webp",
   },
-  { id: "p8", name: "Capgemini", logoUrl: "/images/home/capgemini.webp" },
   {
     id: "p16",
     name: "Zupharm Laboratories",
     logoUrl: "/images/home/zupharm-laboratories.webp",
   },
-  { id: "p17", name: "Dell", logoUrl: "/images/home/dell.webp" },
   { id: "p18", name: "Lululemon", logoUrl: "/images/home/lululemon.webp" },
   { id: "p19", name: "HCLTech", logoUrl: "/images/home/hcl.webp" },
   { id: "p20", name: "IQVIA", logoUrl: "/images/home/iqvia.webp" },

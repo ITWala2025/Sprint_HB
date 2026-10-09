@@ -40,6 +40,8 @@ const MARQUEE_SPEED_PX_PER_SECOND = 48;
  * marquee duration can be derived from the real track width.
  */
 const LOGO_FRAMES = {
+   "Dell Technologies": { className: "h-32 w-60", width: 240 },
+   
   Algocirrus: { className: "h-32 w-36", width: 144 },
   "Eyogi Gurukul": { className: "size-24", width: 96 },
   "Global Medtech Solutions": { className: "h-32 w-60", width: 240 },
@@ -71,7 +73,7 @@ export default function PartnerCarousel() {
 
       {/* marquee-track wrapper enables the desktop hover-to-pause rule
           defined in globals.css without affecting touch devices. */}
-      <div className="marquee-track mt-4 w-full overflow-hidden md:mt-6">
+      <div className="marquee-track mt-4 w-full overflow-hidden px-4 sm:px-6 md:mt-6">
         <div
           className="flex w-max animate-marquee"
           style={{ "--marquee-duration": `${marqueeDuration}s` }}
