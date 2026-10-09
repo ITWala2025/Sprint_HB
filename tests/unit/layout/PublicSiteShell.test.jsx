@@ -25,6 +25,7 @@ describe("PublicSiteShell", () => {
     header: screen.queryByRole("banner"),
     footer: screen.queryByRole("contentinfo"),
     whatsapp: screen.queryByLabelText(/chat on whatsapp/i),
+    chatbot: screen.queryByRole("button", { name: /open sprint chat/i }),
   });
 
   it("renders the public header, footer and WhatsApp bubble on marketing routes", () => {
@@ -34,6 +35,7 @@ describe("PublicSiteShell", () => {
     expect(chrome.header).toBeInTheDocument();
     expect(chrome.footer).toBeInTheDocument();
     expect(chrome.whatsapp).toBeInTheDocument();
+    expect(chrome.chatbot).toBeInTheDocument();
     expect(screen.getByText("Page content")).toBeInTheDocument();
   });
 
@@ -45,6 +47,7 @@ describe("PublicSiteShell", () => {
     expect(chrome.header).not.toBeInTheDocument();
     expect(chrome.footer).not.toBeInTheDocument();
     expect(chrome.whatsapp).not.toBeInTheDocument();
+    expect(chrome.chatbot).not.toBeInTheDocument();
     // The page itself still renders inside the main landmark.
     expect(screen.getByRole("main")).toHaveTextContent("Page content");
   });
