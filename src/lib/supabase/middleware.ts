@@ -54,6 +54,8 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const isLoginPage = pathname === "/admin";
+  const isPasswordResetCallback =
+    isLoginPage && request.nextUrl.searchParams.get("reset") === "true";
   const isAdminSubRoute = pathname.startsWith("/admin/") && !isLoginPage;
 
   const isStudentLogin = pathname === "/student/login";
@@ -88,14 +90,14 @@ export async function updateSession(request: NextRequest) {
       profile?.role === "student" && profile?.status === "active";
 
     // Non-admin logged-in users cannot access any /admin routes
-    if (!isAdmin && (isLoginPage || isAdminSubRoute)) {
+    if (!isAdmin && !isPasswordResetCallback && (isLoginPage || isAdminSubRoute)) {
       const url = request.nextUrl.clone();
       url.pathname = "/home";
       return NextResponse.redirect(url);
     }
 
     // Authenticated admin visiting the login page should be directed to dashboard
-    if (isAdmin && isLoginPage) {
+    if (isAdmin && isLoginPage && !isPasswordResetCallback) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin/dashboard";
       return NextResponse.redirect(url);

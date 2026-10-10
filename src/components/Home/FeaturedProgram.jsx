@@ -37,6 +37,13 @@ const desktopStageColumns = [
   "lg:col-start-5",
   "lg:col-start-6",
 ];
+const timelineSegments = [
+  "M 83 350 C 167 350, 167 650, 250 650",
+  "M 250 650 C 333 650, 333 350, 417 350",
+  "M 417 350 C 500 350, 500 650, 583 650",
+  "M 583 650 C 667 650, 667 350, 750 350",
+  "M 750 350 C 833 350, 833 650, 917 650",
+];
 
 export default function FeaturedProgram() {
   const sectionRef = useRef(null);
@@ -95,7 +102,7 @@ export default function FeaturedProgram() {
             aria-hidden="true"
           >
             <div
-              className={`h-full w-px origin-top bg-brand-blue transition-transform duration-[1800ms] ease-out motion-reduce:scale-y-100 motion-reduce:transition-none ${
+              className={`h-full w-px origin-top bg-brand-blue transition-transform duration-[3600ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:scale-y-100 motion-reduce:transition-none ${
                 hasEntered ? "scale-y-100" : "scale-y-0"
               }`}
             />
@@ -115,27 +122,33 @@ export default function FeaturedProgram() {
                 <stop offset="100%" stopColor="var(--color-brand-blue)" />
               </linearGradient>
             </defs>
-            <path
-              d="M 83 350 C 167 350, 167 650, 250 650 S 333 350, 417 350 S 500 650, 583 650 S 667 350, 750 350 S 833 650, 917 650"
-              stroke="rgba(11, 99, 182, 0.18)"
-              strokeWidth="5"
-              vectorEffect="non-scaling-stroke"
-              pathLength="1"
-              strokeDasharray="1"
-              strokeDashoffset={hasEntered ? "0" : "1"}
-              className="transition-[stroke-dashoffset] duration-[1600ms] ease-out motion-reduce:transition-none motion-reduce:[stroke-dashoffset:0]"
-            />
-            <path
-              d="M 83 350 C 167 350, 167 650, 250 650 S 333 350, 417 350 S 500 650, 583 650 S 667 350, 750 350 S 833 650, 917 650"
-              stroke="url(#featured-program-timeline-gradient)"
-              strokeWidth="2"
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-              pathLength="1"
-              strokeDasharray="1"
-              strokeDashoffset={hasEntered ? "0" : "1"}
-              className="transition-[stroke-dashoffset] duration-[1600ms] ease-out motion-reduce:transition-none motion-reduce:[stroke-dashoffset:0]"
-            />
+            {timelineSegments.map((segment, index) => (
+              <g key={segment} data-timeline-segment={index}>
+                <path
+                  d={segment}
+                  stroke="rgba(11, 99, 182, 0.18)"
+                  strokeWidth="5"
+                  vectorEffect="non-scaling-stroke"
+                  pathLength="1"
+                  strokeDasharray="1"
+                  strokeDashoffset={hasEntered ? "0" : "1"}
+                  className="transition-[stroke-dashoffset] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:[stroke-dashoffset:0]"
+                  style={{ transitionDelay: `${300 + index * 600}ms` }}
+                />
+                <path
+                  d={segment}
+                  stroke="url(#featured-program-timeline-gradient)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                  pathLength="1"
+                  strokeDasharray="1"
+                  strokeDashoffset={hasEntered ? "0" : "1"}
+                  className="transition-[stroke-dashoffset] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:[stroke-dashoffset:0]"
+                  style={{ transitionDelay: `${300 + index * 600}ms` }}
+                />
+              </g>
+            ))}
           </svg>
 
           <div className="relative space-y-5 lg:grid lg:grid-cols-6 lg:grid-rows-[minmax(280px,auto)_14rem_minmax(280px,auto)] lg:gap-x-0 lg:space-y-0">
@@ -147,21 +160,21 @@ export default function FeaturedProgram() {
                 <div
                   key={stage.id}
                   data-index={index}
-                  className={`relative grid grid-cols-[2rem_minmax(0,1fr)] items-center gap-x-4 py-3 transition-[opacity,translate,scale] duration-700 ease-out motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:opacity-100 motion-reduce:transition-none lg:col-span-1 lg:grid-cols-1 lg:px-0 lg:py-0 ${
+                  className={`relative grid grid-cols-[2rem_minmax(0,1fr)] items-center gap-x-4 py-3 transition-[opacity,translate,scale] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:opacity-100 motion-reduce:transition-none lg:col-span-1 lg:grid-cols-1 lg:px-0 lg:py-0 ${
                     isUpper
                       ? "lg:row-start-1 lg:flex lg:items-end"
                       : "lg:row-start-3 lg:flex lg:items-start"
                   } ${desktopStageColumns[index] ?? ""} ${
                     hasEntered
                       ? "translate-y-0 scale-100 opacity-100"
-                      : "translate-y-[18px] scale-[0.9] opacity-0"
+                      : "translate-y-3 scale-[0.96] opacity-0"
                   }`}
-                  style={{ transitionDelay: `${1600 + index * 225}ms` }}
+                  style={{ transitionDelay: `${index * 600}ms` }}
                 >
                   <span
                     className={`z-10 col-start-1 row-start-1 grid size-10 place-items-center rounded-full border-4 border-white text-xs font-bold text-white shadow-[0_3px_12px_rgba(1,31,62,0.18)] ring-1 transition-colors duration-300 md:size-12 lg:absolute lg:left-1/2 lg:size-10 lg:-translate-x-1/2 ${
                       index === 0
-                        ? "bg-brand-red ring-brand-red/20"
+                        ? "bg-brand-red-accessible ring-brand-red/20"
                         : "bg-brand-blue ring-brand-blue/15"
                     } ${
                       isUpper
@@ -207,7 +220,7 @@ export default function FeaturedProgram() {
                       )}
                     </div>
                     <div className="p-5 sm:p-6 md:p-7 lg:p-3.5">
-                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-red lg:text-[0.625rem] lg:tracking-[0.12em]">
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-red-accessible lg:text-[0.625rem] lg:tracking-[0.12em]">
                         {stage.stageLabel}
                       </p>
                       <h3 className="mt-2 font-display text-xl font-semibold text-brand-navy sm:text-2xl lg:mt-1.5 lg:text-base lg:leading-tight">

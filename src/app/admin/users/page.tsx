@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@supabase/ssr";
-import { canAccessAdminRoute, type AdminPermissionMap } from "@/app/admin/authorization";
+import { assertModuleAccess, canAccessAdminRoute, type AdminPermissionMap } from "@/app/admin/authorization";
 import UserDirectoryTable, { type DirectoryRole, type DirectoryUser } from "@/components/admin/users/UserDirectoryTable";
 
 export const metadata: Metadata = {
@@ -15,6 +15,8 @@ type ProfileRow = Omit<DirectoryUser, "roleName" | "roleColor"> & {
 };
 
 export default async function AdminUsersPage() {
+    await assertModuleAccess("user_management");
+
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
         ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -63,7 +65,7 @@ export default async function AdminUsersPage() {
         return <AccessDenied />;
     }
 
-    const [userManagementCreate, accessControlCreate] = await Promise.all([
+    const [userManagementCreate, accessControlCreate, userManagementDelete, accessControlDelete] = await Promise.all([
         supabase.rpc("current_user_has_permission", {
             module_key: "user_management",
             capability: "create",
@@ -72,14 +74,25 @@ export default async function AdminUsersPage() {
             module_key: "access_control",
             capability: "create",
         }),
+        supabase.rpc("current_user_has_permission", {
+            module_key: "user_management",
+            capability: "delete",
+        }),
+        supabase.rpc("current_user_has_permission", {
+            module_key: "access_control",
+            capability: "delete",
+        }),
     ]);
     const canCreateUsers = currentProfile.role === "admin" ||
         userManagementCreate.data === true || accessControlCreate.data === true;
+    const canDeleteUsers = currentProfile.role === "admin" ||
+        roleName?.trim().toLowerCase() === "super admin" ||
+        userManagementDelete.data === true || accessControlDelete.data === true;
 
     const [{ data: profiles, error: profilesError }, { data: roleRows, error: rolesError }] = await Promise.all([
         supabase
             .from("profiles")
-            .select("id, full_name, email, role, role_id, is_active, must_change_password, avatar_url, roles(id, name, color)")
+            .select("id, full_name, email, role, role_id, is_active, must_change_password, first_login, avatar_url, roles(id, name, color)")
             .neq("role", "student")
             .order("full_name"),
         supabase
@@ -112,7 +125,12 @@ export default async function AdminUsersPage() {
                 </div>
                 <p className="text-sm font-semibold text-brand-text-muted">{users.length} accounts</p>
             </header>
-            <UserDirectoryTable users={users} roles={roleRows ?? []} canInvite={canCreateUsers} />
+            <UserDirectoryTable
+                users={users}
+                roles={roleRows ?? []}
+                canInvite={canCreateUsers}
+                canDelete={canDeleteUsers}
+            />
         </div>
     );
 }

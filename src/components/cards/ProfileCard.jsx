@@ -6,7 +6,11 @@ import { Linkedin, ShieldCheck } from "lucide-react";
  *   that can be swapped for a real photo via `profile.image`.
  * - Expected fields: name, designation, bio, verified, tags[], socials[].
  */
-export default function ProfileCard({ profile, showTags = false }) {
+export default function ProfileCard({
+  profile,
+  showTags = false,
+  accessibleBrandRed = false,
+}) {
   const initials = profile.name
     .split(" ")
     .map((word) => word[0])
@@ -47,7 +51,11 @@ export default function ProfileCard({ profile, showTags = false }) {
       <h4 className="mt-5 text-lg font-bold leading-tight text-brand-navy">
         {profile.name}
       </h4>
-      <p className="mt-1 text-sm font-medium text-brand-red">{profile.designation}</p>
+      <p
+        className={`mt-1 text-sm font-medium ${accessibleBrandRed ? "text-brand-red-accessible" : "text-brand-red"}`}
+      >
+        {profile.designation}
+      </p>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-brand-text-secondary">
         {profile.bio}
       </p>

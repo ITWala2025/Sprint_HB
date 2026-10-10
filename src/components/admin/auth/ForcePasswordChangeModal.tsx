@@ -7,9 +7,13 @@ import { createClient } from "@/lib/supabase/client";
 
 type ForcePasswordChangeModalProps = {
     onSuccess: () => void;
+    mode?: "first_login" | "password_reset";
 };
 
-export default function ForcePasswordChangeModal({ onSuccess }: ForcePasswordChangeModalProps) {
+export default function ForcePasswordChangeModal({
+    onSuccess,
+    mode = "first_login",
+}: ForcePasswordChangeModalProps) {
     const [password, setPassword] = useState("");
     const [confirmation, setConfirmation] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -92,6 +96,35 @@ export default function ForcePasswordChangeModal({ onSuccess }: ForcePasswordCha
                 return;
             }
 
+            if (mode === "password_reset") {
+                const { data: authData, error: authError } = await supabase.auth.getUser();
+                if (authError || !authData.user) {
+                    setError("Your password changed, but your account could not be verified. Please contact support.");
+                    return;
+                }
+
+                const { data: profile, error: profileError } = await supabase
+                    .from("profiles")
+                    .update({ must_change_password: false, first_login: false })
+                    .eq("id", authData.user.id)
+                    .select("id")
+                    .maybeSingle();
+                if (profileError || !profile) {
+                    setError("Your password changed, but your account status could not be updated. Please contact support.");
+                    return;
+                }
+
+                const { error: signOutError } = await supabase.auth.signOut();
+                if (signOutError) {
+                    setError("Your password was reset, but sign-out did not complete. Please sign out and log in again.");
+                    return;
+                }
+
+                onSuccess();
+                window.location.assign("/admin?password_reset=success");
+                return;
+            }
+
             const { data: resetComplete, error: resetError } = await supabase.rpc("complete_staff_password_reset");
             if (resetError || resetComplete !== true) {
                 setError("Your password changed, but the required reset could not be verified. Submit again or contact an administrator.");
@@ -112,8 +145,14 @@ export default function ForcePasswordChangeModal({ onSuccess }: ForcePasswordCha
             <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={`${id}-title`} aria-describedby={`${id}-description`} className="w-full max-w-md rounded-xl border border-white/50 bg-white p-6 shadow-2xl sm:p-8">
                 <span className="flex size-12 items-center justify-center rounded-lg bg-brand-red-light text-brand-red"><KeyRound className="size-6" aria-hidden="true" /></span>
                 <p className="mt-5 text-xs font-bold uppercase tracking-[0.14em] text-brand-red">Account security</p>
-                <h1 id={`${id}-title`} className="mt-2 font-display text-2xl font-bold text-brand-navy">Set your permanent password</h1>
-                <p id={`${id}-description`} className="mt-2 text-sm leading-6 text-brand-text-secondary">You are logged in for the first time. Please set your permanent password to continue.</p>
+                <h1 id={`${id}-title`} className="mt-2 font-display text-2xl font-bold text-brand-navy">
+                    {mode === "password_reset" ? "Reset Your Password" : "Set your permanent password"}
+                </h1>
+                <p id={`${id}-description`} className="mt-2 text-sm leading-6 text-brand-text-secondary">
+                    {mode === "password_reset"
+                        ? "Enter your new permanent password below."
+                        : "You are logged in for the first time. Please set your permanent password to continue."}
+                </p>
 
                 <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-5">
                     <div>

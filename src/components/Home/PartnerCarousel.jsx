@@ -66,7 +66,7 @@ export default function PartnerCarousel() {
   return (
     <section className="sprint-section overflow-hidden border-y border-brand-border bg-brand-white py-[1.05rem] md:py-[1.4rem] lg:py-[1.75rem]">
       <div className="mx-auto max-w-[1200px] px-6">
-        <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+        <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-brand-red-accessible">
           Trusted by universities and industry partners
         </p>
       </div>
@@ -86,13 +86,17 @@ export default function PartnerCarousel() {
                 key={`${partner.id}-${i}`}
                 className="flex shrink-0 items-center pr-16 opacity-80"
               >
-                <Image
-                  src={partner.logoUrl}
-                  alt={`${partner.name} logo`}
-                  width={128}
-                  height={128}
-                  className={`object-contain ${frame ? frame.className : "size-32"}`}
-                />
+                <div
+                  className={`relative shrink-0 ${frame ? frame.className : "size-32"}`}
+                >
+                  <Image
+                    src={partner.logoUrl}
+                    alt={`${partner.name} logo`}
+                    fill
+                    sizes={`${frame?.width ?? LOGO_FRAME_HEIGHT}px`}
+                    className="object-contain"
+                  />
+                </div>
                 {/* <span className="whitespace-nowrap text-sm font-medium text-brand-text-secondary">
                 {partner.name}
               </span> */}
