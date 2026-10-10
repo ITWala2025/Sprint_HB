@@ -21,7 +21,7 @@ export default function MoreCourses() {
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-accessible">
               Learning pathways
             </p>
             <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
@@ -37,7 +37,7 @@ export default function MoreCourses() {
             <div className="sticky top-24">
               <Link
                 href="/courses"
-                className="inline-flex min-h-11 items-center gap-1.5 shrink-0 whitespace-nowrap rounded-full border border-brand-border bg-white px-5 py-2.5 text-sm font-semibold text-brand-navy shadow-sm transition-colors hover:bg-brand-off-white hover:border-brand-navy hover:text-brand-red"
+                className="inline-flex min-h-11 items-center gap-1.5 shrink-0 whitespace-nowrap rounded-full border border-brand-border bg-white px-5 py-2.5 text-sm font-semibold text-brand-navy shadow-sm transition-colors hover:bg-brand-off-white hover:border-brand-navy hover:text-brand-red-accessible"
               >
                 View All Courses
               </Link>
@@ -47,7 +47,7 @@ export default function MoreCourses() {
 
         <div className="mt-8 grid grid-cols-1 justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {moreCourses.map((course) => (
-            <CourseCard key={course.slug} course={course} />
+            <CourseCard key={course.slug} course={course} accessibleBrandRed />
           ))}
         </div>
 
@@ -55,7 +55,7 @@ export default function MoreCourses() {
         <div className="mt-6 lg:hidden">
           <Link
             href="/courses"
-            className="flex min-h-11 items-center justify-center text-center text-sm font-semibold text-brand-navy hover:text-brand-red"
+            className="flex min-h-11 items-center justify-center text-center text-sm font-semibold text-brand-navy hover:text-brand-red-accessible"
           >
             View All Courses
           </Link>

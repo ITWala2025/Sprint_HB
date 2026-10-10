@@ -12,7 +12,7 @@ export default function FAQSection() {
   return (
     <section className="sprint-section bg-brand-off-white py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]">
       <div className="mx-auto max-w-3xl px-6">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-accessible">
           Need to know
         </p>
         <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">

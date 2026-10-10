@@ -8,7 +8,7 @@ import { ArrowRight, Clock } from "lucide-react";
  * anywhere on the card navigates to the Course Details page". A visible
  * hover/focus state signals it's clickable, per Section 9.1 / 7.2.
  */
-export default function CourseCard({ course }) {
+export default function CourseCard({ course, accessibleBrandRed = false }) {
   const courseHref = `/courses/${course.slug}`;
 
   return (
@@ -54,7 +54,7 @@ export default function CourseCard({ course }) {
           <span>{course.duration}</span>
         </div>
 
-        <span className="mt-auto flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl bg-brand-red px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-red-dark hover:shadow-brand-cta group-focus-visible:ring-2 group-focus-visible:ring-brand-red group-focus-visible:ring-offset-2">
+        <span className={`mt-auto flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl ${accessibleBrandRed ? "bg-brand-red-accessible" : "bg-brand-red"} px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-red-dark hover:shadow-brand-cta group-focus-visible:ring-2 group-focus-visible:ring-brand-red group-focus-visible:ring-offset-2`}>
           Know More
           <ArrowRight
             className="size-4 transition-transform duration-200 group-hover:translate-x-1"

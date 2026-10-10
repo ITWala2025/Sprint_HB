@@ -60,7 +60,7 @@ export default function Testimonials() {
   return (
     <section className="sprint-section bg-brand-white py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]">
       <div className="mx-auto max-w-6xl px-6 text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-accessible">
           Learner stories
         </p>
         <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">

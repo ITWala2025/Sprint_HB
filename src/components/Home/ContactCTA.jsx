@@ -22,7 +22,7 @@ export default function ContactCTA() {
         <div className="mt-8">
           <Link
             href="/contact"
-            className="sprint-focus inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
+            className="sprint-focus inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-brand-red-accessible px-7 py-3 text-base font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
           >
             Get in Touch
           </Link>

@@ -59,7 +59,7 @@ export default function Hero() {
           <div className="mt-10 max-w-md">
             <Link
               href="/courses"
-              className="sprint-focus inline-flex min-h-[48px] items-center justify-center rounded-full bg-brand-red px-7 py-3 text-base font-semibold text-brand-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
+              className="sprint-focus inline-flex min-h-[48px] items-center justify-center rounded-full bg-brand-red-accessible px-7 py-3 text-base font-semibold text-brand-white shadow-brand-cta transition-colors hover:bg-brand-red-dark"
             >
               Explore Programs
             </Link>
