@@ -63,7 +63,7 @@ export default async function AdminUsersPage() {
         return <AccessDenied />;
     }
 
-    const [userManagementCreate, accessControlCreate] = await Promise.all([
+    const [userManagementCreate, accessControlCreate, userManagementDelete, accessControlDelete] = await Promise.all([
         supabase.rpc("current_user_has_permission", {
             module_key: "user_management",
             capability: "create",
@@ -72,14 +72,25 @@ export default async function AdminUsersPage() {
             module_key: "access_control",
             capability: "create",
         }),
+        supabase.rpc("current_user_has_permission", {
+            module_key: "user_management",
+            capability: "delete",
+        }),
+        supabase.rpc("current_user_has_permission", {
+            module_key: "access_control",
+            capability: "delete",
+        }),
     ]);
     const canCreateUsers = currentProfile.role === "admin" ||
         userManagementCreate.data === true || accessControlCreate.data === true;
+    const canDeleteUsers = currentProfile.role === "admin" ||
+        roleName?.trim().toLowerCase() === "super admin" ||
+        userManagementDelete.data === true || accessControlDelete.data === true;
 
     const [{ data: profiles, error: profilesError }, { data: roleRows, error: rolesError }] = await Promise.all([
         supabase
             .from("profiles")
-            .select("id, full_name, email, role, role_id, is_active, must_change_password, avatar_url, roles(id, name, color)")
+            .select("id, full_name, email, role, role_id, is_active, must_change_password, first_login, avatar_url, roles(id, name, color)")
             .neq("role", "student")
             .order("full_name"),
         supabase
@@ -112,7 +123,12 @@ export default async function AdminUsersPage() {
                 </div>
                 <p className="text-sm font-semibold text-brand-text-muted">{users.length} accounts</p>
             </header>
-            <UserDirectoryTable users={users} roles={roleRows ?? []} canInvite={canCreateUsers} />
+            <UserDirectoryTable
+                users={users}
+                roles={roleRows ?? []}
+                canInvite={canCreateUsers}
+                canDelete={canDeleteUsers}
+            />
         </div>
     );
 }

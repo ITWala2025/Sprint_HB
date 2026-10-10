@@ -12,5 +12,6 @@ export const config = {
     "/student/login",
     "/student/dashboard",
     "/student/:path*",
+    "/staff/:path*",
   ],
 };

@@ -30,6 +30,7 @@ export default function HomePage() {
       <MoreCourses />
       <FacultyExperts
         eyebrow="MENTORS"
+        accessibleBrandRed
         sectionClassName="sprint-section bg-brand-white"
         contentClassName="mx-auto max-w-[1200px] px-6 py-[1.4rem] md:py-[1.925rem] lg:py-[2.45rem]"
       />

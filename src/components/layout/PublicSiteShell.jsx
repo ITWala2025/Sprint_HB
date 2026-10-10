@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import Header from "@/components/header/Header";
 import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";
 import Footer from "@/components/footer/Footer";
-import ChatbotWidget from "@/app/chatbot/ChatbotWidget";
+import AiAssistant from "@/components/ai/AiAssistant";
 
 /**
  * Routes that render their own full-screen chrome: the Student Portal auth
@@ -22,6 +22,7 @@ const FOCUSED_ROUTES = [
   "/student/reset-password",
   "/student/password-reset-success",
   "/student/enroll",
+  "/staff",
 ];
 
 const matchesRoute = (pathname, routes) =>
@@ -60,7 +61,7 @@ export default function PublicSiteShell({ children }) {
           </svg>
         </a>
       )}
-      {showPublicChrome && <ChatbotWidget />}
+      {showPublicChrome && <AiAssistant />}
     </>
   );
 }

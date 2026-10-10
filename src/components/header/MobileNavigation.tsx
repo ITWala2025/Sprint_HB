@@ -9,6 +9,7 @@ interface MobileNavigationProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   isAdmin?: boolean;
+  accessibleBrandRed?: boolean;
 }
 
 const navigation = [
@@ -23,6 +24,7 @@ export default function MobileNavigation({
   isOpen,
   setIsOpen,
   isAdmin = false,
+  accessibleBrandRed = false,
 }: MobileNavigationProps) {
   useEffect(() => {
     setIsOpen(false);
@@ -51,8 +53,14 @@ export default function MobileNavigation({
     <div className="shrink-0 lg:hidden">
       <div className="flex shrink-0 items-center gap-2">
         <Link
-          href={isAdmin ? "/admin/dashboard" : "/register"}
-          className={`sprint-focus min-h-11 rounded-lg px-4 py-2.5 text-sm font-semibold text-white ${isAdmin ? "bg-brand-navy" : "bg-brand-red"}`}
+          href={isAdmin ? "/admin/dashboard" : "/student/enroll"}
+          className={`sprint-focus min-h-11 rounded-lg px-4 py-2.5 text-sm font-semibold text-white ${
+            isAdmin
+              ? "bg-brand-navy"
+              : accessibleBrandRed
+                ? "bg-brand-red-accessible"
+                : "bg-brand-red"
+          }`}
         >
           {isAdmin ? "Admin" : "Enroll"}
         </Link>
@@ -117,9 +125,11 @@ export default function MobileNavigation({
                     Student Portal
                   </Link>
                   <Link
-                    href="/register"
+                    href="/student/enroll"
                     onClick={() => setIsOpen(false)}
-                    className="mt-2 block rounded-lg bg-brand-red px-4 py-3 text-center text-sm font-semibold text-white"
+                    className={`mt-2 block rounded-lg px-4 py-3 text-center text-sm font-semibold text-white ${
+                      accessibleBrandRed ? "bg-brand-red-accessible" : "bg-brand-red"
+                    }`}
                   >
                     Enroll Now
                   </Link>

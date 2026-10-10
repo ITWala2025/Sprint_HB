@@ -18,7 +18,9 @@ describe("CreateUserModal", () => {
         mocks.provision.mockResolvedValue({
             success: true,
             userId: "user-1",
-            loginUrl: "https://example.com/auth/verify?token=one-time",
+            email: "asha@example.com",
+            tempPassword: "TestTempPassword123",
+            inviteUrl: "https://example.com/staff/invitation/secure-token",
         });
     });
 
@@ -43,8 +45,22 @@ describe("CreateUserModal", () => {
         }));
         expect(await screen.findByRole("heading", { name: "Staff account created" })).toBeInTheDocument();
         expect(screen.getByText("asha@example.com")).toBeInTheDocument();
-        expect(screen.getByText("https://example.com/auth/verify?token=one-time")).toBeInTheDocument();
+        expect(screen.getByText("TestTempPassword123")).toBeInTheDocument();
+        expect(screen.getByText("https://example.com/staff/invitation/secure-token")).toBeInTheDocument();
+        expect(screen.getByText("An invitation email has been sent via Supabase. The invitation link is valid for 1 hour.")).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Copy Password" })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Copy Link" })).toBeInTheDocument();
         expect(onCreated).toHaveBeenCalledOnce();
+
+        const writeText = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(navigator, "clipboard", {
+            configurable: true,
+            value: { writeText },
+        });
+        await user.click(screen.getByRole("button", { name: "Copy Password" }));
+        await user.click(screen.getByRole("button", { name: "Copy Link" }));
+        expect(writeText).toHaveBeenNthCalledWith(1, "TestTempPassword123");
+        expect(writeText).toHaveBeenNthCalledWith(2, "https://example.com/staff/invitation/secure-token");
     });
 
     it("shows a server action failure as an accessible error toast", async () => {

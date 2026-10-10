@@ -116,17 +116,16 @@ function CourseTile({ item, audience }) {
           {item.certificate ? <span>Certificate</span> : null}
         </div>
 
-        <div className="course-tile__footer">
-          <span>Know More</span>
-
-          <Link
-            href={itemHref(item, audience)}
-            aria-label={`Know more about ${item.title}`}
-            className="course-tile__link"
-          >
-            <ArrowRight size={18} aria-hidden="true" />
-          </Link>
-        </div>
+        <Link
+          href={itemHref(item, audience)}
+          aria-label={`Know more about ${item.title}`}
+          className="course-tile__footer course-tile__link"
+        >
+          <span className="whitespace-nowrap">Know More</span>
+          <span className="course-tile__link-icon" aria-hidden="true">
+            <ArrowRight className="shrink-0" size={18} />
+          </span>
+        </Link>
       </div>
     </article>
   );

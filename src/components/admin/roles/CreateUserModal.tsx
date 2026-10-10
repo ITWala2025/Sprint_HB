@@ -26,9 +26,10 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
     const [createdAccount, setCreatedAccount] = useState<{
         email: string;
         tempPassword: string;
-        loginUrl: string;
+        inviteUrl: string;
     } | null>(null);
-    const [copied, setCopied] = useState(false);
+    const [copiedPassword, setCopiedPassword] = useState(false);
+    const [copiedLink, setCopiedLink] = useState(false);
     const [error, setError] = useState("");
     const [isSaving, setIsSaving] = useState(false);
 
@@ -67,9 +68,9 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
             }
 
             setCreatedAccount({
-                email: email.trim().toLowerCase(),
-                tempPassword,
-                loginUrl: result.loginUrl,
+                email: result.email,
+                tempPassword: result.tempPassword,
+                inviteUrl: result.inviteUrl,
             });
             onCreated();
         } catch {
@@ -79,13 +80,12 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
         }
     }
 
-    async function copyLoginUrl() {
-        if (!createdAccount) return;
+    async function copyValue(value: string, setCopied: (copied: boolean) => void, label: string) {
         try {
-            await navigator.clipboard.writeText(createdAccount.loginUrl);
+            await navigator.clipboard.writeText(value);
             setCopied(true);
         } catch {
-            setError("Clipboard access was blocked. Select and copy the direct login link manually.");
+            setError(`Clipboard access was blocked. Select and copy the ${label} manually.`);
         }
     }
 
@@ -95,20 +95,30 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
                 <section className="w-full max-w-md rounded-xl border border-white/60 bg-white p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="created-user-title">
                     <div className="flex size-11 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><Check className="size-5" aria-hidden="true" /></div>
                     <h2 id="created-user-title" className="mt-4 font-display text-xl font-bold text-brand-navy">Staff account created</h2>
-                    <p className="mt-1 text-sm leading-6 text-brand-text-secondary">Share these login details with the staff member. The direct login link is single-use.</p>
+                    <p className="mt-1 text-sm leading-6 text-brand-text-secondary">An invitation email has been sent via Supabase. The invitation link is valid for 1 hour.</p>
                     <div className="mt-5 space-y-3 rounded-lg border border-brand-border bg-brand-off-white p-4 font-body text-sm">
                         <p><span className="text-xs font-bold text-brand-text-muted">EMAIL</span><br />{createdAccount.email}</p>
-                        <p><span className="text-xs font-bold text-brand-text-muted">TEMPORARY PASSWORD</span><br /><span className="break-all font-mono">{createdAccount.tempPassword}</span></p>
-                        <p><span className="text-xs font-bold text-brand-text-muted">DIRECT LOGIN URL</span><br /><a className="break-all text-brand-blue underline" href={createdAccount.loginUrl} target="_blank" rel="noreferrer">{createdAccount.loginUrl}</a></p>
+                        <div>
+                            <span className="text-xs font-bold text-brand-text-muted">TEMPORARY PASSWORD</span>
+                            <div className="mt-1 flex items-center justify-between gap-2">
+                                <span className="break-all font-mono">{createdAccount.tempPassword}</span>
+                                <button type="button" onClick={() => void copyValue(createdAccount.tempPassword, setCopiedPassword, "temporary password")} className="inline-flex shrink-0 items-center gap-1 rounded-md border border-brand-border bg-white px-2 py-1 text-xs font-bold text-brand-navy">
+                                    <Copy className="size-3.5" aria-hidden="true" />{copiedPassword ? "Copied" : "Copy Password"}
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <span className="text-xs font-bold text-brand-text-muted">STAFF INVITATION LINK</span>
+                            <div className="mt-1 flex items-center justify-between gap-2">
+                                <a className="break-all text-brand-blue underline" href={createdAccount.inviteUrl} target="_blank" rel="noreferrer">{createdAccount.inviteUrl}</a>
+                                <button type="button" onClick={() => void copyValue(createdAccount.inviteUrl, setCopiedLink, "invitation link")} className="inline-flex shrink-0 items-center gap-1 rounded-md border border-brand-border bg-white px-2 py-1 text-xs font-bold text-brand-navy">
+                                    <Copy className="size-3.5" aria-hidden="true" />{copiedLink ? "Copied" : "Copy Link"}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     {error && <p className="mt-3 text-sm text-brand-red" role="alert">{error}</p>}
-                    <div className="mt-5 flex gap-2">
-                        <button type="button" onClick={copyLoginUrl} className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-bold text-white">
-                            <Copy className="size-4" aria-hidden="true" />
-                            {copied ? "Copied login link" : "Copy login link"}
-                        </button>
-                        <button type="button" onClick={onClose} className="w-full rounded-lg border border-brand-border px-4 py-2.5 text-sm font-bold text-brand-navy">Done</button>
-                    </div>
+                    <button type="button" onClick={onClose} className="mt-5 w-full rounded-lg border border-brand-border px-4 py-2.5 text-sm font-bold text-brand-navy">Done</button>
                 </section>
             </div>
         );

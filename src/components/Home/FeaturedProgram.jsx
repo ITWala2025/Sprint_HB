@@ -174,7 +174,7 @@ export default function FeaturedProgram() {
                   <span
                     className={`z-10 col-start-1 row-start-1 grid size-10 place-items-center rounded-full border-4 border-white text-xs font-bold text-white shadow-[0_3px_12px_rgba(1,31,62,0.18)] ring-1 transition-colors duration-300 md:size-12 lg:absolute lg:left-1/2 lg:size-10 lg:-translate-x-1/2 ${
                       index === 0
-                        ? "bg-brand-red ring-brand-red/20"
+                        ? "bg-brand-red-accessible ring-brand-red/20"
                         : "bg-brand-blue ring-brand-blue/15"
                     } ${
                       isUpper
@@ -220,7 +220,7 @@ export default function FeaturedProgram() {
                       )}
                     </div>
                     <div className="p-5 sm:p-6 md:p-7 lg:p-3.5">
-                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-red lg:text-[0.625rem] lg:tracking-[0.12em]">
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-red-accessible lg:text-[0.625rem] lg:tracking-[0.12em]">
                         {stage.stageLabel}
                       </p>
                       <h3 className="mt-2 font-display text-xl font-semibold text-brand-navy sm:text-2xl lg:mt-1.5 lg:text-base lg:leading-tight">
