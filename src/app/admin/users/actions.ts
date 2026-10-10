@@ -1,8 +1,9 @@
 "use server";
 
 import "server-only";
+import { randomBytes } from "node:crypto";
 import { createServerClient } from "@supabase/ssr";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type User } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
@@ -15,7 +16,15 @@ export type ProvisionStaffUserInput = {
 };
 
 export type ProvisionStaffUserResult =
-    | { success: true; userId: string; loginUrl: string }
+    | { success: true; userId: string; email: string; tempPassword: string; inviteUrl: string }
+    | { success: false; error: string };
+
+export type ResendStaffInvitationResult =
+    | { success: true; email: string; tempPassword: string; inviteUrl: string }
+    | { success: false; error: string };
+
+export type DeleteStaffUserResult =
+    | { success: true }
     | { success: false; error: string };
 
 function roleHasPermission(permissions: unknown, moduleKey: string, capability: string) {
@@ -73,6 +82,84 @@ async function createSessionClient() {
     });
 }
 
+type ServiceClient = NonNullable<ReturnType<typeof createServiceClient>>;
+
+async function authorizeStaffManagement(
+    sessionClient: Awaited<ReturnType<typeof createSessionClient>>,
+    serviceClient: ServiceClient,
+) {
+    if (!sessionClient) {
+        return { authorized: false as const, error: "Authentication is not configured on the server." };
+    }
+
+    const { data: authData, error: authError } = await sessionClient.auth.getUser();
+    if (authError || !authData.user) {
+        return { authorized: false as const, error: "Sign in again before managing staff accounts." };
+    }
+
+    const { data: actor, error: actorError } = await serviceClient
+        .from("profiles")
+        .select("role, is_active, role_id")
+        .eq("id", authData.user.id)
+        .maybeSingle();
+
+    if (actorError || !actor || actor.is_active !== true) {
+        return { authorized: false as const, error: "Your active staff profile could not be verified." };
+    }
+
+    if (actor.role === "admin") {
+        return { authorized: true as const, userId: authData.user.id };
+    }
+    if (!actor.role_id) {
+        return { authorized: false as const, error: "You do not have permission to manage staff accounts." };
+    }
+
+    const { data: actorRole, error: actorRoleError } = await serviceClient
+        .from("roles")
+        .select("is_active, permissions")
+        .eq("id", actor.role_id)
+        .maybeSingle();
+
+    if (actorRoleError) {
+        return { authorized: false as const, error: `Your assigned staff role could not be verified: ${actorRoleError.message}` };
+    }
+    if (!actorRole || actorRole.is_active !== true) {
+        return { authorized: false as const, error: "Your assigned staff role is inactive or unavailable." };
+    }
+    if (
+        !roleHasPermission(actorRole.permissions, "user_management", "create") &&
+        !roleHasPermission(actorRole.permissions, "access_control", "create")
+    ) {
+        return { authorized: false as const, error: "You do not have permission to manage staff accounts." };
+    }
+
+    return { authorized: true as const, userId: authData.user.id };
+}
+
+async function findAuthUserByEmail(serviceClient: ServiceClient, email: string) {
+    for (let page = 1; ; page += 1) {
+        const { data, error } = await serviceClient.auth.admin.listUsers({ page, perPage: 1000 });
+        if (error) return { user: null, error };
+        const users: User[] = data.users;
+        const user = users.find((candidate) => candidate.email?.toLowerCase() === email);
+        if (user) return { user, error: null };
+        if (data.users.length < 1000) return { user: null, error: null };
+    }
+}
+
+function createInvitationToken() {
+    return randomBytes(32).toString("hex");
+}
+
+function getInvitationUrl(token: string) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "http://localhost:3000";
+    return `${siteUrl}/staff/invitation/${token}`;
+}
+
+function createTemporaryPassword() {
+    return randomBytes(24).toString("base64url");
+}
+
 export async function provisionStaffUserAction(
     input: ProvisionStaffUserInput,
 ): Promise<ProvisionStaffUserResult> {
@@ -96,61 +183,13 @@ export async function provisionStaffUserAction(
 
     const serviceClient = createServiceClient();
     if (!serviceClient) {
-        return { success: false, error: "Staff account provisioning is not configured on the server." };
+        return { success: false, error: "Server service client not configured." };
     }
 
     const sessionClient = await createSessionClient();
-    if (!sessionClient) {
-        return { success: false, error: "Authentication is not configured on the server." };
-    }
-
-    const { data: authData, error: authError } = await sessionClient.auth.getUser();
-    if (authError || !authData.user) {
-        return { success: false, error: "Sign in again before creating a staff account." };
-    }
-
-    const { data: actor, error: actorError } = await serviceClient
-        .from("profiles")
-        .select("role, is_active, role_id")
-        .eq("id", authData.user.id)
-        .maybeSingle();
-
-    if (actorError) {
-        return { success: false, error: `Your staff profile could not be read: ${actorError.message}` };
-    }
-    if (!actor) {
-        return { success: false, error: "Your active staff profile could not be verified." };
-    }
-
-    if (actor.is_active !== true) {
-        return { success: false, error: "Your account is marked inactive." };
-    }
-
-    const isLegacyAdmin = actor.role === "admin";
-    if (!isLegacyAdmin) {
-        if (actor.is_active !== true || !actor.role_id) {
-            return { success: false, error: "Your active staff profile could not be verified." };
-        }
-
-        const { data: actorRole, error: actorRoleError } = await serviceClient
-            .from("roles")
-            .select("id, is_active, permissions")
-            .eq("id", actor.role_id)
-            .maybeSingle();
-
-        if (actorRoleError) {
-            return { success: false, error: `Your assigned staff role could not be verified: ${actorRoleError.message}` };
-        }
-        if (!actorRole || actorRole.is_active !== true) {
-            return { success: false, error: "Your assigned staff role is inactive or unavailable." };
-        }
-
-        if (
-            !roleHasPermission(actorRole.permissions, "user_management", "create") &&
-            !roleHasPermission(actorRole.permissions, "access_control", "create")
-        ) {
-            return { success: false, error: "You do not have permission to create staff accounts." };
-        }
+    const authorization = await authorizeStaffManagement(sessionClient, serviceClient);
+    if (!authorization.authorized) {
+        return { success: false, error: authorization.error };
     }
 
     const { data: role, error: roleError } = await serviceClient
@@ -163,34 +202,64 @@ export async function provisionStaffUserAction(
         return { success: false, error: "The selected role is no longer active. Refresh the page and try again." };
     }
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-    if (!siteUrl) {
-        return { success: false, error: "The public site URL is not configured on the server." };
+    const { user: existingUser, error: existingUserError } = await findAuthUserByEmail(serviceClient, email);
+    if (existingUserError) {
+        return { success: false, error: `Could not verify whether this email is already registered: ${existingUserError.message}` };
     }
-    const redirectTo = `${siteUrl.replace(/\/$/, "")}/admin/dashboard`;
+    if (existingUser) {
+        const { data: existingProfile, error: existingProfileError } = await serviceClient
+            .from("profiles")
+            .select("is_active")
+            .eq("id", existingUser.id)
+            .maybeSingle();
 
-    const { data: authDataCreated, error: createError } = await serviceClient.auth.admin.createUser({
-        email,
-        password: tempPassword,
-        email_confirm: true,
-        user_metadata: { full_name: fullName },
+        if (existingProfileError) {
+            return { success: false, error: `Could not verify the existing account: ${existingProfileError.message}` };
+        }
+        if (existingProfile?.is_active === true) {
+            return { success: false, error: "A user with this email address has already been registered." };
+        }
+        return { success: false, error: "An account already exists for this email address and must be reviewed before it can be invited." };
+    }
+
+    const inviteToken = createInvitationToken();
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+    const inviteUrl = getInvitationUrl(inviteToken);
+    const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(email, {
+        data: { full_name: fullName },
+        redirectTo: inviteUrl,
     });
 
-    if (createError || !authDataCreated.user) {
-        return { success: false, error: createError?.message ?? "The staff account could not be created." };
+    if (inviteError || !inviteData.user) {
+        return { success: false, error: inviteError?.message ?? "The staff invitation could not be sent." };
+    }
+
+    const { error: passwordError } = await serviceClient.auth.admin.updateUserById(inviteData.user.id, {
+        password: tempPassword,
+    });
+    if (passwordError) {
+        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id);
+        return {
+            success: false,
+            error: cleanupError
+                ? `${passwordError.message} The newly invited account could not be removed; contact a system administrator.`
+                : passwordError.message,
+        };
     }
 
     const { error: profileError } = await serviceClient.from("profiles").upsert({
-        id: authDataCreated.user.id,
+        id: inviteData.user.id,
         full_name: fullName,
         email,
+        role: "staff",
         role_id: roleId,
         must_change_password: true,
+        first_login: true,
         is_active: true,
     });
 
     if (profileError) {
-        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(authDataCreated.user.id);
+        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id);
         return {
             success: false,
             error: cleanupError
@@ -199,25 +268,247 @@ export async function provisionStaffUserAction(
         };
     }
 
-    const { data: linkData, error: linkError } = await serviceClient.auth.admin.generateLink({
-        type: "magiclink",
-        email,
-        options: {
-            redirectTo,
-        },
-    });
+    const { error: expireError } = await serviceClient
+        .from("staff_invitations")
+        .update({ status: "expired" })
+        .eq("email", email)
+        .eq("status", "pending");
 
-    const loginUrl = linkData.properties?.action_link;
-    if (linkError || !loginUrl) {
-        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(authDataCreated.user.id);
+    if (expireError) {
+        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id);
         return {
             success: false,
             error: cleanupError
-                ? `${linkError?.message ?? "A direct login link could not be generated."} The newly created auth user could not be removed; contact a system administrator.`
-                : linkError?.message ?? "A direct login link could not be generated.",
+                ? `${expireError.message} The newly invited account could not be removed; contact a system administrator.`
+                : expireError.message,
+        };
+    }
+
+    const { error: invitationError } = await serviceClient.from("staff_invitations").insert({
+        user_id: inviteData.user.id,
+        email,
+        token: inviteToken,
+        status: "pending",
+        expires_at: expiresAt,
+    });
+    if (invitationError) {
+        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id);
+        return {
+            success: false,
+            error: cleanupError
+                ? `${invitationError.message} The newly invited account could not be removed; contact a system administrator.`
+                : invitationError.message,
         };
     }
 
     revalidatePath("/admin/users");
-    return { success: true, userId: authDataCreated.user.id, loginUrl };
+    return {
+        success: true,
+        userId: inviteData.user.id,
+        email,
+        tempPassword,
+        inviteUrl,
+    };
+}
+
+export async function resendStaffInvitationAction(
+    userId: string,
+): Promise<ResendStaffInvitationResult> {
+    const targetId = typeof userId === "string" ? userId.trim() : "";
+    if (!targetId) {
+        return { success: false, error: "A valid staff account is required." };
+    }
+
+    const serviceClient = createServiceClient();
+    if (!serviceClient) {
+        return { success: false, error: "Server service client not configured." };
+    }
+
+    const sessionClient = await createSessionClient();
+    const authorization = await authorizeStaffManagement(sessionClient, serviceClient);
+    if (!authorization.authorized) {
+        return { success: false, error: authorization.error };
+    }
+
+    const { data: profile, error: profileError } = await serviceClient
+        .from("profiles")
+        .select("email, full_name, is_active, first_login, must_change_password")
+        .eq("id", targetId)
+        .maybeSingle();
+
+    if (profileError || !profile) {
+        return { success: false, error: `The staff profile could not be verified${profileError ? `: ${profileError.message}` : "."}` };
+    }
+    if (profile.is_active !== true) {
+        return { success: false, error: "Invitations cannot be resent to an inactive account." };
+    }
+    if (profile.first_login !== true && profile.must_change_password !== true) {
+        return { success: false, error: "This staff member has already completed first login." };
+    }
+
+    const { data: authData, error: authError } = await serviceClient.auth.admin.getUserById(targetId);
+    if (authError || !authData.user?.email) {
+        return { success: false, error: `The Auth account could not be verified${authError ? `: ${authError.message}` : "."}` };
+    }
+    if (authData.user.email_confirmed_at) {
+        return {
+            success: false,
+            error: "Supabase Auth cannot resend an invitation after the email address has been confirmed.",
+        };
+    }
+
+    const email = authData.user.email.trim().toLowerCase();
+    const fullName = profile.full_name?.trim() || email;
+    const tempPassword = createTemporaryPassword();
+    const inviteToken = createInvitationToken();
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+    const inviteUrl = getInvitationUrl(inviteToken);
+
+    const { error: expireError } = await serviceClient
+        .from("staff_invitations")
+        .update({ status: "expired" })
+        .eq("user_id", targetId)
+        .eq("status", "pending");
+    if (expireError) {
+        return { success: false, error: `The previous invitation could not be invalidated: ${expireError.message}` };
+    }
+
+    const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(email, {
+        data: { full_name: fullName },
+        redirectTo: inviteUrl,
+    });
+    if (inviteError || !inviteData.user) {
+        return { success: false, error: inviteError?.message ?? "The staff invitation could not be resent." };
+    }
+
+    const { error: passwordError } = await serviceClient.auth.admin.updateUserById(targetId, {
+        password: tempPassword,
+    });
+    if (passwordError) {
+        return { success: false, error: `The invitation was sent, but the temporary password could not be updated: ${passwordError.message}` };
+    }
+
+    const { error: invitationError } = await serviceClient.from("staff_invitations").insert({
+        user_id: targetId,
+        email,
+        token: inviteToken,
+        status: "pending",
+        expires_at: expiresAt,
+    });
+    if (invitationError) {
+        return { success: false, error: `The invitation email was sent, but it could not be tracked: ${invitationError.message}` };
+    }
+
+    revalidatePath("/admin/users");
+    return { success: true, email, tempPassword, inviteUrl };
+}
+
+export async function deleteStaffUserAction(targetUserId: string): Promise<DeleteStaffUserResult> {
+    const sessionClient = await createSessionClient();
+    if (!sessionClient) {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    const sessionUser = (await sessionClient.auth.getUser()).data.user;
+    if (!sessionUser) {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    const targetId = typeof targetUserId === "string" ? targetUserId.trim() : "";
+    if (!targetId) {
+        return { success: false, error: "A valid staff account is required." };
+    }
+
+    if (sessionUser.id === targetId) {
+        return { success: false, error: "You cannot delete your own admin account." };
+    }
+
+    const serviceClient = createServiceClient();
+    if (!serviceClient) {
+        return { success: false, error: "Server service client not configured." };
+    }
+
+    const { data: actor, error: actorError } = await serviceClient
+        .from("profiles")
+        .select("role, is_active, role_id")
+        .eq("id", sessionUser.id)
+        .maybeSingle();
+
+    if (actorError || !actor || actor.is_active !== true) {
+        return { success: false, error: "Your active staff profile could not be verified." };
+    }
+
+    let roleName = "";
+    let permissions: unknown = null;
+    if (actor.role_id) {
+        const { data: actorRole, error: actorRoleError } = await serviceClient
+            .from("roles")
+            .select("name, is_active, permissions")
+            .eq("id", actor.role_id)
+            .maybeSingle();
+
+        if (actorRoleError) {
+            return { success: false, error: `Your assigned staff role could not be verified: ${actorRoleError.message}` };
+        }
+        if (!actorRole || actorRole.is_active !== true) {
+            return { success: false, error: "Your assigned staff role is inactive or unavailable." };
+        }
+        roleName = actorRole.name;
+        permissions = actorRole.permissions;
+    }
+
+    const isSuperAdmin = actor.role?.toLowerCase() === "admin" ||
+        roleName.trim().toLowerCase() === "super admin";
+    const canDeleteUsers = isSuperAdmin ||
+        roleHasPermission(permissions, "user_management", "delete") ||
+        roleHasPermission(permissions, "access_control", "delete");
+
+    if (!canDeleteUsers) {
+        return { success: false, error: "You do not have permission to delete staff accounts." };
+    }
+
+   const { data: targetProfile, error: targetProfileError } = await serviceClient
+        .from("profiles")
+        .select("role")
+        .eq("id", targetId)
+        .maybeSingle();
+
+    if (targetProfileError) {
+        return { success: false, error: `The target account could not be verified: ${targetProfileError.message}` };
+    }
+
+    // Prevent deleting super admin accounts unless caller is authorized
+    if (targetProfile?.role?.toLowerCase() === "admin" && !isSuperAdmin) {
+        return { success: false, error: "You cannot delete an administrator account." };
+    }
+
+    const { error: invitationsError } = await serviceClient
+        .from("staff_invitations")
+        .delete()
+        .eq("user_id", targetId);
+
+    if (
+        invitationsError &&
+        invitationsError.code !== "PGRST205" &&
+        invitationsError.code !== "42P01"
+    ) {
+        return { success: false, error: `Invitation cleanup failed: ${invitationsError.message}` };
+    }
+
+    const { error: profileDeleteError } = await serviceClient
+        .from("profiles")
+        .delete()
+        .eq("id", targetId);
+
+    if (profileDeleteError) {
+        return { success: false, error: `Profile deletion failed: ${profileDeleteError.message}` };
+    }
+
+    const { error: authDeleteError } = await serviceClient.auth.admin.deleteUser(targetId);
+    if (authDeleteError) {
+        return { success: false, error: `Auth deletion failed: ${authDeleteError.message}` };
+    }
+
+    revalidatePath("/admin/users");
+    return { success: true };
 }
