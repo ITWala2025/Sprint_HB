@@ -6,15 +6,14 @@ import {
   Bot,
   ExternalLink,
   LoaderCircle,
-  MessageCircle,
   Send,
-  Sparkles,
   UserRound,
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -132,11 +131,9 @@ function cx(...values: Parameters<typeof clsx>) {
 function MessageAction({
   href,
   label,
-  onNavigate,
 }: {
   href: string;
   label: string;
-  onNavigate: () => void;
 }) {
   const isInternal = href.startsWith("/") && !href.startsWith("//");
   const className =
@@ -150,7 +147,7 @@ function MessageAction({
 
   if (isInternal) {
     return (
-      <Link className={className} href={href} onClick={onNavigate}>
+      <Link className={className} href={href}>
         {content}
       </Link>
     );
@@ -160,7 +157,6 @@ function MessageAction({
     <a
       className={className}
       href={href}
-      onClick={onNavigate}
       target={href.startsWith("https://") ? "_blank" : undefined}
       rel={href.startsWith("https://") ? "noopener noreferrer" : undefined}
     >
@@ -171,6 +167,7 @@ function MessageAction({
 
 export default function AiAssistant() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
   const [draft, setDraft] = useState("");
@@ -191,6 +188,19 @@ export default function AiAssistant() {
   }, [isOpen]);
 
   useEffect(() => {
+    if (!isOpen) return;
+
+    const frame = requestAnimationFrame(() => {
+      const messageList = messagesRef.current;
+      if (messageList) {
+        messageList.scrollTop = messageList.scrollHeight;
+      }
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [isOpen]);
+
+  useEffect(() => {
     messagesRef.current?.scrollTo({
       top: messagesRef.current.scrollHeight,
       behavior: "smooth",
@@ -203,8 +213,11 @@ export default function AiAssistant() {
 
   function handleSuggestionClick(suggestion: Suggestion) {
     if (suggestion.href) {
-      closeChat();
-      window.location.href = suggestion.href;
+      if (suggestion.href.startsWith("/") && !suggestion.href.startsWith("//")) {
+        router.push(suggestion.href);
+      } else {
+        window.open(suggestion.href, "_blank", "noopener,noreferrer");
+      }
     } else if (suggestion.query) {
       void handleSend(suggestion.query);
     }
@@ -293,23 +306,25 @@ export default function AiAssistant() {
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.94 }}
         className={cx(
-          "fixed bottom-24 right-5 z-[60] grid size-14 place-items-center rounded-full bg-[#011f3e] text-white shadow-[0_12px_32px_rgba(1,31,62,0.3)] transition-colors hover:bg-[#062c52] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f81529] sm:bottom-[8.5rem] sm:right-8 sm:size-16",
+          "fixed bottom-[calc(env(safe-area-inset-bottom)+6rem)] right-4 z-[60] grid size-14 place-items-center rounded-full bg-[#011f3e] text-white shadow-[0_12px_32px_rgba(1,31,62,0.3)] transition-colors hover:bg-[#062c52] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f81529] sm:bottom-[8.5rem] sm:right-8 sm:size-16",
           isOpen && "pointer-events-none opacity-0",
         )}
       >
         <span className="absolute inset-0 animate-ping rounded-full bg-[#f81529]/35 motion-reduce:animate-none" />
         <span className="absolute right-0 top-0 size-3.5 rounded-full border-2 border-white bg-[#f81529]" />
-        {isOpen ? (
-          <X className="relative" size={24} aria-hidden="true" />
-        ) : (
-          <MessageCircle className="relative" size={25} aria-hidden="true" />
-        )}
+        <Image
+          src="/images/chat-bot/chat_bot_logo.png"
+          alt=""
+          width={48}
+          height={48}
+          className="relative size-12 object-contain"
+        />
       </motion.button>
 
       <AnimatePresence>
         {isOpen && (
           <div
-            className="fixed inset-0 z-[59] flex items-end justify-center bg-[#001831]/45 p-0 sm:items-end sm:justify-end sm:bg-transparent sm:p-8"
+            className="fixed inset-0 z-[59] flex items-end justify-center bg-[#001831]/45 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:items-end sm:justify-end sm:bg-transparent sm:p-8"
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) closeChat();
             }}
@@ -322,7 +337,7 @@ export default function AiAssistant() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="flex h-[min(550px,88dvh)] w-full flex-col overflow-hidden rounded-t-2xl border border-[#e2e8f0] bg-white shadow-[0_24px_70px_rgba(1,31,62,0.24)] sm:w-[420px] sm:rounded-2xl"
+              className="flex h-[min(600px,calc(100dvh-1rem))] max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1rem)] w-full max-w-[420px] flex-col overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-[0_24px_70px_rgba(1,31,62,0.24)] sm:h-[min(550px,calc(100dvh-4rem))] sm:max-h-none sm:rounded-2xl"
               onKeyDown={(event) => {
                 if (event.key === "Escape") {
                   closeChat();
@@ -345,9 +360,13 @@ export default function AiAssistant() {
               }}
             >
               <header className="flex shrink-0 items-center gap-3 bg-[#011f3e] px-5 py-4 text-white">
-                <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-white/20 bg-white/10">
-                  <Sparkles size={19} aria-hidden="true" />
-                </div>
+                <Image
+                  src="/images/header&footer/sprintlogo.png"
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="size-10 shrink-0 rounded-full bg-white object-contain p-0.5"
+                />
                 <div className="min-w-0 flex-1">
                   <h2 id="ai-assistant-title" className="font-semibold">
                     SPRINT Assistant
@@ -370,7 +389,7 @@ export default function AiAssistant() {
 
               <div
                 ref={messagesRef}
-                className="flex flex-1 flex-col gap-4 overflow-y-auto bg-[#f8fafc] px-4 py-5 sm:px-5"
+                className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto bg-[#f8fafc] px-4 py-5 sm:px-5"
                 aria-live="polite"
                 aria-relevant="additions text"
                 aria-label="Chat messages"
@@ -432,7 +451,6 @@ export default function AiAssistant() {
                           <MessageAction
                             href={message.actionLink}
                             label={message.actionLabel}
-                            onNavigate={closeChat}
                           />
                         )}
                         {message.suggestions && (

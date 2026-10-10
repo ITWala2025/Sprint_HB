@@ -194,20 +194,6 @@ a {
     position: static;
   }
 
-@media (max-width: 767px) {
-  .whatsapp-float {
-    right: clamp(0.75rem, 3vw, 1.25rem);
-    bottom: max(1rem, env(safe-area-inset-bottom));
-    width: 3.25rem;
-    height: 3.25rem;
-  }
-
-  .whatsapp-float svg {
-    width: 1.7rem;
-    height: 1.7rem;
-  }
-}
-
 /* ========================================
    COMMON UTILITIES & ACCESSIBILITY
    ======================================== */
@@ -260,6 +246,20 @@ a {
 .whatsapp-float svg {
   width: 2rem;
   height: 2rem;
+}
+
+@media (max-width: 767px) {
+  .whatsapp-float {
+    right: 1rem;
+    bottom: calc(env(safe-area-inset-bottom) + 1.5rem);
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .whatsapp-float svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
