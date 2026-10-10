@@ -94,7 +94,22 @@ const CONTEXTUAL_SUGGESTIONS: {
   },
 ];
 
-function getContextualSuggestions(message: string, reply: string): Suggestion[] {
+export function getContextualSuggestions(message: string, reply: string): Suggestion[] {
+  if (
+    /\b(career guidance|career advice|best course|best program|course for me|right course|help me choose|help me pick|which course should i|course recommendation)\b/i.test(
+      message,
+    )
+  ) {
+    return [
+      {
+        label: "I’m a student or just starting out",
+        query: "I’m a student or just starting out",
+      },
+      { label: "I’m already working in tech", query: "I’m already working in tech" },
+      { label: "I’m new to tech and exploring", query: "I’m new to tech and exploring" },
+    ];
+  }
+
   const findMatch = (text: string) => {
     const normalized = text.toLowerCase();
     return CONTEXTUAL_SUGGESTIONS.find(({ keywords }) =>
@@ -214,6 +229,16 @@ export default function AiAssistant() {
     const message = value.trim();
     if (!message || isLoading) return;
 
+    const history = [
+      ...messages
+        .filter(
+          (item): item is ChatMessage & { role: "assistant" | "user" } =>
+            item.role === "assistant" || item.role === "user",
+        )
+        .map(({ role, content }) => ({ role, content })),
+      { role: "user" as const, content: message },
+    ].slice(-12);
+
     setMessages((current) => [
       ...current,
       { id: crypto.randomUUID(), role: "user", content: message, createdAt: new Date() },
@@ -222,10 +247,10 @@ export default function AiAssistant() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/ai-chat", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, pathname }),
+        body: JSON.stringify({ message, history, pathname }),
       });
       if (!response.ok) throw new Error(`Chat request failed (${response.status}).`);
 

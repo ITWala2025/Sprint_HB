@@ -9,9 +9,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest run --pool=threads --maxWorkers=1",
-    "test:run": "vitest run",
-    "test:ui": "vitest --ui"
+    "test": "vitest run --config vitest.config.mjs --pool=threads --maxWorkers=1",
+    "test:run": "vitest run --config vitest.config.mjs",
+    "test:ui": "vitest --config vitest.config.mjs --ui"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

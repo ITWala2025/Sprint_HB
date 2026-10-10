@@ -1,0 +1,5 @@
+{"id":"SPRINT-EVAL-001","category":"about","question":"What is SPRINT?","expected_answer_contains":["job-ready","Hazaribagh","AI/ML","Cloud","DevOps"]}
+{"id":"SPRINT-EVAL-002","category":"programs","question":"Tell me about SPRINT RISE","expected_answer_contains":["six-month","online","in-campus","Cloud","AI","DevOps"]}
+{"id":"SPRINT-EVAL-003","category":"courses","question":"What courses does SPRINT teach?","expected_answer_contains":["AI/ML","Cloud","DevOps","web development"]}
+{"id":"SPRINT-EVAL-004","category":"location","question":"Where is the SPRINT center?","expected_answer_contains":["Hazaribagh","Jharkhand"]}
+{"id":"SPRINT-EVAL-005","category":"contact","question":"How can I contact SPRINT?","expected_answer_contains":["contact","admissions","email","phone"]}
