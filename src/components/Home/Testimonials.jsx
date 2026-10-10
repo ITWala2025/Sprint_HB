@@ -246,61 +246,43 @@ export default function Testimonials() {
     "disabled:cursor-not-allowed disabled:opacity-35 " +
     "disabled:hover:border-slate-200 disabled:hover:bg-white";
   return (
-<<<<<<< HEAD
     <section
-  aria-labelledby={headingId}
-  onMouseEnter={() => {
-    autoPauseRef.current.hovered = true;
-  }}
-  onMouseLeave={() => {
-    autoPauseRef.current.hovered = false;
-    lastInteractionRef.current = Date.now();
-  }}
-  onPointerDownCapture={() => {
-    // A mouse/touch click must not leave autoplay stuck on keyboard focus.
-    autoPauseRef.current.focused = false;
-    lastInteractionRef.current = Date.now();
-  }}
-  onKeyDownCapture={(event) => {
-    if (event.key === "Tab" || event.key.startsWith("Arrow")) {
-      autoPauseRef.current.focused = true;
-    }
-  }}
-  onFocusCapture={(event) => {
-    autoPauseRef.current.focused = event.target.matches(":focus-visible");
-  }}
-  onBlurCapture={(event) => {
-    if (!event.currentTarget.contains(event.relatedTarget)) {
-      autoPauseRef.current.focused = false;
-      lastInteractionRef.current = Date.now();
-    }
-  }}
-className="sprint-section bg-brand-white py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]"
- >
-      <div className="mx-auto max-w-6xl px-6 text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-accessible">
-          What our students say
-        </p>
-        <h2
-          id={headingId}
-          className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl"
-=======
-    <section className="sprint-section bg-brand-white py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]">
-      <div className="mx-auto max-w-6xl px-6 text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-accessible">
-          Learner stories
-        </p>
-        <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
-          What our students say
-        </h2>
-
-        <div className="mt-8 flex items-center gap-3 sm:gap-5">
-          <button
-            type="button"
-            onClick={() => scrollByCard(-1)}
-            aria-label="Previous testimonial"
-            className="sprint-focus flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-brand-border text-brand-navy transition-colors hover:border-brand-navy"
->>>>>>> 1a45af5fd48e122fdcf740215bb02f9d37f9b572
+      aria-labelledby={headingId}
+      onMouseEnter={() => {
+        autoPauseRef.current.hovered = true;
+      }}
+      onMouseLeave={() => {
+        autoPauseRef.current.hovered = false;
+        lastInteractionRef.current = Date.now();
+      }}
+      onPointerDownCapture={() => {
+        autoPauseRef.current.focused = false;
+        lastInteractionRef.current = Date.now();
+      }}
+      onKeyDownCapture={(event) => {
+        if (event.key === "Tab" || event.key.startsWith("Arrow")) {
+          autoPauseRef.current.focused = true;
+        }
+      }}
+      onFocusCapture={(event) => {
+        autoPauseRef.current.focused = event.target.matches(":focus-visible");
+      }}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          autoPauseRef.current.focused = false;
+          lastInteractionRef.current = Date.now();
+        }
+      }}
+      className="bg-[linear-gradient(145deg,var(--color-brand-blue-light)_0%,#f5faff_48%,#dcecff_100%)] py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]"
+    >
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-accessible">
+            Learner stories
+          </p>
+          <h2
+            id={headingId}
+            className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl"
           >
             What our students say
           </h2>
