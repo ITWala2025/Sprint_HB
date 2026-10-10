@@ -14,7 +14,7 @@ describe("HeaderActions", () => {
   it("renders the Enroll Now link", () => {
     render(<HeaderActions />);
     const enrollLink = screen.getByRole("link", { name: /Enroll Now/i });
-    expect(enrollLink).toHaveAttribute("href", "/register");
+    expect(enrollLink).toHaveAttribute("href", "/student/enroll");
   });
 
   it("renders the UserRound icon with aria-hidden", () => {
