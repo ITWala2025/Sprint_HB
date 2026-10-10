@@ -10,7 +10,7 @@ import {
     Menu, Megaphone, PhoneCall, Search, School, ShieldAlert, ShieldCheck, UserCheck, Users,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { canAccessAdminRoute, type AdminPermissionMap } from "@/app/admin/authorization";
+import { canAccessAdminRoute, type AdminPermissionMap } from "@/app/admin/auth-types";
 import ForcePasswordChangeModal from "@/components/admin/auth/ForcePasswordChangeModal";
 
 type InitialProfile = {
