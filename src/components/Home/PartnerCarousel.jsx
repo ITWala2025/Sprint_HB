@@ -86,13 +86,17 @@ export default function PartnerCarousel() {
                 key={`${partner.id}-${i}`}
                 className="flex shrink-0 items-center pr-16 opacity-80"
               >
-                <Image
-                  src={partner.logoUrl}
-                  alt={`${partner.name} logo`}
-                  width={128}
-                  height={128}
-                  className={`object-contain ${frame ? frame.className : "size-32"}`}
-                />
+                <div
+                  className={`relative shrink-0 ${frame ? frame.className : "size-32"}`}
+                >
+                  <Image
+                    src={partner.logoUrl}
+                    alt={`${partner.name} logo`}
+                    fill
+                    sizes={`${frame?.width ?? LOGO_FRAME_HEIGHT}px`}
+                    className="object-contain"
+                  />
+                </div>
                 {/* <span className="whitespace-nowrap text-sm font-medium text-brand-text-secondary">
                 {partner.name}
               </span> */}

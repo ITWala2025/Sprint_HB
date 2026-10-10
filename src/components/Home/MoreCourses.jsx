@@ -17,13 +17,10 @@ const moreCourses = courses.filter((course) =>
  */
 export default function MoreCourses() {
   return (
-    <section className="sprint-section relative bg-brand-white py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]">
+    <section className="sprint-section relative bg-brand-white pt-6 pb-[2.1rem] md:pt-10 md:pb-[3.5rem] lg:pt-12 lg:pb-[4.375rem]">
       <div className="mx-auto max-w-[1200px] px-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
-              Learning pathways
-            </p>
             <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl">
               More learning paths
             </h2>

@@ -145,7 +145,6 @@ export const testimonials = [
     role: "BTech Graduate → SDE-1 at Orion Cloud",
     quote:
       "The mentors made hard concepts click. I had two offers before the program even ended.",
-    photoUrl: "/testimonials/ishaan-verma.jpg",
   },
   {
     id: "t2",
@@ -153,7 +152,6 @@ export const testimonials = [
     role: "MCA Graduate → Data Analyst at Falcon Data Labs",
     quote:
       "Live sessions with working engineers felt nothing like a recorded course. Genuinely different.",
-    photoUrl: "/testimonials/sneha-kulkarni.jpg",
   },
   {
     id: "t3",
@@ -161,7 +159,6 @@ export const testimonials = [
     role: "Career Switcher → Cloud Engineer at Vertex Systems",
     quote:
       "I switched from a non-tech background in eight months. The capstone project is what got me hired.",
-    photoUrl: "/testimonials/arjun-nair.jpg",
   },
   {
     id: "t4",
@@ -169,7 +166,6 @@ export const testimonials = [
     role: "Working Professional → Product Manager at Meridian Bank",
     quote:
       "I could learn around my job and still get direct feedback from industry mentors every week.",
-    photoUrl: "/testimonials/meera-pillai.jpg",
   },
   {
     id: "t5",
@@ -177,7 +173,6 @@ export const testimonials = [
     role: "BTech Graduate → SDE-2 at Harbor Robotics",
     quote:
       "The placement sprint alone was worth it — mock interviews with real hiring managers.",
-    photoUrl: "/testimonials/vikram-das.jpg",
   },
 ];
 

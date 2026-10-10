@@ -9,7 +9,7 @@ describe("Testimonials", () => {
     render(<Testimonials />);
 
     const track = screen.getByRole("region", {
-      name: /learner testimonials/i,
+      name: /student testimonials/i,
     });
 
     expect(
@@ -17,17 +17,18 @@ describe("Testimonials", () => {
     ).toBeInTheDocument();
     expect(track).toHaveClass("snap-x", "snap-mandatory", "overflow-x-auto");
     expect(track.querySelectorAll("article")).toHaveLength(testimonials.length);
-    expect(
-      screen.getByRole("button", { name: /previous testimonial/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /next testimonial/i }),
-    ).toBeInTheDocument();
-
+    expect(track.querySelectorAll("img")).toHaveLength(0);
     testimonials.forEach((testimonial) => {
       expect(screen.getByText(testimonial.name)).toBeInTheDocument();
       expect(screen.getByText(testimonial.role)).toBeInTheDocument();
-      expect(screen.getByText(`“${testimonial.quote}”`)).toBeInTheDocument();
+      expect(screen.getByText(testimonial.quote)).toBeInTheDocument();
+      const article = screen.getByText(testimonial.name).closest("article");
+      const initials = testimonial.name
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part[0])
+        .join("");
+      expect(article.querySelector(".rounded-full")).toHaveTextContent(initials);
     });
   });
 });

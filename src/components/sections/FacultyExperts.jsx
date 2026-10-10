@@ -10,11 +10,7 @@ export default function FacultyExperts({
     <section id="faculty" className={sectionClassName}>
       <div className={contentClassName}>
         <div className="max-w-2xl">
-          {eyebrow ? (
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
-              {eyebrow}
-            </p>
-          ) : null}
+          
           <h2
             className={`${eyebrow ? "mt-2 " : ""}text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl`}
           >
