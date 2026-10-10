@@ -22,6 +22,7 @@ const FOCUSED_ROUTES = [
   "/student/reset-password",
   "/student/password-reset-success",
   "/student/enroll",
+  "/staff",
 ];
 
 const matchesRoute = (pathname, routes) =>
