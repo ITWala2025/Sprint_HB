@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@supabase/ssr";
-import { canAccessAdminRoute, type AdminPermissionMap } from "@/app/admin/authorization";
+import { assertModuleAccess, canAccessAdminRoute, type AdminPermissionMap } from "@/app/admin/authorization";
 import UserDirectoryTable, { type DirectoryRole, type DirectoryUser } from "@/components/admin/users/UserDirectoryTable";
 
 export const metadata: Metadata = {
@@ -15,6 +15,8 @@ type ProfileRow = Omit<DirectoryUser, "roleName" | "roleColor"> & {
 };
 
 export default async function AdminUsersPage() {
+    await assertModuleAccess("user_management");
+
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
         ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
