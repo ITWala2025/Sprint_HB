@@ -73,7 +73,7 @@ export default function FeaturedProgram() {
   return (
     <section
       ref={sectionRef}
-      className="sprint-section relative isolate overflow-hidden bg-[linear-gradient(145deg,var(--color-brand-blue-light)_0%,#f5faff_48%,#dcecff_100%)] py-12 text-brand-navy sm:py-16 lg:py-20"
+      className="sprint-section relative isolate overflow-hidden bg-[linear-gradient(145deg,var(--color-brand-blue-light)_0%,#f5faff_48%,#dcecff_100%)] pt-8 pb-12 text-brand-navy sm:pt-12 sm:pb-16 lg:pt-16 lg:pb-20"
       aria-labelledby="featured-program-heading"
     >
       <div

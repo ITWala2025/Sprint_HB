@@ -44,10 +44,14 @@ export default function Testimonials() {
   const trackRef = useRef(null);
   const reducedMotionRef = useRef(false);
   const dragRef = useRef(null);
+  const activeVideoRef = useRef(null);
+  const videoElementsRef = useRef(new Map());
+  const videoRefCallbacksRef = useRef(new Map());
   const autoPauseRef = useRef({
     hovered: false,
     focused: false,
     touching: false,
+    videoPlaying: false,
   });
   const lastInteractionRef = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -57,6 +61,55 @@ export default function Testimonials() {
     canPrevious: false,
     canNext: false,
   });
+  const handleVideoPlay = (event) => {
+    const video = event.currentTarget;
+    const previousVideo = activeVideoRef.current;
+    if (previousVideo && previousVideo !== video) previousVideo.pause();
+    activeVideoRef.current = video;
+    autoPauseRef.current.videoPlaying = true;
+    lastInteractionRef.current = Date.now();
+  };
+  const handleVideoPause = (event) => {
+    if (activeVideoRef.current !== event.currentTarget) return;
+    activeVideoRef.current = null;
+    autoPauseRef.current.videoPlaying = false;
+    lastInteractionRef.current = Date.now();
+  };
+  const getVideoRef = (id) => {
+    if (!videoRefCallbacksRef.current.has(id)) {
+      videoRefCallbacksRef.current.set(id, (video) => {
+        if (video) {
+          videoElementsRef.current.set(id, video);
+          return;
+        }
+        const removedVideo = videoElementsRef.current.get(id);
+        if (removedVideo === activeVideoRef.current) {
+          removedVideo.pause();
+          activeVideoRef.current = null;
+          autoPauseRef.current.videoPlaying = false;
+        }
+        videoElementsRef.current.delete(id);
+      });
+    }
+    return videoRefCallbacksRef.current.get(id);
+  };
+  const pauseVideoIfOutOfView = useCallback(() => {
+    const video = activeVideoRef.current;
+    const track = trackRef.current;
+    if (!video || !track) return;
+    const card = video.closest("article");
+    if (!card) return;
+    const cardRect = card.getBoundingClientRect();
+    const trackRect = track.getBoundingClientRect();
+    if (
+      cardRect.right <= trackRect.left ||
+      cardRect.left >= trackRect.right ||
+      cardRect.bottom <= trackRect.top ||
+      cardRect.top >= trackRect.bottom
+    ) {
+      video.pause();
+    }
+  }, []);
   // Calculate navigation using actual card sizes and viewport width.
   const getMetrics = useCallback(() => {
     const track = trackRef.current;
@@ -117,7 +170,10 @@ export default function Testimonials() {
     let frame = 0;
     const scheduleUpdate = () => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(syncNavigation);
+      frame = requestAnimationFrame(() => {
+        syncNavigation();
+        pauseVideoIfOutOfView();
+      });
     };
     const observer = new ResizeObserver(scheduleUpdate);
     observer.observe(track);
@@ -131,7 +187,7 @@ export default function Testimonials() {
       observer.disconnect();
       track.removeEventListener("scroll", scheduleUpdate);
     };
-  }, [syncNavigation]);
+  }, [syncNavigation, pauseVideoIfOutOfView]);
   const goToPage = useCallback(
     (requestedPage) => {
       const metrics = getMetrics();
@@ -154,7 +210,7 @@ export default function Testimonials() {
       const paused = autoPauseRef.current;
       if (
         reducedMotionRef.current || document.hidden || paused.hovered ||
-        paused.focused || paused.touching || dragRef.current
+        paused.focused || paused.touching || paused.videoPlaying || dragRef.current
       ) {
         nextAdvanceAt = now + 6000;
         return;
@@ -170,6 +226,13 @@ export default function Testimonials() {
     }, 100);
     return () => window.clearInterval(interval);
   }, [navigation.pages, getMetrics, goToPage]);
+  useEffect(() => () => {
+    for (const video of videoElementsRef.current.values()) video.pause();
+    videoElementsRef.current.clear();
+    videoRefCallbacksRef.current.clear();
+    activeVideoRef.current = null;
+    autoPauseRef.current.videoPlaying = false;
+  }, []);
   const handleKeyDown = (event) => {
     lastInteractionRef.current = Date.now();
     switch (event.key) {
@@ -260,15 +323,20 @@ export default function Testimonials() {
         lastInteractionRef.current = Date.now();
       }}
       onKeyDownCapture={(event) => {
-        if (event.key === "Tab" || event.key.startsWith("Arrow")) {
+        if (
+          trackRef.current?.contains(event.target) &&
+          (event.key === "Tab" || event.key.startsWith("Arrow"))
+        ) {
           autoPauseRef.current.focused = true;
         }
       }}
       onFocusCapture={(event) => {
-        autoPauseRef.current.focused = event.target.matches(":focus-visible");
+        autoPauseRef.current.focused =
+          Boolean(trackRef.current?.contains(event.target)) &&
+          event.target.matches(":focus-visible");
       }}
       onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) {
+        if (!trackRef.current?.contains(event.relatedTarget)) {
           autoPauseRef.current.focused = false;
           lastInteractionRef.current = Date.now();
         }
@@ -336,25 +404,38 @@ export default function Testimonials() {
                 md:w-[calc((100%_-_24px)/2)]
                 lg:w-[calc((100%_-_48px)/3)]"
             >
-              <Quote
-                size={28}
-                strokeWidth={1.8}
-                aria-hidden="true"
-                className="shrink-0 text-brand-red"
-              />
-              <blockquote className="mt-5 flex-1">
-                <p className="text-base font-medium leading-7 text-brand-navy lg:text-lg lg:leading-8">
-                  {testimonial.quote}
-                </p>
-              </blockquote>
-              {testimonial.course && (
-                <div className="mt-6">
-                  <span className="inline-block rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
-                    {testimonial.course}
-                  </span>
+              {testimonial.type === "text" && (
+                <Quote
+                  size={28}
+                  strokeWidth={1.8}
+                  aria-hidden="true"
+                  className="shrink-0 text-brand-red"
+                />
+              )}
+              {testimonial.type === "video" && (
+                <div className="h-44 w-full overflow-hidden rounded-lg bg-[#011f3e] sm:h-36 md:h-40 lg:h-48">
+                  <video
+                    ref={getVideoRef(testimonial.id)}
+                    data-testimonial-video={testimonial.id}
+                    src={testimonial.videoUrl}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    onPlay={handleVideoPlay}
+                    onPause={handleVideoPause}
+                    onEnded={handleVideoPause}
+                    className="h-full w-full bg-[#011f3e] object-contain"
+                  />
                 </div>
               )}
-              <div className="mt-6 flex items-start gap-3 border-t border-slate-100 pt-5">
+              {testimonial.type === "text" && (
+                <blockquote className="mt-5 flex-1">
+                  <p className="text-base font-medium leading-7 text-brand-navy lg:text-lg lg:leading-8">
+                    {testimonial.quote}
+                  </p>
+                </blockquote>
+              )}
+              <div className="mt-auto flex min-h-[6.125rem] items-start gap-3 border-t border-slate-100 pt-5">
                 <StudentAvatar
                   name={testimonial.name}
                   photoUrl={testimonial.photoUrl}

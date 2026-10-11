@@ -136,44 +136,81 @@ export const featuredCourse = {
   courseUrl: "/courses/full-stack-engineering",
 };
 
-// Section 6.7 — Student Testimonials (4–6, text-based for now; videoUrl is
-// optional so a testimonial can be upgraded to video without a type change)
+/** @typedef {{ id: string, type: "text", name: string, role: string, quote: string, photoUrl: string }} TextTestimonial */
+/** @typedef {{ id: string, type: "video", name: string, role: string, videoUrl: string }} VideoTestimonial */
+/** @typedef {TextTestimonial | VideoTestimonial} Testimonial */
+
+// Section 6.7 — Student testimonials.
+/** @type {Testimonial[]} */
 export const testimonials = [
+  // EXAMPLE entries: replace each student detail with approved content.
+  {
+    id: "t6",
+    type: "video",
+    name: "Survesh",
+    role: "BTech Graduate ",
+    videoUrl: "/testimonials/testimonials1.mp4",
+  },
+  {
+    id: "t7",
+    type: "video",
+    name: "Myank Aman",
+    role: "BTech Graduate ",
+    videoUrl: "/testimonials/testimonials2.mp4",
+  },
+  {
+    id: "t8",
+    type: "video",
+    name: "Munda",
+    role: "BTech Graduate ",
+    videoUrl: "/testimonials/testimonials3.mp4",
+  },
   {
     id: "t1",
+    type: "text",
     name: "Ishaan Verma",
     role: "BTech Graduate → SDE-1 at Orion Cloud",
+    photoUrl: "",
     quote:
       "The mentors made hard concepts click. I had two offers before the program even ended.",
   },
   {
     id: "t2",
+    type: "text",
     name: "Sneha Kulkarni",
     role: "MCA Graduate → Data Analyst at Falcon Data Labs",
+    photoUrl: "",
     quote:
       "Live sessions with working engineers felt nothing like a recorded course. Genuinely different.",
   },
   {
     id: "t3",
+    type: "text",
     name: "Arjun Nair",
     role: "Career Switcher → Cloud Engineer at Vertex Systems",
+    photoUrl: "",
     quote:
       "I switched from a non-tech background in eight months. The capstone project is what got me hired.",
   },
   {
     id: "t4",
+    type: "text",
     name: "Meera Pillai",
     role: "Working Professional → Product Manager at Meridian Bank",
+    photoUrl: "",
     quote:
       "I could learn around my job and still get direct feedback from industry mentors every week.",
   },
   {
     id: "t5",
+    type: "text",
     name: "Vikram Das",
     role: "BTech Graduate → SDE-2 at Harbor Robotics",
+    photoUrl: "",
     quote:
       "The placement sprint alone was worth it — mock interviews with real hiring managers.",
   },
+  
 ];
 
 // Section 6.8 — FAQs

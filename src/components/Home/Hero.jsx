@@ -15,26 +15,26 @@ export default function Hero() {
   return (
     <section className="relative flex min-h-[80svh] flex-col overflow-hidden bg-brand-navy">
       <Image
-        src="/images/home/home-hero.jpg"
+        src="/images/home/home-hero.png"
         alt="Mentor guiding students working on a laptop at SPRINT"
         fill
         priority
         sizes="100vw"
-        className="object-cover object-right"
+        className="object-cover object-right brightness-90"
       />
 
       {/* Keep the copy on the existing navy field while letting the photo
           emerge gradually on the right. */}
       <div
-        className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/90 via-[40%] to-transparent to-[70%] md:from-brand-navy md:via-brand-navy/85 md:via-[40%] md:to-transparent md:to-[65%]"
+        className="absolute inset-0 bg-gradient-to-r from-brand-navy/30 via-brand-navy/15 via-[40%] to-transparent to-[70%] md:from-brand-navy/25 md:via-brand-navy/10 md:via-[40%] md:to-transparent md:to-[65%]"
         aria-hidden="true"
       />
       <div
-        className="absolute inset-0 bg-gradient-to-r from-brand-navy/95 via-brand-navy/80 via-[45%] to-brand-navy/70 md:hidden"
+        className="absolute inset-0 bg-gradient-to-r from-brand-navy/45 via-brand-navy/25 via-[45%] to-brand-navy/10 md:hidden"
         aria-hidden="true"
       />
       <div
-        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-brand-navy/80 via-brand-navy/20 to-transparent"
+        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-brand-navy/35 via-brand-navy/10 to-transparent"
         aria-hidden="true"
       />
 
