@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import AuthButton from "@/components/student/auth/AuthButton";
@@ -28,7 +29,40 @@ export default function EnrollmentStepFooter({
   skipLabel = "Skip for now",
   className = "",
 }) {
+  const [isSiteFooterVisible, setIsSiteFooterVisible] = useState(false);
   const label = submitLabel ?? (isLast ? "Submit Enrollment" : "Continue");
+
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+
+    const siteFooter = document.querySelector(".sprint-footer");
+    if (!siteFooter) return;
+
+    const mobileViewport = window.matchMedia("(max-width: 767px)");
+    let observer;
+    const updateObserver = () => {
+      observer?.disconnect();
+      observer = undefined;
+
+      if (!mobileViewport.matches) {
+        setIsSiteFooterVisible(false);
+        return;
+      }
+
+      observer = new IntersectionObserver(([entry]) => {
+        setIsSiteFooterVisible(entry.isIntersecting);
+      });
+      observer.observe(siteFooter);
+    };
+
+    updateObserver();
+    mobileViewport.addEventListener("change", updateObserver);
+
+    return () => {
+      observer?.disconnect();
+      mobileViewport.removeEventListener("change", updateObserver);
+    };
+  }, []);
 
   const backButton = isFirst ? null : (
     <AuthButton
@@ -50,7 +84,8 @@ export default function EnrollmentStepFooter({
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-30 border-t border-brand-border bg-brand-white/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur md:static md:inset-auto md:z-auto md:mt-6 md:bg-transparent md:px-0 md:pb-0 md:pt-5 md:backdrop-blur-none ${className}`}
+      aria-hidden={isSiteFooterVisible || undefined}
+      className={`${isSiteFooterVisible ? "invisible pointer-events-none" : ""} fixed inset-x-0 bottom-0 z-30 border-t border-brand-border bg-brand-white/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur md:static md:inset-auto md:z-auto md:mt-6 md:bg-transparent md:px-0 md:pb-0 md:pt-5 md:backdrop-blur-none md:visible md:pointer-events-auto ${className}`}
     >
       <p className="mb-2 text-center text-[11px] font-bold uppercase tracking-[0.14em] text-brand-text-muted md:hidden">
         Step {stepNumber} of {totalSteps}

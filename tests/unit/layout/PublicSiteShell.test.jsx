@@ -2,17 +2,21 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import PublicSiteShell from "@/components/layout/PublicSiteShell";
-
-const { pathnameRef } = vi.hoisted(() => ({ pathnameRef: { value: "/home" } }));
+const { pathnameRef, modalSegmentsRef } = vi.hoisted(() => ({
+  pathnameRef: { value: "/home" },
+  modalSegmentsRef: { value: [] },
+}));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => pathnameRef.value,
+  useSelectedLayoutSegments: () => modalSegmentsRef.value,
   useRouter: () => ({ push: vi.fn() }),
 }));
 
 describe("PublicSiteShell", () => {
   beforeEach(() => {
     pathnameRef.value = "/home";
+    modalSegmentsRef.value = [];
   });
 
   const renderShell = (modal = null) =>
@@ -57,6 +61,7 @@ describe("PublicSiteShell", () => {
 
   it("keeps the public page and chrome visible under an intercepted student modal", () => {
     pathnameRef.value = "/student/dashboard";
+    modalSegmentsRef.value = ["(.)student", "[...segments]"];
     renderShell(<section role="dialog">Student page modal</section>);
 
     expect(screen.getByRole("banner")).toBeInTheDocument();
@@ -65,12 +70,21 @@ describe("PublicSiteShell", () => {
     expect(screen.getByRole("dialog")).toHaveTextContent("Student page modal");
   });
 
+  it("keeps public chrome behind an intercepted enrollment route", () => {
+    pathnameRef.value = "/student/enroll";
+    modalSegmentsRef.value = ["(.)student", "[...segments]"];
+    renderShell(<section role="dialog">Enrollment modal</section>);
+
+    expect(screen.getByRole("banner")).toBeInTheDocument();
+    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toHaveTextContent("Enrollment modal");
+  });
+
   it.each([
     "/student/forgot-password",
     "/student/check-email",
     "/student/reset-password",
     "/student/password-reset-success",
-    "/student/enroll",
   ])("keeps %s free of public chrome", (pathname) => {
     pathnameRef.value = pathname;
     renderShell();
@@ -78,6 +92,14 @@ describe("PublicSiteShell", () => {
     const chrome = publicChrome();
     expect(chrome.header).not.toBeInTheDocument();
     expect(chrome.footer).not.toBeInTheDocument();
+  });
+
+  it("keeps the public header and footer on the full-page enrollment route", () => {
+    pathnameRef.value = "/student/enroll";
+    renderShell();
+
+    expect(screen.getByRole("banner")).toBeInTheDocument();
+    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
   });
 
   it("still shows the public chrome on portal dashboard routes", () => {

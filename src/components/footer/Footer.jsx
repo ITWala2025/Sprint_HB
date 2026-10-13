@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Linkedin, Mail, MapPin, Phone } from "lucide-react";
-import { FcElectronics, FcSettings, FcSimCard } from "react-icons/fc";
+import { Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import { BiLogoLinkedin } from "react-icons/bi";
 import { SiInstagram, SiYoutube } from "react-icons/si";
 
@@ -21,8 +20,8 @@ const exploreLinks = [
 ];
 
 const portalLinks = [
-  { label: "Student Login", href: "/student/login", outbound: true },
-  { label: "New Enrollment", href: "/student/enroll" },
+  { label: "Student Login", href: "/student/login" },
+  { label: "New Enrollment", href: "/student/enroll", fullPage: true },
   { label: "Scholarship Aid", href: "/courses#scholarship" },
 ];
 
@@ -37,12 +36,12 @@ const socialIcons = {
   youtube: { component: SiYoutube, color: "#ff0000" },
 };
 
-export default function Footer() {
+export default function Footer({ className = "" }) {
   const year = new Date().getFullYear();
 
   return (
     <footer
-      className="sprint-footer text-brand-off-white"
+      className={`sprint-footer text-brand-off-white ${className}`}
       style={{
         backgroundImage:
           "url('/images/header&footer/footer_background_img.png')",
@@ -85,12 +84,6 @@ export default function Footer() {
             Systems bridging the academic industry gap with job ready, execution
             first training.
           </p>
-          {/*
-          <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-brand-off-white/90">
-            <FcSettings className="size-4" aria-hidden="true" />
-            Verified Institutional Education Model
-          </p>
-          */}
           <ul className="mt-4 flex flex-wrap items-center gap-3 sm:mt-6">
             {siteConfig.socials.map((social) => {
               const socialIcon = socialIcons[social.icon] ?? {
@@ -144,19 +137,19 @@ export default function Footer() {
             Portals
           </h2>
           <ul className="mt-3 space-y-1 sm:mt-5">
-            {portalLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-1.5 text-sm text-brand-off-white/75 transition-colors hover:text-white lg:min-h-0 lg:min-w-0"
-                >
-                  {link.label}
-                  {link.outbound && (
-                    <ArrowUpRight className="size-3.5" aria-hidden="true" />
-                  )}
-                </Link>
-              </li>
-            ))}
+            {portalLinks.map((link) => {
+              const PortalLink = link.fullPage ? "a" : Link;
+              return (
+                <li key={link.href}>
+                  <PortalLink
+                    href={link.href}
+                    className="sprint-focus inline-flex min-h-11 min-w-11 items-center gap-1.5 text-sm text-brand-off-white/75 transition-colors hover:text-white lg:min-h-0 lg:min-w-0"
+                  >
+                    {link.label}
+                  </PortalLink>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 

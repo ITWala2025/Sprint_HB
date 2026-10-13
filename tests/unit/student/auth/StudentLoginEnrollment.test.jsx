@@ -20,13 +20,14 @@ describe("StudentLoginPage enrollment actions", () => {
     getUser.mockClear();
   });
 
-  it("sends both Enroll Now links to the enrollment page", () => {
+  it("navigates directly to enrollment instead of opening its intercepted modal", () => {
     render(<StudentLoginPage />);
 
     const enrollLinks = screen.getAllByRole("link", { name: /enroll now/i });
     expect(enrollLinks).toHaveLength(2);
     enrollLinks.forEach((link) => {
       expect(link).toHaveAttribute("href", "/student/enroll");
+      expect(link.tagName).toBe("A");
     });
   });
 

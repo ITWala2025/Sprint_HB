@@ -234,13 +234,13 @@ export default function StudentLoginPage({ isModal = false }) {
             <div className="student-login-top-link">
               <span>Don't have an account?</span>
 
-              <Link
+              <a
                 href="/student/enroll"
                 className="student-login-top-enroll"
               >
                 Enroll Now
                 <ArrowRight size={14} strokeWidth={2} />
-              </Link>
+              </a>
             </div>
 
             {/* Heading */}
@@ -421,12 +421,12 @@ export default function StudentLoginPage({ isModal = false }) {
             <p className="student-login-enroll">
               Don't have a SPRINT account?
 
-              <Link
+              <a
                 href="/student/enroll"
                 className="student-login-enroll-btn"
               >
                 Enroll Now
-              </Link>
+              </a>
             </p>
 
             {/* Security */}

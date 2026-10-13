@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSelectedLayoutSegments } from "next/navigation";
 import Header from "@/components/header/Header";
 import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";
 import Footer from "@/components/footer/Footer";
@@ -8,10 +8,9 @@ import AiAssistant from "@/components/ai/AiAssistant";
 import { StudentRouteModalProvider } from "@/components/student/StudentRouteModalContext";
 
 /**
- * Routes that render their own full-screen chrome: the Student Portal auth
- * screens (often opened from an emailed link) and the enrollment wizard, which
- * are focused tasks rather than marketing pages. Direct loads skip public
- * chrome; intercepted student-route modals preserve the public page underneath.
+ * Routes that render their own full-screen chrome: Student Portal auth screens
+ * (often opened from an emailed link). Intercepted student-route modals preserve
+ * the public page underneath.
  */
 const FOCUSED_ROUTES = [
   "/login",
@@ -22,7 +21,6 @@ const FOCUSED_ROUTES = [
   "/student/check-email",
   "/student/reset-password",
   "/student/password-reset-success",
-  "/student/enroll",
   "/staff",
 ];
 
@@ -33,10 +31,15 @@ const matchesRoute = (pathname, routes) =>
 
 export default function PublicSiteShell({ children, modal }) {
   const pathname = usePathname();
+  const modalSegments = useSelectedLayoutSegments("modal");
 
   const isAdminRoute = pathname.startsWith("/admin");
   const isFocusedRoute = matchesRoute(pathname, FOCUSED_ROUTES);
-  const showPublicChrome = Boolean(modal) || (!isAdminRoute && !isFocusedRoute);
+  const hasInterceptedModal = modalSegments.some(
+    (segment) => segment !== "__DEFAULT__",
+  );
+  const showPublicChrome =
+    hasInterceptedModal || (!isAdminRoute && !isFocusedRoute);
 
   return (
     <StudentRouteModalProvider pathname={pathname}>
@@ -45,7 +48,13 @@ export default function PublicSiteShell({ children, modal }) {
 
       {showPublicChrome && <ConditionalCampusNewsTicker />}
       <main id="main">{children}</main>
-      {showPublicChrome && <Footer />}
+      {showPublicChrome && (
+        <Footer
+          className={
+            pathname === "/student/enroll" ? "pb-40 md:pb-0" : undefined
+          }
+        />
+      )}
       {modal}
 
       {showPublicChrome && (
