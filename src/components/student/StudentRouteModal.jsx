@@ -20,18 +20,18 @@ export default function StudentRouteModal({
   contentClassName = "student-route-modal-content",
 }) {
   const router = useRouter();
-  const { historyDepth } = useContext(StudentRouteModalContext);
+  const { backgroundPath } = useContext(StudentRouteModalContext);
   const dialogRef = useRef(null);
   const closeButtonRef = useRef(null);
   const previousFocusRef = useRef(null);
   const closeModal = useCallback(() => {
-    if (historyDepth > 0) {
-      window.history.go(-historyDepth);
+    if (backgroundPath) {
+      window.location.assign(backgroundPath);
       return;
     }
 
     router.back();
-  }, [historyDepth, router]);
+  }, [backgroundPath, router]);
 
   useEffect(() => {
     previousFocusRef.current = document.activeElement;

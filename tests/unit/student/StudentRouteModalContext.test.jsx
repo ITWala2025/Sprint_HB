@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   cleanup,
   fireEvent,
@@ -14,7 +14,9 @@ import {
   StudentRouteModalProvider,
 } from "@/components/student/StudentRouteModalContext";
 
-const { back } = vi.hoisted(() => ({ back: vi.fn() }));
+const { back } = vi.hoisted(() => ({
+  back: vi.fn(),
+}));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ back }),
@@ -41,47 +43,68 @@ function renderStudentFlow(pathname) {
 }
 
 describe("StudentRouteModal close navigation", () => {
-  let historyGo;
+  const locationDescriptor = Object.getOwnPropertyDescriptor(window, "location");
+  const assign = vi.fn();
+
+  beforeEach(() => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: { assign },
+    });
+  });
 
   afterEach(() => {
     cleanup();
     back.mockClear();
-    historyGo?.mockRestore();
+    assign.mockClear();
+    Object.defineProperty(window, "location", locationDescriptor);
   });
 
-  it("closes all nested student routes to the original public page", async () => {
-    historyGo = vi.spyOn(window.history, "go").mockImplementation(() => {});
-    const { rerender } = renderStudentFlow("/home");
+  it.each(["close button", "Escape", "backdrop"])(
+    "closes all nested student routes to the original public page via %s",
+    async (dismissal) => {
+      const { rerender } = renderStudentFlow("/home");
 
-    rerender(
-      <StudentRouteModalProvider pathname="/student/login">
-        <StudentRouteModal title="Student Portal">
-          <p>Student content</p>
-        </StudentRouteModal>
-        <HistoryDepth />
-      </StudentRouteModalProvider>,
-    );
-    rerender(
-      <StudentRouteModalProvider pathname="/student/forgot-password">
-        <StudentRouteModal title="Student Portal">
-          <p>Student content</p>
-        </StudentRouteModal>
-        <HistoryDepth />
-      </StudentRouteModalProvider>,
-    );
+      rerender(
+        <StudentRouteModalProvider pathname="/student/login">
+          <StudentRouteModal title="Student Portal">
+            <p>Student content</p>
+          </StudentRouteModal>
+          <HistoryDepth />
+        </StudentRouteModalProvider>,
+      );
+      rerender(
+        <StudentRouteModalProvider pathname="/student/forgot-password">
+          <StudentRouteModal title="Student Portal">
+            <p>Student content</p>
+          </StudentRouteModal>
+          <HistoryDepth />
+        </StudentRouteModalProvider>,
+      );
 
-    await waitFor(() =>
-      expect(screen.getByTestId("modal-navigation")).toHaveTextContent(
-        "/home|2",
-      ),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Close student page" }));
+      await waitFor(() =>
+        expect(screen.getByTestId("modal-navigation")).toHaveTextContent(
+          "/home|2",
+        ),
+      );
+      if (dismissal === "close button") {
+        fireEvent.click(
+          screen.getByRole("button", { name: "Close student page" }),
+        );
+      } else if (dismissal === "Escape") {
+        fireEvent.keyDown(document, { key: "Escape" });
+      } else {
+        fireEvent.mouseDown(
+          document.querySelector(".student-route-modal-backdrop"),
+        );
+      }
 
-    expect(historyGo).toHaveBeenCalledWith(-2);
-  });
+      expect(assign).toHaveBeenCalledWith("/home");
+      expect(back).not.toHaveBeenCalled();
+    },
+  );
 
   it("closes only the current student page after back navigation", async () => {
-    historyGo = vi.spyOn(window.history, "go").mockImplementation(() => {});
     const { rerender } = renderStudentFlow("/home");
 
     rerender(
@@ -122,6 +145,6 @@ describe("StudentRouteModal close navigation", () => {
       ),
     );
     fireEvent.click(screen.getByRole("button", { name: "Close student page" }));
-    expect(historyGo).toHaveBeenCalledWith(-1);
+    expect(assign).toHaveBeenCalledWith("/home");
   });
 });
