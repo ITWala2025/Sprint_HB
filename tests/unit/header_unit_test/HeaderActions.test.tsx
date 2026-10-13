@@ -1,14 +1,16 @@
 import { describe, it, expect } from "vitest";
-import { render, screen, cleanup, within } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import HeaderActions from "@/components/header/HeaderActions";
 
 describe("HeaderActions", () => {
   afterEach(() => cleanup());
 
-  it("renders the Student Portal link", () => {
+  it("renders the Student Portal modal route", () => {
     render(<HeaderActions />);
-    const studentLink = screen.getByRole("link", { name: /Student Portal/i });
-    expect(studentLink).toHaveAttribute("href", "/student/login");
+    expect(screen.getByRole("link", { name: /Student Portal/i })).toHaveAttribute(
+      "href",
+      "/student/login",
+    );
   });
 
   it("renders the Enroll Now link", () => {

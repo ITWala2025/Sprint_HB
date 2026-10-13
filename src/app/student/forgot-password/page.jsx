@@ -13,10 +13,11 @@ import { createClient } from "@/lib/supabase/client";
 
 import "./forgot-password.css";
 
-export default function ForgotPasswordPage() {
+export default function ForgotPasswordPage({ isModal = false }) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const PageContainer = isModal ? "div" : "main";
 
   useEffect(() => {
     document.body.classList.add("student-auth-page");
@@ -98,7 +99,9 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="student-forgot-page">
+    <PageContainer
+      className={`student-forgot-page ${isModal ? "student-forgot-page--modal" : ""}`}
+    >
       <section
         className="student-forgot-card"
         aria-label="SPRINT Password Recovery"
@@ -197,7 +200,7 @@ export default function ForgotPasswordPage() {
                     }}
                     placeholder="Enter your registered email"
                     autoComplete="email"
-                    autoFocus
+                    autoFocus={!isModal}
                     disabled={loading}
                   />
                 </div>
@@ -253,6 +256,6 @@ export default function ForgotPasswordPage() {
           </div>
         </section>
       </section>
-    </main>
+    </PageContainer>
   );
 }

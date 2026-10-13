@@ -575,7 +575,7 @@ export default function ResetPasswordPage() {
                   </p>
 
                   <Link
-                    href="/forgot-password"
+                    href="/student/forgot-password"
                     className="student-reset-resend-link"
                   >
                     <Mail size={16} strokeWidth={1.9} aria-hidden="true" />
@@ -583,7 +583,7 @@ export default function ResetPasswordPage() {
                   </Link>
 
                   <Link
-                    href="/login"
+                    href="/student/login"
                     className="student-reset-resend-back"
                   >
                     Back to Sign In

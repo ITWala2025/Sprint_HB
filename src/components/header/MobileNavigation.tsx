@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { ArrowRight, Menu, UserRound, X } from "lucide-react";
 
 interface MobileNavigationProps {
   pathname: string;
@@ -50,11 +50,24 @@ export default function MobileNavigation({
     href === "/home" ? pathname === "/home" : pathname.startsWith(href);
 
   return (
-    <div className="shrink-0 lg:hidden">
-      <div className="flex shrink-0 items-center gap-2">
+    <div className="min-w-0 shrink-0 lg:hidden">
+      <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+        {!isAdmin ? (
+          <Link
+            href="/student/login"
+            aria-label="Student Portal"
+            title="Student Portal"
+            className="sprint-focus inline-flex size-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-brand-border bg-white text-sm font-semibold text-brand-navy shadow-sm transition-colors hover:bg-brand-surface min-[480px]:w-auto min-[480px]:px-3"
+          >
+            <UserRound className="size-5" aria-hidden="true" />
+            <span className="hidden min-[480px]:inline">Student Portal</span>
+          </Link>
+        ) : null}
         <Link
           href={isAdmin ? "/admin/dashboard" : "/student/enroll"}
-          className={`sprint-focus min-h-11 rounded-lg px-4 py-2.5 text-sm font-semibold text-white ${
+          aria-label={isAdmin ? "Admin dashboard" : "Enroll Now"}
+          title={isAdmin ? "Admin dashboard" : "Enroll Now"}
+          className={`sprint-focus inline-flex min-h-10 shrink-0 items-center justify-center gap-1 rounded-xl px-3 py-2 text-sm font-bold text-white shadow-sm ${
             isAdmin
               ? "bg-brand-navy"
               : accessibleBrandRed
@@ -62,7 +75,15 @@ export default function MobileNavigation({
                 : "bg-brand-red"
           }`}
         >
-          {isAdmin ? "Admin" : "Enroll"}
+          {isAdmin ? (
+            "Admin"
+          ) : (
+            <>
+              <span className="min-[420px]:hidden">Enroll</span>
+              <span className="hidden min-[420px]:inline">Enroll Now</span>
+            </>
+          )}
+          {!isAdmin ? <ArrowRight className="size-4" aria-hidden="true" /> : null}
         </Link>
         <button
           type="button"
@@ -70,7 +91,7 @@ export default function MobileNavigation({
           aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={isOpen}
           aria-controls="mobile-navigation"
-          className="sprint-focus flex h-11 w-11 items-center justify-center rounded-lg border border-brand-border text-brand-navy"
+          className="sprint-focus flex size-10 shrink-0 items-center justify-center rounded-xl border border-brand-border bg-white text-brand-navy shadow-sm"
         >
           {isOpen ? (
             <X className="size-5" aria-hidden="true" />
@@ -115,26 +136,7 @@ export default function MobileNavigation({
                 >
                   Go to Dashboard
                 </Link>
-              ) : (
-                <>
-                  <Link
-                    href="/student/login"
-                    onClick={() => setIsOpen(false)}
-                    className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-surface"
-                  >
-                    Student Portal
-                  </Link>
-                  <Link
-                    href="/student/enroll"
-                    onClick={() => setIsOpen(false)}
-                    className={`mt-2 block rounded-lg px-4 py-3 text-center text-sm font-semibold text-white ${
-                      accessibleBrandRed ? "bg-brand-red-accessible" : "bg-brand-red"
-                    }`}
-                  >
-                    Enroll Now
-                  </Link>
-                </>
-              )}
+              ) : null}
             </div>
           </nav>
         </div>

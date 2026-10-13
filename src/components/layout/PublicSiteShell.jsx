@@ -9,8 +9,8 @@ import AiAssistant from "@/components/ai/AiAssistant";
 /**
  * Routes that render their own full-screen chrome: the Student Portal auth
  * screens (often opened from an emailed link) and the enrollment wizard, which
- * is a focused task rather than a marketing page. All of them skip the public
- * header, campus ticker, footer and floating WhatsApp bubble.
+ * are focused tasks rather than marketing pages. Direct loads skip public
+ * chrome; intercepted student-route modals preserve the public page underneath.
  */
 const FOCUSED_ROUTES = [
   "/login",
@@ -30,12 +30,12 @@ const matchesRoute = (pathname, routes) =>
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
-export default function PublicSiteShell({ children }) {
+export default function PublicSiteShell({ children, modal }) {
   const pathname = usePathname();
 
   const isAdminRoute = pathname.startsWith("/admin");
   const isFocusedRoute = matchesRoute(pathname, FOCUSED_ROUTES);
-  const showPublicChrome = !isAdminRoute && !isFocusedRoute;
+  const showPublicChrome = Boolean(modal) || (!isAdminRoute && !isFocusedRoute);
 
   return (
     <>
@@ -44,6 +44,7 @@ export default function PublicSiteShell({ children }) {
       {showPublicChrome && <ConditionalCampusNewsTicker />}
       <main id="main">{children}</main>
       {showPublicChrome && <Footer />}
+      {modal}
 
       {showPublicChrome && (
         <a

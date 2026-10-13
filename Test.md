@@ -491,3 +491,28 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - New [tests/unit/courses/CourseCatalogue.test.jsx](tests/unit/courses/CourseCatalogue.test.jsx) verifies query arguments, card rendering and detail link for a database course, live category/level/audience filtering, and local fallback on an empty response.
 - Focused run: `npx vitest run --config tests/vitest.config.mjs tests/unit/courses/CourseCatalogue.test.jsx --pool=threads --maxWorkers=1` — **Passed**, 2 tests.
 - Combined course suites — **Passed**, 5 tests; `npx tsc --noEmit`, `npm run build`, and `git diff --check` also passed.
+
+## 37. Student Portal Header Modal — 2026-10-13
+
+- Updated the desktop and mobile header tests for the Student Portal modal action; added route-shell tests for focused student pages that do not render the public header.
+- The modal is viewport-constrained with no inner scrollbar. Browser checks confirmed all sign-in controls fit at 390x844 mobile and 1024x587 desktop sizes.
+- Focused run: `npx vitest run --config tests/vitest.config.mjs tests/unit/header_unit_test/Header.test.tsx tests/unit/header_unit_test/HeaderActions.test.tsx tests/unit/header_unit_test/MobileNavigation.test.tsx tests/unit/student/StudentPortalRouteShell.test.tsx` — **Passed**, 4 files / 48 tests.
+- `npx tsc --noEmit`, `npm run build`, and `git diff --check` — **Passed**.
+- Wider student suite: 19 files — 18 passed, 1 failed; 189 tests passed, 1 failed. The unrelated failing `EnrollmentWizard` test expected a “City” summary label that was not present.
+
+## 38. Student Login Enrollment Routing — 2026-10-13
+
+- Updated both Student Portal login-page **Enroll Now** actions to link to `/student/enroll`, the same destination used by the header CTA.
+- Removed the old Create Account signup modal, its stylesheet, and its modal-specific tests. Added focused tests asserting the shared route and absence of the former signup fields/dialog.
+- Marked the old sign-up page specification as retired in `docs/md/Student_Portal.md`.
+- Focused auth/header run — **Passed**, 5 files / 55 tests. Student route-integrity and login-enrollment checks — **Passed**, 2 files / 8 tests.
+- `npx tsc --noEmit`, `npm run build`, and `git diff --check` — **Passed**.
+
+## 39. Student Route Modals and Mobile Header Actions — 2026-10-13
+
+- Added an intercepted modal route for every `/student/*` page. In-app navigation shows that page over the previous page; close, Escape, and backdrop return to the previous URL. Direct loads remain standalone.
+- Improved mobile header quick actions for Student Portal and Enroll Now, with accessible names and labels that expand when screen width allows. Removed the duplicate enrollment CTA from the expanded menu.
+- Tests cover route mapping for every student page, modal dismissal, public shell preservation, and mobile CTA layout/visibility.
+- Browser check at 390px — opening `/student/enroll` displayed its modal over the public page; Escape returned to `/home`; no horizontal overflow.
+- Focused route/header suites — **Passed**, 62 tests. `npx tsc --noEmit`, `npm run build`, and `git diff --check` — **Passed**.
+- Wider student suite — 190 passed, 1 failed; the unrelated `EnrollmentWizard` summary-label test expects “City”, which is absent.

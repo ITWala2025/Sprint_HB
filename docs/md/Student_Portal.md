@@ -1,4 +1,14 @@
-# SPRINT Student Portal --- Sign Up Page UI Specification
+# SPRINT Student Portal --- Retired Sign Up Page UI Specification
+
+> **Retired:** This specification describes the former sign-up form opened from
+> the Student Portal login page. That form has been removed. Both **Enroll Now**
+> links on the login page now navigate to the current enrollment flow at
+> `/student/enroll`. Do not use the sign-up form described below as the active
+> product behavior.
+>
+> Student routes open in an intercepted modal when reached through in-app
+> navigation from a public page. Direct URL visits continue to render the
+> standalone student page.
 
 ## 1. Page Overview
 

@@ -86,9 +86,14 @@ The right side of the desktop Header should contain the primary user actions.
 
 ### 4.1 Student Portal
 
-Provide a secondary navigation action for students.
+Provide a secondary action that opens the Student Portal sign-in screen in a
+modal over the current page. The URL changes to `/student/login`; closing the
+modal with its close button, Escape, or the backdrop returns to the previous
+page. The sign-in controls fit within the viewport without an inner scrollbar,
+and the mobile layout hides the decorative image while keeping the form and
+close control visible.
 
-**Route:**
+The sign-in route remains available for direct visits:
 
 ```text
 /student/login
@@ -123,12 +128,11 @@ md:hidden
 The mobile Header should provide:
 
 * Brand/logo area
+* Student Portal quick action
 * Enrollment quick action
 * Menu toggle
 * Navigation drawer/menu
-* Student Login
-* Admin Console
-* Enrollment CTA
+* Admin Console action for administrative users
 
 ---
 
@@ -169,11 +173,12 @@ The mobile navigation should provide access to all primary routes:
 4. Updates
 5. Contact
 
-It should also provide quick-access links for:
+Student Portal and Enroll Now are always available as separate top-bar actions.
+The drawer provides the primary site links and admin action without duplicating
+the enrollment CTA.
 
-* Student Login
-* Admin Console
-* Enrollment
+The Student Portal action opens its route in a modal when navigating from
+another page. Direct loads still render the standalone login page.
 
 ### Recommended Routes
 
@@ -183,11 +188,13 @@ Courses         → /courses
 About Us        → /about
 Updates         → /updates
 Contact         → /contact
-Student Login   → /student/login
+Student Portal  → /student/login (intercepted as a modal)
 Admin Console   → /admin
 ```
 
 The exact Admin Console route should be updated if the project uses a different route.
+The modal pattern also applies to every student page under `/student`, while a
+direct page load continues to show its standalone route view.
 
 ---
 

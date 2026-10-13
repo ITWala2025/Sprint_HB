@@ -13,11 +13,10 @@ import {
 
 import { createClient } from "@/lib/supabase/client";
 import { consumeStudentSignOutFlag } from "@/components/student/student-session";
-import SignupModal from "@/components/student/auth/SignupModal";
 
 import "./login.css";
 
-export default function StudentLoginPage() {
+export default function StudentLoginPage({ isModal = false }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
@@ -25,8 +24,8 @@ export default function StudentLoginPage() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [signedOutNotice, setSignedOutNotice] = useState("");
+  const PageContainer = isModal ? "div" : "main";
 
   useEffect(() => {
     document.body.classList.add("student-auth-page");
@@ -49,8 +48,8 @@ export default function StudentLoginPage() {
 
   /*
    * Seamless portal entry: when an already-signed-in student opens the Sign In
-   * page (e.g. via the "Student Portal" header button) they are sent straight
-   * to the dashboard. Any other session is cleared so the form stays usable.
+   * page (including from the header modal) they are sent straight to the
+   * dashboard. Any other session is cleared so the form stays usable.
    * The middleware performs this redirect server-side; this is the client-side
    * fallback for transitions that never hit the network.
    */
@@ -192,7 +191,9 @@ export default function StudentLoginPage() {
   };
 
   return (
-    <main className="student-login-page">
+    <PageContainer
+      className={`student-login-page ${isModal ? "student-login-page--modal" : ""}`}
+    >
       <section
         className="student-login-card"
         aria-label="SPRINT Student Portal Login"
@@ -233,15 +234,13 @@ export default function StudentLoginPage() {
             <div className="student-login-top-link">
               <span>Don't have an account?</span>
 
-              <button
-                type="button"
+              <Link
+                href="/student/enroll"
                 className="student-login-top-enroll"
-                onClick={() => setIsSignupOpen(true)}
-                disabled={loading}
               >
                 Enroll Now
                 <ArrowRight size={14} strokeWidth={2} />
-              </button>
+              </Link>
             </div>
 
             {/* Heading */}
@@ -366,7 +365,7 @@ export default function StudentLoginPage() {
                   <span>Remember me</span>
                 </label>
 
-                <Link href="/forgot-password">
+                <Link href="/student/forgot-password">
                   Forgot Password?
                 </Link>
               </div>
@@ -422,14 +421,12 @@ export default function StudentLoginPage() {
             <p className="student-login-enroll">
               Don't have a SPRINT account?
 
-              <button
-                type="button"
+              <Link
+                href="/student/enroll"
                 className="student-login-enroll-btn"
-                onClick={() => setIsSignupOpen(true)}
-                disabled={loading}
               >
                 Enroll Now
-              </button>
+              </Link>
             </p>
 
             {/* Security */}
@@ -454,11 +451,6 @@ export default function StudentLoginPage() {
         </section>
       </section>
 
-      {/* Signup opens as a modal on top of Sign In — no separate route. */}
-      <SignupModal
-        isOpen={isSignupOpen}
-        onClose={() => setIsSignupOpen(false)}
-      />
-    </main>
+    </PageContainer>
   );
 }

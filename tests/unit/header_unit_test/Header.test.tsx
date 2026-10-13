@@ -19,7 +19,7 @@ describe("Header", () => {
     render(<Header />);
     expect(screen.getByLabelText(/SPRINT Institutional Hub Home/i)).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: "Main navigation" })).toBeInTheDocument();
-    expect(screen.getByText("Student Portal")).toBeInTheDocument();
+    expect(screen.getAllByText("Student Portal").length).toBeGreaterThan(0);
     expect(screen.getByRole("button", { name: "Open navigation menu" })).toBeInTheDocument();
   });
 
@@ -87,5 +87,13 @@ describe("Header", () => {
 
     fireEvent.click(toggleButton);
     expect(screen.getByRole("button", { name: "Open navigation menu" })).toBeInTheDocument();
+  });
+
+  it("links to the Student Portal route intercepted as a modal", () => {
+    render(<Header />);
+
+    screen
+      .getAllByRole("link", { name: "Student Portal" })
+      .forEach((link) => expect(link).toHaveAttribute("href", "/student/login"));
   });
 });

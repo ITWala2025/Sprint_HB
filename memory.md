@@ -583,3 +583,24 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - `src/components/admin/roles/CreateUserModal.tsx` supplies a cryptographically generated 12-character temporary password and lets an admin regenerate or reveal it. After success, the dialog displays the email, temporary password, and a generated, single-use magic login URL.
 - The magic URL is returned to and displayed in the admin UI for sharing; it is not emailed automatically. No SMTP dispatch is configured in this flow.
 - On success, the action revalidates `/admin/users`. Validation passed `npx tsc --noEmit`, the focused `CreateUserModal` Vitest tests (2 tests), and `git diff --check`.
+
+## 48. Student Portal Header Modal — 2026-10-13
+
+- Desktop and mobile `Student Portal` actions now open the existing `/student/login` screen in a modal without changing the current route. The login route remains available for direct visits.
+- Added a close button, Escape and backdrop dismissal, focus handling, and background scroll locking. The dialog fits within the viewport without an inner scrollbar; its mobile treatment is a compact single-column form.
+- Added the same entry point to focused student auth and enrollment pages that hide the public header. Student portal pages continue to use the public header action.
+- Focused header/route-shell tests cover opening and closing the modal, mobile navigation, and every headerless student route; viewport checks confirm the dialog fits on 390x844 mobile and 1024x587 desktop. Validation passed 48 focused tests, `npx tsc --noEmit`, and `npm run build`. The full student suite had one unrelated `EnrollmentWizard` failure asserting a missing “City” summary label (189 passed, 1 failed).
+
+## 49. Student Login Enrollment Routing — 2026-10-13
+
+- Both **Enroll Now** links on `/student/login` now navigate to `/student/enroll`, matching the header enrollment CTA.
+- Removed the old Create Account sign-up modal, its styling and its tests. The sign-up form specification is marked retired in [docs/md/Student_Portal.md](docs/md/Student_Portal.md).
+- Added student login tests confirming both enrollment links share the header route and the removed account creation form is not rendered.
+
+## 50. Student Route Modals and Mobile Header Actions — 2026-10-13
+
+- Added a Next.js intercepted route slot for all pages under `/student`. Client navigation presents each route over the previous page with a close button, Escape/backdrop dismissal, focus trapping, and scroll locking; the URL is shareable and direct visits still render the normal standalone page.
+- The mobile header now shows compact Student Portal and Enroll Now actions alongside the menu button, expanding both labels when there is room. Removed the duplicate Enroll Now CTA from the opened navigation drawer.
+- Added route integrity coverage for every student page, modal dismissal tests, shell tests for keeping public chrome behind the modal, and updated mobile header tests.
+- Browser checks passed at 390px, including opening `/student/enroll` over the public page and returning to `/home` with Escape; no horizontal overflow was observed.
+- Validation: focused route/header suites passed (62 tests), `npx tsc --noEmit`, and `npm run build`. The wider student suite still has the unrelated `EnrollmentWizard` “City” summary-label failure (190 passed, 1 failed).

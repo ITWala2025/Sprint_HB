@@ -1,5 +1,12 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  cleanup,
+  within,
+} from "@testing-library/react";
 import MobileNavigation from "@/components/header/MobileNavigation";
 
 describe("MobileNavigation", () => {
@@ -24,9 +31,9 @@ describe("MobileNavigation", () => {
   describe("rendering", () => {
     it("renders an Enroll link", () => {
       renderWithProps();
-      expect(screen.getByRole("link", { name: "Enroll" })).toHaveAttribute(
+      expect(screen.getByRole("link", { name: "Enroll Now" })).toHaveAttribute(
         "href",
-        "/register",
+        "/student/enroll",
       );
     });
 
@@ -46,24 +53,24 @@ describe("MobileNavigation", () => {
 
     it("sets aria-expanded to false when menu is closed", () => {
       renderWithProps();
-      expect(screen.getByRole("button")).toHaveAttribute("aria-expanded", "false");
+      expect(screen.getByRole("button", { name: "Open navigation menu" })).toHaveAttribute("aria-expanded", "false");
     });
 
     it("sets aria-expanded to true when menu is open", () => {
       renderWithProps({ isOpen: true });
-      expect(screen.getByRole("button")).toHaveAttribute("aria-expanded", "true");
+      expect(screen.getByRole("button", { name: "Close navigation menu" })).toHaveAttribute("aria-expanded", "true");
     });
 
     it("sets aria-controls to mobile-navigation", () => {
       renderWithProps();
-      expect(screen.getByRole("button")).toHaveAttribute("aria-controls", "mobile-navigation");
+      expect(screen.getByRole("button", { name: "Open navigation menu" })).toHaveAttribute("aria-controls", "mobile-navigation");
     });
   });
 
   describe("icon display", () => {
     it("renders Menu icon when closed", () => {
       renderWithProps();
-      const button = screen.getByRole("button");
+      const button = screen.getByRole("button", { name: "Open navigation menu" });
       const svg = button.querySelector("svg");
       expect(svg).not.toBeNull();
       expect(svg).toHaveClass("lucide-menu");
@@ -71,7 +78,7 @@ describe("MobileNavigation", () => {
 
     it("renders X icon when open", () => {
       renderWithProps({ isOpen: true });
-      const button = screen.getByRole("button");
+      const button = screen.getByRole("button", { name: "Close navigation menu" });
       const svg = button.querySelector("svg");
       expect(svg).not.toBeNull();
       expect(svg).toHaveClass("lucide-x");
@@ -94,7 +101,7 @@ describe("MobileNavigation", () => {
     it("renders all navigation links in the drawer", () => {
       renderWithProps({ isOpen: true });
       const links = screen.getAllByRole("link");
-      expect(links.length).toBeGreaterThanOrEqual(5);
+      expect(links.length).toBeGreaterThanOrEqual(4);
     });
   });
 
@@ -107,16 +114,17 @@ describe("MobileNavigation", () => {
       expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
     });
 
-    it("renders Student Portal and Enroll Now links in the drawer", () => {
+    it("renders Student Portal and Enroll quick actions in the header", () => {
       renderWithProps({ isOpen: true });
       expect(screen.getByRole("link", { name: /Student Portal/i })).toHaveAttribute(
         "href",
         "/student/login",
       );
-      expect(screen.getByRole("link", { name: /Enroll Now/i })).toHaveAttribute(
+      expect(screen.getByRole("link", { name: "Enroll Now" })).toHaveAttribute(
         "href",
-        "/register",
+        "/student/enroll",
       );
+      expect(screen.getAllByRole("link", { name: /Enroll Now/i })).toHaveLength(1);
     });
 
     it("marks the active link with aria-current page", () => {
@@ -148,7 +156,7 @@ describe("MobileNavigation", () => {
     it("calls setIsOpen(true) when toggle button is clicked while closed", () => {
       renderWithProps();
       mockSetIsOpen.mockClear();
-      fireEvent.click(screen.getByRole("button"));
+      fireEvent.click(screen.getByRole("button", { name: "Open navigation menu" }));
       expect(mockSetIsOpen).toHaveBeenCalledTimes(1);
       expect(mockSetIsOpen).toHaveBeenCalledWith(true);
     });
@@ -156,7 +164,7 @@ describe("MobileNavigation", () => {
     it("calls setIsOpen(false) when toggle button is clicked while open", () => {
       renderWithProps({ isOpen: true });
       mockSetIsOpen.mockClear();
-      fireEvent.click(screen.getByRole("button"));
+      fireEvent.click(screen.getByRole("button", { name: "Close navigation menu" }));
       expect(mockSetIsOpen).toHaveBeenCalledTimes(1);
       expect(mockSetIsOpen).toHaveBeenCalledWith(false);
     });
@@ -169,18 +177,22 @@ describe("MobileNavigation", () => {
       expect(mockSetIsOpen).toHaveBeenCalledWith(false);
     });
 
-    it("calls setIsOpen(false) when Student Portal link is clicked", () => {
+    it("renders the top Student Portal action as a route link", () => {
       renderWithProps({ isOpen: true });
-      mockSetIsOpen.mockClear();
-      fireEvent.click(screen.getByRole("link", { name: /Student Portal/i }));
-      expect(mockSetIsOpen).toHaveBeenCalledWith(false);
+      expect(screen.getByRole("link", { name: "Student Portal" })).toHaveAttribute(
+        "href",
+        "/student/login",
+      );
     });
 
-    it("calls setIsOpen(false) when Enroll Now link is clicked", () => {
+    it("does not duplicate the Enroll Now action in the menu drawer", () => {
       renderWithProps({ isOpen: true });
-      mockSetIsOpen.mockClear();
-      fireEvent.click(screen.getByRole("link", { name: /Enroll Now/i }));
-      expect(mockSetIsOpen).toHaveBeenCalledWith(false);
+      const drawer = screen.getByRole("navigation", {
+        name: /Mobile navigation/i,
+      });
+      expect(
+        within(drawer).queryByRole("link", { name: /Enroll Now/i }),
+      ).not.toBeInTheDocument();
     });
   });
 

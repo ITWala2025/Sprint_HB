@@ -5,7 +5,7 @@ export default function HeaderLogo() {
   return (
     <Link
       href="/home"
-      className="flex shrink-0 items-center gap-3"
+      className="flex min-w-0 shrink items-center gap-2 sm:gap-3"
       aria-label="SPRINT Institutional Hub Home"
     >
       <Image
@@ -14,11 +14,11 @@ export default function HeaderLogo() {
         width={56}
         height={56}
         priority
-        className="size-14 object-contain"
+        className="size-10 shrink-0 object-contain sm:size-14"
       />
       <div className="flex flex-col gap-0.5">
         <span
-          className="font-display text-xl font-black uppercase text-brand-navy"
+          className="whitespace-nowrap font-display text-base font-black uppercase text-brand-navy sm:text-xl"
           style={{ letterSpacing: "0.15em", color: "red" }}
         >
           SPRINT

@@ -7,6 +7,7 @@ const { pathnameRef } = vi.hoisted(() => ({ pathnameRef: { value: "/home" } }));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => pathnameRef.value,
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 describe("PublicSiteShell", () => {
@@ -14,9 +15,9 @@ describe("PublicSiteShell", () => {
     pathnameRef.value = "/home";
   });
 
-  const renderShell = () =>
+  const renderShell = (modal = null) =>
     render(
-      <PublicSiteShell>
+      <PublicSiteShell modal={modal}>
         <p>Page content</p>
       </PublicSiteShell>,
     );
@@ -25,7 +26,9 @@ describe("PublicSiteShell", () => {
     header: screen.queryByRole("banner"),
     footer: screen.queryByRole("contentinfo"),
     whatsapp: screen.queryByLabelText(/chat on whatsapp/i),
-    chatbot: screen.queryByRole("button", { name: /open sprint chat/i }),
+    chatbot: screen.queryByRole("button", {
+      name: /open sprint assistant/i,
+    }),
   });
 
   it("renders the public header, footer and WhatsApp bubble on marketing routes", () => {
@@ -50,6 +53,16 @@ describe("PublicSiteShell", () => {
     expect(chrome.chatbot).not.toBeInTheDocument();
     // The page itself still renders inside the main landmark.
     expect(screen.getByRole("main")).toHaveTextContent("Page content");
+  });
+
+  it("keeps the public page and chrome visible under an intercepted student modal", () => {
+    pathnameRef.value = "/student/dashboard";
+    renderShell(<section role="dialog">Student page modal</section>);
+
+    expect(screen.getByRole("banner")).toBeInTheDocument();
+    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+    expect(screen.getByText("Page content")).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toHaveTextContent("Student page modal");
   });
 
   it.each([
