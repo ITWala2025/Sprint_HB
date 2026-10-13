@@ -49,7 +49,7 @@ export default function CourseCard({ course, accessibleBrandRed = false }) {
           </div>
         ) : null}
 
-        <div className="mt-4 flex items-center gap-1.5 text-sm text-brand-text-muted">
+        <div className="mt-4 flex items-center gap-1.5 pb-2 text-sm text-brand-text-muted">
           <Clock className="size-4" aria-hidden="true" />
           <span>{course.duration}</span>
         </div>

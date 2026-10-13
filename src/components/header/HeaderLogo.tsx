@@ -19,14 +19,18 @@ export default function HeaderLogo() {
       <div className="flex flex-col gap-0.5">
         <span
           className="whitespace-nowrap font-display text-base font-black uppercase text-brand-navy sm:text-xl"
-          style={{ letterSpacing: "0.15em", color: "red" }}
+          style={{
+            fontFamily: "'Roboto Slab', serif",
+            letterSpacing: "0.15em",
+            color: "red",
+          }}
         >
           SPRINT
         </span>
         {/* <span className="text-[9px] uppercase font-medium text-brand-text-muted" style={{ letterSpacing: "0.18em" }}>
           Institutional Hub
         </span> */}
-        <div className="mt-0.5 h-0.5 w-8 rounded-full bg-brand-red" />
+        {/* <div className="mt-0.5 h-0.5 w-8 rounded-full bg-brand-red" /> */}
       </div>
     </Link>
   );

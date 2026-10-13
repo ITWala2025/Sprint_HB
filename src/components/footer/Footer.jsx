@@ -76,7 +76,7 @@ export default function Footer({ className = "" }) {
               {/* <span className="text-[10px] uppercase tracking-[0.18em] text-brand-off-white/50 font-medium">
                 Institutional Hub
               </span> */}
-              <div className="mt-1 h-0.5 w-10 rounded-full bg-brand-red" />
+              {/* <div className="mt-1 h-0.5 w-10 rounded-full bg-brand-red" /> */}
             </div>
           </div>
           <p className="mt-3 max-w-md text-sm leading-relaxed text-brand-off-white/80 sm:mt-4">
