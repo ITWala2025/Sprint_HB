@@ -1,12 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  cleanup,
-  within,
-} from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, cleanup, within } from "@testing-library/react";
 import MobileNavigation from "@/components/header/MobileNavigation";
 
 describe("MobileNavigation", () => {
@@ -34,6 +27,9 @@ describe("MobileNavigation", () => {
       expect(screen.getByRole("link", { name: "Enroll Now" })).toHaveAttribute(
         "href",
         "/student/enroll",
+      );
+      expect(screen.getByRole("link", { name: "Enroll Now" }).tagName).toBe(
+        "A",
       );
     });
 
@@ -114,16 +110,21 @@ describe("MobileNavigation", () => {
       expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
     });
 
-    it("renders Student Portal and Enroll quick actions in the header", () => {
+    it("renders Enroll in the header and Student Portal in the drawer", () => {
       renderWithProps({ isOpen: true });
-      expect(screen.getByRole("link", { name: /Student Portal/i })).toHaveAttribute(
-        "href",
-        "/student/login",
-      );
       expect(screen.getByRole("link", { name: "Enroll Now" })).toHaveAttribute(
         "href",
         "/student/enroll",
       );
+      const drawer = screen.getByRole("navigation", {
+        name: /Mobile navigation/i,
+      });
+      expect(
+        within(drawer).getByRole("link", { name: "Student Portal" }),
+      ).toHaveAttribute("href", "/student/login");
+      expect(
+        screen.getAllByRole("link", { name: "Student Portal" }),
+      ).toHaveLength(1);
       expect(screen.getAllByRole("link", { name: /Enroll Now/i })).toHaveLength(1);
     });
 
@@ -177,12 +178,26 @@ describe("MobileNavigation", () => {
       expect(mockSetIsOpen).toHaveBeenCalledWith(false);
     });
 
-    it("renders the top Student Portal action as a route link", () => {
+    it("renders the Student Portal action inside the menu drawer", () => {
       renderWithProps({ isOpen: true });
-      expect(screen.getByRole("link", { name: "Student Portal" })).toHaveAttribute(
-        "href",
-        "/student/login",
-      );
+      const drawer = screen.getByRole("navigation", {
+        name: /Mobile navigation/i,
+      });
+      expect(
+        within(drawer).getByRole("link", { name: "Student Portal" }),
+      ).toHaveAttribute("href", "/student/login");
+      expect(
+        screen.queryByRole("link", { name: "Student Portal" })?.closest(
+          "#mobile-navigation",
+        ),
+      ).toBeInTheDocument();
+    });
+
+    it("closes the drawer when Student Portal is selected", () => {
+      renderWithProps({ isOpen: true });
+      mockSetIsOpen.mockClear();
+      fireEvent.click(screen.getByRole("link", { name: "Student Portal" }));
+      expect(mockSetIsOpen).toHaveBeenCalledWith(false);
     });
 
     it("does not duplicate the Enroll Now action in the menu drawer", () => {

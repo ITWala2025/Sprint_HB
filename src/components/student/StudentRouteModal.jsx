@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
+import { StudentRouteModalContext } from "@/components/student/StudentRouteModalContext";
 
 const FOCUSABLE_SELECTOR = [
   "a[href]",
@@ -19,10 +20,18 @@ export default function StudentRouteModal({
   contentClassName = "student-route-modal-content",
 }) {
   const router = useRouter();
+  const { historyDepth } = useContext(StudentRouteModalContext);
   const dialogRef = useRef(null);
   const closeButtonRef = useRef(null);
   const previousFocusRef = useRef(null);
-  const closeModal = useCallback(() => router.back(), [router]);
+  const closeModal = useCallback(() => {
+    if (historyDepth > 0) {
+      window.history.go(-historyDepth);
+      return;
+    }
+
+    router.back();
+  }, [historyDepth, router]);
 
   useEffect(() => {
     previousFocusRef.current = document.activeElement;

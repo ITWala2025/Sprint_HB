@@ -5,6 +5,7 @@ import Header from "@/components/header/Header";
 import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";
 import Footer from "@/components/footer/Footer";
 import AiAssistant from "@/components/ai/AiAssistant";
+import { StudentRouteModalProvider } from "@/components/student/StudentRouteModalContext";
 
 /**
  * Routes that render their own full-screen chrome: the Student Portal auth
@@ -38,6 +39,7 @@ export default function PublicSiteShell({ children, modal }) {
   const showPublicChrome = Boolean(modal) || (!isAdminRoute && !isFocusedRoute);
 
   return (
+    <StudentRouteModalProvider pathname={pathname}>
     <>
       {showPublicChrome && <Header />}
 
@@ -64,5 +66,6 @@ export default function PublicSiteShell({ children, modal }) {
       )}
       {showPublicChrome && <AiAssistant />}
     </>
+    </StudentRouteModalProvider>
   );
 }

@@ -52,39 +52,29 @@ export default function MobileNavigation({
   return (
     <div className="min-w-0 shrink-0 lg:hidden">
       <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-        {!isAdmin ? (
+        {isAdmin ? (
           <Link
-            href="/student/login"
-            aria-label="Student Portal"
-            title="Student Portal"
-            className="sprint-focus inline-flex size-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-brand-border bg-white text-sm font-semibold text-brand-navy shadow-sm transition-colors hover:bg-brand-surface min-[480px]:w-auto min-[480px]:px-3"
+            href="/admin/dashboard"
+            aria-label="Admin dashboard"
+            title="Admin dashboard"
+            className="sprint-focus inline-flex min-h-10 shrink-0 items-center justify-center gap-1 rounded-xl bg-brand-navy px-3 py-2 text-sm font-bold text-white shadow-sm"
           >
-            <UserRound className="size-5" aria-hidden="true" />
-            <span className="hidden min-[480px]:inline">Student Portal</span>
+            Admin
           </Link>
-        ) : null}
-        <Link
-          href={isAdmin ? "/admin/dashboard" : "/student/enroll"}
-          aria-label={isAdmin ? "Admin dashboard" : "Enroll Now"}
-          title={isAdmin ? "Admin dashboard" : "Enroll Now"}
-          className={`sprint-focus inline-flex min-h-10 shrink-0 items-center justify-center gap-1 rounded-xl px-3 py-2 text-sm font-bold text-white shadow-sm ${
-            isAdmin
-              ? "bg-brand-navy"
-              : accessibleBrandRed
-                ? "bg-brand-red-accessible"
-                : "bg-brand-red"
-          }`}
-        >
-          {isAdmin ? (
-            "Admin"
-          ) : (
-            <>
-              <span className="min-[420px]:hidden">Enroll</span>
-              <span className="hidden min-[420px]:inline">Enroll Now</span>
-            </>
-          )}
-          {!isAdmin ? <ArrowRight className="size-4" aria-hidden="true" /> : null}
-        </Link>
+        ) : (
+          <a
+            href="/student/enroll"
+            aria-label="Enroll Now"
+            title="Enroll Now"
+            className={`sprint-focus inline-flex min-h-10 shrink-0 items-center justify-center gap-1 rounded-xl px-3 py-2 text-sm font-bold text-white shadow-sm ${
+              accessibleBrandRed ? "bg-brand-red-accessible" : "bg-brand-red"
+            }`}
+          >
+            <span className="min-[420px]:hidden">Enroll</span>
+            <span className="hidden min-[420px]:inline">Enroll Now</span>
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </a>
+        )}
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -128,7 +118,16 @@ export default function MobileNavigation({
               })}
             </div>
             <div className="mt-4 border-t border-brand-border pt-4">
-              {isAdmin ? (
+              {!isAdmin ? (
+                <Link
+                  href="/student/login"
+                  onClick={() => setIsOpen(false)}
+                  className="sprint-focus flex items-center justify-center gap-2 rounded-lg border border-brand-border px-4 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-surface"
+                >
+                  <UserRound className="size-4" aria-hidden="true" />
+                  Student Portal
+                </Link>
+              ) : (
                 <Link
                   href="/admin/dashboard"
                   onClick={() => setIsOpen(false)}
@@ -136,7 +135,7 @@ export default function MobileNavigation({
                 >
                   Go to Dashboard
                 </Link>
-              ) : null}
+              )}
             </div>
           </nav>
         </div>

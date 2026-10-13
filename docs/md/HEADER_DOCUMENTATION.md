@@ -88,10 +88,11 @@ The right side of the desktop Header should contain the primary user actions.
 
 Provide a secondary action that opens the Student Portal sign-in screen in a
 modal over the current page. The URL changes to `/student/login`; closing the
-modal with its close button, Escape, or the backdrop returns to the previous
-page. The sign-in controls fit within the viewport without an inner scrollbar,
-and the mobile layout hides the decorative image while keeping the form and
-close control visible.
+modal with its close button, Escape, or the backdrop returns to the public page
+underneath, even after navigating between student screens such as Forgot
+Password. The sign-in controls fit within the viewport without an inner
+scrollbar, and the mobile layout hides the decorative image while keeping the
+form and close control visible.
 
 The sign-in route remains available for direct visits:
 
@@ -105,7 +106,8 @@ The Student Portal should be easily accessible without competing with the primar
 
 Provide a prominent primary CTA for enrollment.
 
-The CTA should navigate users to the appropriate enrollment/cohort registration flow.
+The CTA should navigate users to the appropriate enrollment/cohort registration flow
+as a regular page navigation, not as a student-route modal.
 
 Recommended label:
 
@@ -128,10 +130,9 @@ md:hidden
 The mobile Header should provide:
 
 * Brand/logo area
-* Student Portal quick action
-* Enrollment quick action
+* Enrollment quick action in the header row
 * Menu toggle
-* Navigation drawer/menu
+* Navigation drawer/menu with the Student Portal link
 * Admin Console action for administrative users
 
 ---
@@ -173,9 +174,9 @@ The mobile navigation should provide access to all primary routes:
 4. Updates
 5. Contact
 
-Student Portal and Enroll Now are always available as separate top-bar actions.
-The drawer provides the primary site links and admin action without duplicating
-the enrollment CTA.
+Enroll Now remains available in the top action row. Student Portal is in the
+expanded drawer with the primary site links, keeping the compact header row
+clear on small screens. The drawer does not duplicate the enrollment CTA.
 
 The Student Portal action opens its route in a modal when navigating from
 another page. Direct loads still render the standalone login page.
