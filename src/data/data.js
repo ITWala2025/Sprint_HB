@@ -142,59 +142,77 @@ export const featuredCourse = {
 
 // Section 6.7 — Student testimonials.
 /** @type {Testimonial[]} */
-export const testimonials = [
-  // EXAMPLE entries: replace each student detail with approved content.
+
+export const videoTestimonials = [
   {
-    id: "t6",
-    type: "video",
+    id: "v1",
     name: "Survesh",
-    role: "BTech Graduate ",
+    role: "BTech Graduate",
     videoUrl: "/testimonials/testimonials1.mp4",
   },
   {
-    id: "t7",
-    type: "video",
+    id: "v2",
     name: "Myank Aman",
-    role: "BTech Graduate ",
+    role: "BTech Graduate",
     videoUrl: "/testimonials/testimonials2.mp4",
   },
   {
-    id: "t8",
-    type: "video",
+    id: "v3",
     name: "Raman Munda",
-    role: "BTech Graduate ",
+    role: "BTech Graduate",
     videoUrl: "/testimonials/Raman_munda testimonial.mp4",
   },
+];
+
+export const textTestimonials = [
   {
     id: "t1",
-    type: "text",
     name: "Shabba Kausar",
     role: "BTech Graduate intern at JAK TECHNOLOGIES LTD",
     photoUrl: "",
     quote:
-      "SPRINT provides a professional learning environment with experienced mentors, practical assignments, and excellent technical guidance.",
+      "SPRINT provides a great learning environment with a strong focus on practical skills.",
   },
   {
     id: "t2",
-    type: "text",
+    name: "Sukumar Gope",
+    role: "BTech Graduate intern at Shaip",
+    photoUrl: "",
+    quote:
+      "SPRINT provides excellent practical training, supportive mentors, and valuable guidance to improve students' technical skills.",
+  },
+  {
+    id: "t3",
     name: "Chhavi",
     role: "BTech Graduate intern at UPTITUDE",
     photoUrl: "",
     quote:
-      "Great learning experience with friendly trainers, hands-on projects, and opportunities to develop real-world technical skills.",
+  "The structured courses and supportive trainers made programming easier to understand and improved my coding confidence."
   },
   {
-    id: "t3",
-    type: "text",
-    name: "Sukuamr Gope",
-    role: " BTech Graduate intern at Shaip",
-    photoUrl: "",
-    quote:
-      "SPRINT offers industry-focused training, practical projects, and expert mentorship that help students become confident developers",
-  },
-   
-  
+  id: "t4",
+  name: "Aarav Sharma",
+  role: "BTech Graduate",
+  photoUrl: "",
+  quote:
+    "SPRINT helped me improve my technical knowledge through practical assignments, experienced mentors, and a professional learning environment focused on growth."},
+{
+  id: "t5",
+  name: "Priya Kumari",
+  role: "MCA Graduate",
+  photoUrl: "",
+  quote:
+"The trainers are helpful, and the structured sessions made programming easier to understand."
+},{
+  id: "t6",
+  name: "Rohit Verma",
+  role: "BTech Graduate",
+  photoUrl: "",
+  quote:
+    "The trainers are helpful, and the structured sessions made programming easier to understand.",
+},
 ];
+
 
 // Section 6.8 — FAQs
 export const faqs = [
