@@ -25,6 +25,10 @@ const ROUTE_TITLES = {
 export default function StudentPortalRouteShell({ children }) {
   const pathname = usePathname() ?? "";
   const routeKey = pathname.split("/").filter(Boolean).slice(1).join("/");
+  if (["/student/dashboard", "/student/enroll"].includes(pathname)) {
+    return children;
+  }
+
   const title = ROUTE_TITLES[routeKey] ?? "Student Portal";
   const isLoginRoute = routeKey === "login";
   const isAuthRoute = [

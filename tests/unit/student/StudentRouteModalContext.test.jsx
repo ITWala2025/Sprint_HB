@@ -57,6 +57,18 @@ describe("StudentRouteModal close navigation", () => {
     vi.restoreAllMocks();
   });
 
+  it("treats the dashboard as a page, not a modal background", () => {
+    render(
+      <StudentRouteModalProvider pathname="/student/dashboard">
+        <HistoryDepth />
+      </StudentRouteModalProvider>,
+    );
+
+    expect(screen.getByTestId("modal-navigation")).toHaveTextContent(
+      "/student/dashboard|0",
+    );
+  });
+
   it.each(["close button", "Escape", "backdrop"])(
     "closes all nested student routes to the original public page via %s",
     async (dismissal) => {

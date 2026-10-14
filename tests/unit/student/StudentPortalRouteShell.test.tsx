@@ -29,8 +29,6 @@ describe("StudentPortalRouteShell", () => {
     ["/student/check-email", "Check your email"],
     ["/student/reset-password", "Create a new password"],
     ["/student/password-reset-success", "Password updated"],
-    ["/student/enroll", "Student enrollment"],
-    ["/student/dashboard", "Student dashboard"],
   ])("renders %s in a modal on a direct route load", (pathname, title) => {
     mockPathname.mockReturnValue(pathname);
     render(
@@ -43,6 +41,21 @@ describe("StudentPortalRouteShell", () => {
       "Student page",
     );
   });
+
+  it.each(["/student/dashboard", "/student/enroll"])(
+    "renders %s without the student route modal",
+    (pathname) => {
+      mockPathname.mockReturnValue(pathname);
+      render(
+        <StudentPortalRouteShell>
+          <p>Student page content</p>
+        </StudentPortalRouteShell>,
+      );
+
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(screen.getByText("Student page content")).toBeInTheDocument();
+    },
+  );
 
   it("returns a directly loaded student modal to home when closed", () => {
     mockPathname.mockReturnValue("/student/login");

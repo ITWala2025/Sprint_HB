@@ -34,10 +34,16 @@ export default function PublicSiteShell({ children, modal }) {
 
   const isAdminRoute = pathname.startsWith("/admin");
   const isStudentRoute = pathname.startsWith("/student/");
+  const isStudentFullPageRoute = [
+    "/student/dashboard",
+    "/student/enroll",
+  ].includes(pathname);
   const isFocusedRoute = matchesRoute(pathname, FOCUSED_ROUTES);
   const hasInterceptedModal = modalSegments.some(
     (segment) => segment !== "__DEFAULT__",
   );
+  const renderInterceptedFullPage =
+    isStudentFullPageRoute && hasInterceptedModal;
   const showPublicChrome =
     hasInterceptedModal ||
     (!isAdminRoute && (!isFocusedRoute || isStudentRoute));
@@ -48,7 +54,9 @@ export default function PublicSiteShell({ children, modal }) {
       {showPublicChrome && <Header />}
 
       {showPublicChrome && <ConditionalCampusNewsTicker />}
-      <main id="main">{children}</main>
+      <main id="main">
+        {renderInterceptedFullPage ? modal : children}
+      </main>
       {showPublicChrome && (
         <Footer
           className={
@@ -56,7 +64,7 @@ export default function PublicSiteShell({ children, modal }) {
           }
         />
       )}
-      {modal}
+      {!renderInterceptedFullPage && modal}
 
       {showPublicChrome && (
         <a

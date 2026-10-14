@@ -125,13 +125,15 @@ describe("Student portal navigation integrity", () => {
     });
   });
 
-  it("supports modal interception for every student page route", () => {
+  it("maps every student page route and keeps full-page routes out of modals", () => {
     const modalRouteSource = readFileSync(STUDENT_MODAL_ROUTE_FILE, "utf8");
     const configuredRoutes = new Set(
       [...modalRouteSource.matchAll(/^\s{2}"?([a-z0-9-]+)"?: \{/gm)].map(
         (match) => match[1],
       ),
     );
+    const dashboardRoute = modalRouteSource.match(/dashboard:\s*\{([^}]*)\}/);
+    const enrollmentRoute = modalRouteSource.match(/enroll:\s*\{([^}]*)\}/);
     const directRoutes = readdirSync(STUDENT_DIR, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
@@ -143,6 +145,8 @@ describe("Student portal navigation integrity", () => {
         route,
       );
     });
+    expect(dashboardRoute?.[1]).toContain("fullPage: true");
+    expect(enrollmentRoute?.[1]).toContain("fullPage: true");
   });
 
   it("leaves no portal link pointing at a removed section", () => {

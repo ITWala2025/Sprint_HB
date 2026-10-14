@@ -36,7 +36,11 @@ const studentRoutes = {
     component: StudentResetPasswordPage,
     title: "Create a new password",
   },
-  enroll: { component: StudentEnrollPage, title: "Student enrollment" },
+  enroll: {
+    component: StudentEnrollPage,
+    title: "Student enrollment",
+    fullPage: true,
+  },
   "password-reset-success": {
     component: StudentPasswordResetSuccessPage,
     title: "Password updated",
@@ -60,6 +64,7 @@ const studentRoutes = {
     component: StudentDashboardPage,
     title: "Student dashboard",
     portal: true,
+    fullPage: true,
   },
   "help-support": {
     component: StudentHelpSupportPage,
@@ -108,6 +113,8 @@ export default async function InterceptedStudentPage({ params }) {
   ) : (
     page
   );
+
+  if (route.fullPage) return content;
 
   return (
     <StudentRouteModal

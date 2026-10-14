@@ -7,7 +7,9 @@ export const StudentRouteModalContext = createContext({
   historyDepth: 0,
 });
 
-const isStudentRoute = (pathname) => pathname.startsWith("/student/");
+const isStudentModalRoute = (pathname) =>
+  pathname.startsWith("/student/") &&
+  !["/student/dashboard", "/student/enroll"].includes(pathname);
 
 export function StudentRouteModalProvider({ pathname, children }) {
   const navigationRef = useRef(null);
@@ -16,7 +18,7 @@ export function StudentRouteModalProvider({ pathname, children }) {
     navigationRef.current = {
       pathname,
       paths: [pathname],
-      backgroundPath: isStudentRoute(pathname) ? null : pathname,
+      backgroundPath: isStudentModalRoute(pathname) ? null : pathname,
       wasPopState: false,
     };
   }
@@ -47,14 +49,17 @@ export function StudentRouteModalProvider({ pathname, children }) {
         previousIndex >= 0
           ? current.paths.slice(0, previousIndex + 1)
           : [...current.paths, pathname];
-    } else if (isStudentRoute(pathname) && !isStudentRoute(previousPath)) {
+    } else if (
+      isStudentModalRoute(pathname) &&
+      !isStudentModalRoute(previousPath)
+    ) {
       current.paths = [previousPath, pathname];
       current.backgroundPath = previousPath;
     } else {
       current.paths = [...current.paths, pathname];
     }
 
-    if (!isStudentRoute(pathname)) {
+    if (!isStudentModalRoute(pathname)) {
       current.paths = [pathname];
       current.backgroundPath = pathname;
     }
@@ -67,7 +72,7 @@ export function StudentRouteModalProvider({ pathname, children }) {
     setNavigation({
       backgroundPath: current.backgroundPath,
       historyDepth:
-        isStudentRoute(pathname) && backgroundIndex >= 0
+        isStudentModalRoute(pathname) && backgroundIndex >= 0
           ? current.paths.length - backgroundIndex - 1
           : 0,
     });

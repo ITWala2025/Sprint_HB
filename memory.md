@@ -623,3 +623,16 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - `/student/login` defaults to the same modal variant opened from the public Student Portal link. Refreshed routes no longer render the full-page login layout inside the dialog.
 - Browser comparison confirmed the login modal's class, content, and dialog structure match before and after refresh.
 - Focused validation passed: 4 files / 19 tests; TypeScript and `git diff --check` passed.
+
+## 54. Student Modal Refresh and Dashboard Layout — 2026-10-14
+
+- Shared student modal CSS is loaded from `StudentRouteModal`, so direct loads and browser refreshes retain the fixed overlay, dialog scrolling, and top-right close control on auth and enrollment routes.
+- Forgot Password now defaults to its modal presentation, matching intercepted navigation. `/student/dashboard` renders as a page without the modal wrapper.
+- Browser refresh checks passed for `/student/login`, `/student/forgot-password`, `/student/check-email`, `/student/reset-password`, `/student/password-reset-success`, and `/student/enroll`. Enrollment scrolling and validation remained interactive.
+- Focused validation passed: 5 files / 35 tests, `npx tsc --noEmit`, and `git diff --check`.
+
+## 55. Enrollment and Dashboard Full-Page Routes — 2026-10-14
+
+- Both direct and intercepted `/student/enroll` navigation render the enrollment wizard as a normal page, without the student modal or close control.
+- `/student/dashboard` is also outside the modal. A successful active student login redirects to `/student/dashboard`; the Supabase proxy sends unauthenticated or inactive sessions to `/student/login`.
+- Focused route-shell and navigation tests cover the two full-page routes.

@@ -535,3 +535,16 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - `/student/login` now defaults to the same modal presentation used by the intercepted Student Portal link, so a direct refresh no longer shows the full-page login variant inside the dialog.
 - Browser comparison confirmed the login modal class, content, and dialog structure are identical before and after refresh.
 - Focused validation: 4 files / 19 tests passed; TypeScript and `git diff --check` passed.
+
+## 43. Student Route Modal Refresh and Enrollment Validation — 2026-10-14
+
+- Moved shared dialog positioning and close-control styles into a stylesheet imported by the modal itself. Directly loaded and refreshed student routes now keep their backdrop, fixed dialog, internal scrolling, and top-right close control instead of showing an unstyled page with body scrolling locked.
+- The Forgot Password direct-load variant now matches the intercepted modal. The student dashboard renders as a page rather than a modal; all other student routes keep the modal shell.
+- Browser refresh checks passed for `/student/login`, `/student/forgot-password`, `/student/check-email`, `/student/reset-password`, `/student/password-reset-success`, and `/student/enroll`. The enrollment dialog scrolled internally and its Continue action showed field validation.
+- Focused modal, route-shell, navigation-integrity, context, and public-shell suites passed: 5 files / 35 tests. `npx tsc --noEmit` and `git diff --check` passed.
+
+## 44. Keep Enrollment and Dashboard as Full Pages — 2026-10-14
+
+- `/student/enroll` is explicitly excluded from both intercepted and direct-load modal shells. Enrollment renders as a normal page with no modal close button.
+- `/student/dashboard` remains a normal protected portal page. Successful active student sign-in redirects to `/student/dashboard`; unauthenticated or inactive sessions are redirected to `/student/login` by the Supabase proxy.
+- Focused route-shell and navigation tests assert that neither full-page route renders in a modal.

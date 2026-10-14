@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { StudentRouteModalContext } from "@/components/student/StudentRouteModalContext";
 
+import "./student-route-modal.css";
+
 const FOCUSABLE_SELECTOR = [
   "a[href]",
   "button:not([disabled])",

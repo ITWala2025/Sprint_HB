@@ -58,26 +58,32 @@ describe("PublicSiteShell", () => {
     expect(screen.getByRole("main")).toHaveTextContent("Page content");
   });
 
-  it("keeps the public page and chrome visible under an intercepted student modal", () => {
-    pathnameRef.value = "/student/dashboard";
-    modalSegmentsRef.value = ["(.)student", "[...segments]"];
-    renderShell(<section role="dialog">Student page modal</section>);
+  it.each(["/student/dashboard", "/student/enroll"])(
+    "renders intercepted %s as a page instead of a modal",
+    (pathname) => {
+      pathnameRef.value = pathname;
+      modalSegmentsRef.value = ["(.)student", "[...segments]"];
+      renderShell(<section>Student full page route</section>);
 
-    expect(screen.getByRole("banner")).toBeInTheDocument();
-    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
-    expect(screen.getByText("Page content")).toBeInTheDocument();
-    expect(screen.getByRole("dialog")).toHaveTextContent("Student page modal");
-  });
+      expect(screen.getByRole("banner")).toBeInTheDocument();
+      expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+      expect(screen.getByRole("main")).toHaveTextContent(
+        "Student full page route",
+      );
+      expect(screen.queryByText("Page content")).not.toBeInTheDocument();
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    },
+  );
 
-  it("keeps public chrome behind an intercepted enrollment route", () => {
-    pathnameRef.value = "/student/enroll";
-    modalSegmentsRef.value = ["(.)student", "[...segments]"];
-    renderShell(<section role="dialog">Enrollment modal</section>);
+  it.each(["/student/dashboard", "/student/enroll"])(
+    "renders direct %s page content with an empty default parallel slot",
+    (pathname) => {
+      pathnameRef.value = pathname;
+      renderShell(<></>);
 
-    expect(screen.getByRole("banner")).toBeInTheDocument();
-    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
-    expect(screen.getByRole("dialog")).toHaveTextContent("Enrollment modal");
-  });
+      expect(screen.getByRole("main")).toHaveTextContent("Page content");
+    },
+  );
 
   it.each([
     "/student/login",
