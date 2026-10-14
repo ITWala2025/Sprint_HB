@@ -516,3 +516,22 @@ To maintain comprehensive test coverage across the entire platform, the followin
 - Browser check at 390px — opening `/student/enroll` displayed its modal over the public page; Escape returned to `/home`; no horizontal overflow.
 - Focused route/header suites — **Passed**, 62 tests. `npx tsc --noEmit`, `npm run build`, and `git diff --check` — **Passed**.
 - Wider student suite — 190 passed, 1 failed; the unrelated `EnrollmentWizard` summary-label test expects “City”, which is absent.
+
+## 40. Student Route Modal Close Navigation — 2026-10-14
+
+- The intercepted Student Portal modal's close, Escape, and backdrop actions now traverse back by the tracked number of student-route history entries. This clears Next.js's intercepted parallel-route slot without forcing a full page reload.
+- Refresh behavior in this iteration was unchanged and direct loads rendered standalone pages; this was subsequently changed by §41.
+- Focused modal suites: `npx vitest run --config tests/vitest.config.mjs tests/unit/student/StudentRouteModalContext.test.jsx tests/unit/student/StudentRouteModal.test.tsx` — **Passed**, 2 files / 6 tests. `git diff --check` — **Passed**.
+
+## 41. Keep Student Routes Modal on Refresh — 2026-10-14
+
+- The `/student/*` route layout now wraps direct loads and refreshed routes in the same accessible modal used by intercepted navigation. Student titles and login/auth-specific sizing are retained; public site chrome renders behind the dialog.
+- Closing a directly loaded student modal safely replaces the route with `/home`; intercepted routes continue returning through their tracked browser history.
+- Browser-verified `/student/login` and `/student/forgot-password` both remain dialogs after refresh. Closing the login dialog returns to `/home` and removes the dialog.
+- Focused validation: 4 files / 27 tests passed; `npx tsc --noEmit` and `git diff --check` passed.
+
+## 42. Match Student Login Modal After Refresh — 2026-10-14
+
+- `/student/login` now defaults to the same modal presentation used by the intercepted Student Portal link, so a direct refresh no longer shows the full-page login variant inside the dialog.
+- Browser comparison confirmed the login modal class, content, and dialog structure are identical before and after refresh.
+- Focused validation: 4 files / 19 tests passed; TypeScript and `git diff --check` passed.

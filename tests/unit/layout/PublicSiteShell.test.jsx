@@ -46,16 +46,15 @@ describe("PublicSiteShell", () => {
     expect(screen.getByText("Page content")).toBeInTheDocument();
   });
 
-  it("keeps the portal auth screens free of public chrome", () => {
+  it("shows public chrome behind a directly loaded student modal", () => {
     pathnameRef.value = "/student/login";
     renderShell();
 
     const chrome = publicChrome();
-    expect(chrome.header).not.toBeInTheDocument();
-    expect(chrome.footer).not.toBeInTheDocument();
-    expect(chrome.whatsapp).not.toBeInTheDocument();
-    expect(chrome.chatbot).not.toBeInTheDocument();
-    // The page itself still renders inside the main landmark.
+    expect(chrome.header).toBeInTheDocument();
+    expect(chrome.footer).toBeInTheDocument();
+    expect(chrome.whatsapp).toBeInTheDocument();
+    expect(chrome.chatbot).toBeInTheDocument();
     expect(screen.getByRole("main")).toHaveTextContent("Page content");
   });
 
@@ -81,17 +80,18 @@ describe("PublicSiteShell", () => {
   });
 
   it.each([
+    "/student/login",
     "/student/forgot-password",
     "/student/check-email",
     "/student/reset-password",
     "/student/password-reset-success",
-  ])("keeps %s free of public chrome", (pathname) => {
+  ])("keeps public chrome behind directly loaded %s modal", (pathname) => {
     pathnameRef.value = pathname;
     renderShell();
 
     const chrome = publicChrome();
-    expect(chrome.header).not.toBeInTheDocument();
-    expect(chrome.footer).not.toBeInTheDocument();
+    expect(chrome.header).toBeInTheDocument();
+    expect(chrome.footer).toBeInTheDocument();
   });
 
   it("keeps the public header and footer on the full-page enrollment route", () => {

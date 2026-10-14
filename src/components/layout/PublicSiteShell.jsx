@@ -8,9 +8,8 @@ import AiAssistant from "@/components/ai/AiAssistant";
 import { StudentRouteModalProvider } from "@/components/student/StudentRouteModalContext";
 
 /**
- * Routes that render their own full-screen chrome: Student Portal auth screens
- * (often opened from an emailed link). Intercepted student-route modals preserve
- * the public page underneath.
+ * Routes with focused full-screen layouts. Student routes use the public site
+ * as the modal backdrop whether they are intercepted or loaded directly.
  */
 const FOCUSED_ROUTES = [
   "/login",
@@ -34,12 +33,14 @@ export default function PublicSiteShell({ children, modal }) {
   const modalSegments = useSelectedLayoutSegments("modal");
 
   const isAdminRoute = pathname.startsWith("/admin");
+  const isStudentRoute = pathname.startsWith("/student/");
   const isFocusedRoute = matchesRoute(pathname, FOCUSED_ROUTES);
   const hasInterceptedModal = modalSegments.some(
     (segment) => segment !== "__DEFAULT__",
   );
   const showPublicChrome =
-    hasInterceptedModal || (!isAdminRoute && !isFocusedRoute);
+    hasInterceptedModal ||
+    (!isAdminRoute && (!isFocusedRoute || isStudentRoute));
 
   return (
     <StudentRouteModalProvider pathname={pathname}>

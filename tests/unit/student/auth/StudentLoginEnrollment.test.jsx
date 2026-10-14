@@ -32,9 +32,13 @@ describe("StudentLoginPage enrollment actions", () => {
   });
 
   it("does not render the removed account creation form", () => {
-    render(<StudentLoginPage />);
+    const { container } = render(<StudentLoginPage />);
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(container.querySelector("main")).not.toBeInTheDocument();
+    expect(
+      container.querySelector(".student-login-page--modal"),
+    ).toBeInTheDocument();
     expect(screen.queryByLabelText(/first name/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/last name/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/mobile number/i)).not.toBeInTheDocument();

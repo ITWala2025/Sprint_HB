@@ -604,3 +604,22 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Added route integrity coverage for every student page, modal dismissal tests, shell tests for keeping public chrome behind the modal, and updated mobile header tests.
 - Browser checks passed at 390px, including opening `/student/enroll` over the public page and returning to `/home` with Escape; no horizontal overflow was observed.
 - Validation: focused route/header suites passed (62 tests), `npx tsc --noEmit`, and `npm run build`. The wider student suite still has the unrelated `EnrollmentWizard` “City” summary-label failure (190 passed, 1 failed).
+
+## 51. Student Route Modal Close Navigation — 2026-10-14
+
+- Student route modal dismissal now traverses back by the tracked number of student-route history entries. This clears Next.js's intercepted parallel-route slot without forcing a hard reload.
+- At this stage, refresh still rendered direct student routes standalone; this was changed in the follow-up recorded below.
+- Focused modal verification passed: 2 files / 6 tests; `git diff --check` passed.
+
+## 52. Keep Student Routes Modal on Refresh — 2026-10-14
+
+- The `/student/*` route layout now wraps direct loads and refreshed routes in the existing accessible modal; public site chrome remains visible behind it.
+- Directly loaded modals close to `/home`; intercepted modal routes still return through their tracked history entries.
+- Browser-verified login and Forgot Password dialogs remain modal after refresh. Closing the direct login modal returns to `/home`.
+- Focused validation passed: 4 files / 27 tests; TypeScript and `git diff --check` passed.
+
+## 53. Match Student Login Modal After Refresh — 2026-10-14
+
+- `/student/login` defaults to the same modal variant opened from the public Student Portal link. Refreshed routes no longer render the full-page login layout inside the dialog.
+- Browser comparison confirmed the login modal's class, content, and dialog structure match before and after refresh.
+- Focused validation passed: 4 files / 19 tests; TypeScript and `git diff --check` passed.

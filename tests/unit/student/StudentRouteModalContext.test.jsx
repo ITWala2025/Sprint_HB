@@ -14,12 +14,14 @@ import {
   StudentRouteModalProvider,
 } from "@/components/student/StudentRouteModalContext";
 
-const { back } = vi.hoisted(() => ({
+const { back, replace, historyGo } = vi.hoisted(() => ({
   back: vi.fn(),
+  replace: vi.fn(),
+  historyGo: vi.fn(),
 }));
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ back }),
+  useRouter: () => ({ back, replace }),
 }));
 
 function HistoryDepth() {
@@ -43,21 +45,16 @@ function renderStudentFlow(pathname) {
 }
 
 describe("StudentRouteModal close navigation", () => {
-  const locationDescriptor = Object.getOwnPropertyDescriptor(window, "location");
-  const assign = vi.fn();
-
   beforeEach(() => {
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      value: { assign },
-    });
+    vi.spyOn(window.history, "go").mockImplementation(historyGo);
   });
 
   afterEach(() => {
     cleanup();
     back.mockClear();
-    assign.mockClear();
-    Object.defineProperty(window, "location", locationDescriptor);
+    replace.mockClear();
+    historyGo.mockClear();
+    vi.restoreAllMocks();
   });
 
   it.each(["close button", "Escape", "backdrop"])(
@@ -99,7 +96,7 @@ describe("StudentRouteModal close navigation", () => {
         );
       }
 
-      expect(assign).toHaveBeenCalledWith("/home");
+      expect(historyGo).toHaveBeenCalledWith(-2);
       expect(back).not.toHaveBeenCalled();
     },
   );
@@ -145,6 +142,15 @@ describe("StudentRouteModal close navigation", () => {
       ),
     );
     fireEvent.click(screen.getByRole("button", { name: "Close student page" }));
-    expect(assign).toHaveBeenCalledWith("/home");
+    expect(historyGo).toHaveBeenCalledWith(-1);
+  });
+
+  it("returns a directly loaded student route to home", () => {
+    renderStudentFlow("/student/login");
+
+    fireEvent.click(screen.getByRole("button", { name: "Close student page" }));
+
+    expect(replace).toHaveBeenCalledWith("/home");
+    expect(historyGo).not.toHaveBeenCalled();
   });
 });

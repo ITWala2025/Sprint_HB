@@ -30,7 +30,8 @@ describe("StudentRouteModal", () => {
       screen.getByRole("dialog", { name: "Student dashboard" }),
     ).toHaveTextContent("Dashboard content");
     fireEvent.click(screen.getByRole("button", { name: "Close student page" }));
-    expect(back).toHaveBeenCalledOnce();
+    expect(replace).toHaveBeenCalledWith("/home");
+    expect(back).not.toHaveBeenCalled();
   });
 
   it("returns to the previous page when Escape or the backdrop is used", () => {
@@ -43,6 +44,8 @@ describe("StudentRouteModal", () => {
     fireEvent.keyDown(document, { key: "Escape" });
     fireEvent.mouseDown(container.querySelector(".student-route-modal-backdrop"));
 
-    expect(back).toHaveBeenCalledTimes(2);
+    expect(replace).toHaveBeenCalledTimes(2);
+    expect(replace).toHaveBeenCalledWith("/home");
+    expect(back).not.toHaveBeenCalled();
   });
 });

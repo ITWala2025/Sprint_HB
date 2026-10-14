@@ -16,7 +16,7 @@ import { consumeStudentSignOutFlag } from "@/components/student/student-session"
 
 import "./login.css";
 
-export default function StudentLoginPage({ isModal = false }) {
+export default function StudentLoginPage({ isModal = true }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
