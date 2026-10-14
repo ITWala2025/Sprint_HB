@@ -161,55 +161,38 @@ export const testimonials = [
   {
     id: "t8",
     type: "video",
-    name: "Munda",
+    name: "Raman Munda",
     role: "BTech Graduate ",
-    videoUrl: "/testimonials/testimonials3.mp4",
+    videoUrl: "/testimonials/Raman_munda testimonial.mp4",
   },
   {
     id: "t1",
     type: "text",
-    name: "Ishaan Verma",
-    role: "BTech Graduate → SDE-1 at Orion Cloud",
+    name: "Shabba Kausar",
+    role: "BTech Graduate intern at JAK TECHNOLOGIES LTD",
     photoUrl: "",
     quote:
-      "The mentors made hard concepts click. I had two offers before the program even ended.",
+      "SPRINT provides a professional learning environment with experienced mentors, practical assignments, and excellent technical guidance.",
   },
   {
     id: "t2",
     type: "text",
-    name: "Sneha Kulkarni",
-    role: "MCA Graduate → Data Analyst at Falcon Data Labs",
+    name: "Chhavi",
+    role: "BTech Graduate intern at UPTITUDE",
     photoUrl: "",
     quote:
-      "Live sessions with working engineers felt nothing like a recorded course. Genuinely different.",
+      "Great learning experience with friendly trainers, hands-on projects, and opportunities to develop real-world technical skills.",
   },
   {
     id: "t3",
     type: "text",
-    name: "Arjun Nair",
-    role: "Career Switcher → Cloud Engineer at Vertex Systems",
+    name: "Sukuamr Gope",
+    role: " BTech Graduate intern at Shaip",
     photoUrl: "",
     quote:
-      "I switched from a non-tech background in eight months. The capstone project is what got me hired.",
+      "SPRINT offers industry-focused training, practical projects, and expert mentorship that help students become confident developers",
   },
-  {
-    id: "t4",
-    type: "text",
-    name: "Meera Pillai",
-    role: "Working Professional → Product Manager at Meridian Bank",
-    photoUrl: "",
-    quote:
-      "I could learn around my job and still get direct feedback from industry mentors every week.",
-  },
-  {
-    id: "t5",
-    type: "text",
-    name: "Vikram Das",
-    role: "BTech Graduate → SDE-2 at Harbor Robotics",
-    photoUrl: "",
-    quote:
-      "The placement sprint alone was worth it — mock interviews with real hiring managers.",
-  },
+   
   
 ];
 

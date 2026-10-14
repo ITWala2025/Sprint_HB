@@ -430,7 +430,7 @@ export default function Testimonials() {
               )}
               {testimonial.type === "text" && (
                 <blockquote className="mt-5 flex-1">
-                  <p className="text-base font-medium leading-7 text-brand-navy lg:text-lg lg:leading-8">
+                  <p className="text-sm font-medium leading-6 text-brand-navy sm:text-base sm:leading-7">
                     {testimonial.quote}
                   </p>
                 </blockquote>
