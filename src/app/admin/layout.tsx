@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import type { AdminPermissionMap } from "@/app/admin/authorization";
 import AdminLayoutClient from "@/app/admin/AdminLayoutClient";
+import { redirect } from "next/navigation";
 
 type InitialProfile = {
     role: string | null;
@@ -10,6 +11,8 @@ type InitialProfile = {
     must_change_password: boolean;
     role_name: string | null;
     permissions: AdminPermissionMap | null;
+    full_name: string | null;
+    email: string | null;
 };
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
@@ -34,17 +37,16 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         });
 
         const { data: authData, error: authError } = await supabase.auth.getUser();
-        if (authError) throw new Error(`Admin session verification failed: ${authError.message}`);
-        if (authData.user) {
+
+        // If there is no active session (e.g. logged out), leave initialProfile as null
+        if (!authError && authData?.user) {
             const { data: profile, error: profileError } = await supabase
                 .from("profiles")
-                .select("role, is_active, must_change_password, role_id, roles(name, permissions, is_active)")
+                .select("role, is_active, must_change_password, full_name, email, role_id, roles(name, permissions, is_active)")
                 .eq("id", authData.user.id)
                 .maybeSingle();
 
-            if (profileError) throw new Error(`Admin profile could not be loaded: ${profileError.message}`);
-
-            if (profile) {
+            if (!profileError && profile && profile.is_active === true) {
                 const assignedRole = Array.isArray(profile.roles) ? profile.roles[0] : profile.roles;
                 initialProfile = {
                     role: profile.role,
@@ -54,6 +56,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                     permissions: (assignedRole?.is_active
                         ? assignedRole.permissions
                         : null) as AdminPermissionMap | null,
+                    full_name: profile.full_name,
+                    email: profile.email ?? authData.user.email ?? null,
                 };
             }
         }

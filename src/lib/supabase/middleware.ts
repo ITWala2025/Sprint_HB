@@ -53,10 +53,13 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
-  const isLoginPage = pathname === "/admin";
+  const isLoginPage = pathname === "/admin" || pathname === "/admin/login";
   const isPasswordResetCallback =
-    isLoginPage && request.nextUrl.searchParams.get("reset") === "true";
+    pathname === "/admin" && request.nextUrl.searchParams.get("reset") === "true";
   const isAdminSubRoute = pathname.startsWith("/admin/") && !isLoginPage;
+  const isStaffLogin = pathname === "/staff/login";
+  const isStaffInvitation = pathname === "/staff/invitation" || pathname.startsWith("/staff/invitation/");
+  const isStaffWorkspaceRoute = pathname.startsWith("/staff/") && !isStaffLogin && !isStaffInvitation;
 
   const isStudentLogin = pathname === "/student/login";
   const isStudentPortalRoute = PORTAL_ROUTE_PREFIXES.some(
@@ -67,6 +70,12 @@ export async function updateSession(request: NextRequest) {
   if (!user && isAdminSubRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin";
+    return NextResponse.redirect(url);
+  }
+
+  if (!user && isStaffWorkspaceRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/staff/login";
     return NextResponse.redirect(url);
   }
 
@@ -81,25 +90,37 @@ export async function updateSession(request: NextRequest) {
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role, status")
+      .select("role, status, is_active, roles(permissions, is_active)")
       .eq("id", user.id)
       .maybeSingle();
 
-    const isAdmin = profile?.role === "admin";
+    const assignedRole = Array.isArray(profile?.roles) ? profile.roles[0] : profile?.roles;
+    const isAdmin = profile?.role === "admin" ||
+      (assignedRole?.is_active === true && assignedRole.permissions?.full_access === true);
+    const isActiveStaff = profile?.role === "staff" && profile?.is_active === true && !isAdmin;
     const isActiveStudent =
       profile?.role === "student" && profile?.status === "active";
 
-    // Non-admin logged-in users cannot access any /admin routes
-    if (!isAdmin && !isPasswordResetCallback && (isLoginPage || isAdminSubRoute)) {
+    // Staff and admins share the workspace; other roles cannot access it.
+    if (!isAdmin && !isActiveStaff && !isPasswordResetCallback && (isLoginPage || isAdminSubRoute || isStaffWorkspaceRoute)) {
       const url = request.nextUrl.clone();
       url.pathname = "/home";
       return NextResponse.redirect(url);
     }
 
-    // Authenticated admin visiting the login page should be directed to dashboard
-    if (isAdmin && isLoginPage && !isPasswordResetCallback) {
+    if (isAdmin && (isLoginPage || isStaffLogin) && !isPasswordResetCallback) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin/dashboard";
+      return NextResponse.redirect(url);
+    }
+    if (isActiveStaff && (isLoginPage || isStaffLogin) && !isPasswordResetCallback) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/staff/dashboard";
+      return NextResponse.redirect(url);
+    }
+    if (isAdmin && isStaffWorkspaceRoute) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/admin${pathname.slice("/staff".length)}`;
       return NextResponse.redirect(url);
     }
 

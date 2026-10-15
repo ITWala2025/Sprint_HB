@@ -3,9 +3,28 @@ import PartnerCarousel from "@/components/Home/PartnerCarousel";
 import FeaturedProgram from "@/components/Home/FeaturedProgram";
 import MoreCourses from "@/components/Home/MoreCourses";
 import FacultyExperts from "@/components/sections/FacultyExperts";
+import FacultyFilmstrip from "@/components/Home/FacultyFilmstrip";
 import Testimonials from "@/components/Home/Testimonials";
 import FAQSection from "@/components/Home/FAQSection";
 import ContactCTA from "@/components/Home/ContactCTA";
+import about from "@/data/about.json";
+
+const homeFacultyProfiles = about.faculty.profiles.map((profile) => ({
+  ...profile,
+  image:
+    profile.image ??
+    (profile.name === "Ananya Roy" ? "/images/home/Ananya.jpeg" : undefined),
+}));
+const academicLead = about.leadership.profiles.find(
+  (profile) => profile.name === "Priya Verma",
+);
+const homeFacultyAndAcademicProfiles = [
+  ...homeFacultyProfiles,
+  {
+    ...academicLead,
+    image: "/images/home/Priya.jpeg",
+  },
+];
 
 export const metadata = {
   title: "SPRINT Training Hub",
@@ -32,6 +51,7 @@ export default function HomePage() {
         accessibleBrandRed
         sectionClassName="sprint-section bg-brand-white"
         contentClassName="mx-auto max-w-[1200px] px-6 py-[1.4rem] md:py-[1.925rem] lg:py-[2.45rem]"
+        profilesContent={<FacultyFilmstrip profiles={homeFacultyAndAcademicProfiles} />}
       />
       <Testimonials />
       <FAQSection />

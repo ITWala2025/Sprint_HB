@@ -8,7 +8,7 @@ export { adminRoutePermissions, canAccessAdminRoute } from "./auth-types";
 export type { AdminPermissionMap } from "./auth-types";
 
 export async function assertModuleAccess(
-    moduleSlug: string,
+    moduleSlugs: string | readonly string[],
     capability = "view",
 ): Promise<void> {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -36,10 +36,14 @@ export async function assertModuleAccess(
     if (authError) throw new Error(`Admin session verification failed: ${authError.message}`);
     if (!authData.user) redirect("/admin");
 
-    const { data: permitted, error } = await supabase.rpc("current_user_has_permission", {
-        module_key: moduleSlug,
-        capability,
-    });
-    if (error) throw new Error(`Could not verify ${capability} access for ${moduleSlug}: ${error.message}`);
-    if (permitted !== true) redirect("/admin/dashboard");
+    const modules = typeof moduleSlugs === "string" ? [moduleSlugs] : moduleSlugs;
+    for (const moduleSlug of modules) {
+        const { data: permitted, error } = await supabase.rpc("current_user_has_permission", {
+            module_key: moduleSlug,
+            capability,
+        });
+        if (error) throw new Error(`Could not verify ${capability} access for ${moduleSlug}: ${error.message}`);
+        if (permitted === true) return;
+    }
+    redirect("/staff/dashboard");
 }
