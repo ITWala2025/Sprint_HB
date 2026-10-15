@@ -5,7 +5,7 @@ const visualByCategory = {
   "Data Analytics": "/images/courses/abstract-data.svg",
   "Full-Stack Web": "/images/courses/abstract-web.svg",
   "Programming Fundamentals": "/images/courses/abstract-code.svg",
-  "Cybersecurity": "/images/courses/abstract-security.svg",
+  Cybersecurity: "/images/courses/abstract-security.svg",
   "Professional Skills": "/images/courses/abstract-people.svg",
 };
 
@@ -40,18 +40,16 @@ export function createDefaultProgramStages({
   );
   const durationAmount = durationMatch ? Number(durationMatch[1]) : 6;
   const durationUnit = durationMatch?.[2].toLowerCase() ?? "weeks";
-  const weeks =
-    durationUnit.startsWith("month")
-      ? durationAmount * 4
-      : durationUnit.startsWith("day")
-        ? Math.ceil(durationAmount / 5)
-        : durationAmount;
+  const weeks = durationUnit.startsWith("month")
+    ? durationAmount * 4
+    : durationUnit.startsWith("day")
+      ? Math.ceil(durationAmount / 5)
+      : durationAmount;
   const totalHours = Math.max(10, weeks * 10);
   const coreHours = Math.round(totalHours * 0.5);
   const practiceHours = Math.round(totalHours * 0.2);
   const projectHours = Math.round(totalHours * 0.2);
-  const assessmentHours =
-    totalHours - coreHours - practiceHours - projectHours;
+  const assessmentHours = totalHours - coreHours - practiceHours - projectHours;
   const primaryTool = tools[0] || title;
   const secondaryTool = tools[1] || "guided exercises";
   const thirdTool = tools[2] || "course workspace";
@@ -133,8 +131,7 @@ const createCourse = ({
   prerequisites,
   role,
   image:
-    visualByCategory[category] ||
-    visualByCategory["Programming Fundamentals"],
+    visualByCategory[category] || visualByCategory["Programming Fundamentals"],
   programStages,
   price: "Contact for fee details",
 });
@@ -365,11 +362,7 @@ export const courses = [
       "Create clear dashboards and make data-informed decisions with practical business datasets.",
     tools: ["Power BI", "Excel", "DAX"],
     pathway: "Analytics pathway",
-    outcomes: [
-      "Clean data",
-      "Build dashboards",
-      "Communicate insights",
-    ],
+    outcomes: ["Clean data", "Build dashboards", "Communicate insights"],
     role: "Analyst",
   }),
 
@@ -382,11 +375,7 @@ export const courses = [
     duration: "4 weeks",
     description:
       "Recognize cyber risks, strengthen digital hygiene, and understand secure working practices.",
-    tools: [
-      "Security awareness",
-      "Password tools",
-      "Risk checklists",
-    ],
+    tools: ["Security awareness", "Password tools", "Risk checklists"],
     pathway: "Digital safety",
     outcomes: [
       "Identify common threats",
@@ -463,11 +452,7 @@ export const courses = [
     duration: "4 weeks",
     description:
       "Build clarity, confidence, and structure for workplace communication and presentations.",
-    tools: [
-      "Presentation frameworks",
-      "Writing templates",
-      "Practice reviews",
-    ],
+    tools: ["Presentation frameworks", "Writing templates", "Practice reviews"],
     pathway: "Career readiness",
     outcomes: [
       "Write clearer messages",
@@ -489,11 +474,7 @@ export const courses = [
     tools: ["Linux", "Bash", "SSH"],
     prerequisites: "Basic computing and command-line familiarity",
     pathway: "Cloud and DevOps pathway",
-    outcomes: [
-      "Navigate Linux",
-      "Manage services",
-      "Automate routine tasks",
-    ],
+    outcomes: ["Navigate Linux", "Manage services", "Automate routine tasks"],
     role: "Systems learner",
   }),
 
@@ -550,7 +531,9 @@ const createBundle = ({
   const includedCourseTitles = included.map((courseSlug) => {
     const course = courses.find((entry) => entry.slug === courseSlug);
     if (!course) {
-      throw new Error(`Bundle "${slug}" references unknown course "${courseSlug}".`);
+      throw new Error(
+        `Bundle "${slug}" references unknown course "${courseSlug}".`,
+      );
     }
     return course.title;
   });
@@ -576,10 +559,7 @@ const createBundle = ({
     curriculum: [
       {
         title: "Foundation",
-        topics: [
-          "Build essential knowledge",
-          "Complete guided practice",
-        ],
+        topics: ["Build essential knowledge", "Complete guided practice"],
       },
       {
         title: "Specialize",
@@ -641,10 +621,7 @@ export const bundles = [
     audience: ["student"],
     description:
       "Start with Python and AI concepts, then apply your skills to building for the web.",
-    courses: [
-      "python-and-ai-foundations",
-      "full-stack-web-foundations",
-    ],
+    courses: ["python-and-ai-foundations", "full-stack-web-foundations"],
     pathway: "School and web foundations",
     outcomes: [
       "Understand programming and AI fundamentals",

@@ -5640,20 +5640,20 @@ a {
 .courses-signature-programs__name {
   margin: 0;
   color: var(--color-brand-navy);
-  font: 800 clamp(1.55rem, 3vw, 2.45rem) / 1 var(--font-display);
+  font: 800 clamp(1.32rem, 2.55vw, 2.08rem) / 1 var(--font-display);
   letter-spacing: -0.045em;
 }
 
 .courses-signature-programs__overview h3 {
-  margin: 0.75rem 0 0;
+  margin: 0.6rem 0 0;
   color: #4f26d7;
-  font: 700 clamp(1.25rem, 2.4vw, 2rem) / 1.18 var(--font-display);
+  font: 700 clamp(1.03rem, 1.95vw, 1.65rem) / 1.18 var(--font-display);
   letter-spacing: -0.035em;
 }
 
 .courses-signature-programs__description {
   max-width: 34rem;
-  margin: 1rem 0 0;
+  margin: 0.85rem 0 0;
   color: var(--color-brand-text-secondary);
   font: 400 clamp(0.94rem, 1.5vw, 1.08rem) / 1.6 var(--font-body);
 }
@@ -5662,7 +5662,7 @@ a {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
-  margin: 1.25rem 0 0;
+  margin: 1rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -5684,18 +5684,23 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.65rem;
+  gap: 0.45rem;
   width: fit-content;
-  min-height: 3rem;
-  margin-top: 1.25rem;
-  padding: 0.75rem 1.15rem;
+  min-height: 2.625rem;
+  margin-top: 1rem;
+  padding: 0.5rem 0.9rem;
   border: 1px solid var(--color-brand-navy);
   border-radius: 0.6rem;
   background: var(--color-brand-navy);
   color: var(--color-brand-white);
-  font: 800 0.9rem var(--font-body);
+  font: 800 0.8125rem / 1.2 var(--font-body);
   text-decoration: none;
   transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+.courses-signature-programs__cta svg {
+  width: 0.8rem;
+  height: 0.8rem;
 }
 
 .courses-signature-programs__cta:hover {

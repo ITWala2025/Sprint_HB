@@ -17,7 +17,7 @@ export default function RoleBasedLearningPaths() {
     >
       <div className="role-pathways__heading">
         <div>
-          <p className="courses-eyebrow">Career-focused pathways</p>
+          {/* <p className="courses-eyebrow">Career-focused pathways</p> */}
           <h2
             className="courses-results__group-heading"
             id="role-pathways-heading"
@@ -25,7 +25,7 @@ export default function RoleBasedLearningPaths() {
             Role-Based Learning Paths
           </h2>
         </div>
-        <p>Explore a sequence of learning designed around your target role.</p>
+        {/* <p>Explore a sequence of learning designed around your target role.</p> */}
       </div>
 
       <div className="role-pathways__grid">

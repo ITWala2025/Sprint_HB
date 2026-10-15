@@ -95,9 +95,9 @@ function CourseTile({ item, audience }) {
       <div className="course-tile__art">
         {item.image?.startsWith("/") ? <Image src={item.image} alt="" fill sizes="(min-width: 1024px) 26vw, (min-width: 640px) 45vw, 100vw" className="object-cover" /> : item.image ? <div aria-hidden="true" className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(0deg, rgba(1,31,62,.18), rgba(1,31,62,.04)), url("${item.image}")` }} /> : <CourseArt category={item.category} />}
 
-        <span className="course-tile__type">
-          {item.kind === "bundle" ? "Career Package" : "Course"}
-        </span>
+        {item.kind !== "bundle" ? (
+          <span className="course-tile__type">Course</span>
+        ) : null}
       </div>
 
       <div className="course-tile__body">
@@ -347,7 +347,7 @@ function FeaturedPrograms() {
           <p className="courses-signature-programs__name">
             SPRINT Career Accelerator
           </p>
-          <h3>From campus to corporate, with confidence.</h3>
+          <h3>Campus to Corporate, Confidently.</h3>
           <p className="courses-signature-programs__description">
             A career-development program for B.Tech and MCA students, progressing
             through Foundations, Ignite, and Outperform.
