@@ -240,12 +240,6 @@ export default async function DetailPage({ item, searchParams }) {
       <div className="course-detail-layout">
         <main>
           <section className="course-detail-section">
-            <p className="courses-eyebrow">Overview</p>
-            <h2>Learn with purpose and practical context.</h2>
-            <p>{item.longDescription || item.description}</p>
-          </section>
-
-          <section className="course-detail-section">
             <p className="courses-eyebrow">Course pathway</p>
             <h2>{item.pathway}</h2>
             <p>
@@ -260,7 +254,7 @@ export default async function DetailPage({ item, searchParams }) {
           <section className="course-detail-section">
             <p className="courses-eyebrow">Curriculum</p>
             <h2>What you will work through</h2>
-            <CourseCurriculum curriculum={item.curriculum} />
+            <CourseCurriculum curriculum={item.programStages} />
           </section>
 
           <section className="course-detail-section">

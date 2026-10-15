@@ -6588,19 +6588,23 @@ a {
 }
 
 .course-curriculum {
+  --timeline-x: 0.3rem;
+  --timeline-header-origin: calc(2rem + 2.4px);
+
   position: relative;
   display: grid;
   gap: 0.85rem;
   margin-top: 1.3rem;
 }
 
-.course-curriculum::before {
+.course-curriculum:not(.course-curriculum .course-curriculum)::before {
   position: absolute;
-  top: 1.25rem;
-  bottom: 1.25rem;
-  left: 0.3rem;
-  width: 1px;
-  background: var(--color-brand-border);
+  top: var(--timeline-start, 0);
+  bottom: var(--timeline-end, 0);
+  left: var(--timeline-x);
+  width: 2px;
+  transform: translateX(-50%);
+  background: color-mix(in srgb, var(--color-brand-navy) 30%, transparent);
   content: "";
 }
 
@@ -6615,17 +6619,46 @@ a {
   background: var(--color-brand-off-white);
 }
 
-.course-curriculum__item::before {
+.course-curriculum__header {
+  position: relative;
+}
+
+.course-curriculum__header::before,
+.course-curriculum__header::after {
   position: absolute;
-  top: 1rem;
-  left: -1rem;
-  width: 0.6rem;
-  height: 0.6rem;
-  border: 2px solid var(--color-brand-white);
+  top: 50%;
+  left: calc(var(--timeline-x) - var(--timeline-header-origin));
+  transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: var(--color-brand-red);
-  box-shadow: 0 0 0 1px var(--color-brand-border);
   content: "";
+  pointer-events: none;
+  transition: top 200ms ease, transform 200ms ease;
+}
+
+.course-curriculum__header::before {
+  z-index: 1;
+  width: 0.8rem;
+  height: 0.8rem;
+  box-sizing: border-box;
+  border: 2px solid var(--color-brand-navy);
+  background: var(--color-brand-off-white);
+}
+
+.course-curriculum__header::after {
+  z-index: 2;
+  width: 0.35rem;
+  height: 0.35rem;
+  background: color-mix(in srgb, var(--color-brand-navy) 55%, transparent);
+}
+
+.course-curriculum .course-curriculum .course-curriculum__header::before {
+  width: 0.65rem;
+  height: 0.65rem;
+}
+
+.course-curriculum .course-curriculum .course-curriculum__header::after {
+  width: 0.25rem;
+  height: 0.25rem;
 }
 
 .course-curriculum__item button {
@@ -6947,22 +6980,15 @@ a {
   }
 
   .course-curriculum {
-    gap: 0.7rem;
-  }
+    --timeline-x: 0.25rem;
+    --timeline-header-origin: calc(1.7rem + 2.4px);
 
-  .course-curriculum::before {
-    left: 0.25rem;
+    gap: 0.7rem;
   }
 
   .course-curriculum__item {
     margin-left: 0.85rem;
     padding: 0.75rem 0.85rem 0.9rem;
-  }
-
-  .course-curriculum__item::before {
-    left: -0.85rem;
-    width: 0.5rem;
-    height: 0.5rem;
   }
 
   .course-detail-aside > div:first-child {
@@ -7000,7 +7026,9 @@ a {
   .course-tile,
   .course-tile__link,
   .course-tile__link-icon,
-  .course-curriculum__item svg {
+  .course-curriculum__item svg,
+  .course-curriculum__header::before,
+  .course-curriculum__header::after {
     transition: none;
   }
 

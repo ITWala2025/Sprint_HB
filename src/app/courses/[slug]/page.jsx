@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import DetailPage from "@/components/courses/DetailPage";
-import { courses, getCourse } from "@/data/courses";
+import {
+  courses,
+  createDefaultProgramStages,
+  getCourse,
+} from "@/data/courses";
 import { createPublicServerClient } from "@/lib/supabase/public-server";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +15,7 @@ async function findCourse(slug) {
   if (supabase) {
     const { data } = await supabase
       .from("courses")
-      .select("slug,title,category,description,long_description,difficulty_level,duration,delivery_method,pathway,prerequisites,tools,outcomes,target_roles,target_role,curriculum,thumbnail_url,audience,audience_type,badge_label,certificate_included,is_published")
+      .select("slug,title,category,description,difficulty_level,duration,delivery_method,pathway,prerequisites,tools,outcomes,target_roles,target_role,thumbnail_url,audience,audience_type,badge_label,certificate_included,is_published")
       .eq("slug", slug)
       .maybeSingle();
     if (data) {
@@ -24,7 +28,6 @@ async function findCourse(slug) {
         category: data.category,
         description: data.description || "",
         badgeLabel: data.badge_label || "Course",
-        longDescription: data.long_description || data.description,
         level: data.difficulty_level || "",
         duration: data.duration || "",
         delivery: data.delivery_method || "",
@@ -33,7 +36,14 @@ async function findCourse(slug) {
         tools: Array.isArray(data.tools) ? data.tools : [],
         outcomes: Array.isArray(data.outcomes) ? data.outcomes : [],
         targetRoles: Array.isArray(data.target_roles) ? data.target_roles : data.target_role ? [data.target_role] : [],
-        curriculum: Array.isArray(data.curriculum) ? data.curriculum : [],
+        programStages:
+          getCourse(slug)?.programStages ??
+          createDefaultProgramStages({
+            title: data.title,
+            tools: Array.isArray(data.tools) ? data.tools : [],
+            description: data.description || "",
+            duration: data.duration || "",
+          }),
         image: data.thumbnail_url || "/images/courses/abstract-code.svg",
         audience,
         certificate: Boolean(data.certificate_included),
@@ -50,7 +60,6 @@ async function findCourse(slug) {
     category: fallback.category,
     description: fallback.description,
     badgeLabel: "Course",
-    longDescription: fallback.longDescription,
     level: fallback.level,
     duration: fallback.duration,
     delivery: fallback.delivery,
@@ -59,7 +68,14 @@ async function findCourse(slug) {
     tools: fallback.tools,
     outcomes: fallback.outcomes,
     targetRoles: fallback.role ? [fallback.role] : [],
-    curriculum: fallback.curriculum,
+    programStages:
+      fallback.programStages ??
+      createDefaultProgramStages({
+        title: fallback.title,
+        tools: fallback.tools,
+        description: fallback.description,
+        duration: fallback.duration,
+      }),
     image: fallback.image,
     certificate: fallback.certificate,
   };

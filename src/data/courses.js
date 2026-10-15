@@ -29,28 +29,78 @@ const audienceCopy = {
   },
 };
 
-const baseCurriculum = (title, tools) => [
-  {
-    title: "Build the foundation",
-    topics: [
-      `How ${title} is used in real teams`,
-      "Core concepts and terminology",
-      "Guided practice exercises",
-    ],
-  },
-  {
-    title: "Work with the tools",
-    topics: tools.map((tool) => `${tool} in a hands-on lab`),
-  },
-  {
-    title: "Apply it in context",
-    topics: [
-      "Scenario-based implementation",
-      "Review with practical feedback",
-      "Portfolio-ready deliverable",
-    ],
-  },
-];
+export function createDefaultProgramStages({
+  title,
+  tools = [],
+  description = "",
+  duration = "",
+}) {
+  const durationMatch = String(duration).match(
+    /(\d+)\s*(weeks?|months?|days?)/i,
+  );
+  const durationAmount = durationMatch ? Number(durationMatch[1]) : 6;
+  const durationUnit = durationMatch?.[2].toLowerCase() ?? "weeks";
+  const weeks =
+    durationUnit.startsWith("month")
+      ? durationAmount * 4
+      : durationUnit.startsWith("day")
+        ? Math.ceil(durationAmount / 5)
+        : durationAmount;
+  const totalHours = Math.max(10, weeks * 10);
+  const coreHours = Math.round(totalHours * 0.5);
+  const practiceHours = Math.round(totalHours * 0.2);
+  const projectHours = Math.round(totalHours * 0.2);
+  const assessmentHours =
+    totalHours - coreHours - practiceHours - projectHours;
+  const primaryTool = tools[0] || title;
+  const secondaryTool = tools[1] || "guided exercises";
+  const thirdTool = tools[2] || "course workspace";
+  const context = description.split(/[.!?]/)[0] || title;
+  const learningBoard = (id, topics) => ({
+    id: `${id}-learning-board`,
+    label: "Learning Board",
+    title: "",
+    topics,
+  });
+  const stage = (id, title, topics) => ({
+    id,
+    label: "Program Stage",
+    title,
+    children: [learningBoard(id, topics)],
+  });
+
+  return [
+    stage("day-one", "Day One", [
+      `Course goals and learning path for ${title}`,
+      `Set up ${primaryTool} and the learning workspace`,
+      `Try a first guided task: ${context.toLowerCase()}`,
+    ]),
+    stage("core-sessions", `Core Sessions (${coreHours} hours)`, [
+      `Core concepts and terminology for ${title}`,
+      `How ${primaryTool} supports ${context.toLowerCase()}`,
+      `Key workflows using ${secondaryTool}`,
+    ]),
+    stage("hands-on-practice", `Hands-on Practice (${practiceHours} hours)`, [
+      `Guided ${primaryTool} lab`,
+      `Practice with ${secondaryTool} and ${thirdTool}`,
+      "Troubleshoot a realistic task with feedback",
+    ]),
+    stage("project-work", `Project Work (${projectHours} hours)`, [
+      `Plan a practical ${title} project`,
+      `Build a project using ${primaryTool} and ${secondaryTool}`,
+      "Document and present the project outcome",
+    ]),
+    stage(
+      "assessment-certification",
+      `Assessment & Certification (${assessmentHours} hours)`,
+      [
+        "Apply course concepts to a practical scenario",
+        "Review the final deliverable against course outcomes",
+        "Prepare for certification and next steps",
+      ],
+    ),
+  ];
+}
 
 const createCourse = ({
   slug,
@@ -66,6 +116,7 @@ const createCourse = ({
   outcomes,
   prerequisites = "No formal prerequisites",
   role,
+  programStages = null,
 }) => ({
   slug,
   title,
@@ -75,7 +126,6 @@ const createCourse = ({
   level,
   duration,
   description,
-  longDescription: `${description} The learning experience combines instructor guidance, practice exercises, and a practical outcome you can carry into your next role or project.`,
   tools,
   certificate,
   pathway,
@@ -85,7 +135,7 @@ const createCourse = ({
   image:
     visualByCategory[category] ||
     visualByCategory["Programming Fundamentals"],
-  curriculum: baseCurriculum(title, tools),
+  programStages,
   price: "Contact for fee details",
 });
 
