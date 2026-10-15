@@ -6,7 +6,6 @@ import { assertModuleAccess, canAccessAdminRoute, type AdminPermissionMap } from
 import UserDirectoryTable, { type DirectoryRole, type DirectoryUser } from "@/components/admin/users/UserDirectoryTable";
 
 export const metadata: Metadata = {
-    title: "Staff & User Directory | SPRINT Admin Hub",
     robots: { index: false, follow: false },
 };
 
@@ -61,7 +60,7 @@ export default async function AdminUsersPage() {
     }
     const permissions = (assignedRole?.permissions as AdminPermissionMap | null) ?? null;
     const roleName = assignedRole?.name ?? null;
-    if (!canAccessAdminRoute("/admin/users", permissions, currentProfile.role, roleName)) {
+    if (!canAccessAdminRoute("/admin/users", permissions, currentProfile.role)) {
         return <AccessDenied />;
     }
 

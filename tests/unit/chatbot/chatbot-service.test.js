@@ -168,6 +168,54 @@ describe("chatbot service", () => {
     expect(result.reply).toContain("job-ready training platform in Hazaribagh");
   });
 
+  it("answers location and visit questions directly without inventing hours or distance", async () => {
+    vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await getLocalChatbotReply({
+      message: "Where is the center located and timings? What is the distance from VBU?",
+    });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(result.reply).toContain("Hazaribagh, Jharkhand");
+    expect(result.reply).toContain("can’t verify the distance or route from VBU");
+    expect(result.reply).toContain("confirm current office timings");
+    expect(result.reply).toContain("+91 85212 83184/85");
+  });
+
+  it("answers course area and AI course questions from the current catalogue", async () => {
+    vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const areas = await getLocalChatbotReply({
+      message: "In which areas does SPRINT offer courses?",
+    });
+    const aiCourses = await getLocalChatbotReply({ message: "Tell me about AI courses" });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(areas.reply).toContain("Artificial Intelligence");
+    expect(areas.reply).toContain("Professional Skills");
+    expect(aiCourses.reply).toContain("Python & AI Foundations (8 weeks)");
+    expect(aiCourses.reply).toContain("Generative AI for Work (4 weeks)");
+  });
+
+  it("lists catalogue options for non-IT learners without another screening question", async () => {
+    vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await getLocalChatbotReply({
+      message: "What non-professional courses are available in SPRINT?",
+    });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(result.reply).toContain("Python & AI Foundations");
+    expect(result.reply).toContain("Digital Office Workflows");
+    expect(result.reply).not.toMatch(/\?$/);
+  });
+
   it("uses a verified dataset answer when the local model request fails", async () => {
     vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Ollama unavailable")));
@@ -197,8 +245,17 @@ describe("chatbot service", () => {
     const prompt = buildChatbotPrompt({ message: "Can you help me find the right course?" });
 
     expect(prompt).toContain("Do not refuse general learning or career guidance");
-    expect(prompt).toContain("ask one concise, relevant follow-up question");
-    expect(prompt).toContain("do not guess or immediately list courses");
+    expect(prompt).toContain("Ask a follow-up only when the visitor explicitly requests a personalized course or career recommendation");
+    expect(prompt).toMatch(/do not guess or immediately list courses/i);
+  });
+
+  it("keeps model responses short after the visitor asks for a short answer", () => {
+    const prompt = buildChatbotPrompt({
+      message: "Where is the office?",
+      history: [{ role: "user", content: "Give me only a short answer." }],
+    });
+
+    expect(prompt).toContain("The visitor asked for short answers");
   });
 
   it("does not use unverified dataset entries as fallback answers", async () => {

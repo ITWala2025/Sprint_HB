@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { AlertCircle, ArrowRight, CheckCircle2, LoaderCircle, ShieldCheck, X } from "lucide-react";
+import { AlertCircle, ArrowRight, CheckCircle2, Home, LoaderCircle, ShieldCheck, X } from "lucide-react";
+import Link from "next/link";
 import ForcePasswordChangeModal from "@/components/admin/auth/ForcePasswordChangeModal";
 import { createClient } from "@/lib/supabase/client";
 
@@ -137,6 +138,13 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-off-white px-4">
+      <Link
+        href="/home"
+        className="fixed top-5 right-5 z-50 inline-flex items-center gap-2 rounded-lg border border-brand-border bg-white px-4 py-2 text-sm font-bold text-brand-navy shadow-sm transition hover:bg-slate-50"
+      >
+        <Home className="size-4" aria-hidden="true" />
+        Go Home
+      </Link>
       <div className="w-full max-w-md bg-brand-white border border-brand-border rounded-2xl shadow-xl p-8 space-y-6">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-brand-red bg-brand-red/10 px-3 py-1 rounded-full">

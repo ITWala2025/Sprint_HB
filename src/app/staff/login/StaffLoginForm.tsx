@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { Eye, EyeOff, LoaderCircle, LogIn, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, Home, LoaderCircle, LogIn, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import FirstTimePasswordModal from "@/components/staff/auth/FirstTimePasswordModal";
 import { createClient } from "@/lib/supabase/client";
 
@@ -20,6 +21,7 @@ export default function StaffLoginForm({ initialEmail, invitationToken }: StaffL
     const supabase = useMemo(() => createClient({ detectSessionInUrl: false }), []);
 
     useEffect(() => {
+        document.title = "Staff Login | SPRINT Workspace";
         if (window.location.hash.includes("access_token=") || window.location.hash.includes("error=")) {
             window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
         }
@@ -67,6 +69,13 @@ export default function StaffLoginForm({ initialEmail, invitationToken }: StaffL
 
     return (
         <>
+            <Link
+                href="/home"
+                className="fixed top-5 right-5 z-50 inline-flex items-center gap-2 rounded-lg border border-brand-border bg-white px-4 py-2 text-sm font-bold text-brand-navy shadow-sm transition hover:bg-slate-50"
+            >
+                <Home className="size-4" aria-hidden="true" />
+                Go Home
+            </Link>
             <main className="flex min-h-screen items-center justify-center bg-brand-off-white px-4 py-12">
                 <section className="w-full max-w-md space-y-6 rounded-2xl border border-brand-border bg-white p-8 shadow-xl" aria-labelledby="staff-login-title">
                     <header className="space-y-2 text-center">
