@@ -1,7 +1,9 @@
 "use client";
 
+import { useContext } from "react";
 import { usePathname } from "next/navigation";
 import StudentRouteModal from "@/components/student/StudentRouteModal";
+import { StudentRouteModalContext } from "@/components/student/StudentRouteModalContext";
 
 const ROUTE_TITLES = {
   login: "Student Portal",
@@ -24,8 +26,13 @@ const ROUTE_TITLES = {
 
 export default function StudentPortalRouteShell({ children }) {
   const pathname = usePathname() ?? "";
+  const { isInterceptedModal } = useContext(StudentRouteModalContext);
   const routeKey = pathname.split("/").filter(Boolean).slice(1).join("/");
-  if (["/student/dashboard", "/student/enroll"].includes(pathname)) {
+
+  if (
+    isInterceptedModal ||
+    ["/student/dashboard", "/student/enroll"].includes(pathname)
+  ) {
     return children;
   }
 

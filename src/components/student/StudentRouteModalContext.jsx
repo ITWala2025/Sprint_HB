@@ -5,13 +5,18 @@ import { createContext, useEffect, useRef, useState } from "react";
 export const StudentRouteModalContext = createContext({
   backgroundPath: null,
   historyDepth: 0,
+  isInterceptedModal: false,
 });
 
 const isStudentModalRoute = (pathname) =>
   pathname.startsWith("/student/") &&
   !["/student/dashboard", "/student/enroll"].includes(pathname);
 
-export function StudentRouteModalProvider({ pathname, children }) {
+export function StudentRouteModalProvider({
+  pathname,
+  isInterceptedModal = false,
+  children,
+}) {
   const navigationRef = useRef(null);
 
   if (!navigationRef.current) {
@@ -79,7 +84,9 @@ export function StudentRouteModalProvider({ pathname, children }) {
   }, [pathname]);
 
   return (
-    <StudentRouteModalContext.Provider value={navigation}>
+    <StudentRouteModalContext.Provider
+      value={{ ...navigation, isInterceptedModal }}
+    >
       {children}
     </StudentRouteModalContext.Provider>
   );

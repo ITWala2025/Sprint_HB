@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { StudentRouteModalContext } from "@/components/student/StudentRouteModalContext";
 
 const { mockPathname, back, replace } = vi.hoisted(() => ({
   mockPathname: vi.fn(() => "/student/forgot-password"),
@@ -56,6 +57,26 @@ describe("StudentPortalRouteShell", () => {
       expect(screen.getByText("Student page content")).toBeInTheDocument();
     },
   );
+
+  it("does not add a second modal when the intercepted modal slot is active", () => {
+    mockPathname.mockReturnValue("/student/login");
+    render(
+      <StudentRouteModalContext.Provider
+        value={{
+          backgroundPath: "/student/enroll",
+          historyDepth: 1,
+          isInterceptedModal: true,
+        }}
+      >
+        <StudentPortalRouteShell>
+          <p>Background page</p>
+        </StudentPortalRouteShell>
+      </StudentRouteModalContext.Provider>,
+    );
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByText("Background page")).toBeInTheDocument();
+  });
 
   it("returns a directly loaded student modal to home when closed", () => {
     mockPathname.mockReturnValue("/student/login");

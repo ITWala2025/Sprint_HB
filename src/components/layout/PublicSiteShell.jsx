@@ -49,7 +49,10 @@ export default function PublicSiteShell({ children, modal }) {
     (!isAdminRoute && (!isFocusedRoute || isStudentRoute));
 
   return (
-    <StudentRouteModalProvider pathname={pathname}>
+    <StudentRouteModalProvider
+      pathname={pathname}
+      isInterceptedModal={hasInterceptedModal}
+    >
     <>
       {showPublicChrome && <Header />}
 
