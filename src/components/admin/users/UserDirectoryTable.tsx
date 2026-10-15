@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Copy, LoaderCircle, Mail, Plus, Search, Trash2, Users, X } from "lucide-react";
 import { deleteStaffUserAction, resendStaffInvitationAction } from "@/app/admin/users/actions";
@@ -47,10 +47,12 @@ export default function UserDirectoryTable({ users, roles, canInvite, canDelete 
         email: string;
         tempPassword: string;
         inviteUrl: string;
+        emailSent: boolean;
     } | null>(null);
     const [copyError, setCopyError] = useState("");
     const [copiedValue, setCopiedValue] = useState<"password" | "link" | null>(null);
-    const [isPending, startTransition] = useTransition();
+    const [resendingId, setResendingId] = useState<string | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
     const router = useRouter();
 
     const filteredUsers = useMemo(() => {
@@ -63,44 +65,46 @@ export default function UserDirectoryTable({ users, roles, canInvite, canDelete 
         });
     }, [roleFilter, search, users]);
 
-    function handleDelete(user: DirectoryUser) {
+    async function handleDelete(user: DirectoryUser) {
         if (!window.confirm(`Permanently delete ${user.full_name || user.email}? This cannot be undone.`)) {
             return;
         }
 
         setDeleteError("");
-        startTransition(async () => {
-            try {
-                const result = await deleteStaffUserAction(user.id);
-                if (result.success === false) {
-                    setDeleteError(result.error);
-                    return;
-                }
-                router.refresh();
-            } catch {
-                setDeleteError("The staff account could not be deleted. Check your connection and try again.");
+        setDeletingId(user.id);
+        try {
+            const result = await deleteStaffUserAction(user.id);
+            if (result.success === false) {
+                setDeleteError(result.error);
+                return;
             }
-        });
+            router.refresh();
+        } catch {
+            setDeleteError("The staff account could not be deleted. Check your connection and try again.");
+        } finally {
+            setDeletingId(null);
+        }
     }
 
-    function handleResend(user: DirectoryUser) {
+    async function handleResend(user: DirectoryUser) {
         setDeleteError("");
         setResendResult(null);
         setCopiedValue(null);
         setCopyError("");
-        startTransition(async () => {
-            try {
-                const result = await resendStaffInvitationAction(user.id);
-                if (result.success === false) {
-                    setDeleteError(result.error);
-                    return;
-                }
-                setResendResult(result);
-                router.refresh();
-            } catch {
-                setDeleteError("The staff invitation could not be resent. Check your connection and try again.");
+        setResendingId(user.id);
+        try {
+            const result = await resendStaffInvitationAction(user.id);
+            if (result.success === false) {
+                setDeleteError(result.error);
+                return;
             }
-        });
+            setResendResult(result);
+            router.refresh();
+        } catch {
+            setDeleteError("The staff invitation could not be resent. Check your connection and try again.");
+        } finally {
+            setResendingId(null);
+        }
     }
 
     async function copyInvitationValue(value: string, copied: "password" | "link") {
@@ -209,24 +213,24 @@ export default function UserDirectoryTable({ users, roles, canInvite, canDelete 
                                                 <button
                                                     type="button"
                                                     onClick={() => handleResend(user)}
-                                                    disabled={isPending}
+                                                    disabled={resendingId !== null || deletingId !== null}
                                                     className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-bold text-brand-navy transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
                                                     aria-label={`Resend invitation to ${user.email}`}
                                                 >
-                                                    {isPending ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <Mail className="size-4" aria-hidden="true" />}
-                                                    {isPending ? "Sending..." : "Resend invite"}
+                                                    {resendingId === user.id ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <Mail className="size-4" aria-hidden="true" />}
+                                                    {resendingId === user.id ? "Sending..." : "Resend invite"}
                                                 </button>
                                             )}
                                             {canDelete && (
                                                 <button
                                                     type="button"
                                                     onClick={() => handleDelete(user)}
-                                                    disabled={isPending}
+                                                    disabled={deletingId !== null || resendingId !== null}
                                                     className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-bold text-brand-red transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                                                     aria-label={`Delete ${user.full_name || user.email}`}
                                                 >
-                                                    {isPending ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <Trash2 className="size-4" aria-hidden="true" />}
-                                                    {isPending ? "Working..." : "Delete"}
+                                                    {deletingId === user.id ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <Trash2 className="size-4" aria-hidden="true" />}
+                                                    {deletingId === user.id ? "Working..." : "Delete"}
                                                 </button>
                                             )}
                                         </div>
@@ -261,8 +265,12 @@ export default function UserDirectoryTable({ users, roles, canInvite, canDelete 
                     <section className="w-full max-w-md rounded-xl border border-white/60 bg-white p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="resend-invitation-title">
                         <div className="flex items-start justify-between gap-4">
                             <div>
-                                <h2 id="resend-invitation-title" className="font-display text-xl font-bold text-brand-navy">Invitation resent</h2>
-                                <p className="mt-1 text-sm leading-6 text-brand-text-secondary">A new Supabase invitation email has been sent. The invitation link is valid for 1 hour.</p>
+                                <h2 id="resend-invitation-title" className="font-display text-xl font-bold text-brand-navy">New credentials ready</h2>
+                                <p className="mt-1 text-sm leading-6 text-brand-text-secondary">
+                                    {resendResult.emailSent
+                                        ? "A new Supabase invitation email has been sent. The invitation link is valid for 1 hour."
+                                        : "This email is already confirmed, so no invitation email was sent. Share the new temporary password and invitation link below."}
+                                </p>
                             </div>
                             <button type="button" onClick={() => setResendResult(null)} aria-label="Close resend confirmation" className="rounded-md p-1 text-brand-text-muted hover:bg-slate-100"><X className="size-5" aria-hidden="true" /></button>
                         </div>

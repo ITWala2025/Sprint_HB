@@ -20,7 +20,7 @@ export type ProvisionStaffUserResult =
     | { success: false; error: string };
 
 export type ResendStaffInvitationResult =
-    | { success: true; email: string; tempPassword: string; inviteUrl: string }
+    | { success: true; email: string; tempPassword: string; inviteUrl: string; emailSent: boolean }
     | { success: false; error: string };
 
 export type DeleteStaffUserResult =
@@ -236,6 +236,7 @@ export async function provisionStaffUserAction(
 
     const { error: passwordError } = await serviceClient.auth.admin.updateUserById(inviteData.user.id, {
         password: tempPassword,
+        email_confirm: true, // <--- Auto-confirms so sign-in works immediately with temp password
     });
     if (passwordError) {
         const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id);
@@ -350,13 +351,6 @@ export async function resendStaffInvitationAction(
     if (authError || !authData.user?.email) {
         return { success: false, error: `The Auth account could not be verified${authError ? `: ${authError.message}` : "."}` };
     }
-    if (authData.user.email_confirmed_at) {
-        return {
-            success: false,
-            error: "Supabase Auth cannot resend an invitation after the email address has been confirmed.",
-        };
-    }
-
     const email = authData.user.email.trim().toLowerCase();
     const fullName = profile.full_name?.trim() || email;
     const tempPassword = createTemporaryPassword();
@@ -373,19 +367,28 @@ export async function resendStaffInvitationAction(
         return { success: false, error: `The previous invitation could not be invalidated: ${expireError.message}` };
     }
 
-    const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(email, {
-        data: { full_name: fullName },
-        redirectTo: inviteUrl,
-    });
-    if (inviteError || !inviteData.user) {
-        return { success: false, error: inviteError?.message ?? "The staff invitation could not be resent." };
+    const emailSent = !authData.user.email_confirmed_at;
+    if (emailSent) {
+        const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(email, {
+            data: { full_name: fullName },
+            redirectTo: inviteUrl,
+        });
+        if (inviteError || !inviteData.user) {
+            return { success: false, error: inviteError?.message ?? "The staff invitation could not be resent." };
+        }
     }
 
     const { error: passwordError } = await serviceClient.auth.admin.updateUserById(targetId, {
         password: tempPassword,
+        email_confirm: true,
     });
     if (passwordError) {
-        return { success: false, error: `The invitation was sent, but the temporary password could not be updated: ${passwordError.message}` };
+        return {
+            success: false,
+            error: emailSent
+                ? `The invitation was sent, but the temporary password could not be updated: ${passwordError.message}`
+                : `The temporary password could not be updated: ${passwordError.message}`,
+        };
     }
 
     const { error: invitationError } = await serviceClient.from("staff_invitations").insert({
@@ -396,11 +399,16 @@ export async function resendStaffInvitationAction(
         expires_at: expiresAt,
     });
     if (invitationError) {
-        return { success: false, error: `The invitation email was sent, but it could not be tracked: ${invitationError.message}` };
+        return {
+            success: false,
+            error: emailSent
+                ? `The invitation email was sent, but it could not be tracked: ${invitationError.message}`
+                : `The new credentials were created, but the invitation could not be tracked: ${invitationError.message}`,
+        };
     }
 
     revalidatePath("/admin/users");
-    return { success: true, email, tempPassword, inviteUrl };
+    return { success: true, email, tempPassword, inviteUrl, emailSent };
 }
 
 export async function deleteStaffUserAction(targetUserId: string): Promise<DeleteStaffUserResult> {
@@ -467,7 +475,7 @@ export async function deleteStaffUserAction(targetUserId: string): Promise<Delet
         return { success: false, error: "You do not have permission to delete staff accounts." };
     }
 
-   const { data: targetProfile, error: targetProfileError } = await serviceClient
+    const { data: targetProfile, error: targetProfileError } = await serviceClient
         .from("profiles")
         .select("role")
         .eq("id", targetId)

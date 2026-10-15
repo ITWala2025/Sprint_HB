@@ -14,6 +14,20 @@ const nextConfig = {
     ],
     formats: ["image/avif", "image/webp"],
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/admin/login",
+          destination: "/admin",
+        },
+        {
+          source: "/staff/:path((?!login|invitation).*)",
+          destination: "/admin/:path*",
+        },
+      ],
+    };
+  },
 };
 
 export default nextConfig;

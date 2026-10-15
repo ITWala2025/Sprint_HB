@@ -10,6 +10,7 @@ vi.mock("@/app/admin/users/actions", () => ({
         email: "asha@example.com",
         tempPassword: "new-temporary-password",
         inviteUrl: "https://example.com/staff/invitation/new-token",
+        emailSent: true,
     }),
 }));
 vi.mock("@/components/admin/roles/CreateUserModal", () => ({
@@ -94,8 +95,46 @@ describe("UserDirectoryTable", () => {
         await user.click(screen.getByRole("button", { name: "Resend invitation to asha@example.com" }));
 
         await waitFor(() => expect(resendStaffInvitationAction).toHaveBeenCalledWith("user-1"));
-        expect(await screen.findByRole("heading", { name: "Invitation resent" })).toBeInTheDocument();
+        expect(await screen.findByRole("heading", { name: "New credentials ready" })).toBeInTheDocument();
+        expect(screen.getByText(/A new Supabase invitation email has been sent/)).toBeInTheDocument();
         expect(screen.getByText("new-temporary-password")).toBeInTheDocument();
         expect(screen.getByText("https://example.com/staff/invitation/new-token")).toBeInTheDocument();
+    });
+
+    it("shows loading labels only on the row being processed", async () => {
+        const user = userEvent.setup();
+        let finishResend!: (result: {
+            success: true;
+            email: string;
+            tempPassword: string;
+            inviteUrl: string;
+            emailSent: boolean;
+        }) => void;
+        vi.mocked(resendStaffInvitationAction).mockReturnValueOnce(new Promise((resolve) => {
+            finishResend = resolve;
+        }));
+
+        const secondUser = {
+            ...users[1],
+            is_active: true,
+            first_login: true,
+            must_change_password: true,
+        };
+        render(<UserDirectoryTable users={[users[0], secondUser]} roles={[]} canInvite={true} canDelete={true} />);
+
+        await user.click(screen.getByRole("button", { name: "Resend invitation to asha@example.com" }));
+
+        expect(screen.getAllByText("Sending...")).toHaveLength(1);
+        expect(screen.getAllByText("Resend invite")).toHaveLength(1);
+        expect(screen.getAllByText("Delete")).toHaveLength(2);
+
+        finishResend({
+            success: true,
+            email: "asha@example.com",
+            tempPassword: "new-temporary-password",
+            inviteUrl: "https://example.com/staff/invitation/new-token",
+            emailSent: true,
+        });
+        expect(await screen.findByRole("heading", { name: "New credentials ready" })).toBeInTheDocument();
     });
 });

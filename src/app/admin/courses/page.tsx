@@ -5,6 +5,7 @@ import {
     BookOpen, Check, CheckCircle2, Clock, Edit3, Eye, Layers, LayoutGrid, List, Plus, Search, Sparkles, Star, Tag, Trash2, X,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useAdminPermissions } from "@/app/admin/permissions-context";
 
 export interface SyllabusModule {
     title: string;
@@ -128,6 +129,7 @@ function normalizeCourse(row: CourseItem): CourseItem {
 
 export default function CourseManagementPage() {
     const supabase = useMemo(() => createClient(), []);
+    const { hasPermission } = useAdminPermissions();
     const [courses, setCourses] = useState<CourseItem[]>([]);
     const [bundles, setBundles] = useState<BundleItem[]>([]);
     const [dashboardView, setDashboardView] = useState<DashboardView>("courses");
@@ -142,6 +144,8 @@ export default function CourseManagementPage() {
     const [editingCourse, setEditingCourse] = useState<CourseItem | null | undefined>(undefined);
     const [editingBundle, setEditingBundle] = useState<BundleItem | null | undefined>(undefined);
     const [viewingCourse, setViewingCourse] = useState<CourseItem | null>(null);
+    const hasCoursePermission = (capability: string) => hasPermission(["courses", "cms_courses"], capability);
+    const hasBundlePermission = (capability: string) => hasPermission(["course_bundle_cms", "cms_courses"], capability);
 
     useEffect(() => {
         let active = true;
@@ -201,6 +205,11 @@ export default function CourseManagementPage() {
     const activeCategoryCount = new Set(courses.map((course) => course.category).filter(Boolean)).size;
 
     async function saveCourse(payload: CoursePayload, id?: string) {
+        const capability = id ? "edit" : "create";
+        if (!hasCoursePermission(capability)) {
+            setNotice({ type: "error", message: `You do not have permission to ${capability} courses.` });
+            return false;
+        }
         setSavingId(id ?? "new");
         setNotice(null);
         const audience = payload.audience_type || payload.audience || "undergraduate";
@@ -229,6 +238,11 @@ export default function CourseManagementPage() {
     }
 
     async function saveBundle(payload: BundlePayload, id?: string) {
+        const capability = id ? "edit" : "create";
+        if (!hasBundlePermission(capability)) {
+            setNotice({ type: "error", message: `You do not have permission to ${capability} flagship programs.` });
+            return false;
+        }
         setSavingId(id ?? "new-bundle");
         setNotice(null);
         const upsertPayload = { ...payload, ...(id ? { id } : {}) };
@@ -248,6 +262,10 @@ export default function CourseManagementPage() {
     }
 
     async function deleteBundle(bundle: BundleItem) {
+        if (!hasBundlePermission("delete")) {
+            setNotice({ type: "error", message: "You do not have permission to delete flagship programs." });
+            return;
+        }
         if (!window.confirm(`Delete “${bundle.title}”? This cannot be undone.`)) return;
         setSavingId(bundle.id);
         const { error } = await supabase.from("course_bundles").delete().eq("id", bundle.id);
@@ -261,6 +279,10 @@ export default function CourseManagementPage() {
     }
 
     async function toggleBundle(bundle: BundleItem, field: "is_published" | "is_featured") {
+        if (!hasBundlePermission("edit")) {
+            setNotice({ type: "error", message: "You do not have permission to edit flagship programs." });
+            return;
+        }
         setSavingId(bundle.id);
         const nextValue = !bundle[field];
         const { error } = await supabase.from("course_bundles").update({ [field]: nextValue }).eq("id", bundle.id);
@@ -273,6 +295,10 @@ export default function CourseManagementPage() {
     }
 
     async function toggleFeatured(course: CourseItem) {
+        if (!hasCoursePermission("edit")) {
+            setNotice({ type: "error", message: "You do not have permission to edit courses." });
+            return;
+        }
         setSavingId(course.id);
         const nextValue = !course.is_featured;
         const { error } = await supabase.from("courses").update({ is_featured: nextValue }).eq("id", course.id);
@@ -286,6 +312,10 @@ export default function CourseManagementPage() {
     }
 
     async function togglePublished(course: CourseItem) {
+        if (!hasCoursePermission("edit")) {
+            setNotice({ type: "error", message: "You do not have permission to edit courses." });
+            return;
+        }
         setSavingId(course.id);
         const nextValue = !course.is_published;
         const { error } = await supabase.from("courses").update({ is_published: nextValue }).eq("id", course.id);
@@ -299,6 +329,10 @@ export default function CourseManagementPage() {
     }
 
     async function deleteCourse(course: CourseItem) {
+        if (!hasCoursePermission("delete")) {
+            setNotice({ type: "error", message: "You do not have permission to delete courses." });
+            return;
+        }
         if (!window.confirm(`Delete “${course.title}”? This cannot be undone.`)) return;
         setSavingId(course.id);
         const { error } = await supabase.from("courses").delete().eq("id", course.id);
@@ -321,9 +355,9 @@ export default function CourseManagementPage() {
                         <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Course Management</h2>
                         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Manage SPRINT technology pathways, learning outcomes, and catalogue visibility.</p>
                     </div>
-                    <button type="button" onClick={() => dashboardView === "courses" ? setEditingCourse(null) : setEditingBundle(null)} className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-red px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">
+                    {(dashboardView === "courses" ? hasCoursePermission("create") : hasBundlePermission("create")) && <button type="button" onClick={() => dashboardView === "courses" ? setEditingCourse(null) : setEditingBundle(null)} className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-red px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">
                         <Plus className="size-4" aria-hidden="true" /> {dashboardView === "courses" ? "Add Course" : "Add Flagship Program"}
-                    </button>
+                    </button>}
                 </div>
             </section>
 
@@ -389,21 +423,21 @@ export default function CourseManagementPage() {
                         <tbody className="divide-y divide-slate-100">
                             {isLoading ? <tr><td colSpan={8} className="px-6 py-16 text-center text-sm text-brand-text-muted">Loading courses…</td></tr>
                                 : filteredCourses.length === 0 ? <tr><td colSpan={8} className="px-6 py-16 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</td></tr>
-                                    : filteredCourses.map((course) => <CourseRow key={course.id} course={course} isBusy={savingId === course.id} onView={() => setViewingCourse(course)} onEdit={() => setEditingCourse(course)} onDelete={() => void deleteCourse(course)} onToggleFeatured={() => void toggleFeatured(course)} />)}
+                                    : filteredCourses.map((course) => <CourseRow key={course.id} course={course} isBusy={savingId === course.id} canEdit={hasCoursePermission("edit")} canDelete={hasCoursePermission("delete")} onView={() => setViewingCourse(course)} onEdit={() => setEditingCourse(course)} onDelete={() => void deleteCourse(course)} onToggleFeatured={() => void toggleFeatured(course)} />)}
                         </tbody>
                     </table>
                 </div>}
-                {catalogView === "grid" && <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">{isLoading ? <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">Loading courses…</p> : filteredCourses.length ? filteredCourses.map((course) => <AdminCourseCard key={course.id} course={course} isBusy={savingId === course.id} onEdit={() => setEditingCourse(course)} onTogglePublished={() => void togglePublished(course)} onDelete={() => void deleteCourse(course)} />) : <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</p>}</div>}
+                {catalogView === "grid" && <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">{isLoading ? <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">Loading courses…</p> : filteredCourses.length ? filteredCourses.map((course) => <AdminCourseCard key={course.id} course={course} isBusy={savingId === course.id} canEdit={hasCoursePermission("edit")} canDelete={hasCoursePermission("delete")} onEdit={() => setEditingCourse(course)} onTogglePublished={() => void togglePublished(course)} onDelete={() => void deleteCourse(course)} />) : <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</p>}</div>}
                 <div className="border-t border-slate-100 px-5 py-3 text-xs text-brand-text-muted sm:px-6">Showing {filteredCourses.length} of {courses.length} courses</div>
             </section>}
 
             {dashboardView === "bundles" && <section aria-label="Flagship programs and bundles" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {isLoading ? <p className="col-span-full py-16 text-center text-sm text-brand-text-muted">Loading flagship programs…</p> : bundles.length ? bundles.map((bundle) => <BundleCard key={bundle.id} bundle={bundle} isBusy={savingId === bundle.id} onEdit={() => setEditingBundle(bundle)} onDelete={() => void deleteBundle(bundle)} onToggle={(field) => void toggleBundle(bundle, field)} />) : <div className="col-span-full rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center"><Sparkles className="mx-auto size-7 text-brand-red" aria-hidden="true" /><p className="mt-3 font-display font-bold text-brand-navy">No flagship programs yet</p><p className="mt-1 text-sm text-brand-text-muted">Add SPRINT RISE or a degree-integrated pathway to begin.</p></div>}
+                {isLoading ? <p className="col-span-full py-16 text-center text-sm text-brand-text-muted">Loading flagship programs…</p> : bundles.length ? bundles.map((bundle) => <BundleCard key={bundle.id} bundle={bundle} isBusy={savingId === bundle.id} canEdit={hasBundlePermission("edit")} canDelete={hasBundlePermission("delete")} onEdit={() => setEditingBundle(bundle)} onDelete={() => void deleteBundle(bundle)} onToggle={(field) => void toggleBundle(bundle, field)} />) : <div className="col-span-full rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center"><Sparkles className="mx-auto size-7 text-brand-red" aria-hidden="true" /><p className="mt-3 font-display font-bold text-brand-navy">No flagship programs yet</p><p className="mt-1 text-sm text-brand-text-muted">Add SPRINT RISE or a degree-integrated pathway to begin.</p></div>}
             </section>}
 
             {editingCourse !== undefined && <CourseModal course={editingCourse} isSaving={savingId === (editingCourse?.id ?? "new")} onClose={() => setEditingCourse(undefined)} onSave={(payload) => saveCourse(payload, editingCourse?.id)} />}
             {editingBundle !== undefined && <BundleModal bundle={editingBundle} isSaving={savingId === (editingBundle?.id ?? "new-bundle")} onClose={() => setEditingBundle(undefined)} onSave={(payload) => saveBundle(payload, editingBundle?.id)} />}
-            {viewingCourse && <CourseDetailsModal course={viewingCourse} onClose={() => setViewingCourse(null)} onEdit={() => { setViewingCourse(null); setEditingCourse(viewingCourse); }} />}
+            {viewingCourse && <CourseDetailsModal course={viewingCourse} canEdit={hasCoursePermission("edit")} onClose={() => setViewingCourse(null)} onEdit={() => { setViewingCourse(null); setEditingCourse(viewingCourse); }} />}
         </div>
     );
 }
@@ -422,7 +456,7 @@ function NoticeBanner({ notice, onDismiss }: { notice: Notice; onDismiss: () => 
     </div>;
 }
 
-function AdminCourseCard({ course, isBusy, onEdit, onTogglePublished, onDelete }: { course: CourseItem; isBusy: boolean; onEdit: () => void; onTogglePublished: () => void; onDelete: () => void }) {
+function AdminCourseCard({ course, isBusy, canEdit, canDelete, onEdit, onTogglePublished, onDelete }: { course: CourseItem; isBusy: boolean; canEdit: boolean; canDelete: boolean; onEdit: () => void; onTogglePublished: () => void; onDelete: () => void }) {
     return <article className="course-tile">
         <div className="course-tile__art" style={course.thumbnail_url ? { backgroundImage: `linear-gradient(0deg, rgba(1,31,62,.22), rgba(1,31,62,.05)), url("${course.thumbnail_url}")`, backgroundPosition: "center", backgroundSize: "cover" } : undefined}>
             <span className="course-tile__type">{course.badge_label || "Course"}</span>
@@ -441,15 +475,15 @@ function AdminCourseCard({ course, isBusy, onEdit, onTogglePublished, onDelete }
                 {course.tools.length ? course.tools.map((tool) => <span key={tool} className="rounded-full bg-brand-blue-light px-2 py-1 text-[10px] font-semibold text-brand-blue">{tool}</span>) : <span className="text-xs text-brand-text-muted">No tools listed</span>}
             </div>
             <footer className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
-                <button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-brand-surface"><Edit3 className="size-3.5" aria-hidden="true" />Edit</button>
-                <button type="button" onClick={onTogglePublished} disabled={isBusy} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:border-brand-blue hover:bg-brand-blue-light disabled:opacity-50"><Check className="size-3.5" aria-hidden="true" />Toggle Publish</button>
-                <button type="button" onClick={onDelete} disabled={isBusy} aria-label={`Delete ${course.title}`} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-bold text-brand-red hover:bg-brand-red-light disabled:opacity-50"><Trash2 className="size-3.5" aria-hidden="true" />Delete</button>
+                {canEdit && <button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-brand-surface"><Edit3 className="size-3.5" aria-hidden="true" />Edit</button>}
+                {canEdit && <button type="button" onClick={onTogglePublished} disabled={isBusy} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:border-brand-blue hover:bg-brand-blue-light disabled:opacity-50"><Check className="size-3.5" aria-hidden="true" />Toggle Publish</button>}
+                {canDelete && <button type="button" onClick={onDelete} disabled={isBusy} aria-label={`Delete ${course.title}`} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-bold text-brand-red hover:bg-brand-red-light disabled:opacity-50"><Trash2 className="size-3.5" aria-hidden="true" />Delete</button>}
             </footer>
         </div>
     </article>;
 }
 
-function CourseRow({ course, isBusy, onView, onEdit, onDelete, onToggleFeatured }: { course: CourseItem; isBusy: boolean; onView: () => void; onEdit: () => void; onDelete: () => void; onToggleFeatured: () => void }) {
+function CourseRow({ course, isBusy, canEdit, canDelete, onView, onEdit, onDelete, onToggleFeatured }: { course: CourseItem; isBusy: boolean; canEdit: boolean; canDelete: boolean; onView: () => void; onEdit: () => void; onDelete: () => void; onToggleFeatured: () => void }) {
     return <tr className="hover:bg-slate-50/70">
         <td className="max-w-[280px] px-5 py-4 sm:px-6"><p className="truncate font-semibold text-brand-navy">{course.title}</p><p className="mt-1 truncate text-xs text-brand-text-muted">/{course.slug}</p></td>
         <td className="px-4 py-4"><span className="inline-flex max-w-[210px] rounded-full bg-brand-blue-light px-2.5 py-1 text-[10px] font-semibold leading-4 text-brand-blue">{course.category}</span></td>
@@ -457,8 +491,8 @@ function CourseRow({ course, isBusy, onView, onEdit, onDelete, onToggleFeatured 
         <td className="whitespace-nowrap px-4 py-4 text-xs font-semibold text-brand-text-secondary">{course.delivery_method} <span className="px-1 text-brand-text-muted">•</span> {course.difficulty_level}</td>
         <td className="whitespace-nowrap px-4 py-4 text-xs text-brand-text-secondary"><span className="inline-flex items-center gap-1.5"><Clock className="size-3.5 text-brand-text-muted" aria-hidden="true" />{course.duration || "–"}</span></td>
         <td className="px-4 py-4"><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${course.is_published ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>{course.is_published ? "Published" : "Draft"}</span></td>
-        <td className="px-4 py-4 text-center"><button type="button" onClick={onToggleFeatured} disabled={isBusy} aria-label={`${course.is_featured ? "Unfeature" : "Feature"} ${course.title}`} aria-pressed={course.is_featured} className={`sprint-focus inline-flex size-9 items-center justify-center rounded-lg transition disabled:opacity-50 ${course.is_featured ? "bg-amber-50 text-amber-600 hover:bg-amber-100" : "text-slate-400 hover:bg-slate-100 hover:text-amber-600"}`}><Star className="size-4" fill={course.is_featured ? "currentColor" : "none"} aria-hidden="true" /></button></td>
-        <td className="px-5 py-4 sm:px-6"><div className="flex justify-end gap-1.5"><button type="button" onClick={onView} className={iconButtonClass} aria-label={`View ${course.title}`} title="View"><Eye className="size-4" aria-hidden="true" /></button><button type="button" onClick={onEdit} className={iconButtonClass} aria-label={`Edit ${course.title}`} title="Edit"><Edit3 className="size-4" aria-hidden="true" /></button><button type="button" onClick={onDelete} disabled={isBusy} className={`${iconButtonClass} text-brand-red hover:border-brand-red hover:bg-brand-red-light`} aria-label={`Delete ${course.title}`} title="Delete"><Trash2 className="size-4" aria-hidden="true" /></button></div></td>
+        <td className="px-4 py-4 text-center">{canEdit && <button type="button" onClick={onToggleFeatured} disabled={isBusy} aria-label={`${course.is_featured ? "Unfeature" : "Feature"} ${course.title}`} aria-pressed={course.is_featured} className={`sprint-focus inline-flex size-9 items-center justify-center rounded-lg transition disabled:opacity-50 ${course.is_featured ? "bg-amber-50 text-amber-600 hover:bg-amber-100" : "text-slate-400 hover:bg-slate-100 hover:text-amber-600"}`}><Star className="size-4" fill={course.is_featured ? "currentColor" : "none"} aria-hidden="true" /></button>}</td>
+        <td className="px-5 py-4 sm:px-6"><div className="flex justify-end gap-1.5"><button type="button" onClick={onView} className={iconButtonClass} aria-label={`View ${course.title}`} title="View"><Eye className="size-4" aria-hidden="true" /></button>{canEdit && <button type="button" onClick={onEdit} className={iconButtonClass} aria-label={`Edit ${course.title}`} title="Edit"><Edit3 className="size-4" aria-hidden="true" /></button>}{canDelete && <button type="button" onClick={onDelete} disabled={isBusy} className={`${iconButtonClass} text-brand-red hover:border-brand-red hover:bg-brand-red-light`} aria-label={`Delete ${course.title}`} title="Delete"><Trash2 className="size-4" aria-hidden="true" /></button>}</div></td>
     </tr>;
 }
 
@@ -608,7 +642,7 @@ function TagSection({ title, tags, value, onChange, onAdd, onRemove, placeholder
     </FormSection>;
 }
 
-function CourseDetailsModal({ course, onClose, onEdit }: { course: CourseItem; onClose: () => void; onEdit: () => void }) {
+function CourseDetailsModal({ course, canEdit, onClose, onEdit }: { course: CourseItem; canEdit: boolean; onClose: () => void; onEdit: () => void }) {
     useEffect(() => {
         const previousOverflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
@@ -631,7 +665,7 @@ function CourseDetailsModal({ course, onClose, onEdit }: { course: CourseItem; o
                 <DetailSection title="Tools Taught"><TagList items={course.tools} empty="No tools listed." /></DetailSection>
                 <DetailSection title="Learning Outcomes"><TagList items={course.outcomes} empty="No learning outcomes listed." /></DetailSection>
             </div>
-            <footer className="flex justify-end gap-2 border-t border-slate-200 px-5 py-4 sm:px-7"><button type="button" onClick={onClose} className="sprint-focus rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-brand-navy hover:bg-brand-surface">Close</button><button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-2 rounded-lg bg-brand-red px-4 py-2.5 text-sm font-bold text-white hover:brightness-110"><Edit3 className="size-4" aria-hidden="true" /> Edit Course</button></footer>
+            <footer className="flex justify-end gap-2 border-t border-slate-200 px-5 py-4 sm:px-7"><button type="button" onClick={onClose} className="sprint-focus rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-brand-navy hover:bg-brand-surface">Close</button>{canEdit && <button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-2 rounded-lg bg-brand-red px-4 py-2.5 text-sm font-bold text-white hover:brightness-110"><Edit3 className="size-4" aria-hidden="true" /> Edit Course</button>}</footer>
         </section>
     </div>;
 }
@@ -652,7 +686,7 @@ function emptyBundle(): BundlePayload {
     return { slug: "", title: "", badge_label: "Flagship Program", tagline: "", description: "", long_description: "", audience: "undergraduate", duration: "", training_mode: "Hybrid", eligibility: "", highlights: [], roadmap: [], is_published: false, is_featured: false };
 }
 
-function BundleCard({ bundle, isBusy, onEdit, onDelete, onToggle }: { bundle: BundleItem; isBusy: boolean; onEdit: () => void; onDelete: () => void; onToggle: (field: "is_published" | "is_featured") => void }) {
+function BundleCard({ bundle, isBusy, canEdit, canDelete, onEdit, onDelete, onToggle }: { bundle: BundleItem; isBusy: boolean; canEdit: boolean; canDelete: boolean; onEdit: () => void; onDelete: () => void; onToggle: (field: "is_published" | "is_featured") => void }) {
     return <article className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <div className="border-t-4 border-brand-red p-5">
             <div className="flex items-start justify-between gap-3"><span className="inline-flex items-center gap-1.5 rounded-full bg-brand-red/10 px-2.5 py-1 text-[10px] font-bold text-brand-red"><Tag className="size-3" aria-hidden="true" />{bundle.badge_label}</span><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${bundle.is_published ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>{bundle.is_published ? "Published" : "Draft"}</span></div>
@@ -662,10 +696,10 @@ function BundleCard({ bundle, isBusy, onEdit, onDelete, onToggle }: { bundle: Bu
             <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-brand-text-secondary"><span className="inline-flex items-center gap-1"><Clock className="size-3.5" aria-hidden="true" />{bundle.duration || "Duration not set"}</span><span>{bundle.training_mode}</span></div>
             <div className="mt-4"><p className="text-[10px] font-bold uppercase text-brand-text-muted">Highlights</p><ul className="mt-2 space-y-1 text-xs text-brand-text-secondary">{bundle.highlights.slice(0, 3).map((highlight) => <li key={highlight} className="flex gap-2"><CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-brand-red" aria-hidden="true" />{highlight}</li>)}{bundle.highlights.length === 0 && <li>No highlights added.</li>}</ul></div>
             <footer className="mt-5 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
-                <button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-slate-50"><Edit3 className="size-3.5" aria-hidden="true" />Edit</button>
-                <button type="button" disabled={isBusy} onClick={() => onToggle("is_published")} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-slate-50"><Check className="size-3.5" aria-hidden="true" />{bundle.is_published ? "Unpublish" : "Publish"}</button>
-                <button type="button" disabled={isBusy} onClick={() => onToggle("is_featured")} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-slate-50"><Star className="size-3.5" aria-hidden="true" />{bundle.is_featured ? "Unfeature" : "Feature"}</button>
-                <button type="button" disabled={isBusy} onClick={onDelete} className="sprint-focus ml-auto inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-bold text-brand-red hover:bg-brand-red-light"><Trash2 className="size-3.5" aria-hidden="true" />Delete</button>
+                {canEdit && <button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-slate-50"><Edit3 className="size-3.5" aria-hidden="true" />Edit</button>}
+                {canEdit && <button type="button" disabled={isBusy} onClick={() => onToggle("is_published")} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-slate-50"><Check className="size-3.5" aria-hidden="true" />{bundle.is_published ? "Unpublish" : "Publish"}</button>}
+                {canEdit && <button type="button" disabled={isBusy} onClick={() => onToggle("is_featured")} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-slate-50"><Star className="size-3.5" aria-hidden="true" />{bundle.is_featured ? "Unfeature" : "Feature"}</button>}
+                {canDelete && <button type="button" disabled={isBusy} onClick={onDelete} className="sprint-focus ml-auto inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-bold text-brand-red hover:bg-brand-red-light"><Trash2 className="size-3.5" aria-hidden="true" />Delete</button>}
             </footer>
         </div>
     </article>;

@@ -117,6 +117,6 @@ export async function completeFirstTimeStaffSetupAction(
         }
     }
 
-    revalidatePath("/staff/dashboard");
+    revalidatePath("/admin/dashboard");
     return { success: true };
 }

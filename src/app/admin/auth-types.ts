@@ -2,11 +2,32 @@ export type AdminPermissionMap = Record<string, { view?: boolean }> & {
     full_access?: boolean;
 };
 
+export function roleHasPermission(
+    permissions: unknown,
+    moduleKey: string,
+    capability: string,
+): boolean {
+    if (!permissions || typeof permissions !== "object" || Array.isArray(permissions)) {
+        return false;
+    }
+
+    const permissionMap = permissions as Record<string, unknown>;
+    if (permissionMap.full_access === true) return true;
+
+    const modulePermissions = permissionMap[moduleKey];
+    return Boolean(
+        modulePermissions &&
+        typeof modulePermissions === "object" &&
+        !Array.isArray(modulePermissions) &&
+        (modulePermissions as Record<string, unknown>)[capability] === true,
+    );
+}
+
 export const adminRoutePermissions: Record<string, string[]> = {
     "/admin/dashboard": [],
     "/admin/users": ["user_management", "access_control"],
     "/admin/roles": ["access_control"],
-    "/admin/courses": ["courses", "instructors", "academic_ops", "academics", "trainers"],
+    "/admin/courses": ["courses", "course_bundle_cms", "cms_courses", "instructors", "academic_ops", "academics", "trainers"],
     "/admin/enquiries": ["admissions", "marketing", "support"],
     "/admin/admissions": ["admissions", "marketing", "support"],
     "/admin/cms/home": ["cms_home", "marketing"],
@@ -28,11 +49,10 @@ export function canAccessAdminRoute(
     pathname: string,
     permissions: AdminPermissionMap | null,
     profileRole: string | null,
-    roleName: string | null,
+    _roleName?: string | null,
 ): boolean {
     if (
         profileRole?.toLowerCase() === "admin" ||
-        roleName?.toLowerCase() === "super admin" ||
         permissions?.full_access === true
     ) {
         return true;
