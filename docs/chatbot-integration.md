@@ -23,7 +23,11 @@ The browser sends a `POST` request in this shape:
 }
 ```
 
-The route validates the payload and then calls the local Ollama model through `src/app/chatbot/chatbot-service.server.js`. The request includes up to six recent turns in the model prompt, alongside verified SPRINT facts. If the model is unavailable, the route falls back to the verified demo replies so the interface stays usable. The response contract remains the same:
+The route validates the payload and then calls the local Ollama model through `src/app/chatbot/chatbot-service.server.js`. The request includes up to six recent turns, verified SPRINT facts, and the best matching verified Q&A from the local dataset. If Ollama is not configured or unavailable, the server answers from the verified Q&A dataset; when no reliable dataset match exists, it uses the deterministic demo reply.
+
+The chatbot's single consolidated knowledge file is `data/chatbot/sprint-qa-fallback.json`. It combines the Q&A records from `sprint-qa-dataset1.jsonl` and `sprint-qa-dataset2.jsonl` without duplicate IDs. The evaluation dataset is not included. Records whose verification status is not `verified` remain in the consolidated file for traceability, but are not used as model context or fallback answers.
+
+The response contract remains the same:
 
 ```json
 {

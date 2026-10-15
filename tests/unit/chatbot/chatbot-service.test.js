@@ -141,7 +141,7 @@ describe("chatbot service", () => {
     const history = [{ role: "assistant", content: "We were discussing SPRINT RISE." }];
 
     const result = await getLocalChatbotReply({
-      message: "How long is it?",
+      message: "How long is SPRINT RISE?",
       history,
       pathname: "/programs",
     });
@@ -154,8 +154,30 @@ describe("chatbot service", () => {
     expect(request.model).toBe("test-model");
     expect(request.stream).toBe(false);
     expect(request.prompt).toContain("six-month online plus in-campus program");
+    expect(request.prompt).toContain("Relevant verified question-and-answer from the SPRINT dataset");
     expect(request.prompt).toContain("We were discussing SPRINT RISE.");
     expect(result.reply).toBe("SPRINT RISE runs for six months.");
+  });
+
+  it("uses a verified dataset answer when the local model is not configured", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({ message: "What is SPRINT?" });
+
+    expect(result.reply).toContain("job-ready training platform in Hazaribagh");
+  });
+
+  it("uses a verified dataset answer when the local model request fails", async () => {
+    vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Ollama unavailable")));
+    const warning = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const result = await getLocalChatbotReply({ message: "Tell me about SPRINT RISE" });
+
+    expect(result.reply).toContain("six-month, online plus in-campus program");
+    expect(warning).toHaveBeenCalled();
+    warning.mockRestore();
   });
 
   it("marks visitor messages and conversation history as untrusted prompt content", () => {
@@ -177,5 +199,15 @@ describe("chatbot service", () => {
     expect(prompt).toContain("Do not refuse general learning or career guidance");
     expect(prompt).toContain("ask one concise, relevant follow-up question");
     expect(prompt).toContain("do not guess or immediately list courses");
+  });
+
+  it("does not use unverified dataset entries as fallback answers", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({ message: "What payment methods are supported?" });
+
+    expect(result.reply).not.toContain("Information Required");
+    expect(result.suggestions).toContain("Contact admissions");
   });
 });
