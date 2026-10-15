@@ -44,6 +44,9 @@ describe("AboutPage", () => {
     render(<AboutPage />);
 
     expect(
+      screen.queryByRole("region", { name: "Faculty filmstrip carousel" }),
+    ).not.toBeInTheDocument();
+    expect(
       screen.getByRole("heading", { name: /let's talk about your career/i }),
     ).toBeInTheDocument();
 
