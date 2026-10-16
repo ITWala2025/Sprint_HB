@@ -21,6 +21,7 @@ import RoleBasedLearningPaths from "@/components/courses/RoleBasedLearningPaths"
 import { createClient } from "@/lib/supabase/client";
 import {
   audienceOptions,
+  normalizeDatabaseCourse,
 } from "@/data/courses";
 
 const itemHref = (item, audience) => {
@@ -38,33 +39,6 @@ const matchesAudience = (item, audienceValue) => {
     ? item.audience.includes(audienceValue)
     : item.audience === audienceValue;
 };
-
-function normalizeDatabaseCourse(course) {
-  const rawAudience = course.audience_type || course.audience || "undergraduate";
-  const audienceValue = String(rawAudience).toLowerCase().replaceAll(" ", "_");
-  const audience = Array.isArray(rawAudience)
-    ? rawAudience
-    : audienceValue === "undergraduate" || audienceValue === "student"
-      ? ["student"]
-      : audienceValue === "working_professional"
-        ? ["it-pro", "non-it"]
-        : [audienceValue];
-
-  return {
-    ...course,
-    kind: "course",
-    audience,
-    category: course.category || "Software Engineering",
-    level: course.difficulty_level || course.difficulty || "Beginner",
-    difficulty_level: course.difficulty_level || course.difficulty || "Beginner",
-    delivery_method: course.delivery_method || course.mode || "Hybrid",
-    duration: course.duration || "Duration to be announced",
-    description: course.description || "A practical SPRINT technology pathway.",
-    tools: Array.isArray(course.tools) ? course.tools : [],
-    certificate: course.certificate_included ?? true,
-    image: course.thumbnail_url || course.image || null,
-  };
-}
 
 function CourseArt({ category }) {
   const normalized = category.toLowerCase();

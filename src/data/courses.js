@@ -9,6 +9,75 @@ const visualByCategory = {
   "Professional Skills": "/images/courses/abstract-people.svg",
 };
 
+export function getCourseFallbackImage(category) {
+  const normalizedCategory = String(category || "").toLowerCase();
+
+  if (
+    normalizedCategory.includes("artificial") ||
+    normalizedCategory.includes("machine learning") ||
+    normalizedCategory.includes("ai")
+  ) {
+    return visualByCategory["Artificial Intelligence"];
+  }
+  if (normalizedCategory.includes("cloud")) {
+    return visualByCategory["Cloud Computing"];
+  }
+  if (
+    normalizedCategory.includes("devops") ||
+    normalizedCategory.includes("container")
+  ) {
+    return visualByCategory["DevOps & Containers"];
+  }
+  if (normalizedCategory.includes("data")) {
+    return visualByCategory["Data Analytics"];
+  }
+  if (
+    normalizedCategory.includes("web") ||
+    normalizedCategory.includes("software") ||
+    normalizedCategory.includes("engineering")
+  ) {
+    return visualByCategory["Full-Stack Web"];
+  }
+  if (
+    normalizedCategory.includes("cyber") ||
+    normalizedCategory.includes("security")
+  ) {
+    return visualByCategory["Cybersecurity"];
+  }
+  if (normalizedCategory.includes("professional")) {
+    return visualByCategory["Professional Skills"];
+  }
+
+  return visualByCategory["Programming Fundamentals"];
+}
+
+export function normalizeDatabaseCourse(course) {
+  const rawAudience = course.audience_type || course.audience || "undergraduate";
+  const audienceValue = String(rawAudience).toLowerCase().replaceAll(" ", "_");
+  const audience = Array.isArray(rawAudience)
+    ? rawAudience
+    : audienceValue === "undergraduate" || audienceValue === "student"
+      ? ["student"]
+      : audienceValue === "working_professional"
+        ? ["it-pro", "non-it"]
+        : [audienceValue];
+
+  return {
+    ...course,
+    kind: "course",
+    audience,
+    category: course.category || "Software Engineering",
+    level: course.difficulty_level || course.difficulty || "Beginner",
+    difficulty_level: course.difficulty_level || course.difficulty || "Beginner",
+    delivery_method: course.delivery_method || course.mode || "Hybrid",
+    duration: course.duration || "Duration to be announced",
+    description: course.description || "A practical SPRINT technology pathway.",
+    tools: Array.isArray(course.tools) ? course.tools : [],
+    certificate: course.certificate_included === true,
+    image: course.thumbnail_url || course.image || null,
+  };
+}
+
 const audienceCopy = {
   student: {
     title: "Structured pathways for your first technology career",
