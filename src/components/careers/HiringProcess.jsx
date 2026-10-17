@@ -1,84 +1,153 @@
+
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { hiringProcessSteps } from "@/data/careers";
 
-/**
- * Hiring Process — Dark navy section with 4-step visual guide.
- * Circles perfectly aligned with step titles, connecting line through center.
- */
+const stepIcons = [
+  <svg key="apply" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+    <path d="M14 2v6h6M8 13h8M8 17h6" />
+  </svg>,
+  <svg key="screening" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+    <circle cx="9" cy="8" r="3" />
+    <path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5.5a3 3 0 0 1 0 5.8M18 14a5 5 0 0 1 3 4.6V20" />
+  </svg>,
+  <svg key="interview" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+    <rect x="3" y="4" width="18" height="13" rx="2" />
+    <path d="M8 21h8M12 17v4M8 10l2 2 5-5" />
+  </svg>,
+  <svg key="onboarding" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+    <path d="M5 19 19 5M8 5h11v11" />
+    <path d="M4 12v7a1 1 0 0 0 1 1h7" />
+  </svg>,
+];
+
 export default function HiringProcess() {
+  const sectionRef = useRef(null);
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setHasEntered(true);
+      return;
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      setHasEntered(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasEntered(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
-      className="relative bg-brand-navy py-24"
+      ref={sectionRef}
+      className={`hiring-process-section relative overflow-hidden bg-[#061d3d] py-14 text-white sm:py-16 lg:py-16 ${
+        hasEntered ? "is-visible" : ""
+      }`}
       aria-labelledby="hiring-process-heading"
     >
-      {/* Background gradient mesh */}
+      {/* Background decoration */}
       <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_20%_10%,rgba(248,21,41,0.12),transparent_60%),radial-gradient(ellipse_50%_45%_at_80%_90%,rgba(11,99,182,0.1),transparent_50%)]"
         aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(239,62,67,0.12),transparent_45%),radial-gradient(ellipse_at_bottom_right,rgba(11,99,182,0.16),transparent_50%)]"
       />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6">
+      <div className="relative z-10 mx-auto max-w-[1200px] px-5 sm:px-8 lg:px-6">
+        {/* Heading */}
         <div className="mx-auto max-w-2xl text-center">
-          <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+          <span className="inline-flex rounded-full bg-rose-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ef3e43]">
             Hiring Process
-          </p>
+          </span>
+
           <h2
             id="hiring-process-heading"
-            className="mt-4 font-display text-3xl font-bold text-brand-white sm:text-4xl"
+            className="mt-4 font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl"
           >
             Transparent, Respectful, Fast
           </h2>
-          <p className="mt-4 text-lg text-brand-white/70">
+
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-white/75 sm:text-base">
             No ghosting, no endless rounds. Our process is designed to be
             completed in 2–3 weeks with clear communication at every stage.
           </p>
         </div>
 
-        <div className="relative mt-16">
+        {/* Timeline */}
+        <div className="relative mx-auto mt-10 max-w-5xl lg:mt-12">
+          {/* Desktop connecting line */}
           <div
-            className="absolute bottom-0 left-5 top-0 w-px bg-brand-white/15 md:left-1/2 md:-translate-x-1/2"
             aria-hidden="true"
+            className="process-line absolute left-[12.5%] right-[12.5%] top-6 hidden h-px origin-left bg-white/30 lg:block"
           />
 
-          <div className="relative z-10 space-y-10 md:space-y-12">
+          {/* Mobile connecting line */}
+          <div
+            aria-hidden="true"
+            className="absolute bottom-8 left-5 top-5 w-px bg-white/25 lg:hidden"
+          />
+
+          <div className="grid gap-8 lg:grid-cols-4 lg:gap-5">
             {hiringProcessSteps.map((step, index) => (
-              <div
+              <article
                 key={step.id}
-                className="relative grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-8"
+                className="process-step group relative grid grid-cols-[44px_minmax(0,1fr)] gap-4 lg:grid-cols-1 lg:gap-0 lg:text-center"
+                style={{ "--step-index": index }}
               >
-                <div
-                  className="col-start-1 row-start-1 flex size-10 shrink-0 items-center justify-center rounded-full border-4 border-brand-navy bg-brand-red md:col-start-2 md:size-14"
-                  aria-hidden="true"
-                >
-                  <span className="font-display text-base font-bold text-brand-white md:text-2xl">
-                    {step.number}
-                  </span>
+                {/* Number */}
+                <div className="process-number relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-4 border-[#061d3d] bg-[#ef233c] text-sm font-extrabold text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12)] transition-shadow duration-300 group-hover:shadow-[0_0_0_6px_rgba(239,35,60,0.16)] lg:mx-auto lg:h-12 lg:w-12">
+                  {String(step.number ?? index + 1).padStart(2, "0")}
                 </div>
 
                 {/* Step content */}
-                <div
-                  className={`col-start-2 row-start-1 min-w-0 max-w-md ${index % 2 === 0 ? "text-left md:col-start-1 md:justify-self-end md:text-right" : "text-left md:col-start-3 md:justify-self-start"}`}
-                >
-                  <h3 className="font-display text-xl font-semibold text-brand-white">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 leading-relaxed text-brand-white/70">
+                <div className="min-w-0 rounded-xl p-2 transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-white/[0.04] lg:mt-5 lg:p-3">
+                  <div className="mb-2 flex items-center gap-2 lg:justify-center">
+                    <span className="text-white/80">
+                      {stepIcons[index % stepIcons.length]}
+                    </span>
+
+                    <h3 className="font-display text-base font-bold text-white sm:text-lg">
+                      {step.title}
+                    </h3>
+                  </div>
+
+                  <p className="text-sm leading-6 text-white/75 lg:text-[13px] lg:leading-5">
                     {step.description}
                   </p>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>
 
         {/* CTA */}
-        <div className="mt-16 text-center">
+        <div className="mt-10 text-center lg:mt-9">
           <a
             href="#application-form"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-red px-8 py-4 text-base font-semibold text-brand-white transition-colors hover:bg-brand-red-dark"
+            className="process-cta relative inline-flex min-h-11 items-center justify-center gap-2 overflow-hidden rounded-full bg-[#ef233c] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-950/20 transition duration-300 hover:-translate-y-0.5 hover:bg-[#d91f35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
           >
-            Start Your Application
+            <span className="relative z-10">Start Your Application</span>
             <svg
-              className="size-4"
+              className="relative z-10 h-4 w-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"

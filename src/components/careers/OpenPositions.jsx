@@ -1,6 +1,8 @@
+
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { careerRoles } from "@/data/careers";
 import RoleDetailModal, {
   formatPostedDate,
@@ -16,13 +18,6 @@ const typeOptions = [
 
 const EMAIL = "info@sprint.naturalelements.co.in";
 
-/**
- * Open Positions — Light section with filter tabs and role cards.
- *
- * Every card is an entry point to the role detail modal: clicking the card body
- * (the stretched title trigger) or the Apply action opens the same dialog with
- * the full, untruncated job details. The mailto hand-off lives inside the modal.
- */
 export default function OpenPositions() {
   const [selectedType, setSelectedType] = useState("all");
   const [activeRole, setActiveRole] = useState(null);
@@ -32,42 +27,54 @@ export default function OpenPositions() {
     return role.type === selectedType;
   });
 
-  const createMailtoLink = (roleTitle) => {
-    const subject = `Application for ${roleTitle}`;
+  const createMailtoLink = (roleTitle = "") => {
+    const subject = roleTitle
+      ? `Application for ${roleTitle}`
+      : "Career Application - SPRINT";
+
     return `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}`;
   };
 
   return (
-    <section id="open-positions" className="bg-brand-white py-24" aria-labelledby="open-positions-heading">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+    <section
+      id="open-positions"
+      className="bg-white pt-6 pb-14 sm:pt-8 sm:pb-16 lg:pt-10 lg:pb-16"
+      aria-labelledby="open-positions-heading"
+    >
+      <div className="mx-auto max-w-[1200px] px-5 sm:px-8 lg:px-6">
+        {/* Section heading */}
+        <div className="mb-7 text-center">
+          <span className="inline-flex rounded-full bg-rose-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ef3e43]">
             Open Positions
-          </p>
-          <h2 id="open-positions-heading" className="mt-4 font-display text-3xl font-bold text-brand-navy sm:text-4xl">
-            Roles We're Hiring For
+          </span>
+
+          <h2
+            id="open-positions-heading"
+            className="mt-3 font-display text-2xl font-extrabold tracking-tight text-[#10264b] sm:text-3xl"
+          >
+            Roles We’re Hiring For
           </h2>
-          {/* <p className="mt-4 text-lg text-brand-text-secondary">
-            Filter by type to find the right fit. All roles include mentorship, real projects,
-            and a clear path to growth.
-          </p> */}
         </div>
 
-        {/* Filter Tabs */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Filter by role type">
+        {/* Filter tabs */}
+        <div
+          className="mb-7 flex flex-wrap items-center justify-center gap-2"
+          role="tablist"
+          aria-label="Filter by role type"
+        >
           {typeOptions.map((option) => (
             <button
               key={option.value}
+              id={`tab-${option.value}`}
               type="button"
               role="tab"
               aria-selected={selectedType === option.value}
               aria-controls="positions-panel"
-              id={`tab-${option.value}`}
               onClick={() => setSelectedType(option.value)}
-              className={`inline-flex min-h-[44px] items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
+              className={`inline-flex min-h-9 items-center justify-center rounded-full px-4 py-2 text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ef3e43] ${
                 selectedType === option.value
-                  ? "bg-brand-red text-white shadow-brand-cta"
-                  : "text-brand-navy hover:bg-brand-surface"
+                  ? "bg-[#ef233c] text-white shadow-sm"
+                  : "text-[#10264b] hover:bg-slate-100"
               }`}
             >
               {option.label}
@@ -75,91 +82,131 @@ export default function OpenPositions() {
           ))}
         </div>
 
-        {/* Roles Grid */}
-        <div id="positions-panel" role="tabpanel" aria-labelledby={`tab-${selectedType}`} className="mt-10">
-          {filteredRoles.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredRoles.map((role) => (
+        {/* Job cards and resume CTA */}
+        <div
+          id="positions-panel"
+          role="tabpanel"
+          aria-labelledby={`tab-${selectedType}`}
+        >
+          <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredRoles.length > 0 ? (
+              filteredRoles.map((role) => (
                 <article
                   key={role.id}
-                  className="relative flex flex-col rounded-2xl border border-brand-border bg-brand-white p-6 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 hover:border-brand-red focus-within:border-brand-red focus-within:shadow-lg"
+                  className="group flex min-w-0 flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-rose-200 hover:shadow-md sm:p-5"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-display text-lg font-semibold text-brand-navy">
-                        {/* Stretched trigger — opens the modal from anywhere on the card */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h3 className="font-display text-sm font-bold leading-5 text-[#10264b] sm:text-base">
                         <button
                           type="button"
                           onClick={() => setActiveRole(role)}
                           aria-haspopup="dialog"
-                          className="sprint-focus rounded-md text-left after:absolute after:inset-0 after:rounded-2xl after:content-['']"
+                          className="text-left focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ef3e43]"
                         >
                           {role.title}
                         </button>
                       </h3>
-                      <p className="mt-1 text-sm text-brand-text-secondary">
+
+                      <p className="mt-1.5 text-xs leading-5 text-slate-500">
                         {role.location}
                       </p>
                     </div>
+
                     <span
-                      className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] ${roleTypeBadgeClass(
-                        role.type,
+                      className={`inline-flex shrink-0 items-center rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-wide ${roleTypeBadgeClass(
+                        role.type
                       )}`}
                     >
                       {roleTypeLabel(role.type)}
                     </span>
                   </div>
 
-                  <p className="mt-4 text-sm text-brand-text-secondary leading-relaxed line-clamp-3">
+                  <p className="mt-3 line-clamp-3 text-xs leading-5 text-slate-600">
                     {role.description}
                   </p>
 
-                  <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-brand-text-muted">
-                    <span className="flex items-center gap-1">
-                      <span className="size-1 rounded-full bg-brand-border" aria-hidden="true" />
-                      {role.duration}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="size-1 rounded-full bg-brand-border" aria-hidden="true" />
-                      {role.stipend}
-                    </span>
+                  <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11px] leading-5 text-slate-500">
+                    <span>{role.duration}</span>
+                    <span>{role.stipend}</span>
                   </div>
 
-                  <div className="mt-6 flex items-center justify-between">
-                    <span className="text-xs text-brand-text-muted">
+                  <div className="mt-auto flex items-end justify-between gap-3 pt-5">
+                    <span className="text-[10px] leading-4 text-slate-400">
                       Posted {formatPostedDate(role.postedDate)}
                     </span>
+
                     <button
                       type="button"
                       onClick={() => setActiveRole(role)}
                       aria-haspopup="dialog"
-                      className="sprint-focus relative z-10 inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-brand-red transition-colors hover:text-brand-red-dark"
+                      className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-[#ef233c] transition hover:text-[#c91c32] focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ef233c]"
                     >
                       Apply
-                      <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
+                      <span aria-hidden="true">→</span>
                     </button>
                   </div>
                 </article>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-brand-text-secondary">No roles match the selected filter.</p>
-              <button
-                type="button"
-                onClick={() => setSelectedType("all")}
-                className="mt-4 text-sm font-semibold text-brand-red hover:text-brand-red-dark"
+              ))
+            ) : (
+              <div className="rounded-xl border border-slate-200 p-6 text-center sm:col-span-2 lg:col-span-3">
+                <p className="text-sm text-slate-600">
+                  No roles match the selected filter.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedType("all")}
+                  className="mt-3 text-sm font-semibold text-[#ef233c] hover:underline"
+                >
+                  Show all roles
+                </button>
+              </div>
+            )}
+
+            {/* Resume CTA card */}
+            <article className="flex min-h-[220px] flex-col items-center justify-center rounded-xl border border-slate-100 bg-[#f2f5fb] p-6 text-center sm:min-h-0">
+              <div
+                aria-hidden="true"
+                className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-white text-[#10264b] shadow-sm"
               >
-                Show all roles
-              </button>
-            </div>
-          )}
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-7 w-7"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="3" y="7" width="18" height="13" rx="2" />
+                  <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <path d="M3 12h18M10 12v2h4v-2" />
+                </svg>
+              </div>
+
+              <h3 className="font-display text-sm font-bold text-[#10264b]">
+                Don’t see a role that fits?
+              </h3>
+
+              <p className="mt-2 max-w-[260px] text-xs leading-5 text-slate-600">
+                We’re always looking for talented people. Share your resume
+                with us and we’ll keep it on file for future opportunities.
+              </p>
+
+              <Link
+                href={createMailtoLink()}
+                className="mt-5 inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[#ef233c] bg-white px-5 py-2 text-xs font-bold text-[#ef233c] transition hover:bg-[#ef233c] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ef233c]"
+              >
+                Send Your Resume
+                <span aria-hidden="true">→</span>
+              </Link>
+            </article>
+          </div>
         </div>
       </div>
 
-      {/* Single shared dialog instance for the selected card */}
+      {/* Existing role details dialog */}
       {activeRole ? (
         <RoleDetailModal
           role={activeRole}

@@ -2,7 +2,7 @@ import CareerHero from "@/components/careers/CareerHero";
 import WhyJoinSprint from "@/components/careers/WhyJoinSprint";
 import OpenPositions from "@/components/careers/OpenPositions";
 import HiringProcess from "@/components/careers/HiringProcess";
-import ApplicationForm from "@/components/careers/ApplicationForm";
+// import ApplicationForm from "@/components/careers/ApplicationForm";
 
 export const metadata = {
   title: "Careers & Internships | SPRINT",
@@ -25,7 +25,7 @@ export default function CareersPage() {
       <WhyJoinSprint />
       <OpenPositions />
       <HiringProcess />
-      <ApplicationForm />
+      {/* <ApplicationForm /> */}
     </>
   );
 }

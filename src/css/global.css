@@ -7061,3 +7061,115 @@ a {
     display: block;
   }
 }
+
+
+/* SPRINT Careers - Hiring Process Animations */
+
+@keyframes careersStepReveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes careersNumberPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes careersTimelineGrow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes careersCtaShine {
+  from {
+    transform: translateX(-150%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(350%) skewX(-18deg);
+  }
+}
+
+.hiring-process-section.is-visible .process-step {
+  animation: careersStepReveal 650ms ease-out both;
+  animation-delay: calc(var(--step-index, 0) * 150ms);
+}
+
+.hiring-process-section.is-visible .process-number {
+  animation: careersNumberPop 550ms ease-out both;
+  animation-delay: calc(var(--step-index, 0) * 150ms + 100ms);
+}
+
+.hiring-process-section.is-visible .process-line {
+  animation: careersTimelineGrow 1200ms ease-out both;
+}
+
+.process-step:hover .process-number {
+  box-shadow: 0 0 0 6px rgb(239 35 60 / 16%);
+}
+
+.process-cta::after {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 35%;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 25%),
+    transparent
+  );
+  transform: translateX(-150%) skewX(-18deg);
+}
+
+.hiring-process-section:not(.is-visible) .process-step {
+  opacity: 0;
+}
+
+.process-cta:hover::after,
+.process-cta:focus-visible::after {
+  animation: careersCtaShine 800ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hiring-process-section:not(.is-visible) .process-step {
+    opacity: 1;
+  }
+
+  .hiring-process-section.is-visible .process-step,
+  .hiring-process-section.is-visible .process-number,
+  .hiring-process-section.is-visible .process-line {
+    animation: none !important;
+  }
+
+  .process-cta::after {
+    animation: none !important;
+  }
+
+  .process-step,
+  .process-number,
+  .process-cta {
+    transition: none !important;
+  }
+}

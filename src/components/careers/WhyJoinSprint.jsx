@@ -1,77 +1,87 @@
+
 import { whyJoinContent } from "@/data/careers";
 
-/**
- * Why Join SPRINT — Editorial introduction with an asymmetric
- * culture-image collage. Images are placeholders for now.
- */
+const images = [
+  {
+    src: "/images/careers/sprint-careers-team-collaboration.png",
+    alt: "SPRINT team collaborating on a technology project",
+    className:
+      "left-[5%] top-0 z-10 w-[70%] aspect-[1.12/1]",
+  },
+  {
+    src: "/images/careers/sprint-careers-workplace-discussion.png",
+    alt: "SPRINT colleagues discussing a project",
+    className:
+      "right-0 top-[34%] z-20 w-[67%] aspect-[1.2/1]",
+  },
+  {
+    src: "/images/careers/sprint-careers-team.png",
+    alt: "SPRINT team learning and working together",
+    className:
+      "bottom-0 left-[5%] z-30 w-[65%] aspect-[1.2/1]",
+  },
+];
+
 export default function WhyJoinSprint() {
   return (
     <section
-      className="bg-brand-white py-24 sm:py-28 lg:py-32"
       aria-labelledby="why-join-heading"
+      className="overflow-hidden bg-white py-14 sm:py-16 lg:py-20"
     >
-      <div className="mx-auto max-w-[1200px] px-6">
-        {/* Editorial introduction */}
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
-          {/* Left column */}
+      <div className="mx-auto max-w-[1200px] px-5 sm:px-8 lg:px-6">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+          {/* Left: heading and all existing content */}
           <div>
-            <p className="inline-flex items-center rounded-full bg-brand-red-light px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
+            <span className="inline-flex rounded-full bg-rose-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ef3e43]">
               Why Join SPRINT
-            </p>
+            </span>
 
             <h2
               id="why-join-heading"
-              className="mt-5 max-w-xl font-display text-4xl font-bold leading-[1.08] text-brand-navy sm:text-5xl"
+              className="mt-4 max-w-xl font-display text-3xl font-extrabold leading-tight text-[#10264b] sm:text-4xl lg:text-[42px]"
             >
               Where Learning Meets Impact
             </h2>
 
-            <div
-              className="mt-8 max-w-xl text-base leading-relaxed text-brand-text-secondary sm:text-lg"
-              dangerouslySetInnerHTML={{
-                __html: whyJoinContent[0]?.content ?? "",
-              }}
-            />
+            <div className="mt-3 max-w-xl space-y-5 text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
+              {whyJoinContent.map((item) => (
+                <div
+                  key={item.id}
+                  dangerouslySetInnerHTML={{
+                    __html: item.content,
+                  }}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Right column */}
-          <div className="space-y-8 lg:pt-14">
-            {whyJoinContent.slice(1).map((item) => (
-              <p
-                key={item.id}
-                className="max-w-xl text-base leading-relaxed text-brand-text-secondary sm:text-lg"
-                dangerouslySetInnerHTML={{
-                  __html: item.content,
-                }}
-              />
+          {/* Right: three overlapping image cards */}
+          <div className="relative mx-auto mt-2 h-[440px] w-full max-w-[540px] sm:h-[540px] lg:mt-0 lg:h-[560px]">
+            {/* Decorative shapes */}
+            <div
+              aria-hidden="true"
+              className="absolute right-[3%] top-[4%] h-[40%] w-[48%] rounded-3xl bg-rose-50"
+            />
+
+            <div
+              aria-hidden="true"
+              className="absolute bottom-[10%] left-[27%] h-[30%] w-[40%] rounded-3xl bg-blue-50"
+            />
+
+            {/* Image cards */}
+            {images.map((image) => (
+              <div
+                key={image.src}
+                className={`absolute overflow-hidden rounded-2xl border-4 border-white bg-white shadow-lg ${image.className}`}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+              </div>
             ))}
-          </div>
-        </div>
-
-        {/* Culture image collage — placeholders for now */}
-        <div className="relative mt-20 h-[620px] sm:h-[700px] lg:mt-24 lg:h-[760px]">
-          {/* Main image placeholder */}
-          <div className="absolute left-0 top-20 w-[72%] overflow-hidden rounded-2xl">
-            <div
-              className="aspect-[4/3] w-full bg-slate-200"
-              aria-hidden="true"
-            />
-          </div>
-
-          {/* Top floating image placeholder */}
-          <div className="absolute left-[9%] top-0 z-10 w-[30%] overflow-hidden rounded-2xl">
-            <div
-              className="aspect-square w-full bg-slate-300"
-              aria-hidden="true"
-            />
-          </div>
-
-          {/* Bottom-right image placeholder */}
-          <div className="absolute bottom-0 right-0 z-10 w-[38%] overflow-hidden rounded-2xl">
-            <div
-              className="aspect-square w-full bg-slate-400"
-              aria-hidden="true"
-            />
           </div>
         </div>
       </div>

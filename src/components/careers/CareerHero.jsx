@@ -1,50 +1,121 @@
+
 import Link from "next/link";
 
 export default function CareerHero() {
   return (
-    <section className="relative min-h-[70vh] overflow-hidden bg-brand-navy">
-      {/* Subtle CSS-only decorative background */}
+    <section
+      aria-labelledby="careers-hero-title"
+      className="relative isolate overflow-hidden bg-[#061d3d] text-white"
+    >
+      {/* Background image */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/images/careers/sprint-careers-mentor-workshop.png"
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover object-[58%_center]"
+        />
+      </div>
+
+      {/* Navy overlay: darker on the left for readable text */}
       <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_20%_10%,rgba(248,21,41,0.12),transparent_60%),radial-gradient(ellipse_50%_45%_at_80%_90%,rgba(11,99,182,0.1),transparent_50%)]"
         aria-hidden="true"
+        className="absolute inset-0 z-10 bg-gradient-to-r from-[#061d3d] via-[#061d3d]/90 to-[#061d3d]/20"
       />
 
-      {/* Subtle grid texture */}
+      {/* Extra overlay for small screens */}
       <div
-        className="absolute inset-0 opacity-[0.02] bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:48px_48px]"
         aria-hidden="true"
+        className="absolute inset-0 z-10 bg-[#061d3d]/20 md:bg-transparent"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[70vh] w-full max-w-[1200px] items-center px-6 py-14">
-        <div className="w-full max-w-2xl text-left">
+      {/* Hero content */}
+      <div className="relative z-20 mx-auto flex min-h-[480px] w-full max-w-[1200px] items-center px-5 py-10 sm:px-8 sm:py-12 lg:min-h-[430px] lg:px-6">
+        <div className="w-full max-w-[570px]">
+          {/* Breadcrumb */}
           <nav
-            className="sprint-hero-breadcrumb"
             aria-label="Breadcrumb"
+            className="mb-7 flex items-center gap-2 text-sm text-white/75"
           >
-            <Link href="/home">Home</Link>
+            <Link href="/" className="transition hover:text-white">
+              Home
+            </Link>
             <span aria-hidden="true">›</span>
-            <span aria-current="page">Careers</span>
+            <span aria-current="page" className="text-white">
+              Careers
+            </span>
           </nav>
 
-          <h1 className="font-display text-4xl font-bold leading-[1.1] text-brand-white sm:text-5xl md:text-6xl">
+          {/* Hiring badge */}
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider backdrop-blur-sm">
+            <span
+              aria-hidden="true"
+              className="h-2 w-2 rounded-full bg-[#ff4655]"
+            />
+            We're Hiring
+          </div>
+
+          {/* Heading */}
+          <h1
+            id="careers-hero-title"
+            className="font-display text-3xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-5xl"
+          >
             Build the Future of
-            <br />
-            <span className="text-brand-red">Tech Education</span>
+            <span className="mt-1 block text-[#ff4655]">
+              Tech Education
+            </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-white/80">
-            Join a team that bridges the academic–industry gap with hands-on,
-            mentor-led programs. We are looking for engineers, educators, and
-            operators who want to shape how India learns emerging technologies.
+          {/* Description */}
+          <p className="mt-6 max-w-[510px] text-sm leading-7 text-white/90 sm:text-base">
+            Join a team that bridges the academic-industry gap with
+            hands-on, mentor-led programs. We are looking for engineers,
+            educators, and operators who want to shape how India learns
+            emerging technologies.
           </p>
 
-          <div className="mt-10 flex flex-col items-start justify-start gap-4 sm:flex-row sm:items-center">
+          {/* CTA */}
+          <div className="mt-8">
             <Link
               href="#open-positions"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-red px-8 py-4 text-base font-semibold text-brand-white transition-colors hover:bg-brand-red-dark sm:w-auto"
+              className="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#ef233c] px-7 py-3 text-sm font-bold text-white shadow-lg shadow-red-950/20 transition duration-300 hover:-translate-y-0.5 hover:bg-[#d91f35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               View Open Roles
+              <span aria-hidden="true">→</span>
             </Link>
+          </div>
+
+          {/* Key highlights */}
+          <div className="mt-9 grid max-w-[540px] grid-cols-2 gap-x-5 gap-y-5 text-xs sm:grid-cols-4">
+            <div>
+              <p className="font-semibold text-white">Meaningful Impact</p>
+              <p className="mt-1 leading-5 text-white/70">
+                Shape future talent
+              </p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-white">
+                Collaborative Culture
+              </p>
+              <p className="mt-1 leading-5 text-white/70">
+                Learn and grow together
+              </p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-white">Flexible Work</p>
+              <p className="mt-1 leading-5 text-white/70">
+                People-first policies
+              </p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-white">Career Growth</p>
+              <p className="mt-1 leading-5 text-white/70">
+                Build what matters
+              </p>
+            </div>
           </div>
         </div>
       </div>
