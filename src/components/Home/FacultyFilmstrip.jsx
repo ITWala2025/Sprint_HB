@@ -10,6 +10,10 @@ function wrappedDelta(index, activeIndex, count) {
   return delta;
 }
 
+const SWIPE_THRESHOLD = 40;
+const SWIPE_DIRECTION_RATIO = 1.5;
+const SWIPE_MAX_DURATION = 300;
+
 /**
  * SPRINT-local Filmstrip-style fallback. It does not import the unverified
  * ThreeUI stylesheet or the registered source's demo-only faculty identities.
@@ -25,6 +29,28 @@ export default function FacultyFilmstrip({ profiles }) {
   const setPause = (duration = 5000) => {
     pauseUntilRef.current = Date.now() + duration;
   };
+
+  const intervalRef = useRef(null);
+  const touchStartRef = useRef(null);
+  const horizontalLockedRef = useRef(false);
+
+  function startAutoplay() {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+    if (intervalRef.current) window.clearInterval(intervalRef.current);
+    intervalRef.current = window.setInterval(() => {
+      if (Date.now() < pauseUntilRef.current) return;
+      moveBy(1);
+    }, 5000);
+  }
+
+  function pauseAndRestart() {
+    setPause();
+    startAutoplay();
+  }
 
   function moveBy(amount) {
     setActiveIndex((current) => (current + amount + profileCount) % profileCount);
@@ -43,7 +69,7 @@ export default function FacultyFilmstrip({ profiles }) {
     if (cooldownRef.current) return;
     cooldownRef.current = true;
     moveBy(direction);
-    setPause();
+    pauseAndRestart();
     window.setTimeout(() => {
       cooldownRef.current = false;
     }, 250);
@@ -72,32 +98,94 @@ export default function FacultyFilmstrip({ profiles }) {
     return () => {
       container.removeEventListener("wheel", handleWheel);
     };
-  }, [profileCount]);
+  }, [profileCount, commitMove]);
 
   useEffect(() => {
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
-
-    const interval = window.setInterval(() => {
-      if (Date.now() < pauseUntilRef.current) return;
-      moveBy(1);
-    }, 5000);
-
-    return () => window.clearInterval(interval);
+    startAutoplay();
+    return () => {
+      if (intervalRef.current) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, [profileCount]);
+
+  const handlePointerDown = (event) => {
+    // Only touch/pen drives swipes; mouse drags are intentionally ignored.
+    if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+    touchStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      time: Date.now(),
+    };
+    horizontalLockedRef.current = false;
+  };
+
+  const handlePointerMove = (event) => {
+    const start = touchStartRef.current;
+    if (!start || (event.pointerType !== "touch" && event.pointerType !== "pen"))
+      return;
+
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+
+    if (!horizontalLockedRef.current) {
+      if (absX > SWIPE_THRESHOLD && absX > absY * SWIPE_DIRECTION_RATIO) {
+        horizontalLockedRef.current = true;
+      } else if (
+        absY > SWIPE_THRESHOLD &&
+        absY > absX * SWIPE_DIRECTION_RATIO
+      ) {
+        // Vertical scroll intent: abandon swipe tracking so the page scrolls.
+        touchStartRef.current = null;
+        return;
+      }
+    }
+
+    if (horizontalLockedRef.current) {
+      event.preventDefault();
+    }
+  };
+
+  const handlePointerUp = (event) => {
+    const start = touchStartRef.current;
+    if (!start || (event.pointerType !== "touch" && event.pointerType !== "pen"))
+      return;
+
+    touchStartRef.current = null;
+    horizontalLockedRef.current = false;
+
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+    const elapsed = Date.now() - start.time;
+
+    // Ignore slow gestures, tiny movements/taps, and non-horizontal swipes.
+    if (elapsed > SWIPE_MAX_DURATION) return;
+    if (absX < SWIPE_THRESHOLD) return;
+    if (absX <= absY * SWIPE_DIRECTION_RATIO) return;
+
+    // Swipe left advances; swipe right moves backward.
+    commitMove(dx > 0 ? -1 : 1);
+  };
+
+  const handlePointerCancel = () => {
+    touchStartRef.current = null;
+    horizontalLockedRef.current = false;
+  };
 
   function handleKeyDown(event) {
     if (event.key === "ArrowRight" || event.key === "ArrowDown") {
       event.preventDefault();
       moveBy(1);
-      setPause();
+      pauseAndRestart();
     } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
       event.preventDefault();
       moveBy(-1);
-      setPause();
+      pauseAndRestart();
     }
   }
 
@@ -108,6 +196,10 @@ export default function FacultyFilmstrip({ profiles }) {
       role="region"
       aria-label="Faculty filmstrip carousel"
       onKeyDown={handleKeyDown}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerCancel}
     >
       <div className={styles.stage} aria-label="Select a faculty card to browse">
         <p className={styles.srOnly}>
@@ -151,7 +243,7 @@ export default function FacultyFilmstrip({ profiles }) {
                 aria-pressed={index === activeIndex}
                 onClick={() => {
                   setActiveIndex(index);
-                  setPause();
+                  pauseAndRestart();
                 }}
               >
                 <span className={styles.portrait}>

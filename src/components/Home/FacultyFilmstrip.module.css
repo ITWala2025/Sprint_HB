@@ -3,6 +3,8 @@
   min-width: 0;
   margin-top: 2rem;
   color: #171612;
+  touch-action: pan-y;
+  overflow-x: hidden;
 }
 
 .stage {
