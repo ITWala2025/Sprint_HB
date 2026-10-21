@@ -27,7 +27,7 @@ const features = [
     icon: GraduationCap,
     accent: "teal",
     image:
-    "/images/about_page/corporate trainer.png",
+    "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/about-images/what-makes-us-unique/corporate-trainer.png",
     alt: "Professionals collaborating in a workplace",
   },
   {
@@ -42,7 +42,7 @@ const features = [
     icon: Handshake,
     accent: "blue",
     image:
-      "/images/about_page/Strong Industry Connect.png",
+      "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/about-images/what-makes-us-unique/Strong-Industry-Connect.png",
     alt: "Professionals attending a collaborative business meeting",
   },
   {
@@ -57,7 +57,7 @@ const features = [
     icon: CodeXml,
     accent: "amber",
     image:
-      "/images/about_page/360° Development.png",
+      "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/about-images/what-makes-us-unique/360-Development.png",
     alt: "Laptop and programming workspace",
   },
   {
@@ -72,7 +72,7 @@ const features = [
     icon: Award,
     accent: "violet",
     image:
-      "/images/about_page/Real Internship.png",
+      "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/about-images/what-makes-us-unique/Real-Internship.png",
     alt: "Professional reviewing documents at a desk",
   },
 ];
