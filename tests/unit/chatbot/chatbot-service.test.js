@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getChatbotReply, getDemoChatbotReply } from "@/app/chatbot/chatbot-service";
+import { bundles, courses } from "@/data/courses";
+import { rolePaths } from "@/data/learningPaths";
+import { programs } from "@/data/programs";
 import {
   buildChatbotPrompt,
   getLocalChatbotReply,
@@ -130,18 +133,18 @@ describe("chatbot service", () => {
     );
   });
 
-  it("grounds local model replies in verified facts and recent conversation", async () => {
+  it("grounds local model requests in verified SPRINT facts and recent conversation", async () => {
     vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
     vi.stubEnv("OLLAMA_MODEL", "test-model");
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ response: "SPRINT RISE runs for six months." }),
+      json: async () => ({ response: "I don’t have verified SPRINT information about that." }),
     });
     vi.stubGlobal("fetch", fetchMock);
     const history = [{ role: "assistant", content: "We were discussing SPRINT RISE." }];
 
     const result = await getLocalChatbotReply({
-      message: "How long is SPRINT RISE?",
+      message: "What is the weather on Mars?",
       history,
       pathname: "/programs",
     });
@@ -153,10 +156,10 @@ describe("chatbot service", () => {
     );
     expect(request.model).toBe("test-model");
     expect(request.stream).toBe(false);
-    expect(request.prompt).toContain("six-month online plus in-campus program");
-    expect(request.prompt).toContain("Relevant verified question-and-answer from the SPRINT dataset");
+    expect(request.prompt).toContain("job-ready training platform");
+    expect(request.prompt).toContain("Python & AI Foundations");
     expect(request.prompt).toContain("We were discussing SPRINT RISE.");
-    expect(result.reply).toBe("SPRINT RISE runs for six months.");
+    expect(result.reply).toBe("I don’t have verified SPRINT information about that.");
   });
 
   it("uses a verified dataset answer when the local model is not configured", async () => {
@@ -168,7 +171,17 @@ describe("chatbot service", () => {
     expect(result.reply).toContain("job-ready training platform in Hazaribagh");
   });
 
-  it("answers location and visit questions directly without inventing hours or distance", async () => {
+  it("does not repeat the conflicting office schedule from the master FAQ", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({ message: "What days does SPRINT work?" });
+
+    expect(result.reply).toMatch(/don’t have verified details/i);
+    expect(result.action.href).toBe("/contact");
+  });
+
+  it("avoids conflicting office hours and unverified travel details", async () => {
     vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
@@ -180,7 +193,7 @@ describe("chatbot service", () => {
     expect(fetchMock).not.toHaveBeenCalled();
     expect(result.reply).toContain("Hazaribagh, Jharkhand");
     expect(result.reply).toContain("can’t verify the distance or route from VBU");
-    expect(result.reply).toContain("confirm current office timings");
+    expect(result.reply).toContain("published schedule details differ");
     expect(result.reply).toContain("+91 85212 83184/85");
   });
 
@@ -201,6 +214,145 @@ describe("chatbot service", () => {
     expect(aiCourses.reply).toContain("Generative AI for Work (4 weeks)");
   });
 
+  it("links general course questions to the complete course catalogue", async () => {
+    vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await getLocalChatbotReply({ message: "What courses do you have?" });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(result.reply).toContain("AI/ML");
+    expect(result.action).toEqual({
+      label: "Browse all courses",
+      href: "/courses",
+    });
+  });
+
+  it("answers specific course questions from the published catalogue without Ollama", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: "What are the prerequisites for Machine Learning Essentials?",
+    });
+
+    expect(result.reply).toContain("Machine Learning Essentials");
+    expect(result.reply).toContain("Python fundamentals and basic statistics");
+    expect(result.reply).toContain("6 weeks");
+    expect(result.reply).not.toContain("..");
+    expect(result.action).toEqual({
+      label: "Browse all courses",
+      href: "/courses",
+    });
+  });
+
+  it.each(courses)("answers published course details for $title", async (course) => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: `Tell me about ${course.title}`,
+    });
+
+    expect(result.reply).toContain(course.title);
+    expect(result.reply).toContain(course.duration);
+  });
+
+  it("answers program questions with published audience and curriculum details", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: "Tell me about the Career Accelerator",
+    });
+
+    expect(result.reply).toContain("B.Tech and MCA students");
+    expect(result.reply).toContain("Foundations");
+    expect(result.reply).toContain("Ignite");
+    expect(result.reply).toContain("Outperform");
+    expect(result.action.href).toBe("/programs/career-accelerator");
+  });
+
+  it.each(programs)("answers published program details for $title", async (program) => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: `Tell me about ${program.title}`,
+    });
+
+    expect(result.reply).toContain(program.description);
+    expect(result.action.href).toBe(`/programs/${program.slug}`);
+  });
+
+  it.each(rolePaths)("answers published learning-path details for $role", async (path) => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: `What is the ${path.role} learning path?`,
+    });
+
+    expect(result.reply).toContain(path.role);
+    expect(result.reply).toContain("three stages");
+    expect(result.action.href).toBe(`/learning-paths/${path.slug}`);
+  });
+
+  it("answers package questions with published included courses", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: "What is included in the Non-IT to Tech Transition package?",
+    });
+
+    expect(result.reply).toContain("Python & AI Foundations");
+    expect(result.reply).toContain("SQL & Database Systems");
+    expect(result.reply).toContain("Data Analytics with Power BI");
+  });
+
+  it.each(bundles)("answers package details for $title", async (bundle) => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: `What is included in the ${bundle.title} package?`,
+    });
+
+    expect(result.reply).toContain(bundle.title);
+    for (const slug of bundle.courses) {
+      const course = courses.find((entry) => entry.slug === slug);
+      expect(result.reply).toContain(course.title);
+    }
+  });
+
+  it("returns current contact details for enquiry questions", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({ message: "How can I contact SPRINT?" });
+
+    expect(result.reply).toContain("+91 85212 83184/85");
+    expect(result.reply).toContain("info@sprint.naturalelements.co.in");
+    expect(result.reply).toContain("WhatsApp");
+    expect(result.action.href).toBe("/contact");
+  });
+
+  it("does not invent fee or scholarship details", async () => {
+    vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await getLocalChatbotReply({
+      message: "How much does SPRINT RISE cost?",
+    });
+
+    expect(result.reply).toMatch(/not published in the verified course catalogue/i);
+    expect(result.action.href).toBe("/contact");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("lists catalogue options for non-IT learners without another screening question", async () => {
     vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
     const fetchMock = vi.fn();
@@ -216,14 +368,14 @@ describe("chatbot service", () => {
     expect(result.reply).not.toMatch(/\?$/);
   });
 
-  it("uses a verified dataset answer when the local model request fails", async () => {
+  it("falls back safely when the local model request fails", async () => {
     vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Ollama unavailable")));
     const warning = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-    const result = await getLocalChatbotReply({ message: "Tell me about SPRINT RISE" });
+    const result = await getLocalChatbotReply({ message: "What is the weather on Mars?" });
 
-    expect(result.reply).toContain("six-month, online plus in-campus program");
+    expect(result.reply).not.toContain("SPRINT RISE runs for six months");
     expect(warning).toHaveBeenCalled();
     warning.mockRestore();
   });
@@ -258,13 +410,28 @@ describe("chatbot service", () => {
     expect(prompt).toContain("The visitor asked for short answers");
   });
 
-  it("does not use unverified dataset entries as fallback answers", async () => {
-    vi.stubEnv("OLLAMA_URL", "");
-    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+  it("provides the model verified catalog, program, bundle, and contact facts", () => {
+    const prompt = buildChatbotPrompt({ message: "Tell me about SPRINT courses" });
+
+    expect(prompt).toContain("Python & AI Foundations");
+    expect(prompt).toContain("Machine Learning Essentials");
+    expect(prompt).toContain("Non-IT to Tech Transition");
+    expect(prompt).toContain("Career Accelerator");
+    expect(prompt).toContain("info@sprint.naturalelements.co.in");
+    expect(prompt).toContain("Do not invent these details");
+  });
+
+  it("refuses to answer matching unverified FAQs and points visitors to admissions", async () => {
+    vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
 
     const result = await getLocalChatbotReply({ message: "What payment methods are supported?" });
 
     expect(result.reply).not.toContain("Information Required");
-    expect(result.suggestions).toContain("Contact admissions");
+    expect(result.reply).toMatch(/not published in the verified course catalogue/i);
+    expect(result.action).toEqual({ label: "Contact SPRINT", href: "/contact" });
+    expect(result.suggestions).toContain("Explore courses");
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

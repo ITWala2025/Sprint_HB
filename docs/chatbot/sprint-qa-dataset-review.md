@@ -1,10 +1,10 @@
 # SPRINT Q&A dataset review
 
-The verified Q&A dataset is a source-traceable baseline for the chatbot. Each question includes a concrete source file and a verification status so the model can answer from project-backed content rather than generic assumptions.
+`data/chatbot/sprint-qa-master.json` is the chatbot's single consolidated Q&A file.
 
 ## Coverage
 
-The dataset includes questions about:
+The source datasets include questions about:
 
 - SPRINT overview and location
 - Course catalog coverage
@@ -13,6 +13,17 @@ The dataset includes questions about:
 - Eligibility and beginner guidance
 - Contact and admissions information
 - Educational technology topics and program selection
+- Payments, registration, account support, events, privacy, and technical troubleshooting
+
+## Consolidation and verification
+
+- The consolidated master contains 1,099 unique FAQs and 9,027 alternative questions: 9 FAQs marked `verified` and 1,090 marked `needs_review`.
+- Generated query variants are stored as alternative questions on their parent FAQs.
+- The original merged source JSONL files were removed after consolidation; keep the master as the canonical Q&A file.
+- The five-row evaluation set is not merged into chatbot knowledge.
+- `needs_review` answers remain available in the master for review and traceability, but are never used as facts. If one of their questions matches, the chatbot avoids sending it to the model, says it cannot verify the details, and points visitors to admissions.
+- The chatbot supplements the master with published facts loaded directly from `src/data/courses.js`, `src/data/programs.js`, `src/data/learningPaths.js`, and `src/config/site.config.json`; this allows it to answer current catalogue and contact questions even though only 9 master FAQ records are verified.
+- Published office-hour details conflict between sources. The chatbot does not repeat either schedule as authoritative and asks visitors to confirm before visiting.
 
 ## Source files used
 
@@ -30,4 +41,4 @@ The dataset includes questions about:
 
 ## Review notes
 
-This is a living dataset. New source-backed facts should be added only after corroboration across the project’s docs or data files.
+The master is broad, but only 9 unique FAQs are currently marked verified. Review the remaining records and verify them against current project data or an owner-confirmed source before changing their status. Do not invent fees, payment methods, policies, or outcomes.

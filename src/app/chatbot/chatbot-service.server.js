@@ -1,14 +1,67 @@
 import { getDemoChatbotReply } from "./chatbot-core";
 import siteConfig from "../../config/site.config.json";
-import { courses } from "../../data/courses";
-import qaDataset from "../../../data/chatbot/sprint-qa-fallback.json";
+import { bundles, courses } from "../../data/courses";
+import { rolePaths } from "../../data/learningPaths";
+import { programs } from "../../data/programs";
+import qaDataset from "../../../data/chatbot/sprint-qa-master.json";
 
 const VERIFIED_CHATBOT_CONTEXT = [
-  "SPRINT is a job-ready training platform in Hazaribagh, Jharkhand, focused on hands-on learning.",
-  "Course areas include AI/ML, Cloud, DevOps, web development, data analytics, cybersecurity, and professional skills.",
-  "SPRINT RISE is a six-month online plus in-campus program for beginner-to-intermediate learners. It includes a 90-hour internship stage.",
-  "The Career Accelerator is for B.Tech and MCA students and has Foundations, Ignite, and Outperform phases.",
-  "Course duration, fees, scholarships, current cohorts, and detailed eligibility vary or are not fully specified. Do not invent these details; direct visitors to the admissions team at /contact.",
+  `${siteConfig.name} is a job-ready training platform in ${siteConfig.address}, focused on hands-on learning.`,
+  `Public contact: phone ${siteConfig.contact.phoneDisplay}; email ${siteConfig.contact.email}; WhatsApp ${siteConfig.contact.whatsappNumber}.`,
+  `Programs: ${programs
+    .map((program) => {
+      const stages = program.curriculum.map((stage) => stage.title).join(", ");
+      const details = [
+        program.duration ? `duration ${program.duration}` : "",
+        program.delivery ? `delivery ${program.delivery}` : "",
+        program.level ? `level ${program.level}` : "",
+        program.audience ? `audience ${program.audience}` : "",
+        program.certification ? `credential ${program.certification}` : "",
+        stages ? `stages ${stages}` : "",
+      ].filter(Boolean);
+
+      return `${program.title}: ${program.description} ${details.join("; ")}.`;
+    })
+    .join("\n")}`,
+  `Courses: ${courses
+    .map((course) => {
+      const details = [
+        course.category,
+        course.level,
+        course.duration,
+        `for ${course.audience.join(", ")}`,
+        course.prerequisites,
+        course.description,
+        course.outcomes?.length ? `outcomes: ${course.outcomes.join(", ")}` : "",
+        course.certificate ? "certificate included" : "",
+        course.tools.length ? `tools: ${course.tools.join(", ")}` : "",
+      ].filter(Boolean);
+
+      return `${course.title}: ${details.join("; ")}.`;
+    })
+    .join("\n")}`,
+  `Career packages: ${bundles
+    .map(
+      (bundle) =>
+        `${bundle.title}: ${bundle.description} For ${bundle.audience.join(", ")}. Outcomes: ${bundle.outcomes.join(", ")}. Includes ${bundle.courses
+          .map((slug) => courses.find((course) => course.slug === slug)?.title)
+          .filter(Boolean)
+          .join(", ")}.`,
+    )
+    .join("\n")}`,
+  `Role-based learning paths: ${rolePaths
+    .map(
+      (path) =>
+        `${path.role}: ${path.courses
+          .map(
+            (stage) =>
+              `${stage.title} (${stage.duration}): ${stage.learn} Assessment requirement: ${stage.certification}`,
+          )
+          .join("; ")}`,
+    )
+    .join("\n")}`,
+  "Course and package fees, scholarships, cohort dates, admission decisions, and placement guarantees are not confirmed in the published catalogue. Do not invent these details; direct visitors to admissions at /contact.",
+  "A course duration, level, audience, or prerequisite is verified only when listed in the published catalogue. Do not infer or promise eligibility, certification outcomes, employment, or placements.",
 ].join("\n");
 
 const VERIFIED_QA_RECORDS = qaDataset.filter(
@@ -17,6 +70,12 @@ const VERIFIED_QA_RECORDS = qaDataset.filter(
     typeof record.question === "string" &&
     typeof record.answer === "string" &&
     record.answer.trim(),
+);
+const UNVERIFIED_QA_RECORDS = qaDataset.filter(
+  (record) =>
+    record.verification_status === "needs_review" &&
+    typeof record.question === "string" &&
+    record.question.trim(),
 );
 const QUESTION_STOP_WORDS = new Set([
   "a",
@@ -58,7 +117,7 @@ function getQuestionTerms(value) {
   );
 }
 
-function findVerifiedDatasetAnswer(message) {
+function findDatasetMatch(message, records) {
   const normalizedMessage = normalizeQuestion(message);
   const messageTerms = getQuestionTerms(message);
 
@@ -67,7 +126,7 @@ function findVerifiedDatasetAnswer(message) {
   let bestMatch = null;
   let bestScore = 0;
 
-  for (const record of VERIFIED_QA_RECORDS) {
+  for (const record of records) {
     const questions = [
       record.question,
       ...(Array.isArray(record.alternative_questions) ? record.alternative_questions : []),
@@ -103,31 +162,161 @@ function findVerifiedDatasetAnswer(message) {
   return bestScore >= 0.55 ? bestMatch : null;
 }
 
+function findVerifiedDatasetAnswer(message) {
+  return findDatasetMatch(message, VERIFIED_QA_RECORDS);
+}
+
+function getUnverifiedQaReply() {
+  return {
+    reply:
+      "I don’t have verified details about that yet. Please contact the SPRINT admissions team for current information.",
+    action: { label: "Contact admissions", href: "/contact" },
+    suggestions: ["Contact admissions", "Explore courses"],
+  };
+}
+
 function getFallbackChatbotReply(message, pathname) {
   const datasetAnswer = findVerifiedDatasetAnswer(message);
-  if (!datasetAnswer) return getDemoChatbotReply(message, pathname);
+  if (datasetAnswer) {
+    return {
+      reply: datasetAnswer.answer.trim(),
+      action: null,
+      suggestions: ["Explore courses", "Tell me about SPRINT RISE", "Contact admissions"],
+    };
+  }
 
-  return {
-    reply: datasetAnswer.answer.trim(),
-    action: null,
-    suggestions: ["Explore courses", "Tell me about SPRINT RISE", "Contact admissions"],
-  };
+  const unverifiedMatch = findDatasetMatch(message, UNVERIFIED_QA_RECORDS);
+  if (!unverifiedMatch) return getDemoChatbotReply(message, pathname);
+
+  return getUnverifiedQaReply();
 }
 
 function createCourseReply(reply) {
   return {
     reply,
-    action: { label: "Browse courses", href: "/courses" },
+    action: { label: "Browse all courses", href: "/courses" },
     suggestions: ["Explore courses", "Contact admissions"],
+  };
+}
+
+function findNamedEntry(message, entries) {
+  const messageTerms = getQuestionTerms(message);
+  const titleTerms = entries.map((entry) => ({
+    entry,
+    terms: getQuestionTerms(entry.title),
+  }));
+  const termCounts = new Map();
+
+  for (const { terms } of titleTerms) {
+    for (const term of terms) {
+      termCounts.set(term, (termCounts.get(term) || 0) + 1);
+    }
+  }
+
+  let bestMatch = null;
+  let bestCoverage = 0;
+
+  for (const candidate of titleTerms) {
+    const sharedTerms = [...candidate.terms].filter((term) => messageTerms.has(term));
+    const coverage = sharedTerms.length / candidate.terms.size;
+    const hasUniqueTitleTerm = sharedTerms.some((term) => termCounts.get(term) === 1);
+    const isStrongMatch =
+      coverage >= 0.66 && (sharedTerms.length >= 2 || hasUniqueTitleTerm);
+
+    if (isStrongMatch && coverage > bestCoverage) {
+      bestMatch = candidate.entry;
+      bestCoverage = coverage;
+    }
+  }
+
+  return bestMatch;
+}
+
+function getCourseMatch(message) {
+  return findNamedEntry(message, courses);
+}
+
+function getCourseDetailsReply(course, message) {
+  const audienceLabels = {
+    student: "students",
+    "it-pro": "IT professionals",
+    "non-it": "non-IT learners",
+  };
+  const details = [
+    `${course.category}, ${course.level}, ${course.duration}`,
+    `intended for ${course.audience.map((audience) => audienceLabels[audience] || audience).join(", ")}`,
+    course.prerequisites ? `Prerequisites: ${course.prerequisites}` : "",
+    course.description,
+    course.outcomes?.length ? `Learning outcomes include ${course.outcomes.join(", ")}` : "",
+    /\b(certificate|certification)\b/.test(normalizeQuestion(message))
+      ? course.certificate
+        ? "The catalogue lists a certificate as included"
+        : "The catalogue does not list a certificate as included"
+      : "",
+    course.tools.length ? `Tools covered include ${course.tools.join(", ")}` : "",
+  ].filter(Boolean);
+
+  const answerDetails = details.map((detail) => detail.trim().replace(/[. ]+$/, ""));
+  return createCourseReply(`${course.title}: ${answerDetails.join(". ")}.`);
+}
+
+function getProgramReply(program) {
+  const stages = program.curriculum.map((stage) => stage.title).join(", ");
+  const details = [
+    program.duration ? `Duration: ${program.duration}` : "",
+    program.delivery ? `Format: ${program.delivery}` : "",
+    program.level ? `Level: ${program.level}` : "",
+    program.audience ? `Designed for ${program.audience}` : "",
+    stages ? `Stages include ${stages}` : "",
+  ].filter(Boolean);
+
+  return {
+    reply: `${program.title}: ${program.description} ${details.join(". ")}.`,
+    action: { label: `Explore ${program.title}`, href: `/programs/${program.slug}` },
+    suggestions: ["Explore courses", "Contact admissions"],
+  };
+}
+
+function getLearningPathReply(path, message) {
+  const totalHours = path.courses.reduce(
+    (total, stage) => total + Number.parseInt(stage.duration, 10),
+    0,
+  );
+  const normalizedMessage = normalizeQuestion(message);
+  const asksAboutLearningContent =
+    /\b(learn|learning|curriculum|topic|topics|study)\b/.test(normalizedMessage);
+  const asksAboutAssessments =
+    /\b(certification|assessment|exam)\b/.test(normalizedMessage);
+  const stages = path.courses
+    .map(
+      (stage) =>
+        `${stage.title} (${stage.duration})${
+          asksAboutLearningContent ? `: ${stage.learn.replace(/[. ]+$/, "")}` : ""
+        }${
+          asksAboutAssessments
+            ? ` Assessment requirement: ${stage.certification}`
+            : ""
+        }`,
+    )
+    .join(", ");
+
+  return {
+    reply: `The ${path.role} learning path has three stages and ${totalHours} total learning hours: ${stages}.`,
+    action: { label: `Explore ${path.role} path`, href: `/learning-paths/${path.slug}` },
+    suggestions: ["Explore courses", "Explore other learning paths"],
   };
 }
 
 function getDirectChatbotReply(message) {
   const normalizedMessage = normalizeQuestion(message);
   const asksAboutLocation =
-    /\b(location|located|address|direction|directions|distance|far|vbu|office|center|centre)\b/.test(
+    /\b(location|located|address|direction|directions|distance|far|vbu|center|centre)\b/.test(
       normalizedMessage,
-    );
+    ) ||
+    (/\boffice\b/.test(normalizedMessage) &&
+      /\b(where|location|address|direction|directions|distance|far|timing|timings|hours|open|opening|visit|visiting)\b/.test(
+        normalizedMessage,
+      ));
 
   if (asksAboutLocation) {
     const asksAboutHours =
@@ -137,7 +326,9 @@ function getDirectChatbotReply(message) {
     const contact = siteConfig.contact;
     const visitDetails = [
       asksAboutRoute ? "I can’t verify the distance or route from VBU." : "",
-      asksAboutHours ? "Please confirm current office timings before visiting." : "",
+      asksAboutHours
+        ? "Please confirm current office hours before visiting; published schedule details differ."
+        : "",
     ]
       .filter(Boolean)
       .join(" ");
@@ -152,9 +343,102 @@ function getDirectChatbotReply(message) {
     };
   }
 
+  const asksAboutFeesOrPolicies =
+    /\b(fee|fees|price|pricing|cost|tuition|scholarship|scholarships|payment|refund|refunds)\b/.test(
+      normalizedMessage,
+    );
+  if (asksAboutFeesOrPolicies) {
+    const contact = siteConfig.contact;
+    return {
+      reply: `Current fee, scholarship, payment, refund, and admissions details are not published in the verified course catalogue. Contact SPRINT at ${contact.phoneDisplay} or ${contact.email}, or use the Contact page for current information.`,
+      action: { label: "Contact SPRINT", href: "/contact" },
+      suggestions: ["Explore courses", "Explore programs"],
+    };
+  }
+
+  const asksAboutContact =
+    /\b(contact|email|phone|telephone|call|whatsapp|admissions|admission|enquir(?:y|ies)|apply|enrol|enroll|register)\b/.test(
+      normalizedMessage,
+    ) ||
+    /\b(application form|application process|admission application)\b/.test(
+      normalizedMessage,
+    );
+  if (asksAboutContact) {
+    const contact = siteConfig.contact;
+    return {
+      reply: `You can contact SPRINT at ${contact.phoneDisplay}, email ${contact.email}, or message on WhatsApp at ${contact.whatsappNumber}. For admissions or course enquiries, use the Contact page.`,
+      action: { label: "Contact SPRINT", href: "/contact" },
+      suggestions: ["Explore courses", "Explore programs"],
+    };
+  }
+
+  const asksAboutPlacementGuarantee =
+    /\b(placement|placements|job|jobs|employment)\b/.test(normalizedMessage) &&
+    /\b(guarantee|guaranteed|assure|assured|promise|promised)\b/.test(normalizedMessage);
+  if (asksAboutPlacementGuarantee) {
+    return {
+      reply:
+        "SPRINT does not publish a job or placement guarantee. SPRINT RISE includes a 90-hour internship stage; contact admissions for current details about career support.",
+      action: { label: "Contact admissions", href: "/contact" },
+      suggestions: ["Explore SPRINT RISE", "Contact admissions"],
+    };
+  }
+
+  const asksAboutLearningPath =
+    /\b(learning path|learning paths|career path|career paths|role based path|pathway)\b/.test(
+      normalizedMessage,
+    );
+  if (asksAboutLearningPath) {
+    const learningPath = rolePaths.find((path) =>
+      normalizedMessage.includes(normalizeQuestion(path.role)),
+    );
+
+    if (learningPath) return getLearningPathReply(learningPath, message);
+
+    return {
+      reply: `SPRINT has role-based learning paths for ${rolePaths.map((path) => path.role).join(", ")}.`,
+      action: { label: "Explore learning paths", href: "/courses#role-pathways-heading" },
+      suggestions: ["Explore courses", "Contact admissions"],
+    };
+  }
+
+  const asksAboutProgram =
+    /\b(program|programs|programme|programmes|pathway|sprint rise|career accelerator|internship)\b/.test(
+      normalizedMessage,
+    );
+  if (asksAboutProgram) {
+    const program = programs.find((entry) =>
+      entry.title.toLowerCase().includes("career accelerator")
+        ? /\bcareer accelerator\b/.test(normalizedMessage)
+        : /\bsprint rise\b|\brise\b|\binternship\b/.test(normalizedMessage),
+    );
+
+    if (program) return getProgramReply(program);
+    if (/\b(program|programs|programme|programmes|pathway)\b/.test(normalizedMessage)) {
+      return {
+        reply: `SPRINT's programs include ${programs.map((entry) => entry.title).join(" and ")}.`,
+        action: { label: "Explore SPRINT RISE", href: "/programs/sprint-rise" },
+        suggestions: ["Tell me about SPRINT RISE", "Tell me about the Career Accelerator"],
+      };
+    }
+  }
+
   const asksAboutCourses = /\b(course|courses|training|learn|learning|teach|offer)\b/.test(
     normalizedMessage,
   );
+  const courseMatch = getCourseMatch(message);
+  const asksCourseSpecificDetails =
+    asksAboutCourses ||
+    /\b(what|which|how|is|does|tell|about|more|duration|level|prerequisite|certificate|tool|curriculum)\b/.test(
+      normalizedMessage,
+    );
+  if (
+    courseMatch &&
+    asksCourseSpecificDetails
+  ) {
+    return getCourseDetailsReply(courseMatch, message);
+  }
+
   const asksAboutCourseAreas =
     asksAboutCourses && /\b(area|areas|field|fields|domain|domains|kind|kinds)\b/.test(normalizedMessage);
 
@@ -174,6 +458,23 @@ function getDirectChatbotReply(message) {
 
     return createCourseReply(
       `Yes. Options for non-IT learners include ${nonItCourses.join(", ")}.`,
+    );
+  }
+
+  const asksAboutPackages = /\b(bundle|bundles|package|packages)\b/.test(normalizedMessage);
+  if (asksAboutPackages) {
+    const bundle = findNamedEntry(message, bundles);
+    if (bundle) {
+      const includedCourses = bundle.courses
+        .map((slug) => courses.find((course) => course.slug === slug)?.title)
+        .filter(Boolean);
+      return createCourseReply(
+        `${bundle.title}: ${bundle.description} Designed for ${bundle.audience.join(", ")}. ${bundle.outcomes.length ? `Learning outcomes include ${bundle.outcomes.join(", ")}.` : ""} It includes ${includedCourses.join(", ")}.`,
+      );
+    }
+
+    return createCourseReply(
+      `SPRINT packages include ${bundles.map((entry) => entry.title).join(", ")}.`,
     );
   }
 
@@ -225,6 +526,14 @@ function getDirectChatbotReply(message) {
         `${categoryMatch.category} courses include ${courseNames.join(", ")}.`,
       );
     }
+
+    const courseAreas = VERIFIED_QA_RECORDS.find(
+      (record) => record.id === "SPRINT-FAQ-004",
+    );
+    return createCourseReply(
+      courseAreas?.answer ??
+        "Please browse the course catalogue for current SPRINT course offerings.",
+    );
   }
 
   if (
@@ -287,6 +596,13 @@ export async function getLocalChatbotReply({
 }) {
   const directReply = getDirectChatbotReply(message);
   if (directReply) return directReply;
+
+  if (
+    !findVerifiedDatasetAnswer(message) &&
+    findDatasetMatch(message, UNVERIFIED_QA_RECORDS)
+  ) {
+    return getUnverifiedQaReply();
+  }
 
   const configuredUrl = process.env.OLLAMA_URL || process.env.NEXT_PUBLIC_OLLAMA_URL;
   const model = process.env.OLLAMA_MODEL || "llama3.2:3b";
