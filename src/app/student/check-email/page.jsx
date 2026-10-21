@@ -17,7 +17,7 @@ import "./check-email.css";
 
 const RESEND_COOLDOWN = 30;
 
-export default function CheckEmailPage() {
+export default function CheckEmailPage({ isModal = true }) {
   const [email, setEmail] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(0);
 
@@ -137,7 +137,9 @@ export default function CheckEmailPage() {
   })();
 
   return (
-    <main className="student-check-email-page">
+    <main
+      className={`student-check-email-page ${isModal ? "student-check-email-page--modal" : ""}`}
+    >
       <section
         className="student-check-email-card"
         aria-label="SPRINT Check Your Email"

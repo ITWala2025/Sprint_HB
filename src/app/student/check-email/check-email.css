@@ -644,3 +644,145 @@
     animation: none;
   }
 }
+
+.student-check-email-page--modal {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  background: #ffffff;
+}
+
+.student-check-email-page--modal .student-check-email-card {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  grid-template-columns: 40% 60%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.student-check-email-page--modal .student-check-email-visual {
+  height: 100%;
+  min-height: 0;
+}
+
+.student-check-email-page--modal .student-check-email-panel {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.student-check-email-page--modal .student-check-email-wrapper {
+  width: min(450px, calc(100% - 56px));
+  padding: 40px 0 18px;
+}
+
+.student-check-email-page--modal .student-check-email-back {
+  margin-bottom: 18px;
+}
+
+.student-check-email-page--modal .student-check-email-icon {
+  width: 54px;
+  height: 54px;
+  margin-bottom: 14px;
+}
+
+.student-check-email-page--modal .student-check-email-heading {
+  margin-bottom: 16px;
+}
+
+.student-check-email-page--modal .student-check-email-heading > p {
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+.student-check-email-page--modal .student-check-email-address {
+  margin-top: 11px;
+}
+
+.student-check-email-page--modal .student-check-email-tip {
+  gap: 10px;
+  padding: 12px;
+}
+
+.student-check-email-page--modal .student-check-email-resend {
+  margin-top: 14px;
+}
+
+.student-check-email-page--modal .student-check-email-success,
+.student-check-email-page--modal .student-check-email-error {
+  margin-top: 10px;
+  padding: 9px 11px;
+}
+
+.student-check-email-page--modal .student-check-email-signin {
+  min-height: 44px;
+  margin-top: 14px;
+}
+
+.student-check-email-page--modal .student-check-email-footer {
+  margin-top: 12px;
+}
+
+@media (max-width: 767px) {
+  .student-check-email-page--modal .student-check-email-card {
+    display: block;
+  }
+
+  .student-check-email-page--modal .student-check-email-visual {
+    display: none;
+  }
+
+  .student-check-email-page--modal .student-check-email-panel {
+    width: 100%;
+    height: 100%;
+  }
+
+  .student-check-email-page--modal .student-check-email-wrapper {
+    width: min(450px, calc(100% - 40px));
+    padding: 48px 0 16px;
+  }
+}
+
+@media (max-height: 700px) {
+  .student-check-email-page--modal .student-check-email-wrapper {
+    padding-top: 32px;
+    padding-bottom: 12px;
+  }
+
+  .student-check-email-page--modal .student-check-email-back {
+    margin-bottom: 12px;
+  }
+
+  .student-check-email-page--modal .student-check-email-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+  }
+
+  .student-check-email-page--modal .student-check-email-heading {
+    margin-bottom: 12px;
+  }
+
+  .student-check-email-page--modal .student-check-email-heading > p {
+    margin-top: 8px;
+  }
+
+  .student-check-email-page--modal .student-check-email-tip {
+    padding: 9px 11px;
+  }
+
+  .student-check-email-page--modal .student-check-email-resend {
+    margin-top: 10px;
+  }
+
+  .student-check-email-page--modal .student-check-email-signin {
+    min-height: 40px;
+    margin-top: 10px;
+  }
+}

@@ -31,10 +31,12 @@ const studentRoutes = {
   "check-email": {
     component: StudentCheckEmailPage,
     title: "Check your email",
+    modalPage: true,
   },
   "reset-password": {
     component: StudentResetPasswordPage,
     title: "Create a new password",
+    modalPage: true,
   },
   enroll: {
     component: StudentEnrollPage,

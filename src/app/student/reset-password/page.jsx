@@ -44,7 +44,7 @@ const PASSWORD_RULES = [
   },
 ];
 
-export default function ResetPasswordPage() {
+export default function ResetPasswordPage({ isModal = true }) {
   const [supabase] = useState(() => createClient());
 
   const [newPassword, setNewPassword] = useState("");
@@ -305,7 +305,9 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <main className="student-reset-page">
+    <main
+      className={`student-reset-page ${isModal ? "student-reset-page--modal" : ""}`}
+    >
       <section
         className="student-reset-card"
         aria-label="SPRINT Create New Password"

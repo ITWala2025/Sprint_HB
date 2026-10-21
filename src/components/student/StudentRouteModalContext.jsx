@@ -9,8 +9,9 @@ export const StudentRouteModalContext = createContext({
 });
 
 const isStudentModalRoute = (pathname) =>
-  pathname.startsWith("/student/") &&
-  !["/student/dashboard", "/student/enroll"].includes(pathname);
+  (pathname.startsWith("/student/") &&
+    !["/student/dashboard", "/student/enroll"].includes(pathname)) ||
+  pathname === "/set-password";
 
 export function StudentRouteModalProvider({
   pathname,

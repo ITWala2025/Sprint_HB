@@ -19,6 +19,7 @@ const FOCUSABLE_SELECTOR = [
 export default function StudentRouteModal({
   children,
   title,
+  fallbackHref = "/home",
   contentClassName = "student-route-modal-content",
 }) {
   const router = useRouter();
@@ -26,25 +27,32 @@ export default function StudentRouteModal({
   const dialogRef = useRef(null);
   const closeButtonRef = useRef(null);
   const previousFocusRef = useRef(null);
+
   const closeModal = useCallback(() => {
     if (backgroundPath && historyDepth > 0) {
       window.history.go(-historyDepth);
       return;
     }
 
-    router.replace(backgroundPath ?? "/home");
-  }, [backgroundPath, historyDepth, router]);
+    router.replace(backgroundPath ?? fallbackHref);
+  }, [backgroundPath, fallbackHref, historyDepth, router]);
+  const closeModalRef = useRef(closeModal);
+  closeModalRef.current = closeModal;
 
   useEffect(() => {
     previousFocusRef.current = document.activeElement;
-    const { overflow } = document.body.style;
+    const bodyOverflow = document.body.style.overflow;
+    const documentOverflow = document.documentElement.style.overflow;
+    document.body.classList.add("student-route-modal-open");
+    document.documentElement.classList.add("student-route-modal-open");
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
     closeButtonRef.current?.focus();
 
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        closeModal();
+        closeModalRef.current();
         return;
       }
 
@@ -69,14 +77,17 @@ export default function StudentRouteModal({
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = overflow;
+      document.body.classList.remove("student-route-modal-open");
+      document.documentElement.classList.remove("student-route-modal-open");
+      document.body.style.overflow = bodyOverflow;
+      document.documentElement.style.overflow = documentOverflow;
 
       const previousFocus = previousFocusRef.current;
       if (previousFocus instanceof HTMLElement && previousFocus.isConnected) {
         previousFocus.focus();
       }
     };
-  }, [closeModal]);
+  }, []);
 
   return (
     <div
