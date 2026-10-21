@@ -7,6 +7,8 @@ import StoryVisionMission from "@/components/sections/StoryVisionMission";
 import FacultyExperts from "@/components/sections/FacultyExperts";
 import ProfileCard from "@/components/cards/ProfileCard";
 import SkillCard from "@/components/cards/SkillCard";
+import WhyChooseSprint from "@/components/sections/WhyChooseSprint";
+
 
 // About Us — "/about". Spec: docs/md/About_Page.md (10 approved sections).
 // Sections 1 (Header) and 10 (Footer) render via the root layout; this page
@@ -231,6 +233,9 @@ export default function AboutPage() {
 
       {/* ============ 6. FACULTY / EXPERTS (§3.6) ============ */}
       <FacultyExperts />
+
+      <WhyChooseSprint />
+      
 
       {/* ============ 7. INDUSTRY / ACADEMIC CONNECTION (§3.7) ============ */}
       <section

@@ -8,6 +8,7 @@ import Testimonials from "@/components/Home/Testimonials";
 import FAQSection from "@/components/Home/FAQSection";
 import ContactCTA from "@/components/Home/ContactCTA";
 import about from "@/data/about.json";
+// import WhyChooseSprint from "@/components/Home/WhyChooseSprint";
 
 const homeFacultyProfiles = about.faculty.profiles.map((profile) => ({
   ...profile,
@@ -53,6 +54,8 @@ export default function HomePage() {
         contentClassName="mx-auto max-w-[1200px] px-6 py-[1.4rem] md:py-[1.925rem] lg:py-[2.45rem]"
         profilesContent={<FacultyFilmstrip profiles={homeFacultyAndAcademicProfiles} />}
       />
+       {/* <WhyChooseSprint />  */}
+
       <Testimonials />
       <FAQSection />
       <ContactCTA />
