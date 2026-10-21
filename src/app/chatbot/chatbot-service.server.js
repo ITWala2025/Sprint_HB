@@ -3,7 +3,7 @@ import siteConfig from "../../config/site.config.json";
 import { bundles, courses } from "../../data/courses";
 import { rolePaths } from "../../data/learningPaths";
 import { programs } from "../../data/programs";
-import qaDataset from "../../../data/chatbot/sprint-qa-master.json";
+import { qaDataset } from "./chatbot-qa-datasets";
 
 const VERIFIED_CHATBOT_CONTEXT = [
   `${siteConfig.name} is a job-ready training platform in ${siteConfig.address}, focused on hands-on learning.`,

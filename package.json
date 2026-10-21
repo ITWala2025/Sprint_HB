@@ -9,6 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "chatbot:qa:build": "node scripts/build/build-chatbot-qa-master.js",
     "test": "vitest run --config vitest.config.mjs --pool=threads --maxWorkers=1",
     "test:run": "vitest run --config vitest.config.mjs",
     "test:ui": "vitest --config vitest.config.mjs --ui"

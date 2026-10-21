@@ -1,0 +1,932 @@
+[
+  {
+    "id": "SUP-011",
+    "category": "contact_channels_and_response",
+    "question": "What is SPRINT's contact email?",
+    "answer": "You can email info@sprint.naturalelements.co.in for general enquiries and support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What is SPRINT's contact email?",
+      "For a student, Please help me with this SPRINT query: What is SPRINT's contact email?",
+      "For a student, I would like to know: What is SPRINT's contact email?",
+      "For a student, Can you clarify this for me: What is SPRINT's contact email?",
+      "For a student, Quick question: What is SPRINT's contact email?",
+      "For a student, Please explain this: What is SPRINT's contact email?",
+      "For a student, I have a question: What is SPRINT's contact email?",
+      "For a student, Can you tell me: What is SPRINT's contact email?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 289
+  },
+  {
+    "id": "SUP-012",
+    "category": "contact_channels_and_response",
+    "question": "What phone numbers can I use to contact SPRINT?",
+    "answer": "You can call +91 8521283183 or +91 8521283184.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What phone numbers can I use to contact SPRINT?",
+      "For a student, Please help me with this SPRINT query: What phone numbers can I use to contact SPRINT?",
+      "For a student, I would like to know: What phone numbers can I use to contact SPRINT?",
+      "For a student, Can you clarify this for me: What phone numbers can I use to contact SPRINT?",
+      "For a student, Quick question: What phone numbers can I use to contact SPRINT?",
+      "For a student, Please explain this: What phone numbers can I use to contact SPRINT?",
+      "For a student, I have a question: What phone numbers can I use to contact SPRINT?",
+      "For a student, Can you tell me: What phone numbers can I use to contact SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 290
+  },
+  {
+    "id": "SUP-013",
+    "category": "contact_channels_and_response",
+    "question": "How long may a response take?",
+    "answer": "The previously published support guidance states that enquiries are answered within 24 business hours. Complex enquiries may need additional follow-up.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How long may a response take?",
+      "For a student, Please help me with this SPRINT query: How long may a response take?",
+      "For a student, I would like to know: How long may a response take?",
+      "For a student, Can you clarify this for me: How long may a response take?",
+      "For a student, Quick question: How long may a response take?",
+      "For a student, Please explain this: How long may a response take?",
+      "For a student, I have a question: How long may a response take?",
+      "For a student, Can you tell me: How long may a response take?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 291
+  },
+  {
+    "id": "SUP-014",
+    "category": "contact_channels_and_response",
+    "question": "What if nobody answers my call?",
+    "answer": "Try the other listed number or email info@sprint.naturalelements.co.in with your name, contact number, and reason for calling.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if nobody answers my call?",
+      "For a student, Please help me with this SPRINT query: What if nobody answers my call?",
+      "For a student, I would like to know: What if nobody answers my call?",
+      "For a student, Can you clarify this for me: What if nobody answers my call?",
+      "For a student, Quick question: What if nobody answers my call?",
+      "For a student, Please explain this: What if nobody answers my call?",
+      "For a student, I have a question: What if nobody answers my call?",
+      "For a student, Can you tell me: What if nobody answers my call?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 292
+  },
+  {
+    "id": "SUP-015",
+    "category": "contact_channels_and_response",
+    "question": "Can I contact SPRINT by email instead of phone?",
+    "answer": "Yes. Email info@sprint.naturalelements.co.in and include enough detail for the team to understand your request.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I contact SPRINT by email instead of phone?",
+      "For a student, Please help me with this SPRINT query: Can I contact SPRINT by email instead of phone?",
+      "For a student, I would like to know: Can I contact SPRINT by email instead of phone?",
+      "For a student, Can you clarify this for me: Can I contact SPRINT by email instead of phone?",
+      "For a student, Quick question: Can I contact SPRINT by email instead of phone?",
+      "For a student, Please explain this: Can I contact SPRINT by email instead of phone?",
+      "For a student, I have a question: Can I contact SPRINT by email instead of phone?",
+      "For a student, Can you tell me: Can I contact SPRINT by email instead of phone?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 293
+  },
+  {
+    "id": "SUP-016",
+    "category": "contact_channels_and_response",
+    "question": "What information should I provide when following up?",
+    "answer": "Mention your original enquiry date, the email or phone number you used, the subject, and any reference number you received.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What information should I provide when following up?",
+      "For a student, Please help me with this SPRINT query: What information should I provide when following up?",
+      "For a student, I would like to know: What information should I provide when following up?",
+      "For a student, Can you clarify this for me: What information should I provide when following up?",
+      "For a student, Quick question: What information should I provide when following up?",
+      "For a student, Please explain this: What information should I provide when following up?",
+      "For a student, I have a question: What information should I provide when following up?",
+      "For a student, Can you tell me: What information should I provide when following up?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 294
+  },
+  {
+    "id": "SUP-017",
+    "category": "contact_channels_and_response",
+    "question": "Can I request a callback?",
+    "answer": "You can request a callback by sharing your name, preferred contact number, suitable time window, and enquiry topic. A callback is subject to team availability.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I request a callback?",
+      "For a student, Please help me with this SPRINT query: Can I request a callback?",
+      "For a student, I would like to know: Can I request a callback?",
+      "For a student, Can you clarify this for me: Can I request a callback?",
+      "For a student, Quick question: Can I request a callback?",
+      "For a student, Please explain this: Can I request a callback?",
+      "For a student, I have a question: Can I request a callback?",
+      "For a student, Can you tell me: Can I request a callback?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 295
+  },
+  {
+    "id": "SUP-018",
+    "category": "contact_channels_and_response",
+    "question": "Should I send passwords in a support email?",
+    "answer": "No. Never send passwords, one-time passcodes, or full payment-card details. Share only the information needed to identify the issue.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should I send passwords in a support email?",
+      "For a student, Please help me with this SPRINT query: Should I send passwords in a support email?",
+      "For a student, I would like to know: Should I send passwords in a support email?",
+      "For a student, Can you clarify this for me: Should I send passwords in a support email?",
+      "For a student, Quick question: Should I send passwords in a support email?",
+      "For a student, Please explain this: Should I send passwords in a support email?",
+      "For a student, I have a question: Should I send passwords in a support email?",
+      "For a student, Can you tell me: Should I send passwords in a support email?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 296
+  },
+  {
+    "id": "SUP-019",
+    "category": "contact_channels_and_response",
+    "question": "Can I contact SPRINT for a partnership enquiry?",
+    "answer": "Yes. Select the Institute or Company audience in the enquiry form, or email the team with your organisation details and partnership objective.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I contact SPRINT for a partnership enquiry?",
+      "For a student, Please help me with this SPRINT query: Can I contact SPRINT for a partnership enquiry?",
+      "For a student, I would like to know: Can I contact SPRINT for a partnership enquiry?",
+      "For a student, Can you clarify this for me: Can I contact SPRINT for a partnership enquiry?",
+      "For a student, Quick question: Can I contact SPRINT for a partnership enquiry?",
+      "For a student, Please explain this: Can I contact SPRINT for a partnership enquiry?",
+      "For a student, I have a question: Can I contact SPRINT for a partnership enquiry?",
+      "For a student, Can you tell me: Can I contact SPRINT for a partnership enquiry?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 297
+  },
+  {
+    "id": "SUP-020",
+    "category": "contact_channels_and_response",
+    "question": "What should I do if contact details appear outdated?",
+    "answer": "Use the official website and ask the team to confirm the current contact channel before sharing sensitive information.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What should I do if contact details appear outdated?",
+      "For a student, Please help me with this SPRINT query: What should I do if contact details appear outdated?",
+      "For a student, I would like to know: What should I do if contact details appear outdated?",
+      "For a student, Can you clarify this for me: What should I do if contact details appear outdated?",
+      "For a student, Quick question: What should I do if contact details appear outdated?",
+      "For a student, Please explain this: What should I do if contact details appear outdated?",
+      "For a student, I have a question: What should I do if contact details appear outdated?",
+      "For a student, Can you tell me: What should I do if contact details appear outdated?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 298
+  },
+  {
+    "id": "SUP-201",
+    "category": "international_and_remote_enquiries",
+    "question": "Can someone outside Hazaribagh enquire?",
+    "answer": "Yes. Contact SPRINT online or by email and specify your location and preferred communication method.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can someone outside Hazaribagh enquire?",
+      "For a student, Please help me with this SPRINT query: Can someone outside Hazaribagh enquire?",
+      "For a student, I would like to know: Can someone outside Hazaribagh enquire?",
+      "For a student, Can you clarify this for me: Can someone outside Hazaribagh enquire?",
+      "For a student, Quick question: Can someone outside Hazaribagh enquire?",
+      "For a student, Please explain this: Can someone outside Hazaribagh enquire?",
+      "For a student, I have a question: Can someone outside Hazaribagh enquire?",
+      "For a student, Can you tell me: Can someone outside Hazaribagh enquire?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 479
+  },
+  {
+    "id": "SUP-202",
+    "category": "international_and_remote_enquiries",
+    "question": "Can I enquire from another Indian state?",
+    "answer": "Yes. Use the official enquiry form or email and include your location if it affects scheduling or delivery.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I enquire from another Indian state?",
+      "For a student, Please help me with this SPRINT query: Can I enquire from another Indian state?",
+      "For a student, I would like to know: Can I enquire from another Indian state?",
+      "For a student, Can you clarify this for me: Can I enquire from another Indian state?",
+      "For a student, Quick question: Can I enquire from another Indian state?",
+      "For a student, Please explain this: Can I enquire from another Indian state?",
+      "For a student, I have a question: Can I enquire from another Indian state?",
+      "For a student, Can you tell me: Can I enquire from another Indian state?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 480
+  },
+  {
+    "id": "SUP-203",
+    "category": "international_and_remote_enquiries",
+    "question": "Can I enquire from outside India?",
+    "answer": "You can contact SPRINT by email. Ask the team to confirm availability, time-zone compatibility, payment terms, and any location-specific requirements.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I enquire from outside India?",
+      "For a student, Please help me with this SPRINT query: Can I enquire from outside India?",
+      "For a student, I would like to know: Can I enquire from outside India?",
+      "For a student, Can you clarify this for me: Can I enquire from outside India?",
+      "For a student, Quick question: Can I enquire from outside India?",
+      "For a student, Please explain this: Can I enquire from outside India?",
+      "For a student, I have a question: Can I enquire from outside India?",
+      "For a student, Can you tell me: Can I enquire from outside India?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 481
+  },
+  {
+    "id": "SUP-204",
+    "category": "international_and_remote_enquiries",
+    "question": "Which time zone should I use when requesting a call?",
+    "answer": "Include your city or time zone and provide a clear preferred time window to avoid confusion.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Which time zone should I use when requesting a call?",
+      "For a student, Please help me with this SPRINT query: Which time zone should I use when requesting a call?",
+      "For a student, I would like to know: Which time zone should I use when requesting a call?",
+      "For a student, Can you clarify this for me: Which time zone should I use when requesting a call?",
+      "For a student, Quick question: Which time zone should I use when requesting a call?",
+      "For a student, Please explain this: Which time zone should I use when requesting a call?",
+      "For a student, I have a question: Which time zone should I use when requesting a call?",
+      "For a student, Can you tell me: Which time zone should I use when requesting a call?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 482
+  },
+  {
+    "id": "SUP-205",
+    "category": "international_and_remote_enquiries",
+    "question": "Can online sessions work across time zones?",
+    "answer": "Ask SPRINT to confirm whether a suitable schedule is available for your location and chosen program.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can online sessions work across time zones?",
+      "For a student, Please help me with this SPRINT query: Can online sessions work across time zones?",
+      "For a student, I would like to know: Can online sessions work across time zones?",
+      "For a student, Can you clarify this for me: Can online sessions work across time zones?",
+      "For a student, Quick question: Can online sessions work across time zones?",
+      "For a student, Please explain this: Can online sessions work across time zones?",
+      "For a student, I have a question: Can online sessions work across time zones?",
+      "For a student, Can you tell me: Can online sessions work across time zones?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 483
+  },
+  {
+    "id": "SUP-206",
+    "category": "international_and_remote_enquiries",
+    "question": "Will international payment methods be accepted?",
+    "answer": "Payment availability varies. Confirm accepted methods, currency, and any applicable charges directly with SPRINT.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Will international payment methods be accepted?",
+      "For a student, Please help me with this SPRINT query: Will international payment methods be accepted?",
+      "For a student, I would like to know: Will international payment methods be accepted?",
+      "For a student, Can you clarify this for me: Will international payment methods be accepted?",
+      "For a student, Quick question: Will international payment methods be accepted?",
+      "For a student, Please explain this: Will international payment methods be accepted?",
+      "For a student, I have a question: Will international payment methods be accepted?",
+      "For a student, Can you tell me: Will international payment methods be accepted?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 484
+  },
+  {
+    "id": "SUP-207",
+    "category": "international_and_remote_enquiries",
+    "question": "Can an overseas company request training?",
+    "answer": "Yes. Share the organisation's location, learner time zones, goals, and expected delivery format so the team can assess the request.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can an overseas company request training?",
+      "For a student, Please help me with this SPRINT query: Can an overseas company request training?",
+      "For a student, I would like to know: Can an overseas company request training?",
+      "For a student, Can you clarify this for me: Can an overseas company request training?",
+      "For a student, Quick question: Can an overseas company request training?",
+      "For a student, Please explain this: Can an overseas company request training?",
+      "For a student, I have a question: Can an overseas company request training?",
+      "For a student, Can you tell me: Can an overseas company request training?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 485
+  },
+  {
+    "id": "SUP-208",
+    "category": "international_and_remote_enquiries",
+    "question": "Can I receive course information by email?",
+    "answer": "Yes. Email your questions and identify the program or topic for which you need information.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I receive course information by email?",
+      "For a student, Please help me with this SPRINT query: Can I receive course information by email?",
+      "For a student, I would like to know: Can I receive course information by email?",
+      "For a student, Can you clarify this for me: Can I receive course information by email?",
+      "For a student, Quick question: Can I receive course information by email?",
+      "For a student, Please explain this: Can I receive course information by email?",
+      "For a student, I have a question: Can I receive course information by email?",
+      "For a student, Can you tell me: Can I receive course information by email?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 486
+  },
+  {
+    "id": "SUP-209",
+    "category": "international_and_remote_enquiries",
+    "question": "What if I cannot call an Indian phone number?",
+    "answer": "Use info@sprint.naturalelements.co.in and include your country and preferred contact method.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I cannot call an Indian phone number?",
+      "For a student, Please help me with this SPRINT query: What if I cannot call an Indian phone number?",
+      "For a student, I would like to know: What if I cannot call an Indian phone number?",
+      "For a student, Can you clarify this for me: What if I cannot call an Indian phone number?",
+      "For a student, Quick question: What if I cannot call an Indian phone number?",
+      "For a student, Please explain this: What if I cannot call an Indian phone number?",
+      "For a student, I have a question: What if I cannot call an Indian phone number?",
+      "For a student, Can you tell me: What if I cannot call an Indian phone number?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 487
+  },
+  {
+    "id": "SUP-210",
+    "category": "international_and_remote_enquiries",
+    "question": "Can a remote learner request technical support?",
+    "answer": "Yes. Include the affected page or learning tool, device and browser, time zone, and exact error message.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can a remote learner request technical support?",
+      "For a student, Please help me with this SPRINT query: Can a remote learner request technical support?",
+      "For a student, I would like to know: Can a remote learner request technical support?",
+      "For a student, Can you clarify this for me: Can a remote learner request technical support?",
+      "For a student, Quick question: Can a remote learner request technical support?",
+      "For a student, Please explain this: Can a remote learner request technical support?",
+      "For a student, I have a question: Can a remote learner request technical support?",
+      "For a student, Can you tell me: Can a remote learner request technical support?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 488
+  },
+  {
+    "id": "SPRINT-FAQ-007",
+    "category": "admissions",
+    "question": "Who can apply for SPRINT RISE?",
+    "answer": "The project data describes SPRINT RISE as suitable for beginner to intermediate learners, while the Career Accelerator is intended for B.Tech and MCA students.",
+    "alternative_questions": [
+      "Who can enroll in SPRINT RISE?",
+      "Who is eligible for the program?",
+      "Is SPRINT RISE beginner-friendly?",
+      "For a student, Could you answer this question: Who can apply for SPRINT RISE?",
+      "For a student, Please help me with this SPRINT query: Who can apply for SPRINT RISE?",
+      "For a student, I would like to know: Who can apply for SPRINT RISE?",
+      "For a student, Can you clarify this for me: Who can apply for SPRINT RISE?",
+      "For a student, Quick question: Who can apply for SPRINT RISE?",
+      "For a student, Please explain this: Who can apply for SPRINT RISE?",
+      "For a student, I have a question: Who can apply for SPRINT RISE?",
+      "For a student, Can you tell me: Who can apply for SPRINT RISE?"
+    ],
+    "source_files": [
+      "src/data/programs.js"
+    ],
+    "source_location": "program level and audience metadata",
+    "verification_status": "verified",
+    "confidence": "medium",
+    "last_verified": "2026-10-10",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl",
+      "sprint-qa-dataset1.jsonl"
+    ],
+    "_master_order": 1055
+  },
+  {
+    "id": "SPRINT-FAQ-008",
+    "category": "contact",
+    "question": "How can I contact SPRINT?",
+    "answer": "The public site provides phone and email contact details for the admissions or support team. For specific questions about fees, registration, or the latest availability, contact the admissions team directly.",
+    "alternative_questions": [
+      "How do I get in touch?",
+      "What is the contact number?",
+      "How can I reach SPRINT?",
+      "In the contact category: How can I contact SPRINT?"
+    ],
+    "source_files": [
+      "src/config/site.config.json",
+      "src/app/chatbot/chatbot-service.js"
+    ],
+    "source_location": "contact config and chatbot contact response",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-10-10",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl",
+      "sprint-qa-dataset1.jsonl"
+    ],
+    "_master_order": 1056
+  },
+  {
+    "id": "SUP-041",
+    "category": "eligibility_and_prerequisites",
+    "question": "Who is eligible to join a program?",
+    "answer": "Eligibility depends on the specific program. Ask SPRINT for the current educational, skill, and experience requirements.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Who is eligible to join a program?",
+      "For a student, Please help me with this SPRINT query: Who is eligible to join a program?",
+      "For a student, I would like to know: Who is eligible to join a program?",
+      "For a student, Can you clarify this for me: Who is eligible to join a program?",
+      "For a student, Quick question: Who is eligible to join a program?",
+      "For a student, Please explain this: Who is eligible to join a program?",
+      "For a student, I have a question: Who is eligible to join a program?",
+      "For a student, Can you tell me: Who is eligible to join a program?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 319
+  },
+  {
+    "id": "SUP-042",
+    "category": "eligibility_and_prerequisites",
+    "question": "Do I need prior coding experience?",
+    "answer": "Requirements vary by course. Mention your programming background and ask whether beginner-level preparation is needed.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Do I need prior coding experience?",
+      "For a student, Please help me with this SPRINT query: Do I need prior coding experience?",
+      "For a student, I would like to know: Do I need prior coding experience?",
+      "For a student, Can you clarify this for me: Do I need prior coding experience?",
+      "For a student, Quick question: Do I need prior coding experience?",
+      "For a student, Please explain this: Do I need prior coding experience?",
+      "For a student, I have a question: Do I need prior coding experience?",
+      "For a student, Can you tell me: Do I need prior coding experience?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 320
+  },
+  {
+    "id": "SUP-043",
+    "category": "eligibility_and_prerequisites",
+    "question": "Can a beginner enquire?",
+    "answer": "Yes. Explain that you are a beginner and ask which available program starts at your current level.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can a beginner enquire?",
+      "For a student, Please help me with this SPRINT query: Can a beginner enquire?",
+      "For a student, I would like to know: Can a beginner enquire?",
+      "For a student, Can you clarify this for me: Can a beginner enquire?",
+      "For a student, Quick question: Can a beginner enquire?",
+      "For a student, Please explain this: Can a beginner enquire?",
+      "For a student, I have a question: Can a beginner enquire?",
+      "For a student, Can you tell me: Can a beginner enquire?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 321
+  },
+  {
+    "id": "SUP-044",
+    "category": "eligibility_and_prerequisites",
+    "question": "Can a final-year student enquire?",
+    "answer": "Yes. Include your degree, branch, expected graduation date, and career goal so the team can guide you.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can a final-year student enquire?",
+      "For a student, Please help me with this SPRINT query: Can a final-year student enquire?",
+      "For a student, I would like to know: Can a final-year student enquire?",
+      "For a student, Can you clarify this for me: Can a final-year student enquire?",
+      "For a student, Quick question: Can a final-year student enquire?",
+      "For a student, Please explain this: Can a final-year student enquire?",
+      "For a student, I have a question: Can a final-year student enquire?",
+      "For a student, Can you tell me: Can a final-year student enquire?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 322
+  },
+  {
+    "id": "SUP-045",
+    "category": "eligibility_and_prerequisites",
+    "question": "Can a graduate from a non-computer-science branch apply?",
+    "answer": "Ask SPRINT about the requirements for your chosen program and explain your academic background and technical experience.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can a graduate from a non-computer-science branch apply?",
+      "For a student, Please help me with this SPRINT query: Can a graduate from a non-computer-science branch apply?",
+      "For a student, I would like to know: Can a graduate from a non-computer-science branch apply?",
+      "For a student, Can you clarify this for me: Can a graduate from a non-computer-science branch apply?",
+      "For a student, Quick question: Can a graduate from a non-computer-science branch apply?",
+      "For a student, Please explain this: Can a graduate from a non-computer-science branch apply?",
+      "For a student, I have a question: Can a graduate from a non-computer-science branch apply?",
+      "For a student, Can you tell me: Can a graduate from a non-computer-science branch apply?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 323
+  },
+  {
+    "id": "SUP-046",
+    "category": "eligibility_and_prerequisites",
+    "question": "Are there prerequisites for advanced courses?",
+    "answer": "Advanced programs may require relevant foundations. Request the official prerequisite list for the specific course.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Are there prerequisites for advanced courses?",
+      "For a student, Please help me with this SPRINT query: Are there prerequisites for advanced courses?",
+      "For a student, I would like to know: Are there prerequisites for advanced courses?",
+      "For a student, Can you clarify this for me: Are there prerequisites for advanced courses?",
+      "For a student, Quick question: Are there prerequisites for advanced courses?",
+      "For a student, Please explain this: Are there prerequisites for advanced courses?",
+      "For a student, I have a question: Are there prerequisites for advanced courses?",
+      "For a student, Can you tell me: Are there prerequisites for advanced courses?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 324
+  },
+  {
+    "id": "SUP-047",
+    "category": "eligibility_and_prerequisites",
+    "question": "Do I need to take an assessment?",
+    "answer": "Assessment requirements, if any, depend on the program. Confirm the current process with SPRINT.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Do I need to take an assessment?",
+      "For a student, Please help me with this SPRINT query: Do I need to take an assessment?",
+      "For a student, I would like to know: Do I need to take an assessment?",
+      "For a student, Can you clarify this for me: Do I need to take an assessment?",
+      "For a student, Quick question: Do I need to take an assessment?",
+      "For a student, Please explain this: Do I need to take an assessment?",
+      "For a student, I have a question: Do I need to take an assessment?",
+      "For a student, Can you tell me: Do I need to take an assessment?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 325
+  },
+  {
+    "id": "SUP-048",
+    "category": "eligibility_and_prerequisites",
+    "question": "Can working professionals join?",
+    "answer": "Working professionals can enquire. Share your current role, experience, and schedule constraints to discuss suitable options.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can working professionals join?",
+      "For a student, Please help me with this SPRINT query: Can working professionals join?",
+      "For a student, I would like to know: Can working professionals join?",
+      "For a student, Can you clarify this for me: Can working professionals join?",
+      "For a student, Quick question: Can working professionals join?",
+      "For a student, Please explain this: Can working professionals join?",
+      "For a student, I have a question: Can working professionals join?",
+      "For a student, Can you tell me: Can working professionals join?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 326
+  },
+  {
+    "id": "SUP-049",
+    "category": "eligibility_and_prerequisites",
+    "question": "Can I join while studying or working full-time?",
+    "answer": "Ask about available schedules and attendance expectations before enrolling, and explain your time constraints.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I join while studying or working full-time?",
+      "For a student, Please help me with this SPRINT query: Can I join while studying or working full-time?",
+      "For a student, I would like to know: Can I join while studying or working full-time?",
+      "For a student, Can you clarify this for me: Can I join while studying or working full-time?",
+      "For a student, Quick question: Can I join while studying or working full-time?",
+      "For a student, Please explain this: Can I join while studying or working full-time?",
+      "For a student, I have a question: Can I join while studying or working full-time?",
+      "For a student, Can you tell me: Can I join while studying or working full-time?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 327
+  },
+  {
+    "id": "SUP-050",
+    "category": "eligibility_and_prerequisites",
+    "question": "What documents may be needed for enrolment?",
+    "answer": "Required documents depend on the program and enrolment process. Request the current checklist from the SPRINT team.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What documents may be needed for enrolment?",
+      "For a student, Please help me with this SPRINT query: What documents may be needed for enrolment?",
+      "For a student, I would like to know: What documents may be needed for enrolment?",
+      "For a student, Can you clarify this for me: What documents may be needed for enrolment?",
+      "For a student, Quick question: What documents may be needed for enrolment?",
+      "For a student, Please explain this: What documents may be needed for enrolment?",
+      "For a student, I have a question: What documents may be needed for enrolment?",
+      "For a student, Can you tell me: What documents may be needed for enrolment?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 328
+  }
+]

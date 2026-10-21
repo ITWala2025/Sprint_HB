@@ -1,0 +1,4041 @@
+[
+  {
+    "id": "SUP-081",
+    "category": "enquiry_form_and_validation",
+    "question": "Which audiences can use the enquiry form?",
+    "answer": "The form supports Student, Working Professional, Institute, and Company/Enterprise enquiry paths.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Which audiences can use the enquiry form?",
+      "For a student, Please help me with this SPRINT query: Which audiences can use the enquiry form?",
+      "For a student, I would like to know: Which audiences can use the enquiry form?",
+      "For a student, Can you clarify this for me: Which audiences can use the enquiry form?",
+      "For a student, Quick question: Which audiences can use the enquiry form?",
+      "For a student, Please explain this: Which audiences can use the enquiry form?",
+      "For a student, I have a question: Which audiences can use the enquiry form?",
+      "For a student, Can you tell me: Which audiences can use the enquiry form?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 359
+  },
+  {
+    "id": "SUP-082",
+    "category": "enquiry_form_and_validation",
+    "question": "What fields are required for a student enquiry?",
+    "answer": "The student path asks for full name, email, phone, and interested course. The message is optional.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What fields are required for a student enquiry?",
+      "For a student, Please help me with this SPRINT query: What fields are required for a student enquiry?",
+      "For a student, I would like to know: What fields are required for a student enquiry?",
+      "For a student, Can you clarify this for me: What fields are required for a student enquiry?",
+      "For a student, Quick question: What fields are required for a student enquiry?",
+      "For a student, Please explain this: What fields are required for a student enquiry?",
+      "For a student, I have a question: What fields are required for a student enquiry?",
+      "For a student, Can you tell me: What fields are required for a student enquiry?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 360
+  },
+  {
+    "id": "SUP-083",
+    "category": "enquiry_form_and_validation",
+    "question": "What fields are required for a working professional?",
+    "answer": "The working-professional path requires full name, email, phone, and current role. Company, course, and message are optional.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What fields are required for a working professional?",
+      "For a student, Please help me with this SPRINT query: What fields are required for a working professional?",
+      "For a student, I would like to know: What fields are required for a working professional?",
+      "For a student, Can you clarify this for me: What fields are required for a working professional?",
+      "For a student, Quick question: What fields are required for a working professional?",
+      "For a student, Please explain this: What fields are required for a working professional?",
+      "For a student, I have a question: What fields are required for a working professional?",
+      "For a student, Can you tell me: What fields are required for a working professional?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 361
+  },
+  {
+    "id": "SUP-084",
+    "category": "enquiry_form_and_validation",
+    "question": "What fields are required for an institute enquiry?",
+    "answer": "The institute path requires institute name, contact person, official email and phone, service, and availability time. Designation, website, and message are optional.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What fields are required for an institute enquiry?",
+      "For a student, Please help me with this SPRINT query: What fields are required for an institute enquiry?",
+      "For a student, I would like to know: What fields are required for an institute enquiry?",
+      "For a student, Can you clarify this for me: What fields are required for an institute enquiry?",
+      "For a student, Quick question: What fields are required for an institute enquiry?",
+      "For a student, Please explain this: What fields are required for an institute enquiry?",
+      "For a student, I have a question: What fields are required for an institute enquiry?",
+      "For a student, Can you tell me: What fields are required for an institute enquiry?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 362
+  },
+  {
+    "id": "SUP-085",
+    "category": "enquiry_form_and_validation",
+    "question": "What fields are required for a company enquiry?",
+    "answer": "The company path requires company name, contact person, official email and phone, availability time, and purpose type. Domain, website, and message are optional.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What fields are required for a company enquiry?",
+      "For a student, Please help me with this SPRINT query: What fields are required for a company enquiry?",
+      "For a student, I would like to know: What fields are required for a company enquiry?",
+      "For a student, Can you clarify this for me: What fields are required for a company enquiry?",
+      "For a student, Quick question: What fields are required for a company enquiry?",
+      "For a student, Please explain this: What fields are required for a company enquiry?",
+      "For a student, I have a question: What fields are required for a company enquiry?",
+      "For a student, Can you tell me: What fields are required for a company enquiry?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 363
+  },
+  {
+    "id": "SUP-086",
+    "category": "enquiry_form_and_validation",
+    "question": "Why do the form fields change when I select an audience?",
+    "answer": "Each audience has different information needs. Select the audience that best matches your enquiry to see the relevant fields.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why do the form fields change when I select an audience?",
+      "For a student, Please help me with this SPRINT query: Why do the form fields change when I select an audience?",
+      "For a student, I would like to know: Why do the form fields change when I select an audience?",
+      "For a student, Can you clarify this for me: Why do the form fields change when I select an audience?",
+      "For a student, Quick question: Why do the form fields change when I select an audience?",
+      "For a student, Please explain this: Why do the form fields change when I select an audience?",
+      "For a student, I have a question: Why do the form fields change when I select an audience?",
+      "For a student, Can you tell me: Why do the form fields change when I select an audience?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 364
+  },
+  {
+    "id": "SUP-087",
+    "category": "enquiry_form_and_validation",
+    "question": "Why is the course field not visible?",
+    "answer": "The course field may depend on the selected audience or current form configuration. Choose the relevant audience and contact support if it remains missing.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is the course field not visible?",
+      "For a student, Please help me with this SPRINT query: Why is the course field not visible?",
+      "For a student, I would like to know: Why is the course field not visible?",
+      "For a student, Can you clarify this for me: Why is the course field not visible?",
+      "For a student, Quick question: Why is the course field not visible?",
+      "For a student, Please explain this: Why is the course field not visible?",
+      "For a student, I have a question: Why is the course field not visible?",
+      "For a student, Can you tell me: Why is the course field not visible?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 365
+  },
+  {
+    "id": "SUP-088",
+    "category": "enquiry_form_and_validation",
+    "question": "Why does the form say my email is invalid?",
+    "answer": "Check for typing errors, spaces, a missing @ symbol, or an incomplete domain, then enter a valid email address.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why does the form say my email is invalid?",
+      "For a student, Please help me with this SPRINT query: Why does the form say my email is invalid?",
+      "For a student, I would like to know: Why does the form say my email is invalid?",
+      "For a student, Can you clarify this for me: Why does the form say my email is invalid?",
+      "For a student, Quick question: Why does the form say my email is invalid?",
+      "For a student, Please explain this: Why does the form say my email is invalid?",
+      "For a student, I have a question: Why does the form say my email is invalid?",
+      "For a student, Can you tell me: Why does the form say my email is invalid?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 366
+  },
+  {
+    "id": "SUP-089",
+    "category": "enquiry_form_and_validation",
+    "question": "Why is my phone number rejected?",
+    "answer": "Check the digits and any country code required by the form. If the issue continues, contact SPRINT and describe the validation message.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is my phone number rejected?",
+      "For a student, Please help me with this SPRINT query: Why is my phone number rejected?",
+      "For a student, I would like to know: Why is my phone number rejected?",
+      "For a student, Can you clarify this for me: Why is my phone number rejected?",
+      "For a student, Quick question: Why is my phone number rejected?",
+      "For a student, Please explain this: Why is my phone number rejected?",
+      "For a student, I have a question: Why is my phone number rejected?",
+      "For a student, Can you tell me: Why is my phone number rejected?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 367
+  },
+  {
+    "id": "SUP-090",
+    "category": "enquiry_form_and_validation",
+    "question": "Can I edit the auto-generated message?",
+    "answer": "Yes. The selected courses may prefill the message, but the message should remain editable so you can clarify your needs before submission.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I edit the auto-generated message?",
+      "For a student, Please help me with this SPRINT query: Can I edit the auto-generated message?",
+      "For a student, I would like to know: Can I edit the auto-generated message?",
+      "For a student, Can you clarify this for me: Can I edit the auto-generated message?",
+      "For a student, Quick question: Can I edit the auto-generated message?",
+      "For a student, Please explain this: Can I edit the auto-generated message?",
+      "For a student, I have a question: Can I edit the auto-generated message?",
+      "For a student, Can you tell me: Can I edit the auto-generated message?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 368
+  },
+  {
+    "id": "SUP-091",
+    "category": "form_submission_and_confirmation",
+    "question": "How do I submit a contact enquiry?",
+    "answer": "Choose the appropriate audience, complete the required fields, review your details, and submit the form.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I submit a contact enquiry?",
+      "For a student, Please help me with this SPRINT query: How do I submit a contact enquiry?",
+      "For a student, I would like to know: How do I submit a contact enquiry?",
+      "For a student, Can you clarify this for me: How do I submit a contact enquiry?",
+      "For a student, Quick question: How do I submit a contact enquiry?",
+      "For a student, Please explain this: How do I submit a contact enquiry?",
+      "For a student, I have a question: How do I submit a contact enquiry?",
+      "For a student, Can you tell me: How do I submit a contact enquiry?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 369
+  },
+  {
+    "id": "SUP-092",
+    "category": "form_submission_and_confirmation",
+    "question": "How do I know my enquiry was submitted?",
+    "answer": "Look for the form's success message or confirmation screen. If no confirmation appears, check for validation errors before trying again.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I know my enquiry was submitted?",
+      "For a student, Please help me with this SPRINT query: How do I know my enquiry was submitted?",
+      "For a student, I would like to know: How do I know my enquiry was submitted?",
+      "For a student, Can you clarify this for me: How do I know my enquiry was submitted?",
+      "For a student, Quick question: How do I know my enquiry was submitted?",
+      "For a student, Please explain this: How do I know my enquiry was submitted?",
+      "For a student, I have a question: How do I know my enquiry was submitted?",
+      "For a student, Can you tell me: How do I know my enquiry was submitted?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 370
+  },
+  {
+    "id": "SUP-093",
+    "category": "form_submission_and_confirmation",
+    "question": "The submit button does not work. What should I do?",
+    "answer": "Check required fields and network connectivity, then retry once. If the problem continues, contact SPRINT and share the page URL, time, browser, and error details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The submit button does not work. What should I do?",
+      "For a student, Please help me with this SPRINT query: The submit button does not work. What should I do?",
+      "For a student, I would like to know: The submit button does not work. What should I do?",
+      "For a student, Can you clarify this for me: The submit button does not work. What should I do?",
+      "For a student, Quick question: The submit button does not work. What should I do?",
+      "For a student, Please explain this: The submit button does not work. What should I do?",
+      "For a student, I have a question: The submit button does not work. What should I do?",
+      "For a student, Can you tell me: The submit button does not work. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 371
+  },
+  {
+    "id": "SUP-094",
+    "category": "form_submission_and_confirmation",
+    "question": "I clicked submit twice. Will I create duplicate enquiries?",
+    "answer": "Duplicate handling depends on the form implementation. If you suspect duplicate submissions, contact SPRINT and mention the approximate submission time.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I clicked submit twice. Will I create duplicate enquiries?",
+      "For a student, Please help me with this SPRINT query: I clicked submit twice. Will I create duplicate enquiries?",
+      "For a student, I would like to know: I clicked submit twice. Will I create duplicate enquiries?",
+      "For a student, Can you clarify this for me: I clicked submit twice. Will I create duplicate enquiries?",
+      "For a student, Quick question: I clicked submit twice. Will I create duplicate enquiries?",
+      "For a student, Please explain this: I clicked submit twice. Will I create duplicate enquiries?",
+      "For a student, I have a question: I clicked submit twice. Will I create duplicate enquiries?",
+      "For a student, Can you tell me: I clicked submit twice. Will I create duplicate enquiries?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 372
+  },
+  {
+    "id": "SUP-095",
+    "category": "form_submission_and_confirmation",
+    "question": "I received an error after submitting. Was my enquiry sent?",
+    "answer": "The error alone may not confirm whether the request was saved. Check for a confirmation email or success message, then contact support with the error details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I received an error after submitting. Was my enquiry sent?",
+      "For a student, Please help me with this SPRINT query: I received an error after submitting. Was my enquiry sent?",
+      "For a student, I would like to know: I received an error after submitting. Was my enquiry sent?",
+      "For a student, Can you clarify this for me: I received an error after submitting. Was my enquiry sent?",
+      "For a student, Quick question: I received an error after submitting. Was my enquiry sent?",
+      "For a student, Please explain this: I received an error after submitting. Was my enquiry sent?",
+      "For a student, I have a question: I received an error after submitting. Was my enquiry sent?",
+      "For a student, Can you tell me: I received an error after submitting. Was my enquiry sent?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 373
+  },
+  {
+    "id": "SUP-096",
+    "category": "form_submission_and_confirmation",
+    "question": "Can I submit an enquiry without a message?",
+    "answer": "The message is optional on the Student and Working Professional paths. Other paths should follow the required fields shown in the form.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I submit an enquiry without a message?",
+      "For a student, Please help me with this SPRINT query: Can I submit an enquiry without a message?",
+      "For a student, I would like to know: Can I submit an enquiry without a message?",
+      "For a student, Can you clarify this for me: Can I submit an enquiry without a message?",
+      "For a student, Quick question: Can I submit an enquiry without a message?",
+      "For a student, Please explain this: Can I submit an enquiry without a message?",
+      "For a student, I have a question: Can I submit an enquiry without a message?",
+      "For a student, Can you tell me: Can I submit an enquiry without a message?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 374
+  },
+  {
+    "id": "SUP-097",
+    "category": "form_submission_and_confirmation",
+    "question": "Can I attach a resume or document?",
+    "answer": "Only attach files if the form explicitly supports uploads. Otherwise, ask SPRINT which secure channel should be used.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I attach a resume or document?",
+      "For a student, Please help me with this SPRINT query: Can I attach a resume or document?",
+      "For a student, I would like to know: Can I attach a resume or document?",
+      "For a student, Can you clarify this for me: Can I attach a resume or document?",
+      "For a student, Quick question: Can I attach a resume or document?",
+      "For a student, Please explain this: Can I attach a resume or document?",
+      "For a student, I have a question: Can I attach a resume or document?",
+      "For a student, Can you tell me: Can I attach a resume or document?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 375
+  },
+  {
+    "id": "SUP-098",
+    "category": "form_submission_and_confirmation",
+    "question": "Can I submit an enquiry on behalf of someone else?",
+    "answer": "You can ask about someone else's options, but provide accurate contact information and obtain their permission before sharing their personal details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I submit an enquiry on behalf of someone else?",
+      "For a student, Please help me with this SPRINT query: Can I submit an enquiry on behalf of someone else?",
+      "For a student, I would like to know: Can I submit an enquiry on behalf of someone else?",
+      "For a student, Can you clarify this for me: Can I submit an enquiry on behalf of someone else?",
+      "For a student, Quick question: Can I submit an enquiry on behalf of someone else?",
+      "For a student, Please explain this: Can I submit an enquiry on behalf of someone else?",
+      "For a student, I have a question: Can I submit an enquiry on behalf of someone else?",
+      "For a student, Can you tell me: Can I submit an enquiry on behalf of someone else?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 376
+  },
+  {
+    "id": "SUP-099",
+    "category": "form_submission_and_confirmation",
+    "question": "Can I update an enquiry after submission?",
+    "answer": "Email SPRINT with the original enquiry details and the correction you need. Avoid sending sensitive information that is not necessary.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I update an enquiry after submission?",
+      "For a student, Please help me with this SPRINT query: Can I update an enquiry after submission?",
+      "For a student, I would like to know: Can I update an enquiry after submission?",
+      "For a student, Can you clarify this for me: Can I update an enquiry after submission?",
+      "For a student, Quick question: Can I update an enquiry after submission?",
+      "For a student, Please explain this: Can I update an enquiry after submission?",
+      "For a student, I have a question: Can I update an enquiry after submission?",
+      "For a student, Can you tell me: Can I update an enquiry after submission?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 377
+  },
+  {
+    "id": "SUP-100",
+    "category": "form_submission_and_confirmation",
+    "question": "What if I do not receive a confirmation email?",
+    "answer": "Check spam or junk folders and verify your email address. If no confirmation arrives, contact SPRINT with the submission date and topic.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I do not receive a confirmation email?",
+      "For a student, Please help me with this SPRINT query: What if I do not receive a confirmation email?",
+      "For a student, I would like to know: What if I do not receive a confirmation email?",
+      "For a student, Can you clarify this for me: What if I do not receive a confirmation email?",
+      "For a student, Quick question: What if I do not receive a confirmation email?",
+      "For a student, Please explain this: What if I do not receive a confirmation email?",
+      "For a student, I have a question: What if I do not receive a confirmation email?",
+      "For a student, Can you tell me: What if I do not receive a confirmation email?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 378
+  },
+  {
+    "id": "DASH-101",
+    "category": "profile_and_personal_details",
+    "question": "Where can I view my student profile?",
+    "answer": "Open Profile or account settings from the dashboard if that option is available.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Where can I view my student profile?",
+      "For a student, Please help me with this SPRINT query: Where can I view my student profile?",
+      "For a student, I would like to know: Where can I view my student profile?",
+      "For a student, Can you clarify this for me: Where can I view my student profile?",
+      "For a student, Quick question: Where can I view my student profile?",
+      "For a student, Please explain this: Where can I view my student profile?",
+      "For a student, I have a question: Where can I view my student profile?",
+      "For a student, Can you tell me: Where can I view my student profile?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 619
+  },
+  {
+    "id": "DASH-102",
+    "category": "profile_and_personal_details",
+    "question": "How do I update my name?",
+    "answer": "Use profile editing if supported. If the name field is locked or official records are involved, contact SPRINT support for the approved process.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I update my name?",
+      "For a student, Please help me with this SPRINT query: How do I update my name?",
+      "For a student, I would like to know: How do I update my name?",
+      "For a student, Can you clarify this for me: How do I update my name?",
+      "For a student, Quick question: How do I update my name?",
+      "For a student, Please explain this: How do I update my name?",
+      "For a student, I have a question: How do I update my name?",
+      "For a student, Can you tell me: How do I update my name?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 620
+  },
+  {
+    "id": "DASH-103",
+    "category": "profile_and_personal_details",
+    "question": "How do I change my phone number?",
+    "answer": "Open profile settings and look for an edit option. If you cannot change it, contact support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I change my phone number?",
+      "For a student, Please help me with this SPRINT query: How do I change my phone number?",
+      "For a student, I would like to know: How do I change my phone number?",
+      "For a student, Can you clarify this for me: How do I change my phone number?",
+      "For a student, Quick question: How do I change my phone number?",
+      "For a student, Please explain this: How do I change my phone number?",
+      "For a student, I have a question: How do I change my phone number?",
+      "For a student, Can you tell me: How do I change my phone number?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 621
+  },
+  {
+    "id": "DASH-104",
+    "category": "profile_and_personal_details",
+    "question": "Can I change my email address?",
+    "answer": "Email changes can affect sign-in and verification. Use the official account settings if supported, or contact SPRINT for assistance.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I change my email address?",
+      "For a student, Please help me with this SPRINT query: Can I change my email address?",
+      "For a student, I would like to know: Can I change my email address?",
+      "For a student, Can you clarify this for me: Can I change my email address?",
+      "For a student, Quick question: Can I change my email address?",
+      "For a student, Please explain this: Can I change my email address?",
+      "For a student, I have a question: Can I change my email address?",
+      "For a student, Can you tell me: Can I change my email address?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 622
+  },
+  {
+    "id": "DASH-105",
+    "category": "profile_and_personal_details",
+    "question": "How do I update my city or education details?",
+    "answer": "Use the profile edit controls if available. Contact support if the information is locked.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I update my city or education details?",
+      "For a student, Please help me with this SPRINT query: How do I update my city or education details?",
+      "For a student, I would like to know: How do I update my city or education details?",
+      "For a student, Can you clarify this for me: How do I update my city or education details?",
+      "For a student, Quick question: How do I update my city or education details?",
+      "For a student, Please explain this: How do I update my city or education details?",
+      "For a student, I have a question: How do I update my city or education details?",
+      "For a student, Can you tell me: How do I update my city or education details?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 623
+  },
+  {
+    "id": "DASH-106",
+    "category": "profile_and_personal_details",
+    "question": "My profile shows incorrect information.",
+    "answer": "Identify the incorrect field and contact SPRINT through the official support channel if you cannot edit it yourself.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: My profile shows incorrect information.",
+      "For a student, Please help me with this SPRINT query: My profile shows incorrect information.",
+      "For a student, I would like to know: My profile shows incorrect information.",
+      "For a student, Can you clarify this for me: My profile shows incorrect information.",
+      "For a student, Quick question: My profile shows incorrect information.",
+      "For a student, Please explain this: My profile shows incorrect information.",
+      "For a student, I have a question: My profile shows incorrect information.",
+      "For a student, Can you tell me: My profile shows incorrect information."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 624
+  },
+  {
+    "id": "DASH-107",
+    "category": "profile_and_personal_details",
+    "question": "Can I add a profile photo?",
+    "answer": "Use a profile-photo control if the portal provides one. Follow any file-type and size requirements shown.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I add a profile photo?",
+      "For a student, Please help me with this SPRINT query: Can I add a profile photo?",
+      "For a student, I would like to know: Can I add a profile photo?",
+      "For a student, Can you clarify this for me: Can I add a profile photo?",
+      "For a student, Quick question: Can I add a profile photo?",
+      "For a student, Please explain this: Can I add a profile photo?",
+      "For a student, I have a question: Can I add a profile photo?",
+      "For a student, Can you tell me: Can I add a profile photo?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 625
+  },
+  {
+    "id": "DASH-108",
+    "category": "profile_and_personal_details",
+    "question": "Why is my profile incomplete?",
+    "answer": "Some fields may be optional or may need to be completed in the education and career profile. Follow the portal’s prompts.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is my profile incomplete?",
+      "For a student, Please help me with this SPRINT query: Why is my profile incomplete?",
+      "For a student, I would like to know: Why is my profile incomplete?",
+      "For a student, Can you clarify this for me: Why is my profile incomplete?",
+      "For a student, Quick question: Why is my profile incomplete?",
+      "For a student, Please explain this: Why is my profile incomplete?",
+      "For a student, I have a question: Why is my profile incomplete?",
+      "For a student, Can you tell me: Why is my profile incomplete?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 626
+  },
+  {
+    "id": "DASH-109",
+    "category": "profile_and_personal_details",
+    "question": "Can I edit my specialization?",
+    "answer": "If specialization editing is available, update it in your profile. Otherwise, ask SPRINT whether a change can be made.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I edit my specialization?",
+      "For a student, Please help me with this SPRINT query: Can I edit my specialization?",
+      "For a student, I would like to know: Can I edit my specialization?",
+      "For a student, Can you clarify this for me: Can I edit my specialization?",
+      "For a student, Quick question: Can I edit my specialization?",
+      "For a student, Please explain this: Can I edit my specialization?",
+      "For a student, I have a question: Can I edit my specialization?",
+      "For a student, Can you tell me: Can I edit my specialization?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 627
+  },
+  {
+    "id": "DASH-110",
+    "category": "profile_and_personal_details",
+    "question": "Should I share my profile screenshot publicly?",
+    "answer": "Avoid sharing screenshots containing your email, phone number, student ID, or other private information.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should I share my profile screenshot publicly?",
+      "For a student, Please help me with this SPRINT query: Should I share my profile screenshot publicly?",
+      "For a student, I would like to know: Should I share my profile screenshot publicly?",
+      "For a student, Can you clarify this for me: Should I share my profile screenshot publicly?",
+      "For a student, Quick question: Should I share my profile screenshot publicly?",
+      "For a student, Please explain this: Should I share my profile screenshot publicly?",
+      "For a student, I have a question: Should I share my profile screenshot publicly?",
+      "For a student, Can you tell me: Should I share my profile screenshot publicly?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 628
+  },
+  {
+    "id": "REG-001",
+    "category": "registration_flow",
+    "question": "How do I register as a new SPRINT student?",
+    "answer": "Open Student Portal and select Enroll Now. Complete the required personal details, choose a learning path, set up an email-based account, verify your email, and follow the confirmation steps.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I register as a new SPRINT student?",
+      "For a student, Please help me with this SPRINT query: How do I register as a new SPRINT student?",
+      "For a student, I would like to know: How do I register as a new SPRINT student?",
+      "For a student, Can you clarify this for me: How do I register as a new SPRINT student?",
+      "For a student, Quick question: How do I register as a new SPRINT student?",
+      "For a student, Please explain this: How do I register as a new SPRINT student?",
+      "For a student, I have a question: How do I register as a new SPRINT student?",
+      "For a student, Can you tell me: How do I register as a new SPRINT student?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 789
+  },
+  {
+    "id": "REG-002",
+    "category": "registration_flow",
+    "question": "Where do existing students sign in?",
+    "answer": "Open Student Portal and choose Sign In, then use the email and password associated with your account.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Where do existing students sign in?",
+      "For a student, Please help me with this SPRINT query: Where do existing students sign in?",
+      "For a student, I would like to know: Where do existing students sign in?",
+      "For a student, Can you clarify this for me: Where do existing students sign in?",
+      "For a student, Quick question: Where do existing students sign in?",
+      "For a student, Please explain this: Where do existing students sign in?",
+      "For a student, I have a question: Where do existing students sign in?",
+      "For a student, Can you tell me: Where do existing students sign in?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 790
+  },
+  {
+    "id": "REG-003",
+    "category": "registration_flow",
+    "question": "What is the difference between Sign In and Enroll Now?",
+    "answer": "Sign In is for an existing account. Enroll Now starts the new-student enrolment and registration flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What is the difference between Sign In and Enroll Now?",
+      "For a student, Please help me with this SPRINT query: What is the difference between Sign In and Enroll Now?",
+      "For a student, I would like to know: What is the difference between Sign In and Enroll Now?",
+      "For a student, Can you clarify this for me: What is the difference between Sign In and Enroll Now?",
+      "For a student, Quick question: What is the difference between Sign In and Enroll Now?",
+      "For a student, Please explain this: What is the difference between Sign In and Enroll Now?",
+      "For a student, I have a question: What is the difference between Sign In and Enroll Now?",
+      "For a student, Can you tell me: What is the difference between Sign In and Enroll Now?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 791
+  },
+  {
+    "id": "REG-004",
+    "category": "registration_flow",
+    "question": "Is student sign-up linked to enrolment?",
+    "answer": "Yes. The specified flow links new-student enrolment with account creation. Follow the steps shown in the portal.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is student sign-up linked to enrolment?",
+      "For a student, Please help me with this SPRINT query: Is student sign-up linked to enrolment?",
+      "For a student, I would like to know: Is student sign-up linked to enrolment?",
+      "For a student, Can you clarify this for me: Is student sign-up linked to enrolment?",
+      "For a student, Quick question: Is student sign-up linked to enrolment?",
+      "For a student, Please explain this: Is student sign-up linked to enrolment?",
+      "For a student, I have a question: Is student sign-up linked to enrolment?",
+      "For a student, Can you tell me: Is student sign-up linked to enrolment?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 792
+  },
+  {
+    "id": "REG-005",
+    "category": "registration_flow",
+    "question": "What are the four main enrolment steps?",
+    "answer": "Step 1 collects required personal details; Step 2 is optional education/career information; Step 3 is learning-path selection; Step 4 is account setup.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What are the four main enrolment steps?",
+      "For a student, Please help me with this SPRINT query: What are the four main enrolment steps?",
+      "For a student, I would like to know: What are the four main enrolment steps?",
+      "For a student, Can you clarify this for me: What are the four main enrolment steps?",
+      "For a student, Quick question: What are the four main enrolment steps?",
+      "For a student, Please explain this: What are the four main enrolment steps?",
+      "For a student, I have a question: What are the four main enrolment steps?",
+      "For a student, Can you tell me: What are the four main enrolment steps?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 793
+  },
+  {
+    "id": "REG-006",
+    "category": "registration_flow",
+    "question": "Can I skip Step 2?",
+    "answer": "Yes. Step 2 is optional and skippable in the specified flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I skip Step 2?",
+      "For a student, Please help me with this SPRINT query: Can I skip Step 2?",
+      "For a student, I would like to know: Can I skip Step 2?",
+      "For a student, Can you clarify this for me: Can I skip Step 2?",
+      "For a student, Quick question: Can I skip Step 2?",
+      "For a student, Please explain this: Can I skip Step 2?",
+      "For a student, I have a question: Can I skip Step 2?",
+      "For a student, Can you tell me: Can I skip Step 2?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 794
+  },
+  {
+    "id": "REG-007",
+    "category": "registration_flow",
+    "question": "Which step is mandatory before proceeding?",
+    "answer": "Step 1 is required. Complete the required fields before moving to the next step.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Which step is mandatory before proceeding?",
+      "For a student, Please help me with this SPRINT query: Which step is mandatory before proceeding?",
+      "For a student, I would like to know: Which step is mandatory before proceeding?",
+      "For a student, Can you clarify this for me: Which step is mandatory before proceeding?",
+      "For a student, Quick question: Which step is mandatory before proceeding?",
+      "For a student, Please explain this: Which step is mandatory before proceeding?",
+      "For a student, I have a question: Which step is mandatory before proceeding?",
+      "For a student, Can you tell me: Which step is mandatory before proceeding?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 795
+  },
+  {
+    "id": "REG-008",
+    "category": "registration_flow",
+    "question": "When do I create my account?",
+    "answer": "Account setup is Step 4, after the personal details, optional background step, and learning-path selection.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: When do I create my account?",
+      "For a student, Please help me with this SPRINT query: When do I create my account?",
+      "For a student, I would like to know: When do I create my account?",
+      "For a student, Can you clarify this for me: When do I create my account?",
+      "For a student, Quick question: When do I create my account?",
+      "For a student, Please explain this: When do I create my account?",
+      "For a student, I have a question: When do I create my account?",
+      "For a student, Can you tell me: When do I create my account?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 796
+  },
+  {
+    "id": "REG-009",
+    "category": "registration_flow",
+    "question": "What happens after account creation?",
+    "answer": "The intended flow includes email verification, a confirmation step, and then access to the student dashboard.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What happens after account creation?",
+      "For a student, Please help me with this SPRINT query: What happens after account creation?",
+      "For a student, I would like to know: What happens after account creation?",
+      "For a student, Can you clarify this for me: What happens after account creation?",
+      "For a student, Quick question: What happens after account creation?",
+      "For a student, Please explain this: What happens after account creation?",
+      "For a student, I have a question: What happens after account creation?",
+      "For a student, Can you tell me: What happens after account creation?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 797
+  },
+  {
+    "id": "REG-010",
+    "category": "registration_flow",
+    "question": "What if I am unsure which action to choose?",
+    "answer": "Choose Enroll Now if you are new. Choose Sign In if you already have an account, or Forgot Password if you cannot access it.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I am unsure which action to choose?",
+      "For a student, Please help me with this SPRINT query: What if I am unsure which action to choose?",
+      "For a student, I would like to know: What if I am unsure which action to choose?",
+      "For a student, Can you clarify this for me: What if I am unsure which action to choose?",
+      "For a student, Quick question: What if I am unsure which action to choose?",
+      "For a student, Please explain this: What if I am unsure which action to choose?",
+      "For a student, I have a question: What if I am unsure which action to choose?",
+      "For a student, Can you tell me: What if I am unsure which action to choose?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 798
+  },
+  {
+    "id": "REG-011",
+    "category": "required_personal_details",
+    "question": "Which fields are required in Step 1?",
+    "answer": "The specified Step 1 fields are full name, email, phone number, date of birth, gender, and city.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Which fields are required in Step 1?",
+      "For a student, Please help me with this SPRINT query: Which fields are required in Step 1?",
+      "For a student, I would like to know: Which fields are required in Step 1?",
+      "For a student, Can you clarify this for me: Which fields are required in Step 1?",
+      "For a student, Quick question: Which fields are required in Step 1?",
+      "For a student, Please explain this: Which fields are required in Step 1?",
+      "For a student, I have a question: Which fields are required in Step 1?",
+      "For a student, Can you tell me: Which fields are required in Step 1?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 799
+  },
+  {
+    "id": "REG-012",
+    "category": "required_personal_details",
+    "question": "Why must I enter my full name?",
+    "answer": "It helps identify your registration and student record. Enter your name accurately.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why must I enter my full name?",
+      "For a student, Please help me with this SPRINT query: Why must I enter my full name?",
+      "For a student, I would like to know: Why must I enter my full name?",
+      "For a student, Can you clarify this for me: Why must I enter my full name?",
+      "For a student, Quick question: Why must I enter my full name?",
+      "For a student, Please explain this: Why must I enter my full name?",
+      "For a student, I have a question: Why must I enter my full name?",
+      "For a student, Can you tell me: Why must I enter my full name?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 800
+  },
+  {
+    "id": "REG-013",
+    "category": "required_personal_details",
+    "question": "Can I enter only my first name?",
+    "answer": "Step 1 asks for a full name, so enter the complete name requested by the form.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I enter only my first name?",
+      "For a student, Please help me with this SPRINT query: Can I enter only my first name?",
+      "For a student, I would like to know: Can I enter only my first name?",
+      "For a student, Can you clarify this for me: Can I enter only my first name?",
+      "For a student, Quick question: Can I enter only my first name?",
+      "For a student, Please explain this: Can I enter only my first name?",
+      "For a student, I have a question: Can I enter only my first name?",
+      "For a student, Can you tell me: Can I enter only my first name?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 801
+  },
+  {
+    "id": "REG-014",
+    "category": "required_personal_details",
+    "question": "Which email should I use?",
+    "answer": "Use an inbox you can access because the registration flow includes email verification and account recovery.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Which email should I use?",
+      "For a student, Please help me with this SPRINT query: Which email should I use?",
+      "For a student, I would like to know: Which email should I use?",
+      "For a student, Can you clarify this for me: Which email should I use?",
+      "For a student, Quick question: Which email should I use?",
+      "For a student, Please explain this: Which email should I use?",
+      "For a student, I have a question: Which email should I use?",
+      "For a student, Can you tell me: Which email should I use?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 802
+  },
+  {
+    "id": "REG-015",
+    "category": "required_personal_details",
+    "question": "Why is phone number required?",
+    "answer": "Phone number is a required contact detail in the current Step 1 specification.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is phone number required?",
+      "For a student, Please help me with this SPRINT query: Why is phone number required?",
+      "For a student, I would like to know: Why is phone number required?",
+      "For a student, Can you clarify this for me: Why is phone number required?",
+      "For a student, Quick question: Why is phone number required?",
+      "For a student, Please explain this: Why is phone number required?",
+      "For a student, I have a question: Why is phone number required?",
+      "For a student, Can you tell me: Why is phone number required?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 803
+  },
+  {
+    "id": "REG-016",
+    "category": "required_personal_details",
+    "question": "Can I skip the phone field?",
+    "answer": "No. The specified Step 1 flow marks phone as required. If you cannot complete it, contact SPRINT support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I skip the phone field?",
+      "For a student, Please help me with this SPRINT query: Can I skip the phone field?",
+      "For a student, I would like to know: Can I skip the phone field?",
+      "For a student, Can you clarify this for me: Can I skip the phone field?",
+      "For a student, Quick question: Can I skip the phone field?",
+      "For a student, Please explain this: Can I skip the phone field?",
+      "For a student, I have a question: Can I skip the phone field?",
+      "For a student, Can you tell me: Can I skip the phone field?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 804
+  },
+  {
+    "id": "REG-017",
+    "category": "required_personal_details",
+    "question": "Why is date of birth requested?",
+    "answer": "Date of birth is one of the required personal-detail fields in the specified registration flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is date of birth requested?",
+      "For a student, Please help me with this SPRINT query: Why is date of birth requested?",
+      "For a student, I would like to know: Why is date of birth requested?",
+      "For a student, Can you clarify this for me: Why is date of birth requested?",
+      "For a student, Quick question: Why is date of birth requested?",
+      "For a student, Please explain this: Why is date of birth requested?",
+      "For a student, I have a question: Why is date of birth requested?",
+      "For a student, Can you tell me: Why is date of birth requested?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 805
+  },
+  {
+    "id": "REG-018",
+    "category": "required_personal_details",
+    "question": "Why does the form ask for gender?",
+    "answer": "Gender is included as a required Step 1 field in the current flow specification.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why does the form ask for gender?",
+      "For a student, Please help me with this SPRINT query: Why does the form ask for gender?",
+      "For a student, I would like to know: Why does the form ask for gender?",
+      "For a student, Can you clarify this for me: Why does the form ask for gender?",
+      "For a student, Quick question: Why does the form ask for gender?",
+      "For a student, Please explain this: Why does the form ask for gender?",
+      "For a student, I have a question: Why does the form ask for gender?",
+      "For a student, Can you tell me: Why does the form ask for gender?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 806
+  },
+  {
+    "id": "REG-019",
+    "category": "required_personal_details",
+    "question": "Why do I need to enter my city?",
+    "answer": "City is required in Step 1 to complete the personal-details section.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why do I need to enter my city?",
+      "For a student, Please help me with this SPRINT query: Why do I need to enter my city?",
+      "For a student, I would like to know: Why do I need to enter my city?",
+      "For a student, Can you clarify this for me: Why do I need to enter my city?",
+      "For a student, Quick question: Why do I need to enter my city?",
+      "For a student, Please explain this: Why do I need to enter my city?",
+      "For a student, I have a question: Why do I need to enter my city?",
+      "For a student, Can you tell me: Why do I need to enter my city?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 807
+  },
+  {
+    "id": "REG-020",
+    "category": "required_personal_details",
+    "question": "What if a required field is missing?",
+    "answer": "The form should prevent progression and identify the missing or invalid field. Complete it accurately before continuing.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if a required field is missing?",
+      "For a student, Please help me with this SPRINT query: What if a required field is missing?",
+      "For a student, I would like to know: What if a required field is missing?",
+      "For a student, Can you clarify this for me: What if a required field is missing?",
+      "For a student, Quick question: What if a required field is missing?",
+      "For a student, Please explain this: What if a required field is missing?",
+      "For a student, I have a question: What if a required field is missing?",
+      "For a student, Can you tell me: What if a required field is missing?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 808
+  },
+  {
+    "id": "REG-021",
+    "category": "name_email_and_phone_validation",
+    "question": "Why does the form say my email is invalid?",
+    "answer": "Check for spelling errors, spaces, a missing @ symbol, or an incomplete domain. Use an email address you can access.",
+    "alternative_questions": [
+      "In the name email and phone validation category: Why does the form say my email is invalid?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 809
+  },
+  {
+    "id": "REG-022",
+    "category": "name_email_and_phone_validation",
+    "question": "Can I use a college email address?",
+    "answer": "You can use an accessible email address if it passes the form's validation and you can receive verification messages.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I use a college email address?",
+      "For a student, Please help me with this SPRINT query: Can I use a college email address?",
+      "For a student, I would like to know: Can I use a college email address?",
+      "For a student, Can you clarify this for me: Can I use a college email address?",
+      "For a student, Quick question: Can I use a college email address?",
+      "For a student, Please explain this: Can I use a college email address?",
+      "For a student, I have a question: Can I use a college email address?",
+      "For a student, Can you tell me: Can I use a college email address?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 810
+  },
+  {
+    "id": "REG-023",
+    "category": "name_email_and_phone_validation",
+    "question": "Can I use someone else's email?",
+    "answer": "Use an email you control or are authorised to use. Verification and recovery messages should reach an inbox you can access.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I use someone else's email?",
+      "For a student, Please help me with this SPRINT query: Can I use someone else's email?",
+      "For a student, I would like to know: Can I use someone else's email?",
+      "For a student, Can you clarify this for me: Can I use someone else's email?",
+      "For a student, Quick question: Can I use someone else's email?",
+      "For a student, Please explain this: Can I use someone else's email?",
+      "For a student, I have a question: Can I use someone else's email?",
+      "For a student, Can you tell me: Can I use someone else's email?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 811
+  },
+  {
+    "id": "REG-024",
+    "category": "name_email_and_phone_validation",
+    "question": "What if I no longer access my email?",
+    "answer": "Use an accessible address for a new registration. For an existing account, contact support before creating a duplicate.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I no longer access my email?",
+      "For a student, Please help me with this SPRINT query: What if I no longer access my email?",
+      "For a student, I would like to know: What if I no longer access my email?",
+      "For a student, Can you clarify this for me: What if I no longer access my email?",
+      "For a student, Quick question: What if I no longer access my email?",
+      "For a student, Please explain this: What if I no longer access my email?",
+      "For a student, I have a question: What if I no longer access my email?",
+      "For a student, Can you tell me: What if I no longer access my email?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 812
+  },
+  {
+    "id": "REG-025",
+    "category": "name_email_and_phone_validation",
+    "question": "Why is my phone number rejected?",
+    "answer": "Check the number of digits and follow the country-code format requested by the form.",
+    "alternative_questions": [
+      "In the name email and phone validation category: Why is my phone number rejected?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 813
+  },
+  {
+    "id": "REG-026",
+    "category": "name_email_and_phone_validation",
+    "question": "Can I enter an international dialing code?",
+    "answer": "Follow the format shown in the phone field. Include a country code if the form supports or requests it.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I enter an international dialing code?",
+      "For a student, Please help me with this SPRINT query: Can I enter an international dialing code?",
+      "For a student, I would like to know: Can I enter an international dialing code?",
+      "For a student, Can you clarify this for me: Can I enter an international dialing code?",
+      "For a student, Quick question: Can I enter an international dialing code?",
+      "For a student, Please explain this: Can I enter an international dialing code?",
+      "For a student, I have a question: Can I enter an international dialing code?",
+      "For a student, Can you tell me: Can I enter an international dialing code?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 814
+  },
+  {
+    "id": "REG-027",
+    "category": "name_email_and_phone_validation",
+    "question": "What if I misspell my name?",
+    "answer": "Correct it before continuing if possible. After submission, contact support to ask about correcting your record.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I misspell my name?",
+      "For a student, Please help me with this SPRINT query: What if I misspell my name?",
+      "For a student, I would like to know: What if I misspell my name?",
+      "For a student, Can you clarify this for me: What if I misspell my name?",
+      "For a student, Quick question: What if I misspell my name?",
+      "For a student, Please explain this: What if I misspell my name?",
+      "For a student, I have a question: What if I misspell my name?",
+      "For a student, Can you tell me: What if I misspell my name?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 815
+  },
+  {
+    "id": "REG-028",
+    "category": "name_email_and_phone_validation",
+    "question": "What if my city is not listed?",
+    "answer": "If free text is allowed, enter your city. If the field is a dropdown and your city is missing, contact support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if my city is not listed?",
+      "For a student, Please help me with this SPRINT query: What if my city is not listed?",
+      "For a student, I would like to know: What if my city is not listed?",
+      "For a student, Can you clarify this for me: What if my city is not listed?",
+      "For a student, Quick question: What if my city is not listed?",
+      "For a student, Please explain this: What if my city is not listed?",
+      "For a student, I have a question: What if my city is not listed?",
+      "For a student, Can you tell me: What if my city is not listed?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 816
+  },
+  {
+    "id": "REG-029",
+    "category": "name_email_and_phone_validation",
+    "question": "Can I change my email after registration?",
+    "answer": "Use an available profile-editing feature if provided, or contact SPRINT support and follow its verification process.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I change my email after registration?",
+      "For a student, Please help me with this SPRINT query: Can I change my email after registration?",
+      "For a student, I would like to know: Can I change my email after registration?",
+      "For a student, Can you clarify this for me: Can I change my email after registration?",
+      "For a student, Quick question: Can I change my email after registration?",
+      "For a student, Please explain this: Can I change my email after registration?",
+      "For a student, I have a question: Can I change my email after registration?",
+      "For a student, Can you tell me: Can I change my email after registration?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 817
+  },
+  {
+    "id": "REG-030",
+    "category": "name_email_and_phone_validation",
+    "question": "What if all details look valid but the form blocks me?",
+    "answer": "Review each validation message. If the problem persists, record the step and error while hiding personal information, then contact support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if all details look valid but the form blocks me?",
+      "For a student, Please help me with this SPRINT query: What if all details look valid but the form blocks me?",
+      "For a student, I would like to know: What if all details look valid but the form blocks me?",
+      "For a student, Can you clarify this for me: What if all details look valid but the form blocks me?",
+      "For a student, Quick question: What if all details look valid but the form blocks me?",
+      "For a student, Please explain this: What if all details look valid but the form blocks me?",
+      "For a student, I have a question: What if all details look valid but the form blocks me?",
+      "For a student, Can you tell me: What if all details look valid but the form blocks me?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 818
+  },
+  {
+    "id": "REG-031",
+    "category": "date_of_birth_and_gender",
+    "question": "What date format should I use?",
+    "answer": "Follow the date picker or format hint displayed by the form and verify the day, month, and year.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What date format should I use?",
+      "For a student, Please help me with this SPRINT query: What date format should I use?",
+      "For a student, I would like to know: What date format should I use?",
+      "For a student, Can you clarify this for me: What date format should I use?",
+      "For a student, Quick question: What date format should I use?",
+      "For a student, Please explain this: What date format should I use?",
+      "For a student, I have a question: What date format should I use?",
+      "For a student, Can you tell me: What date format should I use?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 819
+  },
+  {
+    "id": "REG-032",
+    "category": "date_of_birth_and_gender",
+    "question": "The date picker will not open. What should I do?",
+    "answer": "Try focusing the field, refreshing, or using an updated browser. If it still fails, report the browser and steps.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The date picker will not open. What should I do?",
+      "For a student, Please help me with this SPRINT query: The date picker will not open. What should I do?",
+      "For a student, I would like to know: The date picker will not open. What should I do?",
+      "For a student, Can you clarify this for me: The date picker will not open. What should I do?",
+      "For a student, Quick question: The date picker will not open. What should I do?",
+      "For a student, Please explain this: The date picker will not open. What should I do?",
+      "For a student, I have a question: The date picker will not open. What should I do?",
+      "For a student, Can you tell me: The date picker will not open. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 820
+  },
+  {
+    "id": "REG-033",
+    "category": "date_of_birth_and_gender",
+    "question": "I selected the wrong birth date. Can I change it?",
+    "answer": "Correct it before proceeding if editable. After submission, contact support to request a correction.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I selected the wrong birth date. Can I change it?",
+      "For a student, Please help me with this SPRINT query: I selected the wrong birth date. Can I change it?",
+      "For a student, I would like to know: I selected the wrong birth date. Can I change it?",
+      "For a student, Can you clarify this for me: I selected the wrong birth date. Can I change it?",
+      "For a student, Quick question: I selected the wrong birth date. Can I change it?",
+      "For a student, Please explain this: I selected the wrong birth date. Can I change it?",
+      "For a student, I have a question: I selected the wrong birth date. Can I change it?",
+      "For a student, Can you tell me: I selected the wrong birth date. Can I change it?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 821
+  },
+  {
+    "id": "REG-034",
+    "category": "date_of_birth_and_gender",
+    "question": "Why is my birth date marked invalid?",
+    "answer": "Check that it is a real calendar date and follows the displayed format. Follow only age/date restrictions explicitly shown.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is my birth date marked invalid?",
+      "For a student, Please help me with this SPRINT query: Why is my birth date marked invalid?",
+      "For a student, I would like to know: Why is my birth date marked invalid?",
+      "For a student, Can you clarify this for me: Why is my birth date marked invalid?",
+      "For a student, Quick question: Why is my birth date marked invalid?",
+      "For a student, Please explain this: Why is my birth date marked invalid?",
+      "For a student, I have a question: Why is my birth date marked invalid?",
+      "For a student, Can you tell me: Why is my birth date marked invalid?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 822
+  },
+  {
+    "id": "REG-035",
+    "category": "date_of_birth_and_gender",
+    "question": "What if the form rejects my birth year?",
+    "answer": "Do not enter a false date to bypass validation. Contact SPRINT support with the exact error.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if the form rejects my birth year?",
+      "For a student, Please help me with this SPRINT query: What if the form rejects my birth year?",
+      "For a student, I would like to know: What if the form rejects my birth year?",
+      "For a student, Can you clarify this for me: What if the form rejects my birth year?",
+      "For a student, Quick question: What if the form rejects my birth year?",
+      "For a student, Please explain this: What if the form rejects my birth year?",
+      "For a student, I have a question: What if the form rejects my birth year?",
+      "For a student, Can you tell me: What if the form rejects my birth year?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 823
+  },
+  {
+    "id": "REG-036",
+    "category": "date_of_birth_and_gender",
+    "question": "What if the gender options do not fit my situation?",
+    "answer": "Do not enter inaccurate information. Contact SPRINT support to ask how to proceed.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if the gender options do not fit my situation?",
+      "For a student, Please help me with this SPRINT query: What if the gender options do not fit my situation?",
+      "For a student, I would like to know: What if the gender options do not fit my situation?",
+      "For a student, Can you clarify this for me: What if the gender options do not fit my situation?",
+      "For a student, Quick question: What if the gender options do not fit my situation?",
+      "For a student, Please explain this: What if the gender options do not fit my situation?",
+      "For a student, I have a question: What if the gender options do not fit my situation?",
+      "For a student, Can you tell me: What if the gender options do not fit my situation?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 824
+  },
+  {
+    "id": "REG-037",
+    "category": "date_of_birth_and_gender",
+    "question": "Can I leave gender blank?",
+    "answer": "The specified Step 1 flow marks gender as required. Ask support for guidance if you cannot complete the field.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I leave gender blank?",
+      "For a student, Please help me with this SPRINT query: Can I leave gender blank?",
+      "For a student, I would like to know: Can I leave gender blank?",
+      "For a student, Can you clarify this for me: Can I leave gender blank?",
+      "For a student, Quick question: Can I leave gender blank?",
+      "For a student, Please explain this: Can I leave gender blank?",
+      "For a student, I have a question: Can I leave gender blank?",
+      "For a student, Can you tell me: Can I leave gender blank?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 825
+  },
+  {
+    "id": "REG-038",
+    "category": "date_of_birth_and_gender",
+    "question": "Can I correct gender after registration?",
+    "answer": "Contact support and ask about the profile-correction process and any verification required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I correct gender after registration?",
+      "For a student, Please help me with this SPRINT query: Can I correct gender after registration?",
+      "For a student, I would like to know: Can I correct gender after registration?",
+      "For a student, Can you clarify this for me: Can I correct gender after registration?",
+      "For a student, Quick question: Can I correct gender after registration?",
+      "For a student, Please explain this: Can I correct gender after registration?",
+      "For a student, I have a question: Can I correct gender after registration?",
+      "For a student, Can you tell me: Can I correct gender after registration?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 826
+  },
+  {
+    "id": "REG-039",
+    "category": "date_of_birth_and_gender",
+    "question": "Why does the form ask for city rather than a full address?",
+    "answer": "The specified Step 1 asks for city. Provide only the information requested by the form.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why does the form ask for city rather than a full address?",
+      "For a student, Please help me with this SPRINT query: Why does the form ask for city rather than a full address?",
+      "For a student, I would like to know: Why does the form ask for city rather than a full address?",
+      "For a student, Can you clarify this for me: Why does the form ask for city rather than a full address?",
+      "For a student, Quick question: Why does the form ask for city rather than a full address?",
+      "For a student, Please explain this: Why does the form ask for city rather than a full address?",
+      "For a student, I have a question: Why does the form ask for city rather than a full address?",
+      "For a student, Can you tell me: Why does the form ask for city rather than a full address?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 827
+  },
+  {
+    "id": "REG-040",
+    "category": "date_of_birth_and_gender",
+    "question": "What if the form rejects correct personal details?",
+    "answer": "Capture the error without exposing private information and report the affected field, device, browser, and steps.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if the form rejects correct personal details?",
+      "For a student, Please help me with this SPRINT query: What if the form rejects correct personal details?",
+      "For a student, I would like to know: What if the form rejects correct personal details?",
+      "For a student, Can you clarify this for me: What if the form rejects correct personal details?",
+      "For a student, Quick question: What if the form rejects correct personal details?",
+      "For a student, Please explain this: What if the form rejects correct personal details?",
+      "For a student, I have a question: What if the form rejects correct personal details?",
+      "For a student, Can you tell me: What if the form rejects correct personal details?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 828
+  },
+  {
+    "id": "REG-051",
+    "category": "specialization_choices",
+    "question": "Where do I choose a specialization?",
+    "answer": "Specialization options may appear in Step 2. Step 3 is for selecting the learning path.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Where do I choose a specialization?",
+      "For a student, Please help me with this SPRINT query: Where do I choose a specialization?",
+      "For a student, I would like to know: Where do I choose a specialization?",
+      "For a student, Can you clarify this for me: Where do I choose a specialization?",
+      "For a student, Quick question: Where do I choose a specialization?",
+      "For a student, Please explain this: Where do I choose a specialization?",
+      "For a student, I have a question: Where do I choose a specialization?",
+      "For a student, Can you tell me: Where do I choose a specialization?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 839
+  },
+  {
+    "id": "REG-052",
+    "category": "specialization_choices",
+    "question": "What does Choose Your Specialization mean?",
+    "answer": "It asks you to indicate the technology or career area that interests you from the available options.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What does Choose Your Specialization mean?",
+      "For a student, Please help me with this SPRINT query: What does Choose Your Specialization mean?",
+      "For a student, I would like to know: What does Choose Your Specialization mean?",
+      "For a student, Can you clarify this for me: What does Choose Your Specialization mean?",
+      "For a student, Quick question: What does Choose Your Specialization mean?",
+      "For a student, Please explain this: What does Choose Your Specialization mean?",
+      "For a student, I have a question: What does Choose Your Specialization mean?",
+      "For a student, Can you tell me: What does Choose Your Specialization mean?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 840
+  },
+  {
+    "id": "REG-053",
+    "category": "specialization_choices",
+    "question": "Which specializations have been listed for SPRINT?",
+    "answer": "Options referenced include AI Engineer, Cloud Engineer, DevOps Engineer, Software Engineer, Data Engineer, Security Specialist, Site Reliability Engineer (SRE), Solution Architect, IT Consultant, and Product Engineer. Confirm the live list.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Which specializations have been listed for SPRINT?",
+      "For a student, Please help me with this SPRINT query: Which specializations have been listed for SPRINT?",
+      "For a student, I would like to know: Which specializations have been listed for SPRINT?",
+      "For a student, Can you clarify this for me: Which specializations have been listed for SPRINT?",
+      "For a student, Quick question: Which specializations have been listed for SPRINT?",
+      "For a student, Please explain this: Which specializations have been listed for SPRINT?",
+      "For a student, I have a question: Which specializations have been listed for SPRINT?",
+      "For a student, Can you tell me: Which specializations have been listed for SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 841
+  },
+  {
+    "id": "REG-054",
+    "category": "specialization_choices",
+    "question": "Can I choose AI Engineer?",
+    "answer": "Select AI Engineer if it appears in the current specialization list.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I choose AI Engineer?",
+      "For a student, Please help me with this SPRINT query: Can I choose AI Engineer?",
+      "For a student, I would like to know: Can I choose AI Engineer?",
+      "For a student, Can you clarify this for me: Can I choose AI Engineer?",
+      "For a student, Quick question: Can I choose AI Engineer?",
+      "For a student, Please explain this: Can I choose AI Engineer?",
+      "For a student, I have a question: Can I choose AI Engineer?",
+      "For a student, Can you tell me: Can I choose AI Engineer?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 842
+  },
+  {
+    "id": "REG-055",
+    "category": "specialization_choices",
+    "question": "Can I choose Cloud Engineer?",
+    "answer": "Select Cloud Engineer if it appears in the current specialization list.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I choose Cloud Engineer?",
+      "For a student, Please help me with this SPRINT query: Can I choose Cloud Engineer?",
+      "For a student, I would like to know: Can I choose Cloud Engineer?",
+      "For a student, Can you clarify this for me: Can I choose Cloud Engineer?",
+      "For a student, Quick question: Can I choose Cloud Engineer?",
+      "For a student, Please explain this: Can I choose Cloud Engineer?",
+      "For a student, I have a question: Can I choose Cloud Engineer?",
+      "For a student, Can you tell me: Can I choose Cloud Engineer?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 843
+  },
+  {
+    "id": "REG-056",
+    "category": "specialization_choices",
+    "question": "Can I choose DevOps Engineer?",
+    "answer": "Select DevOps Engineer if it appears in the current specialization list.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I choose DevOps Engineer?",
+      "For a student, Please help me with this SPRINT query: Can I choose DevOps Engineer?",
+      "For a student, I would like to know: Can I choose DevOps Engineer?",
+      "For a student, Can you clarify this for me: Can I choose DevOps Engineer?",
+      "For a student, Quick question: Can I choose DevOps Engineer?",
+      "For a student, Please explain this: Can I choose DevOps Engineer?",
+      "For a student, I have a question: Can I choose DevOps Engineer?",
+      "For a student, Can you tell me: Can I choose DevOps Engineer?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 844
+  },
+  {
+    "id": "REG-057",
+    "category": "specialization_choices",
+    "question": "Can I select multiple specializations?",
+    "answer": "Follow the current form's controls. If multi-select is enabled, select multiple; otherwise choose the closest fit.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I select multiple specializations?",
+      "For a student, Please help me with this SPRINT query: Can I select multiple specializations?",
+      "For a student, I would like to know: Can I select multiple specializations?",
+      "For a student, Can you clarify this for me: Can I select multiple specializations?",
+      "For a student, Quick question: Can I select multiple specializations?",
+      "For a student, Please explain this: Can I select multiple specializations?",
+      "For a student, I have a question: Can I select multiple specializations?",
+      "For a student, Can you tell me: Can I select multiple specializations?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 845
+  },
+  {
+    "id": "REG-058",
+    "category": "specialization_choices",
+    "question": "Does specialization enrol me automatically?",
+    "answer": "No. It indicates an area of interest. Continue through the learning-path and account steps.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does specialization enrol me automatically?",
+      "For a student, Please help me with this SPRINT query: Does specialization enrol me automatically?",
+      "For a student, I would like to know: Does specialization enrol me automatically?",
+      "For a student, Can you clarify this for me: Does specialization enrol me automatically?",
+      "For a student, Quick question: Does specialization enrol me automatically?",
+      "For a student, Please explain this: Does specialization enrol me automatically?",
+      "For a student, I have a question: Does specialization enrol me automatically?",
+      "For a student, Can you tell me: Does specialization enrol me automatically?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 846
+  },
+  {
+    "id": "REG-059",
+    "category": "specialization_choices",
+    "question": "Can I change specialization before account setup?",
+    "answer": "Use Back or Edit if the wizard provides it, and update your choice before proceeding.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I change specialization before account setup?",
+      "For a student, Please help me with this SPRINT query: Can I change specialization before account setup?",
+      "For a student, I would like to know: Can I change specialization before account setup?",
+      "For a student, Can you clarify this for me: Can I change specialization before account setup?",
+      "For a student, Quick question: Can I change specialization before account setup?",
+      "For a student, Please explain this: Can I change specialization before account setup?",
+      "For a student, I have a question: Can I change specialization before account setup?",
+      "For a student, Can you tell me: Can I change specialization before account setup?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 847
+  },
+  {
+    "id": "REG-060",
+    "category": "specialization_choices",
+    "question": "What if my preferred specialization is missing?",
+    "answer": "Do not select an inaccurate option. Continue only if allowed and contact SPRINT to ask about your preferred area.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if my preferred specialization is missing?",
+      "For a student, Please help me with this SPRINT query: What if my preferred specialization is missing?",
+      "For a student, I would like to know: What if my preferred specialization is missing?",
+      "For a student, Can you clarify this for me: What if my preferred specialization is missing?",
+      "For a student, Quick question: What if my preferred specialization is missing?",
+      "For a student, Please explain this: What if my preferred specialization is missing?",
+      "For a student, I have a question: What if my preferred specialization is missing?",
+      "For a student, Can you tell me: What if my preferred specialization is missing?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 848
+  },
+  {
+    "id": "REG-071",
+    "category": "account_setup_and_sign_up_method",
+    "question": "When do I create an account?",
+    "answer": "Account creation is Step 4 in the specified enrolment flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: When do I create an account?",
+      "For a student, Please help me with this SPRINT query: When do I create an account?",
+      "For a student, I would like to know: When do I create an account?",
+      "For a student, Can you clarify this for me: When do I create an account?",
+      "For a student, Quick question: When do I create an account?",
+      "For a student, Please explain this: When do I create an account?",
+      "For a student, I have a question: When do I create an account?",
+      "For a student, Can you tell me: When do I create an account?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 859
+  },
+  {
+    "id": "REG-072",
+    "category": "account_setup_and_sign_up_method",
+    "question": "What account information is needed?",
+    "answer": "Follow the actual Step 4 fields. The specified sign-up uses email and may request a password and password confirmation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What account information is needed?",
+      "For a student, Please help me with this SPRINT query: What account information is needed?",
+      "For a student, I would like to know: What account information is needed?",
+      "For a student, Can you clarify this for me: What account information is needed?",
+      "For a student, Quick question: What account information is needed?",
+      "For a student, Please explain this: What account information is needed?",
+      "For a student, I have a question: What account information is needed?",
+      "For a student, Can you tell me: What account information is needed?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 860
+  },
+  {
+    "id": "REG-073",
+    "category": "account_setup_and_sign_up_method",
+    "question": "Can I register using Google?",
+    "answer": "No. The specified SPRINT student sign-up flow is email-only; Google sign-up is not included.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I register using Google?",
+      "For a student, Please help me with this SPRINT query: Can I register using Google?",
+      "For a student, I would like to know: Can I register using Google?",
+      "For a student, Can you clarify this for me: Can I register using Google?",
+      "For a student, Quick question: Can I register using Google?",
+      "For a student, Please explain this: Can I register using Google?",
+      "For a student, I have a question: Can I register using Google?",
+      "For a student, Can you tell me: Can I register using Google?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 861
+  },
+  {
+    "id": "REG-074",
+    "category": "account_setup_and_sign_up_method",
+    "question": "Can I register using Microsoft?",
+    "answer": "No. Microsoft sign-up is not included in the specified email-only flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I register using Microsoft?",
+      "For a student, Please help me with this SPRINT query: Can I register using Microsoft?",
+      "For a student, I would like to know: Can I register using Microsoft?",
+      "For a student, Can you clarify this for me: Can I register using Microsoft?",
+      "For a student, Quick question: Can I register using Microsoft?",
+      "For a student, Please explain this: Can I register using Microsoft?",
+      "For a student, I have a question: Can I register using Microsoft?",
+      "For a student, Can you tell me: Can I register using Microsoft?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 862
+  },
+  {
+    "id": "REG-075",
+    "category": "account_setup_and_sign_up_method",
+    "question": "Can I register using Apple?",
+    "answer": "No. Apple sign-up is not included in the specified flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I register using Apple?",
+      "For a student, Please help me with this SPRINT query: Can I register using Apple?",
+      "For a student, I would like to know: Can I register using Apple?",
+      "For a student, Can you clarify this for me: Can I register using Apple?",
+      "For a student, Quick question: Can I register using Apple?",
+      "For a student, Please explain this: Can I register using Apple?",
+      "For a student, I have a question: Can I register using Apple?",
+      "For a student, Can you tell me: Can I register using Apple?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 863
+  },
+  {
+    "id": "REG-076",
+    "category": "account_setup_and_sign_up_method",
+    "question": "Can I register using LinkedIn?",
+    "answer": "No. LinkedIn sign-up is not included in the specified flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I register using LinkedIn?",
+      "For a student, Please help me with this SPRINT query: Can I register using LinkedIn?",
+      "For a student, I would like to know: Can I register using LinkedIn?",
+      "For a student, Can you clarify this for me: Can I register using LinkedIn?",
+      "For a student, Quick question: Can I register using LinkedIn?",
+      "For a student, Please explain this: Can I register using LinkedIn?",
+      "For a student, I have a question: Can I register using LinkedIn?",
+      "For a student, Can you tell me: Can I register using LinkedIn?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 864
+  },
+  {
+    "id": "REG-077",
+    "category": "account_setup_and_sign_up_method",
+    "question": "Why do I need a password?",
+    "answer": "A password protects access to your student account. Use a strong, unique password and keep it private.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why do I need a password?",
+      "For a student, Please help me with this SPRINT query: Why do I need a password?",
+      "For a student, I would like to know: Why do I need a password?",
+      "For a student, Can you clarify this for me: Why do I need a password?",
+      "For a student, Quick question: Why do I need a password?",
+      "For a student, Please explain this: Why do I need a password?",
+      "For a student, I have a question: Why do I need a password?",
+      "For a student, Can you tell me: Why do I need a password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 865
+  },
+  {
+    "id": "REG-078",
+    "category": "account_setup_and_sign_up_method",
+    "question": "Why must I confirm my password?",
+    "answer": "The confirmation field helps catch typing errors before account creation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why must I confirm my password?",
+      "For a student, Please help me with this SPRINT query: Why must I confirm my password?",
+      "For a student, I would like to know: Why must I confirm my password?",
+      "For a student, Can you clarify this for me: Why must I confirm my password?",
+      "For a student, Quick question: Why must I confirm my password?",
+      "For a student, Please explain this: Why must I confirm my password?",
+      "For a student, I have a question: Why must I confirm my password?",
+      "For a student, Can you tell me: Why must I confirm my password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 866
+  },
+  {
+    "id": "REG-079",
+    "category": "account_setup_and_sign_up_method",
+    "question": "What if password and confirmation do not match?",
+    "answer": "Re-enter the same password in both fields, checking case and accidental spaces.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if password and confirmation do not match?",
+      "For a student, Please help me with this SPRINT query: What if password and confirmation do not match?",
+      "For a student, I would like to know: What if password and confirmation do not match?",
+      "For a student, Can you clarify this for me: What if password and confirmation do not match?",
+      "For a student, Quick question: What if password and confirmation do not match?",
+      "For a student, Please explain this: What if password and confirmation do not match?",
+      "For a student, I have a question: What if password and confirmation do not match?",
+      "For a student, Can you tell me: What if password and confirmation do not match?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 867
+  },
+  {
+    "id": "REG-080",
+    "category": "account_setup_and_sign_up_method",
+    "question": "What if the form asks for a username or student ID?",
+    "answer": "Follow the displayed instructions. Do not invent an assigned student ID; use only values the form asks you to provide.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if the form asks for a username or student ID?",
+      "For a student, Please help me with this SPRINT query: What if the form asks for a username or student ID?",
+      "For a student, I would like to know: What if the form asks for a username or student ID?",
+      "For a student, Can you clarify this for me: What if the form asks for a username or student ID?",
+      "For a student, Quick question: What if the form asks for a username or student ID?",
+      "For a student, Please explain this: What if the form asks for a username or student ID?",
+      "For a student, I have a question: What if the form asks for a username or student ID?",
+      "For a student, Can you tell me: What if the form asks for a username or student ID?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 868
+  },
+  {
+    "id": "REG-081",
+    "category": "password_quality_and_visibility",
+    "question": "What makes a strong password?",
+    "answer": "Use a long, unique password that is difficult to guess and meets the form's stated rules.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What makes a strong password?",
+      "For a student, Please help me with this SPRINT query: What makes a strong password?",
+      "For a student, I would like to know: What makes a strong password?",
+      "For a student, Can you clarify this for me: What makes a strong password?",
+      "For a student, Quick question: What makes a strong password?",
+      "For a student, Please explain this: What makes a strong password?",
+      "For a student, I have a question: What makes a strong password?",
+      "For a student, Can you tell me: What makes a strong password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 869
+  },
+  {
+    "id": "REG-082",
+    "category": "password_quality_and_visibility",
+    "question": "Why is my password hidden?",
+    "answer": "The password field masks its contents to reduce the chance that someone nearby can read it.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is my password hidden?",
+      "For a student, Please help me with this SPRINT query: Why is my password hidden?",
+      "For a student, I would like to know: Why is my password hidden?",
+      "For a student, Can you clarify this for me: Why is my password hidden?",
+      "For a student, Quick question: Why is my password hidden?",
+      "For a student, Please explain this: Why is my password hidden?",
+      "For a student, I have a question: Why is my password hidden?",
+      "For a student, Can you tell me: Why is my password hidden?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 870
+  },
+  {
+    "id": "REG-083",
+    "category": "password_quality_and_visibility",
+    "question": "Can I reveal the password while typing?",
+    "answer": "If a Show Password control is present, use it to check your entry and hide it again afterward.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I reveal the password while typing?",
+      "For a student, Please help me with this SPRINT query: Can I reveal the password while typing?",
+      "For a student, I would like to know: Can I reveal the password while typing?",
+      "For a student, Can you clarify this for me: Can I reveal the password while typing?",
+      "For a student, Quick question: Can I reveal the password while typing?",
+      "For a student, Please explain this: Can I reveal the password while typing?",
+      "For a student, I have a question: Can I reveal the password while typing?",
+      "For a student, Can you tell me: Can I reveal the password while typing?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 871
+  },
+  {
+    "id": "REG-084",
+    "category": "password_quality_and_visibility",
+    "question": "What if Show Password does not work?",
+    "answer": "Try once more and check whether the field visibility changes. If not, report the browser, device, and steps.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if Show Password does not work?",
+      "For a student, Please help me with this SPRINT query: What if Show Password does not work?",
+      "For a student, I would like to know: What if Show Password does not work?",
+      "For a student, Can you clarify this for me: What if Show Password does not work?",
+      "For a student, Quick question: What if Show Password does not work?",
+      "For a student, Please explain this: What if Show Password does not work?",
+      "For a student, I have a question: What if Show Password does not work?",
+      "For a student, Can you tell me: What if Show Password does not work?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 872
+  },
+  {
+    "id": "REG-085",
+    "category": "password_quality_and_visibility",
+    "question": "What if I forget the password before account creation?",
+    "answer": "Enter a new password during account setup. If an account already exists, use Forgot Password.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I forget the password before account creation?",
+      "For a student, Please help me with this SPRINT query: What if I forget the password before account creation?",
+      "For a student, I would like to know: What if I forget the password before account creation?",
+      "For a student, Can you clarify this for me: What if I forget the password before account creation?",
+      "For a student, Quick question: What if I forget the password before account creation?",
+      "For a student, Please explain this: What if I forget the password before account creation?",
+      "For a student, I have a question: What if I forget the password before account creation?",
+      "For a student, Can you tell me: What if I forget the password before account creation?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 873
+  },
+  {
+    "id": "REG-086",
+    "category": "password_quality_and_visibility",
+    "question": "Can I paste a password?",
+    "answer": "Follow the form's behaviour. A reputable password manager can help generate and fill a unique password.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I paste a password?",
+      "For a student, Please help me with this SPRINT query: Can I paste a password?",
+      "For a student, I would like to know: Can I paste a password?",
+      "For a student, Can you clarify this for me: Can I paste a password?",
+      "For a student, Quick question: Can I paste a password?",
+      "For a student, Please explain this: Can I paste a password?",
+      "For a student, I have a question: Can I paste a password?",
+      "For a student, Can you tell me: Can I paste a password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 874
+  },
+  {
+    "id": "REG-087",
+    "category": "password_quality_and_visibility",
+    "question": "Why is my password marked weak?",
+    "answer": "It may be too short or easy to guess, or may not meet the displayed rules. Follow the on-screen guidance.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is my password marked weak?",
+      "For a student, Please help me with this SPRINT query: Why is my password marked weak?",
+      "For a student, I would like to know: Why is my password marked weak?",
+      "For a student, Can you clarify this for me: Why is my password marked weak?",
+      "For a student, Quick question: Why is my password marked weak?",
+      "For a student, Please explain this: Why is my password marked weak?",
+      "For a student, I have a question: Why is my password marked weak?",
+      "For a student, Can you tell me: Why is my password marked weak?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 875
+  },
+  {
+    "id": "REG-088",
+    "category": "password_quality_and_visibility",
+    "question": "Should I share my password with a counsellor?",
+    "answer": "No. Keep your password private. Staff should not need it to help with registration.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should I share my password with a counsellor?",
+      "For a student, Please help me with this SPRINT query: Should I share my password with a counsellor?",
+      "For a student, I would like to know: Should I share my password with a counsellor?",
+      "For a student, Can you clarify this for me: Should I share my password with a counsellor?",
+      "For a student, Quick question: Should I share my password with a counsellor?",
+      "For a student, Please explain this: Should I share my password with a counsellor?",
+      "For a student, I have a question: Should I share my password with a counsellor?",
+      "For a student, Can you tell me: Should I share my password with a counsellor?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 876
+  },
+  {
+    "id": "REG-089",
+    "category": "password_quality_and_visibility",
+    "question": "What if special characters are rejected?",
+    "answer": "Use characters accepted by the form and follow its stated rules. Report the issue if a valid character is unexpectedly rejected.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if special characters are rejected?",
+      "For a student, Please help me with this SPRINT query: What if special characters are rejected?",
+      "For a student, I would like to know: What if special characters are rejected?",
+      "For a student, Can you clarify this for me: What if special characters are rejected?",
+      "For a student, Quick question: What if special characters are rejected?",
+      "For a student, Please explain this: What if special characters are rejected?",
+      "For a student, I have a question: What if special characters are rejected?",
+      "For a student, Can you tell me: What if special characters are rejected?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 877
+  },
+  {
+    "id": "REG-090",
+    "category": "password_quality_and_visibility",
+    "question": "Should I save my password on a shared computer?",
+    "answer": "No. Avoid saving passwords on public or shared devices and sign out when finished.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should I save my password on a shared computer?",
+      "For a student, Please help me with this SPRINT query: Should I save my password on a shared computer?",
+      "For a student, I would like to know: Should I save my password on a shared computer?",
+      "For a student, Can you clarify this for me: Should I save my password on a shared computer?",
+      "For a student, Quick question: Should I save my password on a shared computer?",
+      "For a student, Please explain this: Should I save my password on a shared computer?",
+      "For a student, I have a question: Should I save my password on a shared computer?",
+      "For a student, Can you tell me: Should I save my password on a shared computer?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 878
+  },
+  {
+    "id": "REG-101",
+    "category": "email_verification",
+    "question": "Why must I verify my email?",
+    "answer": "Verification helps confirm that you can access the email address linked to your account.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why must I verify my email?",
+      "For a student, Please help me with this SPRINT query: Why must I verify my email?",
+      "For a student, I would like to know: Why must I verify my email?",
+      "For a student, Can you clarify this for me: Why must I verify my email?",
+      "For a student, Quick question: Why must I verify my email?",
+      "For a student, Please explain this: Why must I verify my email?",
+      "For a student, I have a question: Why must I verify my email?",
+      "For a student, Can you tell me: Why must I verify my email?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 889
+  },
+  {
+    "id": "REG-102",
+    "category": "email_verification",
+    "question": "When should the verification email arrive?",
+    "answer": "The flow includes an email verification step after account setup. Delivery time can vary.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: When should the verification email arrive?",
+      "For a student, Please help me with this SPRINT query: When should the verification email arrive?",
+      "For a student, I would like to know: When should the verification email arrive?",
+      "For a student, Can you clarify this for me: When should the verification email arrive?",
+      "For a student, Quick question: When should the verification email arrive?",
+      "For a student, Please explain this: When should the verification email arrive?",
+      "For a student, I have a question: When should the verification email arrive?",
+      "For a student, Can you tell me: When should the verification email arrive?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 890
+  },
+  {
+    "id": "REG-103",
+    "category": "email_verification",
+    "question": "I did not receive the verification email. What should I do?",
+    "answer": "Check spam/junk, confirm the address, use a resend option if available, and contact support if it still does not arrive.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I did not receive the verification email. What should I do?",
+      "For a student, Please help me with this SPRINT query: I did not receive the verification email. What should I do?",
+      "For a student, I would like to know: I did not receive the verification email. What should I do?",
+      "For a student, Can you clarify this for me: I did not receive the verification email. What should I do?",
+      "For a student, Quick question: I did not receive the verification email. What should I do?",
+      "For a student, Please explain this: I did not receive the verification email. What should I do?",
+      "For a student, I have a question: I did not receive the verification email. What should I do?",
+      "For a student, Can you tell me: I did not receive the verification email. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 891
+  },
+  {
+    "id": "REG-104",
+    "category": "email_verification",
+    "question": "Can I verify using a different email?",
+    "answer": "Use the email associated with registration. If it is incorrect or inaccessible, contact support for the approved correction process.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I verify using a different email?",
+      "For a student, Please help me with this SPRINT query: Can I verify using a different email?",
+      "For a student, I would like to know: Can I verify using a different email?",
+      "For a student, Can you clarify this for me: Can I verify using a different email?",
+      "For a student, Quick question: Can I verify using a different email?",
+      "For a student, Please explain this: Can I verify using a different email?",
+      "For a student, I have a question: Can I verify using a different email?",
+      "For a student, Can you tell me: Can I verify using a different email?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 892
+  },
+  {
+    "id": "REG-105",
+    "category": "email_verification",
+    "question": "Why is the verification link expired?",
+    "answer": "Verification links can expire. Return to the official portal and request a new link if supported.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is the verification link expired?",
+      "For a student, Please help me with this SPRINT query: Why is the verification link expired?",
+      "For a student, I would like to know: Why is the verification link expired?",
+      "For a student, Can you clarify this for me: Why is the verification link expired?",
+      "For a student, Quick question: Why is the verification link expired?",
+      "For a student, Please explain this: Why is the verification link expired?",
+      "For a student, I have a question: Why is the verification link expired?",
+      "For a student, Can you tell me: Why is the verification link expired?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 893
+  },
+  {
+    "id": "REG-106",
+    "category": "email_verification",
+    "question": "The verification link is invalid. What should I do?",
+    "answer": "Open the latest complete link from the expected email. If it still fails, request a new one or contact support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The verification link is invalid. What should I do?",
+      "For a student, Please help me with this SPRINT query: The verification link is invalid. What should I do?",
+      "For a student, I would like to know: The verification link is invalid. What should I do?",
+      "For a student, Can you clarify this for me: The verification link is invalid. What should I do?",
+      "For a student, Quick question: The verification link is invalid. What should I do?",
+      "For a student, Please explain this: The verification link is invalid. What should I do?",
+      "For a student, I have a question: The verification link is invalid. What should I do?",
+      "For a student, Can you tell me: The verification link is invalid. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 894
+  },
+  {
+    "id": "REG-107",
+    "category": "email_verification",
+    "question": "Can I open a verification link more than once?",
+    "answer": "Follow the portal's message. If the link is expired or already used, return to the portal or request support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I open a verification link more than once?",
+      "For a student, Please help me with this SPRINT query: Can I open a verification link more than once?",
+      "For a student, I would like to know: Can I open a verification link more than once?",
+      "For a student, Can you clarify this for me: Can I open a verification link more than once?",
+      "For a student, Quick question: Can I open a verification link more than once?",
+      "For a student, Please explain this: Can I open a verification link more than once?",
+      "For a student, I have a question: Can I open a verification link more than once?",
+      "For a student, Can you tell me: Can I open a verification link more than once?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 895
+  },
+  {
+    "id": "REG-108",
+    "category": "email_verification",
+    "question": "Can I forward my verification email?",
+    "answer": "Do not forward verification links because they may allow access to your account flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I forward my verification email?",
+      "For a student, Please help me with this SPRINT query: Can I forward my verification email?",
+      "For a student, I would like to know: Can I forward my verification email?",
+      "For a student, Can you clarify this for me: Can I forward my verification email?",
+      "For a student, Quick question: Can I forward my verification email?",
+      "For a student, Please explain this: Can I forward my verification email?",
+      "For a student, I have a question: Can I forward my verification email?",
+      "For a student, Can you tell me: Can I forward my verification email?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 896
+  },
+  {
+    "id": "REG-109",
+    "category": "email_verification",
+    "question": "What if the email is in spam?",
+    "answer": "Check the spam folder and verify the sender before following the link.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if the email is in spam?",
+      "For a student, Please help me with this SPRINT query: What if the email is in spam?",
+      "For a student, I would like to know: What if the email is in spam?",
+      "For a student, Can you clarify this for me: What if the email is in spam?",
+      "For a student, Quick question: What if the email is in spam?",
+      "For a student, Please explain this: What if the email is in spam?",
+      "For a student, I have a question: What if the email is in spam?",
+      "For a student, Can you tell me: What if the email is in spam?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 897
+  },
+  {
+    "id": "REG-110",
+    "category": "email_verification",
+    "question": "Does verification confirm my course seat?",
+    "answer": "Not necessarily. Email verification confirms the email step; follow the portal's confirmation instructions for enrolment status.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does verification confirm my course seat?",
+      "For a student, Please help me with this SPRINT query: Does verification confirm my course seat?",
+      "For a student, I would like to know: Does verification confirm my course seat?",
+      "For a student, Can you clarify this for me: Does verification confirm my course seat?",
+      "For a student, Quick question: Does verification confirm my course seat?",
+      "For a student, Please explain this: Does verification confirm my course seat?",
+      "For a student, I have a question: Does verification confirm my course seat?",
+      "For a student, Can you tell me: Does verification confirm my course seat?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 898
+  },
+  {
+    "id": "REG-121",
+    "category": "sign_in_and_existing_accounts",
+    "question": "How do I sign in after registering?",
+    "answer": "Open Student Portal → Sign In and enter your registered email and password.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I sign in after registering?",
+      "For a student, Please help me with this SPRINT query: How do I sign in after registering?",
+      "For a student, I would like to know: How do I sign in after registering?",
+      "For a student, Can you clarify this for me: How do I sign in after registering?",
+      "For a student, Quick question: How do I sign in after registering?",
+      "For a student, Please explain this: How do I sign in after registering?",
+      "For a student, I have a question: How do I sign in after registering?",
+      "For a student, Can you tell me: How do I sign in after registering?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 909
+  },
+  {
+    "id": "REG-122",
+    "category": "sign_in_and_existing_accounts",
+    "question": "Why are my credentials rejected?",
+    "answer": "Check email spelling and password case. If needed, use Forgot Password.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why are my credentials rejected?",
+      "For a student, Please help me with this SPRINT query: Why are my credentials rejected?",
+      "For a student, I would like to know: Why are my credentials rejected?",
+      "For a student, Can you clarify this for me: Why are my credentials rejected?",
+      "For a student, Quick question: Why are my credentials rejected?",
+      "For a student, Please explain this: Why are my credentials rejected?",
+      "For a student, I have a question: Why are my credentials rejected?",
+      "For a student, Can you tell me: Why are my credentials rejected?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 910
+  },
+  {
+    "id": "REG-123",
+    "category": "sign_in_and_existing_accounts",
+    "question": "Can I sign in before verifying my email?",
+    "answer": "Follow the portal's message. If verification is required, complete it first or contact support if status is unclear.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I sign in before verifying my email?",
+      "For a student, Please help me with this SPRINT query: Can I sign in before verifying my email?",
+      "For a student, I would like to know: Can I sign in before verifying my email?",
+      "For a student, Can you clarify this for me: Can I sign in before verifying my email?",
+      "For a student, Quick question: Can I sign in before verifying my email?",
+      "For a student, Please explain this: Can I sign in before verifying my email?",
+      "For a student, I have a question: Can I sign in before verifying my email?",
+      "For a student, Can you tell me: Can I sign in before verifying my email?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 911
+  },
+  {
+    "id": "REG-124",
+    "category": "sign_in_and_existing_accounts",
+    "question": "My account is not found. What should I check?",
+    "answer": "Confirm you are using the same email used during registration. Avoid creating a duplicate account.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: My account is not found. What should I check?",
+      "For a student, Please help me with this SPRINT query: My account is not found. What should I check?",
+      "For a student, I would like to know: My account is not found. What should I check?",
+      "For a student, Can you clarify this for me: My account is not found. What should I check?",
+      "For a student, Quick question: My account is not found. What should I check?",
+      "For a student, Please explain this: My account is not found. What should I check?",
+      "For a student, I have a question: My account is not found. What should I check?",
+      "For a student, Can you tell me: My account is not found. What should I check?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 912
+  },
+  {
+    "id": "REG-125",
+    "category": "sign_in_and_existing_accounts",
+    "question": "Why does the portal redirect me to Sign In?",
+    "answer": "Your session may have expired or authentication may not have completed. Sign in again and report repeated redirects.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why does the portal redirect me to Sign In?",
+      "For a student, Please help me with this SPRINT query: Why does the portal redirect me to Sign In?",
+      "For a student, I would like to know: Why does the portal redirect me to Sign In?",
+      "For a student, Can you clarify this for me: Why does the portal redirect me to Sign In?",
+      "For a student, Quick question: Why does the portal redirect me to Sign In?",
+      "For a student, Please explain this: Why does the portal redirect me to Sign In?",
+      "For a student, I have a question: Why does the portal redirect me to Sign In?",
+      "For a student, Can you tell me: Why does the portal redirect me to Sign In?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 913
+  },
+  {
+    "id": "REG-126",
+    "category": "sign_in_and_existing_accounts",
+    "question": "Can I sign in on another device?",
+    "answer": "Yes, try a trusted device using your registered credentials. Sign out when using a shared device.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I sign in on another device?",
+      "For a student, Please help me with this SPRINT query: Can I sign in on another device?",
+      "For a student, I would like to know: Can I sign in on another device?",
+      "For a student, Can you clarify this for me: Can I sign in on another device?",
+      "For a student, Quick question: Can I sign in on another device?",
+      "For a student, Please explain this: Can I sign in on another device?",
+      "For a student, I have a question: Can I sign in on another device?",
+      "For a student, Can you tell me: Can I sign in on another device?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 914
+  },
+  {
+    "id": "REG-127",
+    "category": "sign_in_and_existing_accounts",
+    "question": "I forgot which email I used. What should I do?",
+    "answer": "Search your inboxes for SPRINT registration or verification messages. If unclear, contact support and follow account verification.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I forgot which email I used. What should I do?",
+      "For a student, Please help me with this SPRINT query: I forgot which email I used. What should I do?",
+      "For a student, I would like to know: I forgot which email I used. What should I do?",
+      "For a student, Can you clarify this for me: I forgot which email I used. What should I do?",
+      "For a student, Quick question: I forgot which email I used. What should I do?",
+      "For a student, Please explain this: I forgot which email I used. What should I do?",
+      "For a student, I have a question: I forgot which email I used. What should I do?",
+      "For a student, Can you tell me: I forgot which email I used. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 915
+  },
+  {
+    "id": "REG-128",
+    "category": "sign_in_and_existing_accounts",
+    "question": "Can I have two student accounts?",
+    "answer": "Avoid duplicates unless SPRINT instructs you otherwise. Contact support if you need to change email or resolve a duplicate.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I have two student accounts?",
+      "For a student, Please help me with this SPRINT query: Can I have two student accounts?",
+      "For a student, I would like to know: Can I have two student accounts?",
+      "For a student, Can you clarify this for me: Can I have two student accounts?",
+      "For a student, Quick question: Can I have two student accounts?",
+      "For a student, Please explain this: Can I have two student accounts?",
+      "For a student, I have a question: Can I have two student accounts?",
+      "For a student, Can you tell me: Can I have two student accounts?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 916
+  },
+  {
+    "id": "REG-129",
+    "category": "sign_in_and_existing_accounts",
+    "question": "What if my account is locked?",
+    "answer": "Follow on-screen recovery instructions and contact support if it remains locked. Avoid repeatedly guessing passwords.",
+    "alternative_questions": [
+      "In the sign in and existing accounts category: What if my account is locked?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 917
+  },
+  {
+    "id": "REG-130",
+    "category": "sign_in_and_existing_accounts",
+    "question": "Why am I logged out automatically?",
+    "answer": "Sessions may expire for security. Sign in again; report repeated logouts with browser and device details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why am I logged out automatically?",
+      "For a student, Please help me with this SPRINT query: Why am I logged out automatically?",
+      "For a student, I would like to know: Why am I logged out automatically?",
+      "For a student, Can you clarify this for me: Why am I logged out automatically?",
+      "For a student, Quick question: Why am I logged out automatically?",
+      "For a student, Please explain this: Why am I logged out automatically?",
+      "For a student, I have a question: Why am I logged out automatically?",
+      "For a student, Can you tell me: Why am I logged out automatically?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 918
+  },
+  {
+    "id": "REG-131",
+    "category": "forgot_password_and_reset",
+    "question": "Where is Forgot Password?",
+    "answer": "It is available from the student sign-in flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Where is Forgot Password?",
+      "For a student, Please help me with this SPRINT query: Where is Forgot Password?",
+      "For a student, I would like to know: Where is Forgot Password?",
+      "For a student, Can you clarify this for me: Where is Forgot Password?",
+      "For a student, Quick question: Where is Forgot Password?",
+      "For a student, Please explain this: Where is Forgot Password?",
+      "For a student, I have a question: Where is Forgot Password?",
+      "For a student, Can you tell me: Where is Forgot Password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 919
+  },
+  {
+    "id": "REG-132",
+    "category": "forgot_password_and_reset",
+    "question": "How do I reset my password?",
+    "answer": "Choose Forgot Password, enter your registered email, and follow the reset instructions sent to your inbox.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I reset my password?",
+      "For a student, Please help me with this SPRINT query: How do I reset my password?",
+      "For a student, I would like to know: How do I reset my password?",
+      "For a student, Can you clarify this for me: How do I reset my password?",
+      "For a student, Quick question: How do I reset my password?",
+      "For a student, Please explain this: How do I reset my password?",
+      "For a student, I have a question: How do I reset my password?",
+      "For a student, Can you tell me: How do I reset my password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 920
+  },
+  {
+    "id": "REG-133",
+    "category": "forgot_password_and_reset",
+    "question": "I did not receive a reset email. What should I check?",
+    "answer": "Check spam/junk, verify the address, and request another email if the portal permits it.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I did not receive a reset email. What should I check?",
+      "For a student, Please help me with this SPRINT query: I did not receive a reset email. What should I check?",
+      "For a student, I would like to know: I did not receive a reset email. What should I check?",
+      "For a student, Can you clarify this for me: I did not receive a reset email. What should I check?",
+      "For a student, Quick question: I did not receive a reset email. What should I check?",
+      "For a student, Please explain this: I did not receive a reset email. What should I check?",
+      "For a student, I have a question: I did not receive a reset email. What should I check?",
+      "For a student, Can you tell me: I did not receive a reset email. What should I check?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 921
+  },
+  {
+    "id": "REG-134",
+    "category": "forgot_password_and_reset",
+    "question": "The reset link expired. What should I do?",
+    "answer": "Return to the official Forgot Password page and request a fresh reset link.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The reset link expired. What should I do?",
+      "For a student, Please help me with this SPRINT query: The reset link expired. What should I do?",
+      "For a student, I would like to know: The reset link expired. What should I do?",
+      "For a student, Can you clarify this for me: The reset link expired. What should I do?",
+      "For a student, Quick question: The reset link expired. What should I do?",
+      "For a student, Please explain this: The reset link expired. What should I do?",
+      "For a student, I have a question: The reset link expired. What should I do?",
+      "For a student, Can you tell me: The reset link expired. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 922
+  },
+  {
+    "id": "REG-135",
+    "category": "forgot_password_and_reset",
+    "question": "The reset link is invalid. What should I do?",
+    "answer": "Open the latest complete link. If it still fails, request a new one or contact support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The reset link is invalid. What should I do?",
+      "For a student, Please help me with this SPRINT query: The reset link is invalid. What should I do?",
+      "For a student, I would like to know: The reset link is invalid. What should I do?",
+      "For a student, Can you clarify this for me: The reset link is invalid. What should I do?",
+      "For a student, Quick question: The reset link is invalid. What should I do?",
+      "For a student, Please explain this: The reset link is invalid. What should I do?",
+      "For a student, I have a question: The reset link is invalid. What should I do?",
+      "For a student, Can you tell me: The reset link is invalid. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 923
+  },
+  {
+    "id": "REG-136",
+    "category": "forgot_password_and_reset",
+    "question": "Can I reuse the old password?",
+    "answer": "Choose a new, unique password where possible and follow any rules shown by the reset form.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I reuse the old password?",
+      "For a student, Please help me with this SPRINT query: Can I reuse the old password?",
+      "For a student, I would like to know: Can I reuse the old password?",
+      "For a student, Can you clarify this for me: Can I reuse the old password?",
+      "For a student, Quick question: Can I reuse the old password?",
+      "For a student, Please explain this: Can I reuse the old password?",
+      "For a student, I have a question: Can I reuse the old password?",
+      "For a student, Can you tell me: Can I reuse the old password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 924
+  },
+  {
+    "id": "REG-137",
+    "category": "forgot_password_and_reset",
+    "question": "Why do I need to enter the new password twice?",
+    "answer": "The confirmation field helps ensure both entries match.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why do I need to enter the new password twice?",
+      "For a student, Please help me with this SPRINT query: Why do I need to enter the new password twice?",
+      "For a student, I would like to know: Why do I need to enter the new password twice?",
+      "For a student, Can you clarify this for me: Why do I need to enter the new password twice?",
+      "For a student, Quick question: Why do I need to enter the new password twice?",
+      "For a student, Please explain this: Why do I need to enter the new password twice?",
+      "For a student, I have a question: Why do I need to enter the new password twice?",
+      "For a student, Can you tell me: Why do I need to enter the new password twice?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 925
+  },
+  {
+    "id": "REG-138",
+    "category": "forgot_password_and_reset",
+    "question": "The reset page will not load. What should I do?",
+    "answer": "Try refreshing and using an updated browser. If it persists, contact support with the URL and error.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The reset page will not load. What should I do?",
+      "For a student, Please help me with this SPRINT query: The reset page will not load. What should I do?",
+      "For a student, I would like to know: The reset page will not load. What should I do?",
+      "For a student, Can you clarify this for me: The reset page will not load. What should I do?",
+      "For a student, Quick question: The reset page will not load. What should I do?",
+      "For a student, Please explain this: The reset page will not load. What should I do?",
+      "For a student, I have a question: The reset page will not load. What should I do?",
+      "For a student, Can you tell me: The reset page will not load. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 926
+  },
+  {
+    "id": "REG-139",
+    "category": "forgot_password_and_reset",
+    "question": "Should I send my reset link to support?",
+    "answer": "No. Reset links are sensitive. Describe the error instead; never share reset tokens or passwords.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should I send my reset link to support?",
+      "For a student, Please help me with this SPRINT query: Should I send my reset link to support?",
+      "For a student, I would like to know: Should I send my reset link to support?",
+      "For a student, Can you clarify this for me: Should I send my reset link to support?",
+      "For a student, Quick question: Should I send my reset link to support?",
+      "For a student, Please explain this: Should I send my reset link to support?",
+      "For a student, I have a question: Should I send my reset link to support?",
+      "For a student, Can you tell me: Should I send my reset link to support?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 927
+  },
+  {
+    "id": "REG-140",
+    "category": "forgot_password_and_reset",
+    "question": "What happens after a successful reset?",
+    "answer": "Return to Sign In and log in using the registered email and new password.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What happens after a successful reset?",
+      "For a student, Please help me with this SPRINT query: What happens after a successful reset?",
+      "For a student, I would like to know: What happens after a successful reset?",
+      "For a student, Can you clarify this for me: What happens after a successful reset?",
+      "For a student, Quick question: What happens after a successful reset?",
+      "For a student, Please explain this: What happens after a successful reset?",
+      "For a student, I have a question: What happens after a successful reset?",
+      "For a student, Can you tell me: What happens after a successful reset?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 928
+  },
+  {
+    "id": "REG-141",
+    "category": "registration_form_errors",
+    "question": "The registration page shows a generic error. What should I do?",
+    "answer": "Review required fields, note the time and page URL, retry once, and contact support if it continues.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The registration page shows a generic error. What should I do?",
+      "For a student, Please help me with this SPRINT query: The registration page shows a generic error. What should I do?",
+      "For a student, I would like to know: The registration page shows a generic error. What should I do?",
+      "For a student, Can you clarify this for me: The registration page shows a generic error. What should I do?",
+      "For a student, Quick question: The registration page shows a generic error. What should I do?",
+      "For a student, Please explain this: The registration page shows a generic error. What should I do?",
+      "For a student, I have a question: The registration page shows a generic error. What should I do?",
+      "For a student, Can you tell me: The registration page shows a generic error. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 929
+  },
+  {
+    "id": "REG-142",
+    "category": "registration_form_errors",
+    "question": "The form erased my entries. How can I avoid retyping?",
+    "answer": "Draft longer text separately where safe and report the browser, page, and steps that cause the form to reset.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The form erased my entries. How can I avoid retyping?",
+      "For a student, Please help me with this SPRINT query: The form erased my entries. How can I avoid retyping?",
+      "For a student, I would like to know: The form erased my entries. How can I avoid retyping?",
+      "For a student, Can you clarify this for me: The form erased my entries. How can I avoid retyping?",
+      "For a student, Quick question: The form erased my entries. How can I avoid retyping?",
+      "For a student, Please explain this: The form erased my entries. How can I avoid retyping?",
+      "For a student, I have a question: The form erased my entries. How can I avoid retyping?",
+      "For a student, Can you tell me: The form erased my entries. How can I avoid retyping?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 930
+  },
+  {
+    "id": "REG-143",
+    "category": "registration_form_errors",
+    "question": "Why is Continue disabled?",
+    "answer": "A required field may be incomplete or invalid. Review visible validation messages.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is Continue disabled?",
+      "For a student, Please help me with this SPRINT query: Why is Continue disabled?",
+      "For a student, I would like to know: Why is Continue disabled?",
+      "For a student, Can you clarify this for me: Why is Continue disabled?",
+      "For a student, Quick question: Why is Continue disabled?",
+      "For a student, Please explain this: Why is Continue disabled?",
+      "For a student, I have a question: Why is Continue disabled?",
+      "For a student, Can you tell me: Why is Continue disabled?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 931
+  },
+  {
+    "id": "REG-144",
+    "category": "registration_form_errors",
+    "question": "I cannot move from Step 1. What should I check?",
+    "answer": "Confirm every required field is complete and valid, then check for field-level errors.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I cannot move from Step 1. What should I check?",
+      "For a student, Please help me with this SPRINT query: I cannot move from Step 1. What should I check?",
+      "For a student, I would like to know: I cannot move from Step 1. What should I check?",
+      "For a student, Can you clarify this for me: I cannot move from Step 1. What should I check?",
+      "For a student, Quick question: I cannot move from Step 1. What should I check?",
+      "For a student, Please explain this: I cannot move from Step 1. What should I check?",
+      "For a student, I have a question: I cannot move from Step 1. What should I check?",
+      "For a student, Can you tell me: I cannot move from Step 1. What should I check?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 932
+  },
+  {
+    "id": "REG-145",
+    "category": "registration_form_errors",
+    "question": "I cannot skip Step 2. Is that expected?",
+    "answer": "Step 2 is intended to be optional. If the flow blocks skipping, report it as a potential defect.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I cannot skip Step 2. Is that expected?",
+      "For a student, Please help me with this SPRINT query: I cannot skip Step 2. Is that expected?",
+      "For a student, I would like to know: I cannot skip Step 2. Is that expected?",
+      "For a student, Can you clarify this for me: I cannot skip Step 2. Is that expected?",
+      "For a student, Quick question: I cannot skip Step 2. Is that expected?",
+      "For a student, Please explain this: I cannot skip Step 2. Is that expected?",
+      "For a student, I have a question: I cannot skip Step 2. Is that expected?",
+      "For a student, Can you tell me: I cannot skip Step 2. Is that expected?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 933
+  },
+  {
+    "id": "REG-146",
+    "category": "registration_form_errors",
+    "question": "My learning path is not saved. What should I do?",
+    "answer": "Check the selected state and use the wizard's continue action. Report it if the selection resets.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: My learning path is not saved. What should I do?",
+      "For a student, Please help me with this SPRINT query: My learning path is not saved. What should I do?",
+      "For a student, I would like to know: My learning path is not saved. What should I do?",
+      "For a student, Can you clarify this for me: My learning path is not saved. What should I do?",
+      "For a student, Quick question: My learning path is not saved. What should I do?",
+      "For a student, Please explain this: My learning path is not saved. What should I do?",
+      "For a student, I have a question: My learning path is not saved. What should I do?",
+      "For a student, Can you tell me: My learning path is not saved. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 934
+  },
+  {
+    "id": "REG-147",
+    "category": "registration_form_errors",
+    "question": "Create Account does nothing. What should I check?",
+    "answer": "Check required fields, password confirmation, and required consent. If still broken, report the browser and steps.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Create Account does nothing. What should I check?",
+      "For a student, Please help me with this SPRINT query: Create Account does nothing. What should I check?",
+      "For a student, I would like to know: Create Account does nothing. What should I check?",
+      "For a student, Can you clarify this for me: Create Account does nothing. What should I check?",
+      "For a student, Quick question: Create Account does nothing. What should I check?",
+      "For a student, Please explain this: Create Account does nothing. What should I check?",
+      "For a student, I have a question: Create Account does nothing. What should I check?",
+      "For a student, Can you tell me: Create Account does nothing. What should I check?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 935
+  },
+  {
+    "id": "REG-148",
+    "category": "registration_form_errors",
+    "question": "What does duplicate email mean?",
+    "answer": "The email may already be associated with an account. Try Sign In or Forgot Password rather than registering again.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What does duplicate email mean?",
+      "For a student, Please help me with this SPRINT query: What does duplicate email mean?",
+      "For a student, I would like to know: What does duplicate email mean?",
+      "For a student, Can you clarify this for me: What does duplicate email mean?",
+      "For a student, Quick question: What does duplicate email mean?",
+      "For a student, Please explain this: What does duplicate email mean?",
+      "For a student, I have a question: What does duplicate email mean?",
+      "For a student, Can you tell me: What does duplicate email mean?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 936
+  },
+  {
+    "id": "REG-149",
+    "category": "registration_form_errors",
+    "question": "I closed the tab midway. Can I resume?",
+    "answer": "Return to the official enrolment page and see whether progress is retained. Avoid duplicate registration if account creation may have completed.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I closed the tab midway. Can I resume?",
+      "For a student, Please help me with this SPRINT query: I closed the tab midway. Can I resume?",
+      "For a student, I would like to know: I closed the tab midway. Can I resume?",
+      "For a student, Can you clarify this for me: I closed the tab midway. Can I resume?",
+      "For a student, Quick question: I closed the tab midway. Can I resume?",
+      "For a student, Please explain this: I closed the tab midway. Can I resume?",
+      "For a student, I have a question: I closed the tab midway. Can I resume?",
+      "For a student, Can you tell me: I closed the tab midway. Can I resume?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 937
+  },
+  {
+    "id": "REG-150",
+    "category": "registration_form_errors",
+    "question": "What details should I send with a bug report?",
+    "answer": "Include step number, URL, reproduction steps, expected and actual results, browser/device, timestamp, and sanitised evidence.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What details should I send with a bug report?",
+      "For a student, Please help me with this SPRINT query: What details should I send with a bug report?",
+      "For a student, I would like to know: What details should I send with a bug report?",
+      "For a student, Can you clarify this for me: What details should I send with a bug report?",
+      "For a student, Quick question: What details should I send with a bug report?",
+      "For a student, Please explain this: What details should I send with a bug report?",
+      "For a student, I have a question: What details should I send with a bug report?",
+      "For a student, Can you tell me: What details should I send with a bug report?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 938
+  }
+]

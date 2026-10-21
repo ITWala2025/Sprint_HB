@@ -1,0 +1,1922 @@
+[
+  {
+    "id": "PAY-001",
+    "category": "payment",
+    "question": "What is the course fee for the program?",
+    "answer": "Information Required — depends on the specific course/program selected.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What is the course fee for the program?",
+      "For a student, Please help me with this SPRINT query: What is the course fee for the program?",
+      "For a student, I would like to know: What is the course fee for the program?",
+      "For a student, Can you clarify this for me: What is the course fee for the program?",
+      "For a student, Quick question: What is the course fee for the program?",
+      "For a student, Please explain this: What is the course fee for the program?",
+      "For a student, I have a question: What is the course fee for the program?",
+      "For a student, Can you tell me: What is the course fee for the program?",
+      "For a student, Help me understand: What is the course fee for the program?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 0
+  },
+  {
+    "id": "PAY-002",
+    "category": "payment",
+    "question": "What payment methods are supported?",
+    "answer": "Information Required — needs confirmation from the payments/finance team (UPI, cards, net banking, wallets, etc.).",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What payment methods are supported?",
+      "For a student, Please help me with this SPRINT query: What payment methods are supported?",
+      "For a student, I would like to know: What payment methods are supported?",
+      "For a student, Can you clarify this for me: What payment methods are supported?",
+      "For a student, Quick question: What payment methods are supported?",
+      "For a student, Please explain this: What payment methods are supported?",
+      "For a student, I have a question: What payment methods are supported?",
+      "For a student, Can you tell me: What payment methods are supported?",
+      "For a student, Help me understand: What payment methods are supported?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1
+  },
+  {
+    "id": "PAY-003",
+    "category": "payment",
+    "question": "How can I make a payment?",
+    "answer": "Go to the course/subscription page, select your plan, click \"Pay Now,\" and complete the payment using the supported method.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can I make a payment?",
+      "For a student, Please help me with this SPRINT query: How can I make a payment?",
+      "For a student, I would like to know: How can I make a payment?",
+      "For a student, Can you clarify this for me: How can I make a payment?",
+      "For a student, Quick question: How can I make a payment?",
+      "For a student, Please explain this: How can I make a payment?",
+      "For a student, I have a question: How can I make a payment?",
+      "For a student, Can you tell me: How can I make a payment?",
+      "For a student, Help me understand: How can I make a payment?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 2
+  },
+  {
+    "id": "PAY-004",
+    "category": "payment",
+    "question": "My payment failed, what should I do?",
+    "answer": "If the amount was deducted but the payment shows failed, wait a few minutes for auto-reconciliation. If it's not reflected, contact support with the transaction ID.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: My payment failed, what should I do?",
+      "For a student, Please help me with this SPRINT query: My payment failed, what should I do?",
+      "For a student, I would like to know: My payment failed, what should I do?",
+      "For a student, Can you clarify this for me: My payment failed, what should I do?",
+      "For a student, Quick question: My payment failed, what should I do?",
+      "For a student, Please explain this: My payment failed, what should I do?",
+      "For a student, I have a question: My payment failed, what should I do?",
+      "For a student, Can you tell me: My payment failed, what should I do?",
+      "For a student, Help me understand: My payment failed, what should I do?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 3
+  },
+  {
+    "id": "PAY-005",
+    "category": "payment",
+    "question": "My payment was successful but the course is not showing as available.",
+    "answer": "This is usually a sync delay. Recommend logging out/in, and if the issue persists, contact support with payment proof.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: My payment was successful but the course is not showing as available.",
+      "For a student, Please help me with this SPRINT query: My payment was successful but the course is not showing as available.",
+      "For a student, I would like to know: My payment was successful but the course is not showing as available.",
+      "For a student, Can you clarify this for me: My payment was successful but the course is not showing as available.",
+      "For a student, Quick question: My payment was successful but the course is not showing as available.",
+      "For a student, Please explain this: My payment was successful but the course is not showing as available.",
+      "For a student, I have a question: My payment was successful but the course is not showing as available.",
+      "For a student, Can you tell me: My payment was successful but the course is not showing as available.",
+      "For a student, Help me understand: My payment was successful but the course is not showing as available."
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 4
+  },
+  {
+    "id": "PAY-006",
+    "category": "payment",
+    "question": "Can I get a refund?",
+    "answer": "Information Required — depends on Sprint's official refund policy (time window, conditions).",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I get a refund?",
+      "For a student, Please help me with this SPRINT query: Can I get a refund?",
+      "For a student, I would like to know: Can I get a refund?",
+      "For a student, Can you clarify this for me: Can I get a refund?",
+      "For a student, Quick question: Can I get a refund?",
+      "For a student, Please explain this: Can I get a refund?",
+      "For a student, I have a question: Can I get a refund?",
+      "For a student, Can you tell me: Can I get a refund?",
+      "For a student, Help me understand: Can I get a refund?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 5
+  },
+  {
+    "id": "PAY-007",
+    "category": "payment",
+    "question": "How do I download my payment receipt?",
+    "answer": "Receipt/invoice should be available under \"My Payments\" or \"Order History\" in account settings.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I download my payment receipt?",
+      "For a student, Please help me with this SPRINT query: How do I download my payment receipt?",
+      "For a student, I would like to know: How do I download my payment receipt?",
+      "For a student, Can you clarify this for me: How do I download my payment receipt?",
+      "For a student, Quick question: How do I download my payment receipt?",
+      "For a student, Please explain this: How do I download my payment receipt?",
+      "For a student, I have a question: How do I download my payment receipt?",
+      "For a student, Can you tell me: How do I download my payment receipt?",
+      "For a student, Help me understand: How do I download my payment receipt?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 6
+  },
+  {
+    "id": "PAY-008",
+    "category": "payment",
+    "question": "Can I change my subscription plan?",
+    "answer": "Information Required — depends on whether upgrade/downgrade is supported mid-cycle.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I change my subscription plan?",
+      "For a student, Please help me with this SPRINT query: Can I change my subscription plan?",
+      "For a student, I would like to know: Can I change my subscription plan?",
+      "For a student, Can you clarify this for me: Can I change my subscription plan?",
+      "For a student, Quick question: Can I change my subscription plan?",
+      "For a student, Please explain this: Can I change my subscription plan?",
+      "For a student, I have a question: Can I change my subscription plan?",
+      "For a student, Can you tell me: Can I change my subscription plan?",
+      "For a student, Help me understand: Can I change my subscription plan?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 7
+  },
+  {
+    "id": "PAY-009",
+    "category": "payment",
+    "question": "Is there an EMI or installment option?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is there an EMI or installment option?",
+      "For a student, Please help me with this SPRINT query: Is there an EMI or installment option?",
+      "For a student, I would like to know: Is there an EMI or installment option?",
+      "For a student, Can you clarify this for me: Is there an EMI or installment option?",
+      "For a student, Quick question: Is there an EMI or installment option?",
+      "For a student, Please explain this: Is there an EMI or installment option?",
+      "For a student, I have a question: Is there an EMI or installment option?",
+      "For a student, Can you tell me: Is there an EMI or installment option?",
+      "For a student, Help me understand: Is there an EMI or installment option?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 8
+  },
+  {
+    "id": "PAY-010",
+    "category": "payment",
+    "question": "Do you accept international payment methods (PayPal, foreign cards)?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Do you accept international payment methods (PayPal, foreign cards)?",
+      "For a student, Please help me with this SPRINT query: Do you accept international payment methods (PayPal, foreign cards)?",
+      "For a student, I would like to know: Do you accept international payment methods (PayPal, foreign cards)?",
+      "For a student, Can you clarify this for me: Do you accept international payment methods (PayPal, foreign cards)?",
+      "For a student, Quick question: Do you accept international payment methods (PayPal, foreign cards)?",
+      "For a student, Please explain this: Do you accept international payment methods (PayPal, foreign cards)?",
+      "For a student, I have a question: Do you accept international payment methods (PayPal, foreign cards)?",
+      "For a student, Can you tell me: Do you accept international payment methods (PayPal, foreign cards)?",
+      "For a student, Help me understand: Do you accept international payment methods (PayPal, foreign cards)?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 9
+  },
+  {
+    "id": "PAY-011",
+    "category": "payment",
+    "question": "I was charged twice for the same course, what now?",
+    "answer": "Contact support immediately with both transaction IDs for a duplicate-charge refund.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I was charged twice for the same course, what now?",
+      "For a student, Please help me with this SPRINT query: I was charged twice for the same course, what now?",
+      "For a student, I would like to know: I was charged twice for the same course, what now?",
+      "For a student, Can you clarify this for me: I was charged twice for the same course, what now?",
+      "For a student, Quick question: I was charged twice for the same course, what now?",
+      "For a student, Please explain this: I was charged twice for the same course, what now?",
+      "For a student, I have a question: I was charged twice for the same course, what now?",
+      "For a student, Can you tell me: I was charged twice for the same course, what now?",
+      "For a student, Help me understand: I was charged twice for the same course, what now?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 10
+  },
+  {
+    "id": "PAY-012",
+    "category": "payment",
+    "question": "Is GST/tax included in the course fee?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is GST/tax included in the course fee?",
+      "For a student, Please help me with this SPRINT query: Is GST/tax included in the course fee?",
+      "For a student, I would like to know: Is GST/tax included in the course fee?",
+      "For a student, Can you clarify this for me: Is GST/tax included in the course fee?",
+      "For a student, Quick question: Is GST/tax included in the course fee?",
+      "For a student, Please explain this: Is GST/tax included in the course fee?",
+      "For a student, I have a question: Is GST/tax included in the course fee?",
+      "For a student, Can you tell me: Is GST/tax included in the course fee?",
+      "For a student, Help me understand: Is GST/tax included in the course fee?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 11
+  },
+  {
+    "id": "PAY-013",
+    "category": "payment",
+    "question": "Will I get an invoice with GST details for company reimbursement?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Will I get an invoice with GST details for company reimbursement?",
+      "For a student, Please help me with this SPRINT query: Will I get an invoice with GST details for company reimbursement?",
+      "For a student, I would like to know: Will I get an invoice with GST details for company reimbursement?",
+      "For a student, Can you clarify this for me: Will I get an invoice with GST details for company reimbursement?",
+      "For a student, Quick question: Will I get an invoice with GST details for company reimbursement?",
+      "For a student, Please explain this: Will I get an invoice with GST details for company reimbursement?",
+      "For a student, I have a question: Will I get an invoice with GST details for company reimbursement?",
+      "For a student, Can you tell me: Will I get an invoice with GST details for company reimbursement?",
+      "For a student, Help me understand: Will I get an invoice with GST details for company reimbursement?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 12
+  },
+  {
+    "id": "PAY-014",
+    "category": "payment",
+    "question": "What happens if my payment is pending for a long time?",
+    "answer": "If a payment stays pending beyond the usual processing window, contact support with the transaction reference.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What happens if my payment is pending for a long time?",
+      "For a student, Please help me with this SPRINT query: What happens if my payment is pending for a long time?",
+      "For a student, I would like to know: What happens if my payment is pending for a long time?",
+      "For a student, Can you clarify this for me: What happens if my payment is pending for a long time?",
+      "For a student, Quick question: What happens if my payment is pending for a long time?",
+      "For a student, Please explain this: What happens if my payment is pending for a long time?",
+      "For a student, I have a question: What happens if my payment is pending for a long time?",
+      "For a student, Can you tell me: What happens if my payment is pending for a long time?",
+      "For a student, Help me understand: What happens if my payment is pending for a long time?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 13
+  },
+  {
+    "id": "PAY-015",
+    "category": "payment",
+    "question": "Can I pay on someone else's behalf (parent/guardian paying)?",
+    "answer": "Yes, as long as the payment is made through the account holder's registered payment page.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I pay on someone else's behalf (parent/guardian paying)?",
+      "For a student, Please help me with this SPRINT query: Can I pay on someone else's behalf (parent/guardian paying)?",
+      "For a student, I would like to know: Can I pay on someone else's behalf (parent/guardian paying)?",
+      "For a student, Can you clarify this for me: Can I pay on someone else's behalf (parent/guardian paying)?",
+      "For a student, Quick question: Can I pay on someone else's behalf (parent/guardian paying)?",
+      "For a student, Please explain this: Can I pay on someone else's behalf (parent/guardian paying)?",
+      "For a student, I have a question: Can I pay on someone else's behalf (parent/guardian paying)?",
+      "For a student, Can you tell me: Can I pay on someone else's behalf (parent/guardian paying)?",
+      "For a student, Help me understand: Can I pay on someone else's behalf (parent/guardian paying)?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 14
+  },
+  {
+    "id": "PAY-016",
+    "category": "payment",
+    "question": "Is there a discount for early enrollment?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is there a discount for early enrollment?",
+      "For a student, Please help me with this SPRINT query: Is there a discount for early enrollment?",
+      "For a student, I would like to know: Is there a discount for early enrollment?",
+      "For a student, Can you clarify this for me: Is there a discount for early enrollment?",
+      "For a student, Quick question: Is there a discount for early enrollment?",
+      "For a student, Please explain this: Is there a discount for early enrollment?",
+      "For a student, I have a question: Is there a discount for early enrollment?",
+      "For a student, Can you tell me: Is there a discount for early enrollment?",
+      "For a student, Help me understand: Is there a discount for early enrollment?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 15
+  },
+  {
+    "id": "PAY-017",
+    "category": "payment",
+    "question": "Do you offer any discount codes/coupons?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Do you offer any discount codes/coupons?",
+      "For a student, Please help me with this SPRINT query: Do you offer any discount codes/coupons?",
+      "For a student, I would like to know: Do you offer any discount codes/coupons?",
+      "For a student, Can you clarify this for me: Do you offer any discount codes/coupons?",
+      "For a student, Quick question: Do you offer any discount codes/coupons?",
+      "For a student, Please explain this: Do you offer any discount codes/coupons?",
+      "For a student, I have a question: Do you offer any discount codes/coupons?",
+      "For a student, Can you tell me: Do you offer any discount codes/coupons?",
+      "For a student, Help me understand: Do you offer any discount codes/coupons?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 16
+  },
+  {
+    "id": "PAY-018",
+    "category": "payment",
+    "question": "What currency is the fee charged in?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What currency is the fee charged in?",
+      "For a student, Please help me with this SPRINT query: What currency is the fee charged in?",
+      "For a student, I would like to know: What currency is the fee charged in?",
+      "For a student, Can you clarify this for me: What currency is the fee charged in?",
+      "For a student, Quick question: What currency is the fee charged in?",
+      "For a student, Please explain this: What currency is the fee charged in?",
+      "For a student, I have a question: What currency is the fee charged in?",
+      "For a student, Can you tell me: What currency is the fee charged in?",
+      "For a student, Help me understand: What currency is the fee charged in?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 17
+  },
+  {
+    "id": "PAY-019",
+    "category": "payment",
+    "question": "My card was declined during payment — why?",
+    "answer": "Could be due to bank restrictions, insufficient balance, or incorrect card details. Recommend retrying or using another method.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: My card was declined during payment — why?",
+      "For a student, Please help me with this SPRINT query: My card was declined during payment — why?",
+      "For a student, I would like to know: My card was declined during payment — why?",
+      "For a student, Can you clarify this for me: My card was declined during payment — why?",
+      "For a student, Quick question: My card was declined during payment — why?",
+      "For a student, Please explain this: My card was declined during payment — why?",
+      "For a student, I have a question: My card was declined during payment — why?",
+      "For a student, Can you tell me: My card was declined during payment — why?",
+      "For a student, Help me understand: My card was declined during payment — why?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 18
+  },
+  {
+    "id": "PAY-020",
+    "category": "payment",
+    "question": "How long does a refund take to process after approval?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How long does a refund take to process after approval?",
+      "For a student, Please help me with this SPRINT query: How long does a refund take to process after approval?",
+      "For a student, I would like to know: How long does a refund take to process after approval?",
+      "For a student, Can you clarify this for me: How long does a refund take to process after approval?",
+      "For a student, Quick question: How long does a refund take to process after approval?",
+      "For a student, Please explain this: How long does a refund take to process after approval?",
+      "For a student, I have a question: How long does a refund take to process after approval?",
+      "For a student, Can you tell me: How long does a refund take to process after approval?",
+      "For a student, Help me understand: How long does a refund take to process after approval?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 19
+  },
+  {
+    "id": "PAY-021",
+    "category": "payment",
+    "question": "Can I switch from monthly to yearly billing?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I switch from monthly to yearly billing?",
+      "For a student, Please help me with this SPRINT query: Can I switch from monthly to yearly billing?",
+      "For a student, I would like to know: Can I switch from monthly to yearly billing?",
+      "For a student, Can you clarify this for me: Can I switch from monthly to yearly billing?",
+      "For a student, Quick question: Can I switch from monthly to yearly billing?",
+      "For a student, Please explain this: Can I switch from monthly to yearly billing?",
+      "For a student, I have a question: Can I switch from monthly to yearly billing?",
+      "For a student, Can you tell me: Can I switch from monthly to yearly billing?",
+      "For a student, Help me understand: Can I switch from monthly to yearly billing?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 20
+  },
+  {
+    "id": "PAY-022",
+    "category": "payment",
+    "question": "Is auto-renewal enabled for subscriptions?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is auto-renewal enabled for subscriptions?",
+      "For a student, Please help me with this SPRINT query: Is auto-renewal enabled for subscriptions?",
+      "For a student, I would like to know: Is auto-renewal enabled for subscriptions?",
+      "For a student, Can you clarify this for me: Is auto-renewal enabled for subscriptions?",
+      "For a student, Quick question: Is auto-renewal enabled for subscriptions?",
+      "For a student, Please explain this: Is auto-renewal enabled for subscriptions?",
+      "For a student, I have a question: Is auto-renewal enabled for subscriptions?",
+      "For a student, Can you tell me: Is auto-renewal enabled for subscriptions?",
+      "For a student, Help me understand: Is auto-renewal enabled for subscriptions?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 21
+  },
+  {
+    "id": "PAY-023",
+    "category": "payment",
+    "question": "How do I cancel auto-renewal?",
+    "answer": "Information Required — depends on whether subscription settings page has this toggle. B. Subscription",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I cancel auto-renewal?",
+      "For a student, Please help me with this SPRINT query: How do I cancel auto-renewal?",
+      "For a student, I would like to know: How do I cancel auto-renewal?",
+      "For a student, Can you clarify this for me: How do I cancel auto-renewal?",
+      "For a student, Quick question: How do I cancel auto-renewal?",
+      "For a student, Please explain this: How do I cancel auto-renewal?",
+      "For a student, I have a question: How do I cancel auto-renewal?",
+      "For a student, Can you tell me: How do I cancel auto-renewal?",
+      "For a student, Help me understand: How do I cancel auto-renewal?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 22
+  },
+  {
+    "id": "PAY-024",
+    "category": "subscription",
+    "question": "What subscription plans are available?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What subscription plans are available?",
+      "For a student, Please help me with this SPRINT query: What subscription plans are available?",
+      "For a student, I would like to know: What subscription plans are available?",
+      "For a student, Can you clarify this for me: What subscription plans are available?",
+      "For a student, Quick question: What subscription plans are available?",
+      "For a student, Please explain this: What subscription plans are available?",
+      "For a student, I have a question: What subscription plans are available?",
+      "For a student, Can you tell me: What subscription plans are available?",
+      "For a student, Help me understand: What subscription plans are available?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 23
+  },
+  {
+    "id": "PAY-025",
+    "category": "subscription",
+    "question": "What is the difference between free and paid plans?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What is the difference between free and paid plans?",
+      "For a student, Please help me with this SPRINT query: What is the difference between free and paid plans?",
+      "For a student, I would like to know: What is the difference between free and paid plans?",
+      "For a student, Can you clarify this for me: What is the difference between free and paid plans?",
+      "For a student, Quick question: What is the difference between free and paid plans?",
+      "For a student, Please explain this: What is the difference between free and paid plans?",
+      "For a student, I have a question: What is the difference between free and paid plans?",
+      "For a student, Can you tell me: What is the difference between free and paid plans?",
+      "For a student, Help me understand: What is the difference between free and paid plans?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 24
+  },
+  {
+    "id": "PAY-026",
+    "category": "subscription",
+    "question": "How do I check my current subscription status?",
+    "answer": "Under \"My Account\" → \"Subscription\" section.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I check my current subscription status?",
+      "For a student, Please help me with this SPRINT query: How do I check my current subscription status?",
+      "For a student, I would like to know: How do I check my current subscription status?",
+      "For a student, Can you clarify this for me: How do I check my current subscription status?",
+      "For a student, Quick question: How do I check my current subscription status?",
+      "For a student, Please explain this: How do I check my current subscription status?",
+      "For a student, I have a question: How do I check my current subscription status?",
+      "For a student, Can you tell me: How do I check my current subscription status?",
+      "For a student, Help me understand: How do I check my current subscription status?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 25
+  },
+  {
+    "id": "PAY-027",
+    "category": "subscription",
+    "question": "What happens to my data/progress if my subscription expires?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What happens to my data/progress if my subscription expires?",
+      "For a student, Please help me with this SPRINT query: What happens to my data/progress if my subscription expires?",
+      "For a student, I would like to know: What happens to my data/progress if my subscription expires?",
+      "For a student, Can you clarify this for me: What happens to my data/progress if my subscription expires?",
+      "For a student, Quick question: What happens to my data/progress if my subscription expires?",
+      "For a student, Please explain this: What happens to my data/progress if my subscription expires?",
+      "For a student, I have a question: What happens to my data/progress if my subscription expires?",
+      "For a student, Can you tell me: What happens to my data/progress if my subscription expires?",
+      "For a student, Help me understand: What happens to my data/progress if my subscription expires?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 26
+  },
+  {
+    "id": "PAY-028",
+    "category": "subscription",
+    "question": "Can I pause my subscription temporarily?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I pause my subscription temporarily?",
+      "For a student, Please help me with this SPRINT query: Can I pause my subscription temporarily?",
+      "For a student, I would like to know: Can I pause my subscription temporarily?",
+      "For a student, Can you clarify this for me: Can I pause my subscription temporarily?",
+      "For a student, Quick question: Can I pause my subscription temporarily?",
+      "For a student, Please explain this: Can I pause my subscription temporarily?",
+      "For a student, I have a question: Can I pause my subscription temporarily?",
+      "For a student, Can you tell me: Can I pause my subscription temporarily?",
+      "For a student, Help me understand: Can I pause my subscription temporarily?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 27
+  },
+  {
+    "id": "PAY-029",
+    "category": "subscription",
+    "question": "How do I upgrade my subscription plan?",
+    "answer": "Go to Account → Subscription → Upgrade, and complete the additional payment.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I upgrade my subscription plan?",
+      "For a student, Please help me with this SPRINT query: How do I upgrade my subscription plan?",
+      "For a student, I would like to know: How do I upgrade my subscription plan?",
+      "For a student, Can you clarify this for me: How do I upgrade my subscription plan?",
+      "For a student, Quick question: How do I upgrade my subscription plan?",
+      "For a student, Please explain this: How do I upgrade my subscription plan?",
+      "For a student, I have a question: How do I upgrade my subscription plan?",
+      "For a student, Can you tell me: How do I upgrade my subscription plan?",
+      "For a student, Help me understand: How do I upgrade my subscription plan?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 28
+  },
+  {
+    "id": "PAY-030",
+    "category": "subscription",
+    "question": "Will I lose access immediately if I cancel my subscription?",
+    "answer": "Information Required — depends on whether cancellation is immediate or end-of-cycle.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Will I lose access immediately if I cancel my subscription?",
+      "For a student, Please help me with this SPRINT query: Will I lose access immediately if I cancel my subscription?",
+      "For a student, I would like to know: Will I lose access immediately if I cancel my subscription?",
+      "For a student, Can you clarify this for me: Will I lose access immediately if I cancel my subscription?",
+      "For a student, Quick question: Will I lose access immediately if I cancel my subscription?",
+      "For a student, Please explain this: Will I lose access immediately if I cancel my subscription?",
+      "For a student, I have a question: Will I lose access immediately if I cancel my subscription?",
+      "For a student, Can you tell me: Will I lose access immediately if I cancel my subscription?",
+      "For a student, Help me understand: Will I lose access immediately if I cancel my subscription?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 29
+  },
+  {
+    "id": "PAY-031",
+    "category": "subscription",
+    "question": "Is there a free trial before subscribing?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is there a free trial before subscribing?",
+      "For a student, Please help me with this SPRINT query: Is there a free trial before subscribing?",
+      "For a student, I would like to know: Is there a free trial before subscribing?",
+      "For a student, Can you clarify this for me: Is there a free trial before subscribing?",
+      "For a student, Quick question: Is there a free trial before subscribing?",
+      "For a student, Please explain this: Is there a free trial before subscribing?",
+      "For a student, I have a question: Is there a free trial before subscribing?",
+      "For a student, Can you tell me: Is there a free trial before subscribing?",
+      "For a student, Help me understand: Is there a free trial before subscribing?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 30
+  },
+  {
+    "id": "PAY-032",
+    "category": "subscription",
+    "question": "Do I get a reminder before my subscription renews?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Do I get a reminder before my subscription renews?",
+      "For a student, Please help me with this SPRINT query: Do I get a reminder before my subscription renews?",
+      "For a student, I would like to know: Do I get a reminder before my subscription renews?",
+      "For a student, Can you clarify this for me: Do I get a reminder before my subscription renews?",
+      "For a student, Quick question: Do I get a reminder before my subscription renews?",
+      "For a student, Please explain this: Do I get a reminder before my subscription renews?",
+      "For a student, I have a question: Do I get a reminder before my subscription renews?",
+      "For a student, Can you tell me: Do I get a reminder before my subscription renews?",
+      "For a student, Help me understand: Do I get a reminder before my subscription renews?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 31
+  },
+  {
+    "id": "PAY-033",
+    "category": "subscription",
+    "question": "Can I share my subscription with another user?",
+    "answer": "No, subscriptions are typically tied to a single registered account.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I share my subscription with another user?",
+      "For a student, Please help me with this SPRINT query: Can I share my subscription with another user?",
+      "For a student, I would like to know: Can I share my subscription with another user?",
+      "For a student, Can you clarify this for me: Can I share my subscription with another user?",
+      "For a student, Quick question: Can I share my subscription with another user?",
+      "For a student, Please explain this: Can I share my subscription with another user?",
+      "For a student, I have a question: Can I share my subscription with another user?",
+      "For a student, Can you tell me: Can I share my subscription with another user?",
+      "For a student, Help me understand: Can I share my subscription with another user?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 32
+  },
+  {
+    "id": "PAY-034",
+    "category": "subscription",
+    "question": "How do I update my billing details?",
+    "answer": "Under Account Settings → Billing Information.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I update my billing details?",
+      "For a student, Please help me with this SPRINT query: How do I update my billing details?",
+      "For a student, I would like to know: How do I update my billing details?",
+      "For a student, Can you clarify this for me: How do I update my billing details?",
+      "For a student, Quick question: How do I update my billing details?",
+      "For a student, Please explain this: How do I update my billing details?",
+      "For a student, I have a question: How do I update my billing details?",
+      "For a student, Can you tell me: How do I update my billing details?",
+      "For a student, Help me understand: How do I update my billing details?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 33
+  },
+  {
+    "id": "PAY-035",
+    "category": "subscription",
+    "question": "What happens if my subscription payment fails on renewal date?",
+    "answer": "Information Required. C. Scholarship",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What happens if my subscription payment fails on renewal date?",
+      "For a student, Please help me with this SPRINT query: What happens if my subscription payment fails on renewal date?",
+      "For a student, I would like to know: What happens if my subscription payment fails on renewal date?",
+      "For a student, Can you clarify this for me: What happens if my subscription payment fails on renewal date?",
+      "For a student, Quick question: What happens if my subscription payment fails on renewal date?",
+      "For a student, Please explain this: What happens if my subscription payment fails on renewal date?",
+      "For a student, I have a question: What happens if my subscription payment fails on renewal date?",
+      "For a student, Can you tell me: What happens if my subscription payment fails on renewal date?",
+      "For a student, Help me understand: What happens if my subscription payment fails on renewal date?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 34
+  },
+  {
+    "id": "SUP-051",
+    "category": "fees_payments_and_refunds",
+    "question": "How much does a course cost?",
+    "answer": "Fees can vary by program and package. Contact SPRINT for the current fee details before making a payment.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How much does a course cost?",
+      "For a student, Please help me with this SPRINT query: How much does a course cost?",
+      "For a student, I would like to know: How much does a course cost?",
+      "For a student, Can you clarify this for me: How much does a course cost?",
+      "For a student, Quick question: How much does a course cost?",
+      "For a student, Please explain this: How much does a course cost?",
+      "For a student, I have a question: How much does a course cost?",
+      "For a student, Can you tell me: How much does a course cost?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 329
+  },
+  {
+    "id": "SUP-052",
+    "category": "fees_payments_and_refunds",
+    "question": "Are there any additional charges?",
+    "answer": "Ask for a written fee breakdown that identifies tuition and any applicable additional charges before enrolling.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Are there any additional charges?",
+      "For a student, Please help me with this SPRINT query: Are there any additional charges?",
+      "For a student, I would like to know: Are there any additional charges?",
+      "For a student, Can you clarify this for me: Are there any additional charges?",
+      "For a student, Quick question: Are there any additional charges?",
+      "For a student, Please explain this: Are there any additional charges?",
+      "For a student, I have a question: Are there any additional charges?",
+      "For a student, Can you tell me: Are there any additional charges?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 330
+  },
+  {
+    "id": "SUP-053",
+    "category": "fees_payments_and_refunds",
+    "question": "Can I get a fee quotation?",
+    "answer": "Yes. Specify the program or package you are considering and request the current fee quotation and payment terms.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I get a fee quotation?",
+      "For a student, Please help me with this SPRINT query: Can I get a fee quotation?",
+      "For a student, I would like to know: Can I get a fee quotation?",
+      "For a student, Can you clarify this for me: Can I get a fee quotation?",
+      "For a student, Quick question: Can I get a fee quotation?",
+      "For a student, Please explain this: Can I get a fee quotation?",
+      "For a student, I have a question: Can I get a fee quotation?",
+      "For a student, Can you tell me: Can I get a fee quotation?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 331
+  },
+  {
+    "id": "SUP-054",
+    "category": "fees_payments_and_refunds",
+    "question": "Are instalment options available?",
+    "answer": "Instalment availability is not assumed. Ask SPRINT whether a payment plan is offered for your selected program.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Are instalment options available?",
+      "For a student, Please help me with this SPRINT query: Are instalment options available?",
+      "For a student, I would like to know: Are instalment options available?",
+      "For a student, Can you clarify this for me: Are instalment options available?",
+      "For a student, Quick question: Are instalment options available?",
+      "For a student, Please explain this: Are instalment options available?",
+      "For a student, I have a question: Are instalment options available?",
+      "For a student, Can you tell me: Are instalment options available?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 332
+  },
+  {
+    "id": "SUP-055",
+    "category": "fees_payments_and_refunds",
+    "question": "Which payment methods are accepted?",
+    "answer": "Confirm the currently accepted payment methods directly with SPRINT before paying.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Which payment methods are accepted?",
+      "For a student, Please help me with this SPRINT query: Which payment methods are accepted?",
+      "For a student, I would like to know: Which payment methods are accepted?",
+      "For a student, Can you clarify this for me: Which payment methods are accepted?",
+      "For a student, Quick question: Which payment methods are accepted?",
+      "For a student, Please explain this: Which payment methods are accepted?",
+      "For a student, I have a question: Which payment methods are accepted?",
+      "For a student, Can you tell me: Which payment methods are accepted?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 333
+  },
+  {
+    "id": "SUP-056",
+    "category": "fees_payments_and_refunds",
+    "question": "Can I get a receipt after payment?",
+    "answer": "Ask the team for an official receipt or payment confirmation. Keep your transaction reference for follow-up.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I get a receipt after payment?",
+      "For a student, Please help me with this SPRINT query: Can I get a receipt after payment?",
+      "For a student, I would like to know: Can I get a receipt after payment?",
+      "For a student, Can you clarify this for me: Can I get a receipt after payment?",
+      "For a student, Quick question: Can I get a receipt after payment?",
+      "For a student, Please explain this: Can I get a receipt after payment?",
+      "For a student, I have a question: Can I get a receipt after payment?",
+      "For a student, Can you tell me: Can I get a receipt after payment?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 334
+  },
+  {
+    "id": "SUP-057",
+    "category": "fees_payments_and_refunds",
+    "question": "My payment was deducted but I did not receive confirmation. What should I do?",
+    "answer": "Do not pay again immediately. Contact SPRINT with the transaction reference, date, amount, and registered contact details; never send full card details or OTPs.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: My payment was deducted but I did not receive confirmation. What should I do?",
+      "For a student, Please help me with this SPRINT query: My payment was deducted but I did not receive confirmation. What should I do?",
+      "For a student, I would like to know: My payment was deducted but I did not receive confirmation. What should I do?",
+      "For a student, Can you clarify this for me: My payment was deducted but I did not receive confirmation. What should I do?",
+      "For a student, Quick question: My payment was deducted but I did not receive confirmation. What should I do?",
+      "For a student, Please explain this: My payment was deducted but I did not receive confirmation. What should I do?",
+      "For a student, I have a question: My payment was deducted but I did not receive confirmation. What should I do?",
+      "For a student, Can you tell me: My payment was deducted but I did not receive confirmation. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 335
+  },
+  {
+    "id": "SUP-058",
+    "category": "fees_payments_and_refunds",
+    "question": "What is the refund policy?",
+    "answer": "Refund terms depend on the applicable policy and enrolment terms. Request and review the written policy before paying.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What is the refund policy?",
+      "For a student, Please help me with this SPRINT query: What is the refund policy?",
+      "For a student, I would like to know: What is the refund policy?",
+      "For a student, Can you clarify this for me: What is the refund policy?",
+      "For a student, Quick question: What is the refund policy?",
+      "For a student, Please explain this: What is the refund policy?",
+      "For a student, I have a question: What is the refund policy?",
+      "For a student, Can you tell me: What is the refund policy?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 336
+  },
+  {
+    "id": "SUP-059",
+    "category": "fees_payments_and_refunds",
+    "question": "Can I cancel my enrolment?",
+    "answer": "Contact SPRINT promptly and ask for the cancellation procedure and any applicable terms. Do not assume a refund or cancellation outcome.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I cancel my enrolment?",
+      "For a student, Please help me with this SPRINT query: Can I cancel my enrolment?",
+      "For a student, I would like to know: Can I cancel my enrolment?",
+      "For a student, Can you clarify this for me: Can I cancel my enrolment?",
+      "For a student, Quick question: Can I cancel my enrolment?",
+      "For a student, Please explain this: Can I cancel my enrolment?",
+      "For a student, I have a question: Can I cancel my enrolment?",
+      "For a student, Can you tell me: Can I cancel my enrolment?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 337
+  },
+  {
+    "id": "SUP-060",
+    "category": "fees_payments_and_refunds",
+    "question": "Can I receive a company-sponsored invoice?",
+    "answer": "Tell SPRINT that the enrolment is company-sponsored and request the invoice requirements, billing details, and applicable process.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I receive a company-sponsored invoice?",
+      "For a student, Please help me with this SPRINT query: Can I receive a company-sponsored invoice?",
+      "For a student, I would like to know: Can I receive a company-sponsored invoice?",
+      "For a student, Can you clarify this for me: Can I receive a company-sponsored invoice?",
+      "For a student, Quick question: Can I receive a company-sponsored invoice?",
+      "For a student, Please explain this: Can I receive a company-sponsored invoice?",
+      "For a student, I have a question: Can I receive a company-sponsored invoice?",
+      "For a student, Can you tell me: Can I receive a company-sponsored invoice?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 338
+  },
+  {
+    "id": "DASH-131",
+    "category": "fees_payments_and_receipts",
+    "question": "The dashboard is blank.",
+    "answer": "Refresh once, sign in again if needed, and try a current browser. If the page remains blank, report the time, browser, and page to support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The dashboard is blank.",
+      "For a student, Please help me with this SPRINT query: The dashboard is blank.",
+      "For a student, I would like to know: The dashboard is blank.",
+      "For a student, Can you clarify this for me: The dashboard is blank.",
+      "For a student, Quick question: The dashboard is blank.",
+      "For a student, Please explain this: The dashboard is blank.",
+      "For a student, I have a question: The dashboard is blank.",
+      "For a student, Can you tell me: The dashboard is blank."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 649
+  },
+  {
+    "id": "DASH-132",
+    "category": "fees_payments_and_receipts",
+    "question": "The dashboard is loading forever.",
+    "answer": "Check your internet connection and try refreshing once. If it continues, capture the error or loading state and contact support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The dashboard is loading forever.",
+      "For a student, Please help me with this SPRINT query: The dashboard is loading forever.",
+      "For a student, I would like to know: The dashboard is loading forever.",
+      "For a student, Can you clarify this for me: The dashboard is loading forever.",
+      "For a student, Quick question: The dashboard is loading forever.",
+      "For a student, Please explain this: The dashboard is loading forever.",
+      "For a student, I have a question: The dashboard is loading forever.",
+      "For a student, Can you tell me: The dashboard is loading forever."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 650
+  },
+  {
+    "id": "DASH-133",
+    "category": "fees_payments_and_receipts",
+    "question": "A dashboard button does not respond.",
+    "answer": "Try clicking once, check whether required information is missing, and retry in a current browser. Report the button and page if it remains unresponsive.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: A dashboard button does not respond.",
+      "For a student, Please help me with this SPRINT query: A dashboard button does not respond.",
+      "For a student, I would like to know: A dashboard button does not respond.",
+      "For a student, Can you clarify this for me: A dashboard button does not respond.",
+      "For a student, Quick question: A dashboard button does not respond.",
+      "For a student, Please explain this: A dashboard button does not respond.",
+      "For a student, I have a question: A dashboard button does not respond.",
+      "For a student, Can you tell me: A dashboard button does not respond."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 651
+  },
+  {
+    "id": "DASH-134",
+    "category": "fees_payments_and_receipts",
+    "question": "I see a 404 page in the portal.",
+    "answer": "Return to the official portal navigation and open the page from there. If the link is still broken, report the URL path and steps to support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I see a 404 page in the portal.",
+      "For a student, Please help me with this SPRINT query: I see a 404 page in the portal.",
+      "For a student, I would like to know: I see a 404 page in the portal.",
+      "For a student, Can you clarify this for me: I see a 404 page in the portal.",
+      "For a student, Quick question: I see a 404 page in the portal.",
+      "For a student, Please explain this: I see a 404 page in the portal.",
+      "For a student, I have a question: I see a 404 page in the portal.",
+      "For a student, Can you tell me: I see a 404 page in the portal."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 652
+  },
+  {
+    "id": "DASH-135",
+    "category": "fees_payments_and_receipts",
+    "question": "I see a server error.",
+    "answer": "Try again after a short interval and avoid repeated submissions. If the error persists, send support the error text and the action that triggered it.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I see a server error.",
+      "For a student, Please help me with this SPRINT query: I see a server error.",
+      "For a student, I would like to know: I see a server error.",
+      "For a student, Can you clarify this for me: I see a server error.",
+      "For a student, Quick question: I see a server error.",
+      "For a student, Please explain this: I see a server error.",
+      "For a student, I have a question: I see a server error.",
+      "For a student, Can you tell me: I see a server error."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 653
+  },
+  {
+    "id": "DASH-136",
+    "category": "fees_payments_and_receipts",
+    "question": "The dashboard is slow.",
+    "answer": "Check your connection, close unnecessary tabs, and try a current browser. If only the portal is slow, report the affected page and approximate time.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The dashboard is slow.",
+      "For a student, Please help me with this SPRINT query: The dashboard is slow.",
+      "For a student, I would like to know: The dashboard is slow.",
+      "For a student, Can you clarify this for me: The dashboard is slow.",
+      "For a student, Quick question: The dashboard is slow.",
+      "For a student, Please explain this: The dashboard is slow.",
+      "For a student, I have a question: The dashboard is slow.",
+      "For a student, Can you tell me: The dashboard is slow."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 654
+  },
+  {
+    "id": "DASH-137",
+    "category": "fees_payments_and_receipts",
+    "question": "My browser keeps logging me out.",
+    "answer": "Check browser cookie settings and avoid private browsing if it prevents the session from persisting. Contact support if the issue continues.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: My browser keeps logging me out.",
+      "For a student, Please help me with this SPRINT query: My browser keeps logging me out.",
+      "For a student, I would like to know: My browser keeps logging me out.",
+      "For a student, Can you clarify this for me: My browser keeps logging me out.",
+      "For a student, Quick question: My browser keeps logging me out.",
+      "For a student, Please explain this: My browser keeps logging me out.",
+      "For a student, I have a question: My browser keeps logging me out.",
+      "For a student, Can you tell me: My browser keeps logging me out."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 655
+  },
+  {
+    "id": "DASH-138",
+    "category": "fees_payments_and_receipts",
+    "question": "A file will not download.",
+    "answer": "Check browser download permissions, storage space, and whether the link is still valid. Try again once and report the file name if it fails.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: A file will not download.",
+      "For a student, Please help me with this SPRINT query: A file will not download.",
+      "For a student, I would like to know: A file will not download.",
+      "For a student, Can you clarify this for me: A file will not download.",
+      "For a student, Quick question: A file will not download.",
+      "For a student, Please explain this: A file will not download.",
+      "For a student, I have a question: A file will not download.",
+      "For a student, Can you tell me: A file will not download."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 656
+  },
+  {
+    "id": "DASH-139",
+    "category": "fees_payments_and_receipts",
+    "question": "The course video will not play.",
+    "answer": "Check your connection, browser compatibility, volume, and any playback error. If the issue persists, report the course and video title.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: The course video will not play.",
+      "For a student, Please help me with this SPRINT query: The course video will not play.",
+      "For a student, I would like to know: The course video will not play.",
+      "For a student, Can you clarify this for me: The course video will not play.",
+      "For a student, Quick question: The course video will not play.",
+      "For a student, Please explain this: The course video will not play.",
+      "For a student, I have a question: The course video will not play.",
+      "For a student, Can you tell me: The course video will not play."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 657
+  },
+  {
+    "id": "DASH-140",
+    "category": "fees_payments_and_receipts",
+    "question": "How can I report a bug safely?",
+    "answer": "Share the steps, expected result, actual result, browser/device, and a redacted screenshot. Never include passwords, OTPs, or sensitive payment details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can I report a bug safely?",
+      "For a student, Please help me with this SPRINT query: How can I report a bug safely?",
+      "For a student, I would like to know: How can I report a bug safely?",
+      "For a student, Can you clarify this for me: How can I report a bug safely?",
+      "For a student, Quick question: How can I report a bug safely?",
+      "For a student, Please explain this: How can I report a bug safely?",
+      "For a student, I have a question: How can I report a bug safely?",
+      "For a student, Can you tell me: How can I report a bug safely?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 658
+  },
+  {
+    "id": "REG-181",
+    "category": "fees_and_enrolment_commitments",
+    "question": "Are course fees always shown during registration?",
+    "answer": "The wizard may not show every fee detail. Request current written fee information before paying.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Are course fees always shown during registration?",
+      "For a student, Please help me with this SPRINT query: Are course fees always shown during registration?",
+      "For a student, I would like to know: Are course fees always shown during registration?",
+      "For a student, Can you clarify this for me: Are course fees always shown during registration?",
+      "For a student, Quick question: Are course fees always shown during registration?",
+      "For a student, Please explain this: Are course fees always shown during registration?",
+      "For a student, I have a question: Are course fees always shown during registration?",
+      "For a student, Can you tell me: Are course fees always shown during registration?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 969
+  },
+  {
+    "id": "REG-182",
+    "category": "fees_and_enrolment_commitments",
+    "question": "Does registration automatically charge me?",
+    "answer": "Do not assume a charge occurs unless the portal explicitly presents a payment step and confirmation. Review payment screens carefully.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does registration automatically charge me?",
+      "For a student, Please help me with this SPRINT query: Does registration automatically charge me?",
+      "For a student, I would like to know: Does registration automatically charge me?",
+      "For a student, Can you clarify this for me: Does registration automatically charge me?",
+      "For a student, Quick question: Does registration automatically charge me?",
+      "For a student, Please explain this: Does registration automatically charge me?",
+      "For a student, I have a question: Does registration automatically charge me?",
+      "For a student, Can you tell me: Does registration automatically charge me?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 970
+  },
+  {
+    "id": "REG-183",
+    "category": "fees_and_enrolment_commitments",
+    "question": "Does selecting a learning path authorise payment?",
+    "answer": "A selection alone should not be treated as payment authorisation. Read current terms and any explicit confirmation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does selecting a learning path authorise payment?",
+      "For a student, Please help me with this SPRINT query: Does selecting a learning path authorise payment?",
+      "For a student, I would like to know: Does selecting a learning path authorise payment?",
+      "For a student, Can you clarify this for me: Does selecting a learning path authorise payment?",
+      "For a student, Quick question: Does selecting a learning path authorise payment?",
+      "For a student, Please explain this: Does selecting a learning path authorise payment?",
+      "For a student, I have a question: Does selecting a learning path authorise payment?",
+      "For a student, Can you tell me: Does selecting a learning path authorise payment?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 971
+  },
+  {
+    "id": "REG-184",
+    "category": "fees_and_enrolment_commitments",
+    "question": "Can I register before choosing a program?",
+    "answer": "The specified wizard includes a learning-path step. Ask SPRINT whether the current portal allows saving progress or deferring a choice.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I register before choosing a program?",
+      "For a student, Please help me with this SPRINT query: Can I register before choosing a program?",
+      "For a student, I would like to know: Can I register before choosing a program?",
+      "For a student, Can you clarify this for me: Can I register before choosing a program?",
+      "For a student, Quick question: Can I register before choosing a program?",
+      "For a student, Please explain this: Can I register before choosing a program?",
+      "For a student, I have a question: Can I register before choosing a program?",
+      "For a student, Can you tell me: Can I register before choosing a program?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 972
+  },
+  {
+    "id": "REG-185",
+    "category": "fees_and_enrolment_commitments",
+    "question": "Can I change from RISE to Expert Track later?",
+    "answer": "Changes depend on current availability and rules. Ask SPRINT before assuming a transfer is possible.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I change from RISE to Expert Track later?",
+      "For a student, Please help me with this SPRINT query: Can I change from RISE to Expert Track later?",
+      "For a student, I would like to know: Can I change from RISE to Expert Track later?",
+      "For a student, Can you clarify this for me: Can I change from RISE to Expert Track later?",
+      "For a student, Quick question: Can I change from RISE to Expert Track later?",
+      "For a student, Please explain this: Can I change from RISE to Expert Track later?",
+      "For a student, I have a question: Can I change from RISE to Expert Track later?",
+      "For a student, Can you tell me: Can I change from RISE to Expert Track later?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 973
+  },
+  {
+    "id": "REG-186",
+    "category": "fees_and_enrolment_commitments",
+    "question": "Can I choose an individual course instead of a package?",
+    "answer": "If Individual Modular Courses are available, select that path and confirm the current module details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I choose an individual course instead of a package?",
+      "For a student, Please help me with this SPRINT query: Can I choose an individual course instead of a package?",
+      "For a student, I would like to know: Can I choose an individual course instead of a package?",
+      "For a student, Can you clarify this for me: Can I choose an individual course instead of a package?",
+      "For a student, Quick question: Can I choose an individual course instead of a package?",
+      "For a student, Please explain this: Can I choose an individual course instead of a package?",
+      "For a student, I have a question: Can I choose an individual course instead of a package?",
+      "For a student, Can you tell me: Can I choose an individual course instead of a package?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 974
+  },
+  {
+    "id": "REG-187",
+    "category": "fees_and_enrolment_commitments",
+    "question": "How can I compare course duration?",
+    "answer": "Compare current published duration, total hours, session frequency, and prerequisites for each path.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can I compare course duration?",
+      "For a student, Please help me with this SPRINT query: How can I compare course duration?",
+      "For a student, I would like to know: How can I compare course duration?",
+      "For a student, Can you clarify this for me: How can I compare course duration?",
+      "For a student, Quick question: How can I compare course duration?",
+      "For a student, Please explain this: How can I compare course duration?",
+      "For a student, I have a question: How can I compare course duration?",
+      "For a student, Can you tell me: How can I compare course duration?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 975
+  },
+  {
+    "id": "REG-188",
+    "category": "fees_and_enrolment_commitments",
+    "question": "Does registration guarantee placement?",
+    "answer": "Do not assume a placement guarantee. Request the current written career-support or placement policy and its conditions.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does registration guarantee placement?",
+      "For a student, Please help me with this SPRINT query: Does registration guarantee placement?",
+      "For a student, I would like to know: Does registration guarantee placement?",
+      "For a student, Can you clarify this for me: Does registration guarantee placement?",
+      "For a student, Quick question: Does registration guarantee placement?",
+      "For a student, Please explain this: Does registration guarantee placement?",
+      "For a student, I have a question: Does registration guarantee placement?",
+      "For a student, Can you tell me: Does registration guarantee placement?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 976
+  },
+  {
+    "id": "REG-189",
+    "category": "fees_and_enrolment_commitments",
+    "question": "Can I cancel after registering?",
+    "answer": "Cancellation and refund terms depend on current policy. Contact SPRINT and request the applicable written procedure.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I cancel after registering?",
+      "For a student, Please help me with this SPRINT query: Can I cancel after registering?",
+      "For a student, I would like to know: Can I cancel after registering?",
+      "For a student, Can you clarify this for me: Can I cancel after registering?",
+      "For a student, Quick question: Can I cancel after registering?",
+      "For a student, Please explain this: Can I cancel after registering?",
+      "For a student, I have a question: Can I cancel after registering?",
+      "For a student, Can you tell me: Can I cancel after registering?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 977
+  },
+  {
+    "id": "REG-190",
+    "category": "fees_and_enrolment_commitments",
+    "question": "What should I verify before paying?",
+    "answer": "Confirm program name, fee breakdown, format, schedule, eligibility, cancellation/refund terms, and official payment instructions.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What should I verify before paying?",
+      "For a student, Please help me with this SPRINT query: What should I verify before paying?",
+      "For a student, I would like to know: What should I verify before paying?",
+      "For a student, Can you clarify this for me: What should I verify before paying?",
+      "For a student, Quick question: What should I verify before paying?",
+      "For a student, Please explain this: What should I verify before paying?",
+      "For a student, I have a question: What should I verify before paying?",
+      "For a student, Can you tell me: What should I verify before paying?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 978
+  }
+]

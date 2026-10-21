@@ -1,0 +1,2068 @@
+[
+  {
+    "id": "SPRINT-174",
+    "category": "workshops_seminars_and_events",
+    "question": "Does SPRINT work with industry partners?",
+    "answer": "Yes. SPRINT’s programs are designed and delivered collaboratively by SPRINT and industry partners, and industry experts contribute to learning and delivery.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT work with industry partners?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT work with industry partners?",
+      "For a student, I would like to know: Does SPRINT work with industry partners?",
+      "For a student, Can you clarify this for me: Does SPRINT work with industry partners?",
+      "For a student, Quick question: Does SPRINT work with industry partners?",
+      "For a student, Please explain this: Does SPRINT work with industry partners?",
+      "For a student, I have a question: Does SPRINT work with industry partners?",
+      "For a student, Can you tell me: Does SPRINT work with industry partners?",
+      "For a student, Help me understand: Does SPRINT work with industry partners?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 79
+  },
+  {
+    "id": "SPRINT-175",
+    "category": "workshops_seminars_and_events",
+    "question": "What does “We do not teach, We #Empower!” mean?",
+    "answer": "The phrase reflects SPRINT’s approach of going beyond conventional teaching by empowering learners through relevant skills, practical exposure, industry interaction, and professional development.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What does “We do not teach, We #Empower!” mean?",
+      "For a student, Please help me with this SPRINT query: What does “We do not teach, We #Empower!” mean?",
+      "For a student, I would like to know: What does “We do not teach, We #Empower!” mean?",
+      "For a student, Can you clarify this for me: What does “We do not teach, We #Empower!” mean?",
+      "For a student, Quick question: What does “We do not teach, We #Empower!” mean?",
+      "For a student, Please explain this: What does “We do not teach, We #Empower!” mean?",
+      "For a student, I have a question: What does “We do not teach, We #Empower!” mean?",
+      "For a student, Can you tell me: What does “We do not teach, We #Empower!” mean?",
+      "For a student, Help me understand: What does “We do not teach, We #Empower!” mean?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 80
+  },
+  {
+    "id": "SPRINT-176",
+    "category": "workshops_seminars_and_events",
+    "question": "Does SPRINT work only with students?",
+    "answer": "No. SPRINT primarily serves students but also works with IT professionals, non-IT professionals, educational institutions, industry partners, NGOs, and social organizations.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT work only with students?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT work only with students?",
+      "For a student, I would like to know: Does SPRINT work only with students?",
+      "For a student, Can you clarify this for me: Does SPRINT work only with students?",
+      "For a student, Quick question: Does SPRINT work only with students?",
+      "For a student, Please explain this: Does SPRINT work only with students?",
+      "For a student, I have a question: Does SPRINT work only with students?",
+      "For a student, Can you tell me: Does SPRINT work only with students?",
+      "For a student, Help me understand: Does SPRINT work only with students?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 81
+  },
+  {
+    "id": "SPRINT-193",
+    "category": "workshops_seminars_and_events",
+    "question": "Is SPRINT mainly focused on professional learning?",
+    "answer": "Yes. SPRINT is an industry-focused professional learning organization combining technology learning, practical exposure, industry interaction, and professional development.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is SPRINT mainly focused on professional learning?",
+      "For a student, Please help me with this SPRINT query: Is SPRINT mainly focused on professional learning?",
+      "For a student, I would like to know: Is SPRINT mainly focused on professional learning?",
+      "For a student, Can you clarify this for me: Is SPRINT mainly focused on professional learning?",
+      "For a student, Quick question: Is SPRINT mainly focused on professional learning?",
+      "For a student, Please explain this: Is SPRINT mainly focused on professional learning?",
+      "For a student, I have a question: Is SPRINT mainly focused on professional learning?",
+      "For a student, Can you tell me: Is SPRINT mainly focused on professional learning?",
+      "For a student, Help me understand: Is SPRINT mainly focused on professional learning?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 82
+  },
+  {
+    "id": "SPRINT-194",
+    "category": "workshops_seminars_and_events",
+    "question": "Can SPRINT work with graduates as well as current students?",
+    "answer": "Yes. SPRINT primarily serves students but also offers professional learning opportunities for graduates, IT professionals, and non-IT professionals depending on the program.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT work with graduates as well as current students?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT work with graduates as well as current students?",
+      "For a student, I would like to know: Can SPRINT work with graduates as well as current students?",
+      "For a student, Can you clarify this for me: Can SPRINT work with graduates as well as current students?",
+      "For a student, Quick question: Can SPRINT work with graduates as well as current students?",
+      "For a student, Please explain this: Can SPRINT work with graduates as well as current students?",
+      "For a student, I have a question: Can SPRINT work with graduates as well as current students?",
+      "For a student, Can you tell me: Can SPRINT work with graduates as well as current students?",
+      "For a student, Help me understand: Can SPRINT work with graduates as well as current students?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 83
+  },
+  {
+    "id": "SPRINT-195",
+    "category": "workshops_seminars_and_events",
+    "question": "Can SPRINT programs be customized?",
+    "answer": "SPRINT can work with educational institutions and organizations on customized workshops, seminars, training programs, and other initiatives based on their requirements.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT programs be customized?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT programs be customized?",
+      "For a student, I would like to know: Can SPRINT programs be customized?",
+      "For a student, Can you clarify this for me: Can SPRINT programs be customized?",
+      "For a student, Quick question: Can SPRINT programs be customized?",
+      "For a student, Please explain this: Can SPRINT programs be customized?",
+      "For a student, I have a question: Can SPRINT programs be customized?",
+      "For a student, Can you tell me: Can SPRINT programs be customized?",
+      "For a student, Help me understand: Can SPRINT programs be customized?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 84
+  },
+  {
+    "id": "SPRINT-222",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "What does SPRINT stand for?",
+    "answer": "SPRINT stands for School of Professional Studies & Information Technology.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What does SPRINT stand for?",
+      "For a student, Please help me with this SPRINT query: What does SPRINT stand for?",
+      "For a student, I would like to know: What does SPRINT stand for?",
+      "For a student, Can you clarify this for me: What does SPRINT stand for?",
+      "For a student, Quick question: What does SPRINT stand for?",
+      "For a student, Please explain this: What does SPRINT stand for?",
+      "For a student, I have a question: What does SPRINT stand for?",
+      "For a student, Can you tell me: What does SPRINT stand for?",
+      "For a student, Help me understand: What does SPRINT stand for?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 85
+  },
+  {
+    "id": "SPRINT-177",
+    "category": "workshops_seminars_and_events",
+    "question": "Can students interact with corporate SMEs through SPRINT?",
+    "answer": "Yes. Students interact with corporate SMEs through training sessions and special SME Connect sessions.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can students interact with corporate SMEs through SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can students interact with corporate SMEs through SPRINT?",
+      "For a student, I would like to know: Can students interact with corporate SMEs through SPRINT?",
+      "For a student, Can you clarify this for me: Can students interact with corporate SMEs through SPRINT?",
+      "For a student, Quick question: Can students interact with corporate SMEs through SPRINT?",
+      "For a student, Please explain this: Can students interact with corporate SMEs through SPRINT?",
+      "For a student, I have a question: Can students interact with corporate SMEs through SPRINT?",
+      "For a student, Can you tell me: Can students interact with corporate SMEs through SPRINT?",
+      "For a student, Help me understand: Can students interact with corporate SMEs through SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 99
+  },
+  {
+    "id": "SPRINT-178",
+    "category": "workshops_seminars_and_events",
+    "question": "Can students learn from experienced professionals through SPRINT?",
+    "answer": "Yes. SPRINT connects students with experienced corporate SMEs, industry professionals, and industry veterans through its programs and expert sessions.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can students learn from experienced professionals through SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can students learn from experienced professionals through SPRINT?",
+      "For a student, I would like to know: Can students learn from experienced professionals through SPRINT?",
+      "For a student, Can you clarify this for me: Can students learn from experienced professionals through SPRINT?",
+      "For a student, Quick question: Can students learn from experienced professionals through SPRINT?",
+      "For a student, Please explain this: Can students learn from experienced professionals through SPRINT?",
+      "For a student, I have a question: Can students learn from experienced professionals through SPRINT?",
+      "For a student, Can you tell me: Can students learn from experienced professionals through SPRINT?",
+      "For a student, Help me understand: Can students learn from experienced professionals through SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 100
+  },
+  {
+    "id": "SPRINT-179",
+    "category": "workshops_seminars_and_events",
+    "question": "Can SPRINT help students understand workplace expectations?",
+    "answer": "Yes. Industry interactions, practical projects, professional development, and career preparation help students understand what companies and professional environments expect.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT help students understand workplace expectations?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT help students understand workplace expectations?",
+      "For a student, I would like to know: Can SPRINT help students understand workplace expectations?",
+      "For a student, Can you clarify this for me: Can SPRINT help students understand workplace expectations?",
+      "For a student, Quick question: Can SPRINT help students understand workplace expectations?",
+      "For a student, Please explain this: Can SPRINT help students understand workplace expectations?",
+      "For a student, I have a question: Can SPRINT help students understand workplace expectations?",
+      "For a student, Can you tell me: Can SPRINT help students understand workplace expectations?",
+      "For a student, Help me understand: Can SPRINT help students understand workplace expectations?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 101
+  },
+  {
+    "id": "SPRINT-196",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can SPRINT provide opportunities beyond academic learning?",
+    "answer": "Yes. Students can receive practical project exposure, industry interaction, workshops, seminars, industry immersion, internship opportunities, and career-development support depending on their program.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT provide opportunities beyond academic learning?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT provide opportunities beyond academic learning?",
+      "For a student, I would like to know: Can SPRINT provide opportunities beyond academic learning?",
+      "For a student, Can you clarify this for me: Can SPRINT provide opportunities beyond academic learning?",
+      "For a student, Quick question: Can SPRINT provide opportunities beyond academic learning?",
+      "For a student, Please explain this: Can SPRINT provide opportunities beyond academic learning?",
+      "For a student, I have a question: Can SPRINT provide opportunities beyond academic learning?",
+      "For a student, Can you tell me: Can SPRINT provide opportunities beyond academic learning?",
+      "For a student, Help me understand: Can SPRINT provide opportunities beyond academic learning?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 102
+  },
+  {
+    "id": "SPRINT-197",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can SPRINT help me understand what the IT industry is really like?",
+    "answer": "Yes. Industry immersion, SME Connect sessions, practical projects, and interactions with experienced professionals help students understand how the IT industry operates.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT help me understand what the IT industry is really like?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT help me understand what the IT industry is really like?",
+      "For a student, I would like to know: Can SPRINT help me understand what the IT industry is really like?",
+      "For a student, Can you clarify this for me: Can SPRINT help me understand what the IT industry is really like?",
+      "For a student, Quick question: Can SPRINT help me understand what the IT industry is really like?",
+      "For a student, Please explain this: Can SPRINT help me understand what the IT industry is really like?",
+      "For a student, I have a question: Can SPRINT help me understand what the IT industry is really like?",
+      "For a student, Can you tell me: Can SPRINT help me understand what the IT industry is really like?",
+      "For a student, Help me understand: Can SPRINT help me understand what the IT industry is really like?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 103
+  },
+  {
+    "id": "SPRINT-198",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can SPRINT help students gain confidence for professional life?",
+    "answer": "SPRINT supports professional readiness through industry exposure, professional and personality development, expert interactions, practical projects, and career preparation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT help students gain confidence for professional life?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT help students gain confidence for professional life?",
+      "For a student, I would like to know: Can SPRINT help students gain confidence for professional life?",
+      "For a student, Can you clarify this for me: Can SPRINT help students gain confidence for professional life?",
+      "For a student, Quick question: Can SPRINT help students gain confidence for professional life?",
+      "For a student, Please explain this: Can SPRINT help students gain confidence for professional life?",
+      "For a student, I have a question: Can SPRINT help students gain confidence for professional life?",
+      "For a student, Can you tell me: Can SPRINT help students gain confidence for professional life?",
+      "For a student, Help me understand: Can SPRINT help students gain confidence for professional life?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 104
+  },
+  {
+    "id": "SPRINT-223",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Are B.Tech and MCA students the main learner groups for SPRINT?",
+    "answer": "Yes. B.Tech and MCA students are among SPRINT’s primary learner groups, along with students from other IT and CS-related courses.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Are B.Tech and MCA students the main learner groups for SPRINT?",
+      "For a student, Please help me with this SPRINT query: Are B.Tech and MCA students the main learner groups for SPRINT?",
+      "For a student, I would like to know: Are B.Tech and MCA students the main learner groups for SPRINT?",
+      "For a student, Can you clarify this for me: Are B.Tech and MCA students the main learner groups for SPRINT?",
+      "For a student, Quick question: Are B.Tech and MCA students the main learner groups for SPRINT?",
+      "For a student, Please explain this: Are B.Tech and MCA students the main learner groups for SPRINT?",
+      "For a student, I have a question: Are B.Tech and MCA students the main learner groups for SPRINT?",
+      "For a student, Can you tell me: Are B.Tech and MCA students the main learner groups for SPRINT?",
+      "For a student, Help me understand: Are B.Tech and MCA students the main learner groups for SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 105
+  },
+  {
+    "id": "SPRINT-180",
+    "category": "workshops_seminars_and_events",
+    "question": "Does SPRINT combine technical and professional learning?",
+    "answer": "Yes. SPRINT combines technical learning with professional and personality development, industry exposure, practical projects, and career readiness.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT combine technical and professional learning?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT combine technical and professional learning?",
+      "For a student, I would like to know: Does SPRINT combine technical and professional learning?",
+      "For a student, Can you clarify this for me: Does SPRINT combine technical and professional learning?",
+      "For a student, Quick question: Does SPRINT combine technical and professional learning?",
+      "For a student, Please explain this: Does SPRINT combine technical and professional learning?",
+      "For a student, I have a question: Does SPRINT combine technical and professional learning?",
+      "For a student, Can you tell me: Does SPRINT combine technical and professional learning?",
+      "For a student, Help me understand: Does SPRINT combine technical and professional learning?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 117
+  },
+  {
+    "id": "SPRINT-181",
+    "category": "workshops_seminars_and_events",
+    "question": "How does SPRINT make technical learning practical?",
+    "answer": "SPRINT uses practical projects, hands-on activities, expert interaction, industry exposure, and project guidance to connect technical learning with real-world application.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How does SPRINT make technical learning practical?",
+      "For a student, Please help me with this SPRINT query: How does SPRINT make technical learning practical?",
+      "For a student, I would like to know: How does SPRINT make technical learning practical?",
+      "For a student, Can you clarify this for me: How does SPRINT make technical learning practical?",
+      "For a student, Quick question: How does SPRINT make technical learning practical?",
+      "For a student, Please explain this: How does SPRINT make technical learning practical?",
+      "For a student, I have a question: How does SPRINT make technical learning practical?",
+      "For a student, Can you tell me: How does SPRINT make technical learning practical?",
+      "For a student, Help me understand: How does SPRINT make technical learning practical?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 118
+  },
+  {
+    "id": "SPRINT-182",
+    "category": "workshops_seminars_and_events",
+    "question": "Does SPRINT help learners understand industry practices, not just technology?",
+    "answer": "Yes. SPRINT combines technical learning with practical projects, industry interactions, expert sessions, and exposure to workplace and project practices.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT help learners understand industry practices, not just technology?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT help learners understand industry practices, not just technology?",
+      "For a student, I would like to know: Does SPRINT help learners understand industry practices, not just technology?",
+      "For a student, Can you clarify this for me: Does SPRINT help learners understand industry practices, not just technology?",
+      "For a student, Quick question: Does SPRINT help learners understand industry practices, not just technology?",
+      "For a student, Please explain this: Does SPRINT help learners understand industry practices, not just technology?",
+      "For a student, I have a question: Does SPRINT help learners understand industry practices, not just technology?",
+      "For a student, Can you tell me: Does SPRINT help learners understand industry practices, not just technology?",
+      "For a student, Help me understand: Does SPRINT help learners understand industry practices, not just technology?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 119
+  },
+  {
+    "id": "SPRINT-199",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Does SPRINT teach modern technologies?",
+    "answer": "Yes. SPRINT focuses on modern technology areas including Cloud, AWS, AI/ML, DevOps, Agile, and modern software development.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT teach modern technologies?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT teach modern technologies?",
+      "For a student, I would like to know: Does SPRINT teach modern technologies?",
+      "For a student, Can you clarify this for me: Does SPRINT teach modern technologies?",
+      "For a student, Quick question: Does SPRINT teach modern technologies?",
+      "For a student, Please explain this: Does SPRINT teach modern technologies?",
+      "For a student, I have a question: Does SPRINT teach modern technologies?",
+      "For a student, Can you tell me: Does SPRINT teach modern technologies?",
+      "For a student, Help me understand: Does SPRINT teach modern technologies?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 120
+  },
+  {
+    "id": "SPRINT-200",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can SPRINT help me understand how my technical skills are used in real projects?",
+    "answer": "Yes. Practical projects, industry interactions, project guidance, and industry immersion help learners connect technical knowledge with real project environments.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT help me understand how my technical skills are used in real projects?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT help me understand how my technical skills are used in real projects?",
+      "For a student, I would like to know: Can SPRINT help me understand how my technical skills are used in real projects?",
+      "For a student, Can you clarify this for me: Can SPRINT help me understand how my technical skills are used in real projects?",
+      "For a student, Quick question: Can SPRINT help me understand how my technical skills are used in real projects?",
+      "For a student, Please explain this: Can SPRINT help me understand how my technical skills are used in real projects?",
+      "For a student, I have a question: Can SPRINT help me understand how my technical skills are used in real projects?",
+      "For a student, Can you tell me: Can SPRINT help me understand how my technical skills are used in real projects?",
+      "For a student, Help me understand: Can SPRINT help me understand how my technical skills are used in real projects?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 121
+  },
+  {
+    "id": "SPRINT-201",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Does SPRINT combine technology learning with industry exposure?",
+    "answer": "Yes. Industry exposure is an important part of SPRINT’s approach and is supported through experts, SMEs, projects, and industry immersion.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT combine technology learning with industry exposure?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT combine technology learning with industry exposure?",
+      "For a student, I would like to know: Does SPRINT combine technology learning with industry exposure?",
+      "For a student, Can you clarify this for me: Does SPRINT combine technology learning with industry exposure?",
+      "For a student, Quick question: Does SPRINT combine technology learning with industry exposure?",
+      "For a student, Please explain this: Does SPRINT combine technology learning with industry exposure?",
+      "For a student, I have a question: Does SPRINT combine technology learning with industry exposure?",
+      "For a student, Can you tell me: Does SPRINT combine technology learning with industry exposure?",
+      "For a student, Help me understand: Does SPRINT combine technology learning with industry exposure?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 122
+  },
+  {
+    "id": "SPRINT-183",
+    "category": "workshops_seminars_and_events",
+    "question": "Can non-IT professionals explore Cloud or AI through SPRINT?",
+    "answer": "Yes. SPRINT offers professional learning opportunities for non-IT professionals, including modern technology areas such as Cloud and AI/ML, depending on the program.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can non-IT professionals explore Cloud or AI through SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can non-IT professionals explore Cloud or AI through SPRINT?",
+      "For a student, I would like to know: Can non-IT professionals explore Cloud or AI through SPRINT?",
+      "For a student, Can you clarify this for me: Can non-IT professionals explore Cloud or AI through SPRINT?",
+      "For a student, Quick question: Can non-IT professionals explore Cloud or AI through SPRINT?",
+      "For a student, Please explain this: Can non-IT professionals explore Cloud or AI through SPRINT?",
+      "For a student, I have a question: Can non-IT professionals explore Cloud or AI through SPRINT?",
+      "For a student, Can you tell me: Can non-IT professionals explore Cloud or AI through SPRINT?",
+      "For a student, Help me understand: Can non-IT professionals explore Cloud or AI through SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 138
+  },
+  {
+    "id": "SPRINT-184",
+    "category": "workshops_seminars_and_events",
+    "question": "Can IT professionals use SPRINT to learn emerging technologies?",
+    "answer": "Yes. SPRINT offers specialized professional courses for IT professionals who want to develop skills in modern technology domains.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can IT professionals use SPRINT to learn emerging technologies?",
+      "For a student, Please help me with this SPRINT query: Can IT professionals use SPRINT to learn emerging technologies?",
+      "For a student, I would like to know: Can IT professionals use SPRINT to learn emerging technologies?",
+      "For a student, Can you clarify this for me: Can IT professionals use SPRINT to learn emerging technologies?",
+      "For a student, Quick question: Can IT professionals use SPRINT to learn emerging technologies?",
+      "For a student, Please explain this: Can IT professionals use SPRINT to learn emerging technologies?",
+      "For a student, I have a question: Can IT professionals use SPRINT to learn emerging technologies?",
+      "For a student, Can you tell me: Can IT professionals use SPRINT to learn emerging technologies?",
+      "For a student, Help me understand: Can IT professionals use SPRINT to learn emerging technologies?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 139
+  },
+  {
+    "id": "SPRINT-202",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can I explore AWS through SPRINT?",
+    "answer": "Yes. AWS is part of SPRINT’s Cloud Computing focus. Current AWS program details should be checked on the Courses page.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I explore AWS through SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can I explore AWS through SPRINT?",
+      "For a student, I would like to know: Can I explore AWS through SPRINT?",
+      "For a student, Can you clarify this for me: Can I explore AWS through SPRINT?",
+      "For a student, Quick question: Can I explore AWS through SPRINT?",
+      "For a student, Please explain this: Can I explore AWS through SPRINT?",
+      "For a student, I have a question: Can I explore AWS through SPRINT?",
+      "For a student, Can you tell me: Can I explore AWS through SPRINT?",
+      "For a student, Help me understand: Can I explore AWS through SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 140
+  },
+  {
+    "id": "SPRINT-203",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can I explore AI and Machine Learning through SPRINT?",
+    "answer": "Yes. AI and Machine Learning are among SPRINT’s primary technology focus areas. Current program details are available on the Courses page.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I explore AI and Machine Learning through SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can I explore AI and Machine Learning through SPRINT?",
+      "For a student, I would like to know: Can I explore AI and Machine Learning through SPRINT?",
+      "For a student, Can you clarify this for me: Can I explore AI and Machine Learning through SPRINT?",
+      "For a student, Quick question: Can I explore AI and Machine Learning through SPRINT?",
+      "For a student, Please explain this: Can I explore AI and Machine Learning through SPRINT?",
+      "For a student, I have a question: Can I explore AI and Machine Learning through SPRINT?",
+      "For a student, Can you tell me: Can I explore AI and Machine Learning through SPRINT?",
+      "For a student, Help me understand: Can I explore AI and Machine Learning through SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 141
+  },
+  {
+    "id": "SPRINT-204",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can I explore DevOps through SPRINT?",
+    "answer": "Yes. DevOps is one of SPRINT’s technology focus areas. Current program details should be checked on the Courses page.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I explore DevOps through SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can I explore DevOps through SPRINT?",
+      "For a student, I would like to know: Can I explore DevOps through SPRINT?",
+      "For a student, Can you clarify this for me: Can I explore DevOps through SPRINT?",
+      "For a student, Quick question: Can I explore DevOps through SPRINT?",
+      "For a student, Please explain this: Can I explore DevOps through SPRINT?",
+      "For a student, I have a question: Can I explore DevOps through SPRINT?",
+      "For a student, Can you tell me: Can I explore DevOps through SPRINT?",
+      "For a student, Help me understand: Can I explore DevOps through SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 142
+  },
+  {
+    "id": "SPRINT-205",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can I explore Agile through SPRINT?",
+    "answer": "Yes. Agile is one of SPRINT’s focus areas and forms part of its broader software-development and industry learning offerings.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I explore Agile through SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can I explore Agile through SPRINT?",
+      "For a student, I would like to know: Can I explore Agile through SPRINT?",
+      "For a student, Can you clarify this for me: Can I explore Agile through SPRINT?",
+      "For a student, Quick question: Can I explore Agile through SPRINT?",
+      "For a student, Please explain this: Can I explore Agile through SPRINT?",
+      "For a student, I have a question: Can I explore Agile through SPRINT?",
+      "For a student, Can you tell me: Can I explore Agile through SPRINT?",
+      "For a student, Help me understand: Can I explore Agile through SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 143
+  },
+  {
+    "id": "SPRINT-185",
+    "category": "workshops_seminars_and_events",
+    "question": "Are internship opportunities provided through partner companies?",
+    "answer": "Yes. SPRINT facilitates internship opportunities through partner companies.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Are internship opportunities provided through partner companies?",
+      "For a student, Please help me with this SPRINT query: Are internship opportunities provided through partner companies?",
+      "For a student, I would like to know: Are internship opportunities provided through partner companies?",
+      "For a student, Can you clarify this for me: Are internship opportunities provided through partner companies?",
+      "For a student, Quick question: Are internship opportunities provided through partner companies?",
+      "For a student, Please explain this: Are internship opportunities provided through partner companies?",
+      "For a student, I have a question: Are internship opportunities provided through partner companies?",
+      "For a student, Can you tell me: Are internship opportunities provided through partner companies?",
+      "For a student, Help me understand: Are internship opportunities provided through partner companies?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 174
+  },
+  {
+    "id": "SPRINT-186",
+    "category": "workshops_seminars_and_events",
+    "question": "Can project performance affect internship opportunities?",
+    "answer": "Yes. Internship and project selection can depend on student performance, trainer review or report, eligibility, and opportunity availability.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can project performance affect internship opportunities?",
+      "For a student, Please help me with this SPRINT query: Can project performance affect internship opportunities?",
+      "For a student, I would like to know: Can project performance affect internship opportunities?",
+      "For a student, Can you clarify this for me: Can project performance affect internship opportunities?",
+      "For a student, Quick question: Can project performance affect internship opportunities?",
+      "For a student, Please explain this: Can project performance affect internship opportunities?",
+      "For a student, I have a question: Can project performance affect internship opportunities?",
+      "For a student, Can you tell me: Can project performance affect internship opportunities?",
+      "For a student, Help me understand: Can project performance affect internship opportunities?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 175
+  },
+  {
+    "id": "SPRINT-187",
+    "category": "workshops_seminars_and_events",
+    "question": "Can project experience help with career preparation?",
+    "answer": "Yes. Relevant project experience helps learners gain practical industry exposure and can be included in their resumes.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can project experience help with career preparation?",
+      "For a student, Please help me with this SPRINT query: Can project experience help with career preparation?",
+      "For a student, I would like to know: Can project experience help with career preparation?",
+      "For a student, Can you clarify this for me: Can project experience help with career preparation?",
+      "For a student, Quick question: Can project experience help with career preparation?",
+      "For a student, Please explain this: Can project experience help with career preparation?",
+      "For a student, I have a question: Can project experience help with career preparation?",
+      "For a student, Can you tell me: Can project experience help with career preparation?",
+      "For a student, Help me understand: Can project experience help with career preparation?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 176
+  },
+  {
+    "id": "SPRINT-206",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can internship opportunities be paid or unpaid?",
+    "answer": "Yes. Internships can be paid or unpaid depending on the particular opportunity.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can internship opportunities be paid or unpaid?",
+      "For a student, Please help me with this SPRINT query: Can internship opportunities be paid or unpaid?",
+      "For a student, I would like to know: Can internship opportunities be paid or unpaid?",
+      "For a student, Can you clarify this for me: Can internship opportunities be paid or unpaid?",
+      "For a student, Quick question: Can internship opportunities be paid or unpaid?",
+      "For a student, Please explain this: Can internship opportunities be paid or unpaid?",
+      "For a student, I have a question: Can internship opportunities be paid or unpaid?",
+      "For a student, Can you tell me: Can internship opportunities be paid or unpaid?",
+      "For a student, Help me understand: Can internship opportunities be paid or unpaid?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 177
+  },
+  {
+    "id": "SPRINT-207",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "How long can an internship through SPRINT last?",
+    "answer": "Typical internship duration is around 2–6 months, depending on the opportunity.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How long can an internship through SPRINT last?",
+      "For a student, Please help me with this SPRINT query: How long can an internship through SPRINT last?",
+      "For a student, I would like to know: How long can an internship through SPRINT last?",
+      "For a student, Can you clarify this for me: How long can an internship through SPRINT last?",
+      "For a student, Quick question: How long can an internship through SPRINT last?",
+      "For a student, Please explain this: How long can an internship through SPRINT last?",
+      "For a student, I have a question: How long can an internship through SPRINT last?",
+      "For a student, Can you tell me: How long can an internship through SPRINT last?",
+      "For a student, Help me understand: How long can an internship through SPRINT last?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 178
+  },
+  {
+    "id": "SPRINT-208",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Can students receive project guidance from SPRINT?",
+    "answer": "Yes. SPRINT can provide technical guidance, project management support, code reviews, design sessions, and critical-thinking guidance during project work.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can students receive project guidance from SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can students receive project guidance from SPRINT?",
+      "For a student, I would like to know: Can students receive project guidance from SPRINT?",
+      "For a student, Can you clarify this for me: Can students receive project guidance from SPRINT?",
+      "For a student, Quick question: Can students receive project guidance from SPRINT?",
+      "For a student, Please explain this: Can students receive project guidance from SPRINT?",
+      "For a student, I have a question: Can students receive project guidance from SPRINT?",
+      "For a student, Can you tell me: Can students receive project guidance from SPRINT?",
+      "For a student, Help me understand: Can students receive project guidance from SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 179
+  },
+  {
+    "id": "SPRINT-190",
+    "category": "workshops_seminars_and_events",
+    "question": "Does SPRINT connect learners with industry veterans?",
+    "answer": "Yes. SPRINT’s programs include interactions with experienced industry veterans and corporate SMEs, including experts with extensive MNC experience.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT connect learners with industry veterans?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT connect learners with industry veterans?",
+      "For a student, I would like to know: Does SPRINT connect learners with industry veterans?",
+      "For a student, Can you clarify this for me: Does SPRINT connect learners with industry veterans?",
+      "For a student, Quick question: Does SPRINT connect learners with industry veterans?",
+      "For a student, Please explain this: Does SPRINT connect learners with industry veterans?",
+      "For a student, I have a question: Does SPRINT connect learners with industry veterans?",
+      "For a student, Can you tell me: Does SPRINT connect learners with industry veterans?",
+      "For a student, Help me understand: Does SPRINT connect learners with industry veterans?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 217
+  },
+  {
+    "id": "SPRINT-191",
+    "category": "workshops_seminars_and_events",
+    "question": "Are SPRINT’s industry experts only from India?",
+    "answer": "Industry experts are primarily based in India, while SPRINT also connects with industry experts based abroad.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Are SPRINT’s industry experts only from India?",
+      "For a student, Please help me with this SPRINT query: Are SPRINT’s industry experts only from India?",
+      "For a student, I would like to know: Are SPRINT’s industry experts only from India?",
+      "For a student, Can you clarify this for me: Are SPRINT’s industry experts only from India?",
+      "For a student, Quick question: Are SPRINT’s industry experts only from India?",
+      "For a student, Please explain this: Are SPRINT’s industry experts only from India?",
+      "For a student, I have a question: Are SPRINT’s industry experts only from India?",
+      "For a student, Can you tell me: Are SPRINT’s industry experts only from India?",
+      "For a student, Help me understand: Are SPRINT’s industry experts only from India?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 218
+  },
+  {
+    "id": "SPRINT-212",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Can students ask questions directly to industry experts?",
+    "answer": "Yes. Students interact with industry experts and SMEs through training sessions, workshops, seminars, and SME Connect sessions.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can students ask questions directly to industry experts?",
+      "For a student, Please help me with this SPRINT query: Can students ask questions directly to industry experts?",
+      "For a student, I would like to know: Can students ask questions directly to industry experts?",
+      "For a student, Can you clarify this for me: Can students ask questions directly to industry experts?",
+      "For a student, Quick question: Can students ask questions directly to industry experts?",
+      "For a student, Please explain this: Can students ask questions directly to industry experts?",
+      "For a student, I have a question: Can students ask questions directly to industry experts?",
+      "For a student, Can you tell me: Can students ask questions directly to industry experts?",
+      "For a student, Help me understand: Can students ask questions directly to industry experts?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 219
+  },
+  {
+    "id": "SPRINT-213",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Does SPRINT provide professional exposure as well as technical learning?",
+    "answer": "Yes. SPRINT combines technical learning with industry exposure, professional development, personality development, practical projects, and expert interaction.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT provide professional exposure as well as technical learning?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT provide professional exposure as well as technical learning?",
+      "For a student, I would like to know: Does SPRINT provide professional exposure as well as technical learning?",
+      "For a student, Can you clarify this for me: Does SPRINT provide professional exposure as well as technical learning?",
+      "For a student, Quick question: Does SPRINT provide professional exposure as well as technical learning?",
+      "For a student, Please explain this: Does SPRINT provide professional exposure as well as technical learning?",
+      "For a student, I have a question: Does SPRINT provide professional exposure as well as technical learning?",
+      "For a student, Can you tell me: Does SPRINT provide professional exposure as well as technical learning?",
+      "For a student, Help me understand: Does SPRINT provide professional exposure as well as technical learning?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 220
+  },
+  {
+    "id": "SPRINT-192",
+    "category": "workshops_seminars_and_events",
+    "question": "Can SPRINT conduct workshops both online and offline?",
+    "answer": "Yes. SPRINT conducts workshops online and offline, including programs on college campuses.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT conduct workshops both online and offline?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT conduct workshops both online and offline?",
+      "For a student, I would like to know: Can SPRINT conduct workshops both online and offline?",
+      "For a student, Can you clarify this for me: Can SPRINT conduct workshops both online and offline?",
+      "For a student, Quick question: Can SPRINT conduct workshops both online and offline?",
+      "For a student, Please explain this: Can SPRINT conduct workshops both online and offline?",
+      "For a student, I have a question: Can SPRINT conduct workshops both online and offline?",
+      "For a student, Can you tell me: Can SPRINT conduct workshops both online and offline?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 240
+  },
+  {
+    "id": "SPRINT-214",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Are SPRINT workshops open to non-students?",
+    "answer": "Workshops are open for participation according to the particular event’s agenda and are not necessarily limited to enrolled students.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Are SPRINT workshops open to non-students?",
+      "For a student, Please help me with this SPRINT query: Are SPRINT workshops open to non-students?",
+      "For a student, I would like to know: Are SPRINT workshops open to non-students?",
+      "For a student, Can you clarify this for me: Are SPRINT workshops open to non-students?",
+      "For a student, Quick question: Are SPRINT workshops open to non-students?",
+      "For a student, Please explain this: Are SPRINT workshops open to non-students?",
+      "For a student, I have a question: Are SPRINT workshops open to non-students?",
+      "For a student, Can you tell me: Are SPRINT workshops open to non-students?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 241
+  },
+  {
+    "id": "SPRINT-215",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Can colleges organize campus programs with SPRINT?",
+    "answer": "Yes. Colleges can approach SPRINT for workshops, seminars, training programs, and customized campus initiatives.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can colleges organize campus programs with SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can colleges organize campus programs with SPRINT?",
+      "For a student, I would like to know: Can colleges organize campus programs with SPRINT?",
+      "For a student, Can you clarify this for me: Can colleges organize campus programs with SPRINT?",
+      "For a student, Quick question: Can colleges organize campus programs with SPRINT?",
+      "For a student, Please explain this: Can colleges organize campus programs with SPRINT?",
+      "For a student, I have a question: Can colleges organize campus programs with SPRINT?",
+      "For a student, Can you tell me: Can colleges organize campus programs with SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 242
+  },
+  {
+    "id": "SPRINT-216",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Can SPRINT work with institutions to build customized learning programs?",
+    "answer": "Yes. SPRINT can work with institutions on customized workshops, training programs, seminars, and other campus initiatives based on their requirements.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT work with institutions to build customized learning programs?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT work with institutions to build customized learning programs?",
+      "For a student, I would like to know: Can SPRINT work with institutions to build customized learning programs?",
+      "For a student, Can you clarify this for me: Can SPRINT work with institutions to build customized learning programs?",
+      "For a student, Quick question: Can SPRINT work with institutions to build customized learning programs?",
+      "For a student, Please explain this: Can SPRINT work with institutions to build customized learning programs?",
+      "For a student, I have a question: Can SPRINT work with institutions to build customized learning programs?",
+      "For a student, Can you tell me: Can SPRINT work with institutions to build customized learning programs?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 255
+  },
+  {
+    "id": "SPRINT-217",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Can universities collaborate with SPRINT for industry exposure?",
+    "answer": "Yes. Universities can collaborate with SPRINT on industry-aligned learning, expert sessions, workshops, training, and professional development initiatives.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can universities collaborate with SPRINT for industry exposure?",
+      "For a student, Please help me with this SPRINT query: Can universities collaborate with SPRINT for industry exposure?",
+      "For a student, I would like to know: Can universities collaborate with SPRINT for industry exposure?",
+      "For a student, Can you clarify this for me: Can universities collaborate with SPRINT for industry exposure?",
+      "For a student, Quick question: Can universities collaborate with SPRINT for industry exposure?",
+      "For a student, Please explain this: Can universities collaborate with SPRINT for industry exposure?",
+      "For a student, I have a question: Can universities collaborate with SPRINT for industry exposure?",
+      "For a student, Can you tell me: Can universities collaborate with SPRINT for industry exposure?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 256
+  },
+  {
+    "id": "SPRINT-218",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Can institutions outside SPRINT’s local area participate?",
+    "answer": "Yes. SPRINT’s online programs allow learners and institutions from different locations to participate.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can institutions outside SPRINT’s local area participate?",
+      "For a student, Please help me with this SPRINT query: Can institutions outside SPRINT’s local area participate?",
+      "For a student, I would like to know: Can institutions outside SPRINT’s local area participate?",
+      "For a student, Can you clarify this for me: Can institutions outside SPRINT’s local area participate?",
+      "For a student, Quick question: Can institutions outside SPRINT’s local area participate?",
+      "For a student, Please explain this: Can institutions outside SPRINT’s local area participate?",
+      "For a student, I have a question: Can institutions outside SPRINT’s local area participate?",
+      "For a student, Can you tell me: Can institutions outside SPRINT’s local area participate?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 257
+  },
+  {
+    "id": "SPRINT-219",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Can NGOs collaborate with SPRINT on skill-development programs?",
+    "answer": "Yes. SPRINT actively collaborates with NGOs and social organizations on skill development, training, workshops, seminars, and educational initiatives.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can NGOs collaborate with SPRINT on skill-development programs?",
+      "For a student, Please help me with this SPRINT query: Can NGOs collaborate with SPRINT on skill-development programs?",
+      "For a student, I would like to know: Can NGOs collaborate with SPRINT on skill-development programs?",
+      "For a student, Can you clarify this for me: Can NGOs collaborate with SPRINT on skill-development programs?",
+      "For a student, Quick question: Can NGOs collaborate with SPRINT on skill-development programs?",
+      "For a student, Please explain this: Can NGOs collaborate with SPRINT on skill-development programs?",
+      "For a student, I have a question: Can NGOs collaborate with SPRINT on skill-development programs?",
+      "For a student, Can you tell me: Can NGOs collaborate with SPRINT on skill-development programs?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 269
+  },
+  {
+    "id": "SPRINT-220",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Can SPRINT help organizations reach students with limited industry exposure?",
+    "answer": "Yes. Through educational and social-organization collaborations, SPRINT can help make industry-aligned learning and exposure more accessible to students in regions with limited industry access.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT help organizations reach students with limited industry exposure?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT help organizations reach students with limited industry exposure?",
+      "For a student, I would like to know: Can SPRINT help organizations reach students with limited industry exposure?",
+      "For a student, Can you clarify this for me: Can SPRINT help organizations reach students with limited industry exposure?",
+      "For a student, Quick question: Can SPRINT help organizations reach students with limited industry exposure?",
+      "For a student, Please explain this: Can SPRINT help organizations reach students with limited industry exposure?",
+      "For a student, I have a question: Can SPRINT help organizations reach students with limited industry exposure?",
+      "For a student, Can you tell me: Can SPRINT help organizations reach students with limited industry exposure?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 270
+  },
+  {
+    "id": "SPRINT-221",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Can social organizations request customized programs from SPRINT?",
+    "answer": "Yes. Social organizations can approach SPRINT to discuss customized training programs, workshops, seminars, and skill-development initiatives.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can social organizations request customized programs from SPRINT?",
+      "For a student, Please help me with this SPRINT query: Can social organizations request customized programs from SPRINT?",
+      "For a student, I would like to know: Can social organizations request customized programs from SPRINT?",
+      "For a student, Can you clarify this for me: Can social organizations request customized programs from SPRINT?",
+      "For a student, Quick question: Can social organizations request customized programs from SPRINT?",
+      "For a student, Please explain this: Can social organizations request customized programs from SPRINT?",
+      "For a student, I have a question: Can social organizations request customized programs from SPRINT?",
+      "For a student, Can you tell me: Can social organizations request customized programs from SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 271
+  },
+  {
+    "id": "SPRINT-188",
+    "category": "workshops_seminars_and_events",
+    "question": "Does SPRINT help students understand how projects are handled in companies?",
+    "answer": "Yes. Practical projects, industry immersion, corporate expert sessions, and project guidance help students understand how professional projects are undertaken and developed.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT help students understand how projects are handled in companies?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT help students understand how projects are handled in companies?",
+      "For a student, I would like to know: Does SPRINT help students understand how projects are handled in companies?",
+      "For a student, Can you clarify this for me: Does SPRINT help students understand how projects are handled in companies?",
+      "For a student, Quick question: Does SPRINT help students understand how projects are handled in companies?",
+      "For a student, Please explain this: Does SPRINT help students understand how projects are handled in companies?",
+      "For a student, I have a question: Does SPRINT help students understand how projects are handled in companies?",
+      "For a student, Can you tell me: Does SPRINT help students understand how projects are handled in companies?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 273
+  },
+  {
+    "id": "SPRINT-189",
+    "category": "workshops_seminars_and_events",
+    "question": "Can SPRINT help a non-IT professional move into technology?",
+    "answer": "Yes. SPRINT offers professional courses for non-IT professionals who want to build technology skills or explore a transition into IT.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT help a non-IT professional move into technology?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT help a non-IT professional move into technology?",
+      "For a student, I would like to know: Can SPRINT help a non-IT professional move into technology?",
+      "For a student, Can you clarify this for me: Can SPRINT help a non-IT professional move into technology?",
+      "For a student, Quick question: Can SPRINT help a non-IT professional move into technology?",
+      "For a student, Please explain this: Can SPRINT help a non-IT professional move into technology?",
+      "For a student, I have a question: Can SPRINT help a non-IT professional move into technology?",
+      "For a student, Can you tell me: Can SPRINT help a non-IT professional move into technology?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 274
+  },
+  {
+    "id": "SPRINT-209",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Does SPRINT provide support with resumes and interviews?",
+    "answer": "Yes. Resume building and interview preparation are part of SPRINT’s career-readiness support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT provide support with resumes and interviews?",
+      "For a student, Please help me with this SPRINT query: Does SPRINT provide support with resumes and interviews?",
+      "For a student, I would like to know: Does SPRINT provide support with resumes and interviews?",
+      "For a student, Can you clarify this for me: Does SPRINT provide support with resumes and interviews?",
+      "For a student, Quick question: Does SPRINT provide support with resumes and interviews?",
+      "For a student, Please explain this: Does SPRINT provide support with resumes and interviews?",
+      "For a student, I have a question: Does SPRINT provide support with resumes and interviews?",
+      "For a student, Can you tell me: Does SPRINT provide support with resumes and interviews?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 275
+  },
+  {
+    "id": "SPRINT-210",
+    "category": "college_university_and_institutional_collaboration",
+    "question": "Does placement assistance mean a guaranteed job?",
+    "answer": "No. Placement assistance is support for career preparation and opportunities; it does not guarantee employment.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does placement assistance mean a guaranteed job?",
+      "For a student, Please help me with this SPRINT query: Does placement assistance mean a guaranteed job?",
+      "For a student, I would like to know: Does placement assistance mean a guaranteed job?",
+      "For a student, Can you clarify this for me: Does placement assistance mean a guaranteed job?",
+      "For a student, Quick question: Does placement assistance mean a guaranteed job?",
+      "For a student, Please explain this: Does placement assistance mean a guaranteed job?",
+      "For a student, I have a question: Does placement assistance mean a guaranteed job?",
+      "For a student, Can you tell me: Does placement assistance mean a guaranteed job?"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 276
+  },
+  {
+    "id": "SPRINT-211",
+    "category": "ngo_and_social_organization_collaboration",
+    "question": "Does SPRINT help students understand what companies look for in fresh",
+    "answer": "Yes. Understanding company expectations is a major part of SPRINT’s student programs and career preparation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does SPRINT help students understand what companies look for in fresh",
+      "For a student, Please help me with this SPRINT query: Does SPRINT help students understand what companies look for in fresh",
+      "For a student, I would like to know: Does SPRINT help students understand what companies look for in fresh",
+      "For a student, Can you clarify this for me: Does SPRINT help students understand what companies look for in fresh",
+      "For a student, Quick question: Does SPRINT help students understand what companies look for in fresh",
+      "For a student, Please explain this: Does SPRINT help students understand what companies look for in fresh",
+      "For a student, I have a question: Does SPRINT help students understand what companies look for in fresh",
+      "For a student, Can you tell me: Does SPRINT help students understand what companies look for in fresh"
+    ],
+    "source_files": [
+      "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 277
+  },
+  {
+    "id": "SUP-141",
+    "category": "institute_partnerships",
+    "question": "How can an institute partner with SPRINT?",
+    "answer": "Select the Institute enquiry path or email info@sprint.naturalelements.co.in with your institute details and collaboration objectives.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can an institute partner with SPRINT?",
+      "For a student, Please help me with this SPRINT query: How can an institute partner with SPRINT?",
+      "For a student, I would like to know: How can an institute partner with SPRINT?",
+      "For a student, Can you clarify this for me: How can an institute partner with SPRINT?",
+      "For a student, Quick question: How can an institute partner with SPRINT?",
+      "For a student, Please explain this: How can an institute partner with SPRINT?",
+      "For a student, I have a question: How can an institute partner with SPRINT?",
+      "For a student, Can you tell me: How can an institute partner with SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 419
+  },
+  {
+    "id": "SUP-142",
+    "category": "institute_partnerships",
+    "question": "What institute services can I enquire about?",
+    "answer": "Describe the training, upskilling, workshop, or collaboration requirement and ask SPRINT to confirm which services are currently offered.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What institute services can I enquire about?",
+      "For a student, Please help me with this SPRINT query: What institute services can I enquire about?",
+      "For a student, I would like to know: What institute services can I enquire about?",
+      "For a student, Can you clarify this for me: What institute services can I enquire about?",
+      "For a student, Quick question: What institute services can I enquire about?",
+      "For a student, Please explain this: What institute services can I enquire about?",
+      "For a student, I have a question: What institute services can I enquire about?",
+      "For a student, Can you tell me: What institute services can I enquire about?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 420
+  },
+  {
+    "id": "SUP-143",
+    "category": "institute_partnerships",
+    "question": "What information should an institute provide?",
+    "answer": "Provide the institute name, contact person, official email and phone, required service, and preferred availability time. Designation, website, and message can add context.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What information should an institute provide?",
+      "For a student, Please help me with this SPRINT query: What information should an institute provide?",
+      "For a student, I would like to know: What information should an institute provide?",
+      "For a student, Can you clarify this for me: What information should an institute provide?",
+      "For a student, Quick question: What information should an institute provide?",
+      "For a student, Please explain this: What information should an institute provide?",
+      "For a student, I have a question: What information should an institute provide?",
+      "For a student, Can you tell me: What information should an institute provide?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 421
+  },
+  {
+    "id": "SUP-144",
+    "category": "institute_partnerships",
+    "question": "Can an institute request a customised training program?",
+    "answer": "Share learner profiles, desired skills, cohort size, delivery preference, and target dates, then ask whether a tailored proposal is possible.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can an institute request a customised training program?",
+      "For a student, Please help me with this SPRINT query: Can an institute request a customised training program?",
+      "For a student, I would like to know: Can an institute request a customised training program?",
+      "For a student, Can you clarify this for me: Can an institute request a customised training program?",
+      "For a student, Quick question: Can an institute request a customised training program?",
+      "For a student, Please explain this: Can an institute request a customised training program?",
+      "For a student, I have a question: Can an institute request a customised training program?",
+      "For a student, Can you tell me: Can an institute request a customised training program?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 422
+  },
+  {
+    "id": "SUP-145",
+    "category": "institute_partnerships",
+    "question": "Can SPRINT conduct workshops for students?",
+    "answer": "Ask about current workshop options, topics, duration, delivery format, availability, and commercial terms.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT conduct workshops for students?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT conduct workshops for students?",
+      "For a student, I would like to know: Can SPRINT conduct workshops for students?",
+      "For a student, Can you clarify this for me: Can SPRINT conduct workshops for students?",
+      "For a student, Quick question: Can SPRINT conduct workshops for students?",
+      "For a student, Please explain this: Can SPRINT conduct workshops for students?",
+      "For a student, I have a question: Can SPRINT conduct workshops for students?",
+      "For a student, Can you tell me: Can SPRINT conduct workshops for students?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 423
+  },
+  {
+    "id": "SUP-146",
+    "category": "institute_partnerships",
+    "question": "Can we request a proposal for our institute?",
+    "answer": "Yes. Provide the scope, audience, expected outcomes, approximate participant count, and preferred schedule so the team can assess the request.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can we request a proposal for our institute?",
+      "For a student, Please help me with this SPRINT query: Can we request a proposal for our institute?",
+      "For a student, I would like to know: Can we request a proposal for our institute?",
+      "For a student, Can you clarify this for me: Can we request a proposal for our institute?",
+      "For a student, Quick question: Can we request a proposal for our institute?",
+      "For a student, Please explain this: Can we request a proposal for our institute?",
+      "For a student, I have a question: Can we request a proposal for our institute?",
+      "For a student, Can you tell me: Can we request a proposal for our institute?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 424
+  },
+  {
+    "id": "SUP-147",
+    "category": "institute_partnerships",
+    "question": "Can institute training be conducted on campus?",
+    "answer": "Ask SPRINT to confirm on-campus delivery availability, location requirements, equipment, scheduling, and any applicable terms.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can institute training be conducted on campus?",
+      "For a student, Please help me with this SPRINT query: Can institute training be conducted on campus?",
+      "For a student, I would like to know: Can institute training be conducted on campus?",
+      "For a student, Can you clarify this for me: Can institute training be conducted on campus?",
+      "For a student, Quick question: Can institute training be conducted on campus?",
+      "For a student, Please explain this: Can institute training be conducted on campus?",
+      "For a student, I have a question: Can institute training be conducted on campus?",
+      "For a student, Can you tell me: Can institute training be conducted on campus?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 425
+  },
+  {
+    "id": "SUP-148",
+    "category": "institute_partnerships",
+    "question": "Can an institute discuss a long-term partnership?",
+    "answer": "Yes. Explain the intended partnership, expected duration, responsibilities, and desired outcomes in your enquiry.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can an institute discuss a long-term partnership?",
+      "For a student, Please help me with this SPRINT query: Can an institute discuss a long-term partnership?",
+      "For a student, I would like to know: Can an institute discuss a long-term partnership?",
+      "For a student, Can you clarify this for me: Can an institute discuss a long-term partnership?",
+      "For a student, Quick question: Can an institute discuss a long-term partnership?",
+      "For a student, Please explain this: Can an institute discuss a long-term partnership?",
+      "For a student, I have a question: Can an institute discuss a long-term partnership?",
+      "For a student, Can you tell me: Can an institute discuss a long-term partnership?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 426
+  },
+  {
+    "id": "SUP-149",
+    "category": "institute_partnerships",
+    "question": "Who should be the institute's point of contact?",
+    "answer": "Provide a designated coordinator with an official email and reachable phone number so follow-up can be managed clearly.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Who should be the institute's point of contact?",
+      "For a student, Please help me with this SPRINT query: Who should be the institute's point of contact?",
+      "For a student, I would like to know: Who should be the institute's point of contact?",
+      "For a student, Can you clarify this for me: Who should be the institute's point of contact?",
+      "For a student, Quick question: Who should be the institute's point of contact?",
+      "For a student, Please explain this: Who should be the institute's point of contact?",
+      "For a student, I have a question: Who should be the institute's point of contact?",
+      "For a student, Can you tell me: Who should be the institute's point of contact?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 427
+  },
+  {
+    "id": "SUP-150",
+    "category": "institute_partnerships",
+    "question": "How do we follow up on an institute proposal?",
+    "answer": "Reply to the original email thread or contact SPRINT with your institute name, proposal date, and the subject of the request.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do we follow up on an institute proposal?",
+      "For a student, Please help me with this SPRINT query: How do we follow up on an institute proposal?",
+      "For a student, I would like to know: How do we follow up on an institute proposal?",
+      "For a student, Can you clarify this for me: How do we follow up on an institute proposal?",
+      "For a student, Quick question: How do we follow up on an institute proposal?",
+      "For a student, Please explain this: How do we follow up on an institute proposal?",
+      "For a student, I have a question: How do we follow up on an institute proposal?",
+      "For a student, Can you tell me: How do we follow up on an institute proposal?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 428
+  },
+  {
+    "id": "SUP-151",
+    "category": "company_and_enterprise_support",
+    "question": "How can a company contact SPRINT?",
+    "answer": "Use the Company/Enterprise enquiry path or email info@sprint.naturalelements.co.in with your organisation's requirements.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can a company contact SPRINT?",
+      "For a student, Please help me with this SPRINT query: How can a company contact SPRINT?",
+      "For a student, I would like to know: How can a company contact SPRINT?",
+      "For a student, Can you clarify this for me: How can a company contact SPRINT?",
+      "For a student, Quick question: How can a company contact SPRINT?",
+      "For a student, Please explain this: How can a company contact SPRINT?",
+      "For a student, I have a question: How can a company contact SPRINT?",
+      "For a student, Can you tell me: How can a company contact SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 429
+  },
+  {
+    "id": "SUP-152",
+    "category": "company_and_enterprise_support",
+    "question": "What details are required for a company enquiry?",
+    "answer": "The company path asks for company name, contact person, official email and phone, availability time, and purpose type. Domain, website, and message are optional.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What details are required for a company enquiry?",
+      "For a student, Please help me with this SPRINT query: What details are required for a company enquiry?",
+      "For a student, I would like to know: What details are required for a company enquiry?",
+      "For a student, Can you clarify this for me: What details are required for a company enquiry?",
+      "For a student, Quick question: What details are required for a company enquiry?",
+      "For a student, Please explain this: What details are required for a company enquiry?",
+      "For a student, I have a question: What details are required for a company enquiry?",
+      "For a student, Can you tell me: What details are required for a company enquiry?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 430
+  },
+  {
+    "id": "SUP-153",
+    "category": "company_and_enterprise_support",
+    "question": "Can a company request employee training?",
+    "answer": "Describe the employee audience, target skills, approximate cohort size, delivery preference, and expected timeframe.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can a company request employee training?",
+      "For a student, Please help me with this SPRINT query: Can a company request employee training?",
+      "For a student, I would like to know: Can a company request employee training?",
+      "For a student, Can you clarify this for me: Can a company request employee training?",
+      "For a student, Quick question: Can a company request employee training?",
+      "For a student, Please explain this: Can a company request employee training?",
+      "For a student, I have a question: Can a company request employee training?",
+      "For a student, Can you tell me: Can a company request employee training?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 431
+  },
+  {
+    "id": "SUP-154",
+    "category": "company_and_enterprise_support",
+    "question": "Can SPRINT discuss a customised corporate program?",
+    "answer": "Share the business objective and desired learning outcomes, then ask whether a customised program can be proposed.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can SPRINT discuss a customised corporate program?",
+      "For a student, Please help me with this SPRINT query: Can SPRINT discuss a customised corporate program?",
+      "For a student, I would like to know: Can SPRINT discuss a customised corporate program?",
+      "For a student, Can you clarify this for me: Can SPRINT discuss a customised corporate program?",
+      "For a student, Quick question: Can SPRINT discuss a customised corporate program?",
+      "For a student, Please explain this: Can SPRINT discuss a customised corporate program?",
+      "For a student, I have a question: Can SPRINT discuss a customised corporate program?",
+      "For a student, Can you tell me: Can SPRINT discuss a customised corporate program?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 432
+  },
+  {
+    "id": "SUP-155",
+    "category": "company_and_enterprise_support",
+    "question": "Can we request a corporate quotation?",
+    "answer": "Provide the scope, number of learners, delivery format, location, and preferred timeline, then request a written quotation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can we request a corporate quotation?",
+      "For a student, Please help me with this SPRINT query: Can we request a corporate quotation?",
+      "For a student, I would like to know: Can we request a corporate quotation?",
+      "For a student, Can you clarify this for me: Can we request a corporate quotation?",
+      "For a student, Quick question: Can we request a corporate quotation?",
+      "For a student, Please explain this: Can we request a corporate quotation?",
+      "For a student, I have a question: Can we request a corporate quotation?",
+      "For a student, Can you tell me: Can we request a corporate quotation?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 433
+  },
+  {
+    "id": "SUP-156",
+    "category": "company_and_enterprise_support",
+    "question": "Can the training be delivered remotely to distributed teams?",
+    "answer": "Ask whether remote delivery is available for the required program and clarify time zones, schedule, and technical requirements.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can the training be delivered remotely to distributed teams?",
+      "For a student, Please help me with this SPRINT query: Can the training be delivered remotely to distributed teams?",
+      "For a student, I would like to know: Can the training be delivered remotely to distributed teams?",
+      "For a student, Can you clarify this for me: Can the training be delivered remotely to distributed teams?",
+      "For a student, Quick question: Can the training be delivered remotely to distributed teams?",
+      "For a student, Please explain this: Can the training be delivered remotely to distributed teams?",
+      "For a student, I have a question: Can the training be delivered remotely to distributed teams?",
+      "For a student, Can you tell me: Can the training be delivered remotely to distributed teams?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 434
+  },
+  {
+    "id": "SUP-157",
+    "category": "company_and_enterprise_support",
+    "question": "Can a company request training at its office?",
+    "answer": "Ask SPRINT to confirm on-site delivery availability, location, equipment, scheduling, and applicable commercial terms.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can a company request training at its office?",
+      "For a student, Please help me with this SPRINT query: Can a company request training at its office?",
+      "For a student, I would like to know: Can a company request training at its office?",
+      "For a student, Can you clarify this for me: Can a company request training at its office?",
+      "For a student, Quick question: Can a company request training at its office?",
+      "For a student, Please explain this: Can a company request training at its office?",
+      "For a student, I have a question: Can a company request training at its office?",
+      "For a student, Can you tell me: Can a company request training at its office?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 435
+  },
+  {
+    "id": "SUP-158",
+    "category": "company_and_enterprise_support",
+    "question": "Can a company request an invoice and purchase-order process?",
+    "answer": "Mention your procurement requirements and ask the team to confirm invoice, purchase-order, and vendor-onboarding steps.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can a company request an invoice and purchase-order process?",
+      "For a student, Please help me with this SPRINT query: Can a company request an invoice and purchase-order process?",
+      "For a student, I would like to know: Can a company request an invoice and purchase-order process?",
+      "For a student, Can you clarify this for me: Can a company request an invoice and purchase-order process?",
+      "For a student, Quick question: Can a company request an invoice and purchase-order process?",
+      "For a student, Please explain this: Can a company request an invoice and purchase-order process?",
+      "For a student, I have a question: Can a company request an invoice and purchase-order process?",
+      "For a student, Can you tell me: Can a company request an invoice and purchase-order process?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 436
+  },
+  {
+    "id": "SUP-159",
+    "category": "company_and_enterprise_support",
+    "question": "How should a company describe its training purpose?",
+    "answer": "State the business challenge, roles involved, skills to develop, expected outcomes, and any operational constraints.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should a company describe its training purpose?",
+      "For a student, Please help me with this SPRINT query: How should a company describe its training purpose?",
+      "For a student, I would like to know: How should a company describe its training purpose?",
+      "For a student, Can you clarify this for me: How should a company describe its training purpose?",
+      "For a student, Quick question: How should a company describe its training purpose?",
+      "For a student, Please explain this: How should a company describe its training purpose?",
+      "For a student, I have a question: How should a company describe its training purpose?",
+      "For a student, Can you tell me: How should a company describe its training purpose?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 437
+  },
+  {
+    "id": "SUP-160",
+    "category": "company_and_enterprise_support",
+    "question": "Can we schedule a discovery call?",
+    "answer": "Request a call and include the contact person's name, official contact details, preferred time window, and a short agenda.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can we schedule a discovery call?",
+      "For a student, Please help me with this SPRINT query: Can we schedule a discovery call?",
+      "For a student, I would like to know: Can we schedule a discovery call?",
+      "For a student, Can you clarify this for me: Can we schedule a discovery call?",
+      "For a student, Quick question: Can we schedule a discovery call?",
+      "For a student, Please explain this: Can we schedule a discovery call?",
+      "For a student, I have a question: Can we schedule a discovery call?",
+      "For a student, Can you tell me: Can we schedule a discovery call?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 438
+  }
+]

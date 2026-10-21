@@ -1,0 +1,422 @@
+[
+  {
+    "id": "PAY-036",
+    "category": "scholarship",
+    "question": "Does Sprint offer scholarships?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does Sprint offer scholarships?",
+      "For a student, Please help me with this SPRINT query: Does Sprint offer scholarships?",
+      "For a student, I would like to know: Does Sprint offer scholarships?",
+      "For a student, Can you clarify this for me: Does Sprint offer scholarships?",
+      "For a student, Quick question: Does Sprint offer scholarships?",
+      "For a student, Please explain this: Does Sprint offer scholarships?",
+      "For a student, I have a question: Does Sprint offer scholarships?",
+      "For a student, Can you tell me: Does Sprint offer scholarships?",
+      "For a student, Help me understand: Does Sprint offer scholarships?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 35
+  },
+  {
+    "id": "PAY-037",
+    "category": "scholarship",
+    "question": "Who is eligible for a scholarship?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Who is eligible for a scholarship?",
+      "For a student, Please help me with this SPRINT query: Who is eligible for a scholarship?",
+      "For a student, I would like to know: Who is eligible for a scholarship?",
+      "For a student, Can you clarify this for me: Who is eligible for a scholarship?",
+      "For a student, Quick question: Who is eligible for a scholarship?",
+      "For a student, Please explain this: Who is eligible for a scholarship?",
+      "For a student, I have a question: Who is eligible for a scholarship?",
+      "For a student, Can you tell me: Who is eligible for a scholarship?",
+      "For a student, Help me understand: Who is eligible for a scholarship?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 36
+  },
+  {
+    "id": "PAY-038",
+    "category": "scholarship",
+    "question": "How do I apply for a scholarship?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I apply for a scholarship?",
+      "For a student, Please help me with this SPRINT query: How do I apply for a scholarship?",
+      "For a student, I would like to know: How do I apply for a scholarship?",
+      "For a student, Can you clarify this for me: How do I apply for a scholarship?",
+      "For a student, Quick question: How do I apply for a scholarship?",
+      "For a student, Please explain this: How do I apply for a scholarship?",
+      "For a student, I have a question: How do I apply for a scholarship?",
+      "For a student, Can you tell me: How do I apply for a scholarship?",
+      "For a student, Help me understand: How do I apply for a scholarship?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 37
+  },
+  {
+    "id": "PAY-039",
+    "category": "scholarship",
+    "question": "Is there a scholarship test or evaluation process?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is there a scholarship test or evaluation process?",
+      "For a student, Please help me with this SPRINT query: Is there a scholarship test or evaluation process?",
+      "For a student, I would like to know: Is there a scholarship test or evaluation process?",
+      "For a student, Can you clarify this for me: Is there a scholarship test or evaluation process?",
+      "For a student, Quick question: Is there a scholarship test or evaluation process?",
+      "For a student, Please explain this: Is there a scholarship test or evaluation process?",
+      "For a student, I have a question: Is there a scholarship test or evaluation process?",
+      "For a student, Can you tell me: Is there a scholarship test or evaluation process?",
+      "For a student, Help me understand: Is there a scholarship test or evaluation process?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 38
+  },
+  {
+    "id": "PAY-040",
+    "category": "scholarship",
+    "question": "How much fee waiver does the scholarship provide?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How much fee waiver does the scholarship provide?",
+      "For a student, Please help me with this SPRINT query: How much fee waiver does the scholarship provide?",
+      "For a student, I would like to know: How much fee waiver does the scholarship provide?",
+      "For a student, Can you clarify this for me: How much fee waiver does the scholarship provide?",
+      "For a student, Quick question: How much fee waiver does the scholarship provide?",
+      "For a student, Please explain this: How much fee waiver does the scholarship provide?",
+      "For a student, I have a question: How much fee waiver does the scholarship provide?",
+      "For a student, Can you tell me: How much fee waiver does the scholarship provide?",
+      "For a student, Help me understand: How much fee waiver does the scholarship provide?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 39
+  },
+  {
+    "id": "PAY-041",
+    "category": "scholarship",
+    "question": "Is the scholarship merit-based or need-based?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is the scholarship merit-based or need-based?",
+      "For a student, Please help me with this SPRINT query: Is the scholarship merit-based or need-based?",
+      "For a student, I would like to know: Is the scholarship merit-based or need-based?",
+      "For a student, Can you clarify this for me: Is the scholarship merit-based or need-based?",
+      "For a student, Quick question: Is the scholarship merit-based or need-based?",
+      "For a student, Please explain this: Is the scholarship merit-based or need-based?",
+      "For a student, I have a question: Is the scholarship merit-based or need-based?",
+      "For a student, Can you tell me: Is the scholarship merit-based or need-based?",
+      "For a student, Help me understand: Is the scholarship merit-based or need-based?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 40
+  },
+  {
+    "id": "PAY-042",
+    "category": "scholarship",
+    "question": "What documents are required for scholarship application?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What documents are required for scholarship application?",
+      "For a student, Please help me with this SPRINT query: What documents are required for scholarship application?",
+      "For a student, I would like to know: What documents are required for scholarship application?",
+      "For a student, Can you clarify this for me: What documents are required for scholarship application?",
+      "For a student, Quick question: What documents are required for scholarship application?",
+      "For a student, Please explain this: What documents are required for scholarship application?",
+      "For a student, I have a question: What documents are required for scholarship application?",
+      "For a student, Can you tell me: What documents are required for scholarship application?",
+      "For a student, Help me understand: What documents are required for scholarship application?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 41
+  },
+  {
+    "id": "PAY-043",
+    "category": "scholarship",
+    "question": "By when should I apply for a scholarship (deadline)?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: By when should I apply for a scholarship (deadline)?",
+      "For a student, Please help me with this SPRINT query: By when should I apply for a scholarship (deadline)?",
+      "For a student, I would like to know: By when should I apply for a scholarship (deadline)?",
+      "For a student, Can you clarify this for me: By when should I apply for a scholarship (deadline)?",
+      "For a student, Quick question: By when should I apply for a scholarship (deadline)?",
+      "For a student, Please explain this: By when should I apply for a scholarship (deadline)?",
+      "For a student, I have a question: By when should I apply for a scholarship (deadline)?",
+      "For a student, Can you tell me: By when should I apply for a scholarship (deadline)?",
+      "For a student, Help me understand: By when should I apply for a scholarship (deadline)?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 42
+  },
+  {
+    "id": "PAY-044",
+    "category": "scholarship",
+    "question": "Can I apply for a scholarship after already paying full fee?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I apply for a scholarship after already paying full fee?",
+      "For a student, Please help me with this SPRINT query: Can I apply for a scholarship after already paying full fee?",
+      "For a student, I would like to know: Can I apply for a scholarship after already paying full fee?",
+      "For a student, Can you clarify this for me: Can I apply for a scholarship after already paying full fee?",
+      "For a student, Quick question: Can I apply for a scholarship after already paying full fee?",
+      "For a student, Please explain this: Can I apply for a scholarship after already paying full fee?",
+      "For a student, I have a question: Can I apply for a scholarship after already paying full fee?",
+      "For a student, Can you tell me: Can I apply for a scholarship after already paying full fee?",
+      "For a student, Help me understand: Can I apply for a scholarship after already paying full fee?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 43
+  },
+  {
+    "id": "PAY-045",
+    "category": "scholarship",
+    "question": "How will I know if my scholarship application is approved?",
+    "answer": "Information Required — likely via email/dashboard notification.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How will I know if my scholarship application is approved?",
+      "For a student, Please help me with this SPRINT query: How will I know if my scholarship application is approved?",
+      "For a student, I would like to know: How will I know if my scholarship application is approved?",
+      "For a student, Can you clarify this for me: How will I know if my scholarship application is approved?",
+      "For a student, Quick question: How will I know if my scholarship application is approved?",
+      "For a student, Please explain this: How will I know if my scholarship application is approved?",
+      "For a student, I have a question: How will I know if my scholarship application is approved?",
+      "For a student, Can you tell me: How will I know if my scholarship application is approved?",
+      "For a student, Help me understand: How will I know if my scholarship application is approved?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 44
+  },
+  {
+    "id": "PAY-046",
+    "category": "scholarship",
+    "question": "Is scholarship available for all courses or specific ones only?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is scholarship available for all courses or specific ones only?",
+      "For a student, Please help me with this SPRINT query: Is scholarship available for all courses or specific ones only?",
+      "For a student, I would like to know: Is scholarship available for all courses or specific ones only?",
+      "For a student, Can you clarify this for me: Is scholarship available for all courses or specific ones only?",
+      "For a student, Quick question: Is scholarship available for all courses or specific ones only?",
+      "For a student, Please explain this: Is scholarship available for all courses or specific ones only?",
+      "For a student, I have a question: Is scholarship available for all courses or specific ones only?",
+      "For a student, Can you tell me: Is scholarship available for all courses or specific ones only?",
+      "For a student, Help me understand: Is scholarship available for all courses or specific ones only?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 45
+  },
+  {
+    "id": "PAY-047",
+    "category": "scholarship",
+    "question": "Can I reapply if my scholarship request is rejected?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I reapply if my scholarship request is rejected?",
+      "For a student, Please help me with this SPRINT query: Can I reapply if my scholarship request is rejected?",
+      "For a student, I would like to know: Can I reapply if my scholarship request is rejected?",
+      "For a student, Can you clarify this for me: Can I reapply if my scholarship request is rejected?",
+      "For a student, Quick question: Can I reapply if my scholarship request is rejected?",
+      "For a student, Please explain this: Can I reapply if my scholarship request is rejected?",
+      "For a student, I have a question: Can I reapply if my scholarship request is rejected?",
+      "For a student, Can you tell me: Can I reapply if my scholarship request is rejected?",
+      "For a student, Help me understand: Can I reapply if my scholarship request is rejected?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 46
+  },
+  {
+    "id": "PAY-048",
+    "category": "scholarship",
+    "question": "Does scholarship cover the entire course fee or partial?",
+    "answer": "Information Required.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does scholarship cover the entire course fee or partial?",
+      "For a student, Please help me with this SPRINT query: Does scholarship cover the entire course fee or partial?",
+      "For a student, I would like to know: Does scholarship cover the entire course fee or partial?",
+      "For a student, Can you clarify this for me: Does scholarship cover the entire course fee or partial?",
+      "For a student, Quick question: Does scholarship cover the entire course fee or partial?",
+      "For a student, Please explain this: Does scholarship cover the entire course fee or partial?",
+      "For a student, I have a question: Does scholarship cover the entire course fee or partial?",
+      "For a student, Can you tell me: Does scholarship cover the entire course fee or partial?",
+      "For a student, Help me understand: Does scholarship cover the entire course fee or partial?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 47
+  },
+  {
+    "id": "PAY-049",
+    "category": "scholarship",
+    "question": "Who do I contact for scholarship-related queries?",
+    "answer": "Recommend routing to admissions/support team — exact contact needs confirmation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Who do I contact for scholarship-related queries?",
+      "For a student, Please help me with this SPRINT query: Who do I contact for scholarship-related queries?",
+      "For a student, I would like to know: Who do I contact for scholarship-related queries?",
+      "For a student, Can you clarify this for me: Who do I contact for scholarship-related queries?",
+      "For a student, Quick question: Who do I contact for scholarship-related queries?",
+      "For a student, Please explain this: Who do I contact for scholarship-related queries?",
+      "For a student, I have a question: Who do I contact for scholarship-related queries?",
+      "For a student, Can you tell me: Who do I contact for scholarship-related queries?",
+      "For a student, Help me understand: Who do I contact for scholarship-related queries?"
+    ],
+    "source_files": [
+      "Payment_Subscription_Scholarship_QA.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 48
+  }
+]

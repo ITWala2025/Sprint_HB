@@ -1,0 +1,1452 @@
+[
+  {
+    "id": "SUP-231",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "What if I selected the wrong audience in the enquiry form?",
+    "answer": "Return to the audience selector before submitting and choose the correct category. If already submitted, contact SPRINT with the correction.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I selected the wrong audience in the enquiry form?",
+      "For a student, Please help me with this SPRINT query: What if I selected the wrong audience in the enquiry form?",
+      "For a student, I would like to know: What if I selected the wrong audience in the enquiry form?",
+      "For a student, Can you clarify this for me: What if I selected the wrong audience in the enquiry form?",
+      "For a student, Quick question: What if I selected the wrong audience in the enquiry form?",
+      "For a student, Please explain this: What if I selected the wrong audience in the enquiry form?",
+      "For a student, I have a question: What if I selected the wrong audience in the enquiry form?",
+      "For a student, Can you tell me: What if I selected the wrong audience in the enquiry form?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 509
+  },
+  {
+    "id": "SUP-232",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "What if I do not know which service category to select?",
+    "answer": "Choose the closest option and explain your requirement in the message, or contact SPRINT for guidance.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I do not know which service category to select?",
+      "For a student, Please help me with this SPRINT query: What if I do not know which service category to select?",
+      "For a student, I would like to know: What if I do not know which service category to select?",
+      "For a student, Can you clarify this for me: What if I do not know which service category to select?",
+      "For a student, Quick question: What if I do not know which service category to select?",
+      "For a student, Please explain this: What if I do not know which service category to select?",
+      "For a student, I have a question: What if I do not know which service category to select?",
+      "For a student, Can you tell me: What if I do not know which service category to select?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 510
+  },
+  {
+    "id": "SUP-233",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "Can I send several questions in one email?",
+    "answer": "Yes. Number your questions and group related topics so the team can respond clearly.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I send several questions in one email?",
+      "For a student, Please help me with this SPRINT query: Can I send several questions in one email?",
+      "For a student, I would like to know: Can I send several questions in one email?",
+      "For a student, Can you clarify this for me: Can I send several questions in one email?",
+      "For a student, Quick question: Can I send several questions in one email?",
+      "For a student, Please explain this: Can I send several questions in one email?",
+      "For a student, I have a question: Can I send several questions in one email?",
+      "For a student, Can you tell me: Can I send several questions in one email?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 511
+  },
+  {
+    "id": "SUP-234",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "Can I ask for information in a specific format?",
+    "answer": "State whether you need a syllabus, quotation, schedule, or summary. SPRINT can confirm which formats are available.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I ask for information in a specific format?",
+      "For a student, Please help me with this SPRINT query: Can I ask for information in a specific format?",
+      "For a student, I would like to know: Can I ask for information in a specific format?",
+      "For a student, Can you clarify this for me: Can I ask for information in a specific format?",
+      "For a student, Quick question: Can I ask for information in a specific format?",
+      "For a student, Please explain this: Can I ask for information in a specific format?",
+      "For a student, I have a question: Can I ask for information in a specific format?",
+      "For a student, Can you tell me: Can I ask for information in a specific format?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 512
+  },
+  {
+    "id": "SUP-235",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "What if I accidentally entered the wrong phone number?",
+    "answer": "If the form has not been submitted, correct it before sending. If already submitted, email SPRINT with the correct contact details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I accidentally entered the wrong phone number?",
+      "For a student, Please help me with this SPRINT query: What if I accidentally entered the wrong phone number?",
+      "For a student, I would like to know: What if I accidentally entered the wrong phone number?",
+      "For a student, Can you clarify this for me: What if I accidentally entered the wrong phone number?",
+      "For a student, Quick question: What if I accidentally entered the wrong phone number?",
+      "For a student, Please explain this: What if I accidentally entered the wrong phone number?",
+      "For a student, I have a question: What if I accidentally entered the wrong phone number?",
+      "For a student, Can you tell me: What if I accidentally entered the wrong phone number?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 513
+  },
+  {
+    "id": "SUP-236",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "Can I use a personal email for an institute enquiry?",
+    "answer": "The institute form requests an official email. If you do not have access to one, contact SPRINT and ask how to proceed.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I use a personal email for an institute enquiry?",
+      "For a student, Please help me with this SPRINT query: Can I use a personal email for an institute enquiry?",
+      "For a student, I would like to know: Can I use a personal email for an institute enquiry?",
+      "For a student, Can you clarify this for me: Can I use a personal email for an institute enquiry?",
+      "For a student, Quick question: Can I use a personal email for an institute enquiry?",
+      "For a student, Please explain this: Can I use a personal email for an institute enquiry?",
+      "For a student, I have a question: Can I use a personal email for an institute enquiry?",
+      "For a student, Can you tell me: Can I use a personal email for an institute enquiry?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 514
+  },
+  {
+    "id": "SUP-237",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "What if my organisation does not have a website?",
+    "answer": "If the website field is optional, leave it blank and provide the other required organisation details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if my organisation does not have a website?",
+      "For a student, Please help me with this SPRINT query: What if my organisation does not have a website?",
+      "For a student, I would like to know: What if my organisation does not have a website?",
+      "For a student, Can you clarify this for me: What if my organisation does not have a website?",
+      "For a student, Quick question: What if my organisation does not have a website?",
+      "For a student, Please explain this: What if my organisation does not have a website?",
+      "For a student, I have a question: What if my organisation does not have a website?",
+      "For a student, Can you tell me: What if my organisation does not have a website?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 515
+  },
+  {
+    "id": "SUP-238",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "Can I ask for information without committing to enrolment?",
+    "answer": "Yes. You can make an enquiry and request information before deciding. Review any terms before committing or paying.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I ask for information without committing to enrolment?",
+      "For a student, Please help me with this SPRINT query: Can I ask for information without committing to enrolment?",
+      "For a student, I would like to know: Can I ask for information without committing to enrolment?",
+      "For a student, Can you clarify this for me: Can I ask for information without committing to enrolment?",
+      "For a student, Quick question: Can I ask for information without committing to enrolment?",
+      "For a student, Please explain this: Can I ask for information without committing to enrolment?",
+      "For a student, I have a question: Can I ask for information without committing to enrolment?",
+      "For a student, Can you tell me: Can I ask for information without committing to enrolment?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 516
+  },
+  {
+    "id": "SUP-239",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "What if the answer I received conflicts with the website?",
+    "answer": "Share the page link and the message you received with SPRINT and ask the team to confirm the current authoritative information.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if the answer I received conflicts with the website?",
+      "For a student, Please help me with this SPRINT query: What if the answer I received conflicts with the website?",
+      "For a student, I would like to know: What if the answer I received conflicts with the website?",
+      "For a student, Can you clarify this for me: What if the answer I received conflicts with the website?",
+      "For a student, Quick question: What if the answer I received conflicts with the website?",
+      "For a student, Please explain this: What if the answer I received conflicts with the website?",
+      "For a student, I have a question: What if the answer I received conflicts with the website?",
+      "For a student, Can you tell me: What if the answer I received conflicts with the website?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 517
+  },
+  {
+    "id": "SUP-240",
+    "category": "miscellaneous_and_edge_cases",
+    "question": "How can I tell if an answer in this FAQ is current?",
+    "answer": "Use this dataset as a support reference, not as a substitute for current policy. Confirm changing details—such as fees, dates, eligibility, and availability—with SPRINT.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can I tell if an answer in this FAQ is current?",
+      "For a student, Please help me with this SPRINT query: How can I tell if an answer in this FAQ is current?",
+      "For a student, I would like to know: How can I tell if an answer in this FAQ is current?",
+      "For a student, Can you clarify this for me: How can I tell if an answer in this FAQ is current?",
+      "For a student, Quick question: How can I tell if an answer in this FAQ is current?",
+      "For a student, Please explain this: How can I tell if an answer in this FAQ is current?",
+      "For a student, I have a question: How can I tell if an answer in this FAQ is current?",
+      "For a student, Can you tell me: How can I tell if an answer in this FAQ is current?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 518
+  },
+  {
+    "id": "REG-201",
+    "category": "qa_tests_successful_flows",
+    "question": "What is the expected successful registration journey?",
+    "answer": "Complete required Step 1 fields, skip or complete optional Step 2, choose a learning path, create an email-based account, verify email, see confirmation, and reach the dashboard.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What is the expected successful registration journey?",
+      "For a student, Please help me with this SPRINT query: What is the expected successful registration journey?",
+      "For a student, I would like to know: What is the expected successful registration journey?",
+      "For a student, Can you clarify this for me: What is the expected successful registration journey?",
+      "For a student, Quick question: What is the expected successful registration journey?",
+      "For a student, Please explain this: What is the expected successful registration journey?",
+      "For a student, I have a question: What is the expected successful registration journey?",
+      "For a student, Can you tell me: What is the expected successful registration journey?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 989
+  },
+  {
+    "id": "REG-202",
+    "category": "qa_tests_successful_flows",
+    "question": "How should QA test required fields?",
+    "answer": "Test each required Step 1 field as empty in turn and confirm progression is blocked with a clear message.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test required fields?",
+      "For a student, Please help me with this SPRINT query: How should QA test required fields?",
+      "For a student, I would like to know: How should QA test required fields?",
+      "For a student, Can you clarify this for me: How should QA test required fields?",
+      "For a student, Quick question: How should QA test required fields?",
+      "For a student, Please explain this: How should QA test required fields?",
+      "For a student, I have a question: How should QA test required fields?",
+      "For a student, Can you tell me: How should QA test required fields?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 990
+  },
+  {
+    "id": "REG-203",
+    "category": "qa_tests_successful_flows",
+    "question": "How should QA test Step 2 optionality?",
+    "answer": "Complete Step 1, skip Step 2, and confirm the wizard advances to Step 3.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test Step 2 optionality?",
+      "For a student, Please help me with this SPRINT query: How should QA test Step 2 optionality?",
+      "For a student, I would like to know: How should QA test Step 2 optionality?",
+      "For a student, Can you clarify this for me: How should QA test Step 2 optionality?",
+      "For a student, Quick question: How should QA test Step 2 optionality?",
+      "For a student, Please explain this: How should QA test Step 2 optionality?",
+      "For a student, I have a question: How should QA test Step 2 optionality?",
+      "For a student, Can you tell me: How should QA test Step 2 optionality?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 991
+  },
+  {
+    "id": "REG-204",
+    "category": "qa_tests_successful_flows",
+    "question": "How should QA test specialization selection?",
+    "answer": "Test each live specialization, continue, navigate back if supported, and verify the selection behaves consistently.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test specialization selection?",
+      "For a student, Please help me with this SPRINT query: How should QA test specialization selection?",
+      "For a student, I would like to know: How should QA test specialization selection?",
+      "For a student, Can you clarify this for me: How should QA test specialization selection?",
+      "For a student, Quick question: How should QA test specialization selection?",
+      "For a student, Please explain this: How should QA test specialization selection?",
+      "For a student, I have a question: How should QA test specialization selection?",
+      "For a student, Can you tell me: How should QA test specialization selection?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 992
+  },
+  {
+    "id": "REG-205",
+    "category": "qa_tests_successful_flows",
+    "question": "How should QA test each learning path?",
+    "answer": "Test each currently available path separately and verify selection, displayed details, and progression.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test each learning path?",
+      "For a student, Please help me with this SPRINT query: How should QA test each learning path?",
+      "For a student, I would like to know: How should QA test each learning path?",
+      "For a student, Can you clarify this for me: How should QA test each learning path?",
+      "For a student, Quick question: How should QA test each learning path?",
+      "For a student, Please explain this: How should QA test each learning path?",
+      "For a student, I have a question: How should QA test each learning path?",
+      "For a student, Can you tell me: How should QA test each learning path?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 993
+  },
+  {
+    "id": "REG-206",
+    "category": "qa_tests_successful_flows",
+    "question": "How should QA test password confirmation?",
+    "answer": "Verify matching passwords allow progression and mismatched passwords show clear validation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test password confirmation?",
+      "For a student, Please help me with this SPRINT query: How should QA test password confirmation?",
+      "For a student, I would like to know: How should QA test password confirmation?",
+      "For a student, Can you clarify this for me: How should QA test password confirmation?",
+      "For a student, Quick question: How should QA test password confirmation?",
+      "For a student, Please explain this: How should QA test password confirmation?",
+      "For a student, I have a question: How should QA test password confirmation?",
+      "For a student, Can you tell me: How should QA test password confirmation?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 994
+  },
+  {
+    "id": "REG-207",
+    "category": "qa_tests_successful_flows",
+    "question": "How should QA test email verification?",
+    "answer": "Use a test inbox to verify successful delivery, valid links, expired links, and resend behaviour if available.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test email verification?",
+      "For a student, Please help me with this SPRINT query: How should QA test email verification?",
+      "For a student, I would like to know: How should QA test email verification?",
+      "For a student, Can you clarify this for me: How should QA test email verification?",
+      "For a student, Quick question: How should QA test email verification?",
+      "For a student, Please explain this: How should QA test email verification?",
+      "For a student, I have a question: How should QA test email verification?",
+      "For a student, Can you tell me: How should QA test email verification?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 995
+  },
+  {
+    "id": "REG-208",
+    "category": "qa_tests_successful_flows",
+    "question": "How should QA test dashboard navigation?",
+    "answer": "Complete a test registration and verification, then confirm the confirmation and dashboard routes load correctly.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test dashboard navigation?",
+      "For a student, Please help me with this SPRINT query: How should QA test dashboard navigation?",
+      "For a student, I would like to know: How should QA test dashboard navigation?",
+      "For a student, Can you clarify this for me: How should QA test dashboard navigation?",
+      "For a student, Quick question: How should QA test dashboard navigation?",
+      "For a student, Please explain this: How should QA test dashboard navigation?",
+      "For a student, I have a question: How should QA test dashboard navigation?",
+      "For a student, Can you tell me: How should QA test dashboard navigation?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 996
+  },
+  {
+    "id": "REG-209",
+    "category": "qa_tests_successful_flows",
+    "question": "How should QA test existing-email handling?",
+    "answer": "Register with an existing test email and verify the system offers a safe next action without creating unintended duplicates.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test existing-email handling?",
+      "For a student, Please help me with this SPRINT query: How should QA test existing-email handling?",
+      "For a student, I would like to know: How should QA test existing-email handling?",
+      "For a student, Can you clarify this for me: How should QA test existing-email handling?",
+      "For a student, Quick question: How should QA test existing-email handling?",
+      "For a student, Please explain this: How should QA test existing-email handling?",
+      "For a student, I have a question: How should QA test existing-email handling?",
+      "For a student, Can you tell me: How should QA test existing-email handling?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 997
+  },
+  {
+    "id": "REG-210",
+    "category": "qa_tests_successful_flows",
+    "question": "How should QA test sign-in after registration?",
+    "answer": "Use a verified test account to sign in and confirm invalid credentials produce a safe error. QA Tests — Negative and Boundary Cases",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test sign-in after registration?",
+      "For a student, Please help me with this SPRINT query: How should QA test sign-in after registration?",
+      "For a student, I would like to know: How should QA test sign-in after registration?",
+      "For a student, Can you clarify this for me: How should QA test sign-in after registration?",
+      "For a student, Quick question: How should QA test sign-in after registration?",
+      "For a student, Please explain this: How should QA test sign-in after registration?",
+      "For a student, I have a question: How should QA test sign-in after registration?",
+      "For a student, Can you tell me: How should QA test sign-in after registration?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 998
+  },
+  {
+    "id": "REG-211",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test malformed emails?",
+    "answer": "Try invalid formats in a test environment and confirm the form blocks progression without exposing technical details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test malformed emails?",
+      "For a student, Please help me with this SPRINT query: How should QA test malformed emails?",
+      "For a student, I would like to know: How should QA test malformed emails?",
+      "For a student, Can you clarify this for me: How should QA test malformed emails?",
+      "For a student, Quick question: How should QA test malformed emails?",
+      "For a student, Please explain this: How should QA test malformed emails?",
+      "For a student, I have a question: How should QA test malformed emails?",
+      "For a student, Can you tell me: How should QA test malformed emails?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 999
+  },
+  {
+    "id": "REG-212",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test phone validation?",
+    "answer": "Test empty, too-short, too-long, alphabetic, and valid inputs according to the specified format.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test phone validation?",
+      "For a student, Please help me with this SPRINT query: How should QA test phone validation?",
+      "For a student, I would like to know: How should QA test phone validation?",
+      "For a student, Can you clarify this for me: How should QA test phone validation?",
+      "For a student, Quick question: How should QA test phone validation?",
+      "For a student, Please explain this: How should QA test phone validation?",
+      "For a student, I have a question: How should QA test phone validation?",
+      "For a student, Can you tell me: How should QA test phone validation?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1000
+  },
+  {
+    "id": "REG-213",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test date boundaries?",
+    "answer": "Test empty, invalid calendar dates, future dates, and documented boundary values according to approved requirements.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test date boundaries?",
+      "For a student, Please help me with this SPRINT query: How should QA test date boundaries?",
+      "For a student, I would like to know: How should QA test date boundaries?",
+      "For a student, Can you clarify this for me: How should QA test date boundaries?",
+      "For a student, Quick question: How should QA test date boundaries?",
+      "For a student, Please explain this: How should QA test date boundaries?",
+      "For a student, I have a question: How should QA test date boundaries?",
+      "For a student, Can you tell me: How should QA test date boundaries?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1001
+  },
+  {
+    "id": "REG-214",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test long names?",
+    "answer": "Test short, typical, long, and boundary-length names and confirm safe handling.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test long names?",
+      "For a student, Please help me with this SPRINT query: How should QA test long names?",
+      "For a student, I would like to know: How should QA test long names?",
+      "For a student, Can you clarify this for me: How should QA test long names?",
+      "For a student, Quick question: How should QA test long names?",
+      "For a student, Please explain this: How should QA test long names?",
+      "For a student, I have a question: How should QA test long names?",
+      "For a student, Can you tell me: How should QA test long names?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1002
+  },
+  {
+    "id": "REG-215",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test script-injection input?",
+    "answer": "In a non-production environment, use safe test strings and verify user input is rendered as text rather than executable code.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test script-injection input?",
+      "For a student, Please help me with this SPRINT query: How should QA test script-injection input?",
+      "For a student, I would like to know: How should QA test script-injection input?",
+      "For a student, Can you clarify this for me: How should QA test script-injection input?",
+      "For a student, Quick question: How should QA test script-injection input?",
+      "For a student, Please explain this: How should QA test script-injection input?",
+      "For a student, I have a question: How should QA test script-injection input?",
+      "For a student, Can you tell me: How should QA test script-injection input?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1003
+  },
+  {
+    "id": "REG-216",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test repeated submissions?",
+    "answer": "Double-click submit or refresh at controlled points and verify duplicate accounts are not unintentionally created.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test repeated submissions?",
+      "For a student, Please help me with this SPRINT query: How should QA test repeated submissions?",
+      "For a student, I would like to know: How should QA test repeated submissions?",
+      "For a student, Can you clarify this for me: How should QA test repeated submissions?",
+      "For a student, Quick question: How should QA test repeated submissions?",
+      "For a student, Please explain this: How should QA test repeated submissions?",
+      "For a student, I have a question: How should QA test repeated submissions?",
+      "For a student, Can you tell me: How should QA test repeated submissions?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1004
+  },
+  {
+    "id": "REG-217",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test expired verification tokens?",
+    "answer": "Use an expired test token and verify a clear recovery path without exposing secrets.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test expired verification tokens?",
+      "For a student, Please help me with this SPRINT query: How should QA test expired verification tokens?",
+      "For a student, I would like to know: How should QA test expired verification tokens?",
+      "For a student, Can you clarify this for me: How should QA test expired verification tokens?",
+      "For a student, Quick question: How should QA test expired verification tokens?",
+      "For a student, Please explain this: How should QA test expired verification tokens?",
+      "For a student, I have a question: How should QA test expired verification tokens?",
+      "For a student, Can you tell me: How should QA test expired verification tokens?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1005
+  },
+  {
+    "id": "REG-218",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test expired reset tokens?",
+    "answer": "Use an expired test token and confirm it is rejected and a fresh reset can be requested.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test expired reset tokens?",
+      "For a student, Please help me with this SPRINT query: How should QA test expired reset tokens?",
+      "For a student, I would like to know: How should QA test expired reset tokens?",
+      "For a student, Can you clarify this for me: How should QA test expired reset tokens?",
+      "For a student, Quick question: How should QA test expired reset tokens?",
+      "For a student, Please explain this: How should QA test expired reset tokens?",
+      "For a student, I have a question: How should QA test expired reset tokens?",
+      "For a student, Can you tell me: How should QA test expired reset tokens?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1006
+  },
+  {
+    "id": "REG-219",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test network interruption?",
+    "answer": "Interrupt connectivity at controlled steps and verify the interface does not falsely claim data was saved.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test network interruption?",
+      "For a student, Please help me with this SPRINT query: How should QA test network interruption?",
+      "For a student, I would like to know: How should QA test network interruption?",
+      "For a student, Can you clarify this for me: How should QA test network interruption?",
+      "For a student, Quick question: How should QA test network interruption?",
+      "For a student, Please explain this: How should QA test network interruption?",
+      "For a student, I have a question: How should QA test network interruption?",
+      "For a student, Can you tell me: How should QA test network interruption?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1007
+  },
+  {
+    "id": "REG-220",
+    "category": "qa_tests_negative_and_boundary_cases",
+    "question": "How should QA test server errors?",
+    "answer": "Simulate failures in test and confirm safe messages appear without stack traces or secrets. QA Tests — Security and Privacy",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test server errors?",
+      "For a student, Please help me with this SPRINT query: How should QA test server errors?",
+      "For a student, I would like to know: How should QA test server errors?",
+      "For a student, Can you clarify this for me: How should QA test server errors?",
+      "For a student, Quick question: How should QA test server errors?",
+      "For a student, Please explain this: How should QA test server errors?",
+      "For a student, I have a question: How should QA test server errors?",
+      "For a student, Can you tell me: How should QA test server errors?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1008
+  },
+  {
+    "id": "REG-231",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA test mobile registration?",
+    "answer": "Test all steps on representative mobile widths, including fields, dropdowns, validation, scrolling, and submission.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test mobile registration?",
+      "For a student, Please help me with this SPRINT query: How should QA test mobile registration?",
+      "For a student, I would like to know: How should QA test mobile registration?",
+      "For a student, Can you clarify this for me: How should QA test mobile registration?",
+      "For a student, Quick question: How should QA test mobile registration?",
+      "For a student, Please explain this: How should QA test mobile registration?",
+      "For a student, I have a question: How should QA test mobile registration?",
+      "For a student, Can you tell me: How should QA test mobile registration?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1019
+  },
+  {
+    "id": "REG-232",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA test tablet layout?",
+    "answer": "Verify controls remain visible and usable at tablet widths and in both orientations.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test tablet layout?",
+      "For a student, Please help me with this SPRINT query: How should QA test tablet layout?",
+      "For a student, I would like to know: How should QA test tablet layout?",
+      "For a student, Can you clarify this for me: How should QA test tablet layout?",
+      "For a student, Quick question: How should QA test tablet layout?",
+      "For a student, Please explain this: How should QA test tablet layout?",
+      "For a student, I have a question: How should QA test tablet layout?",
+      "For a student, Can you tell me: How should QA test tablet layout?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1020
+  },
+  {
+    "id": "REG-233",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA test desktop layout?",
+    "answer": "Verify spacing, labels, validation, button states, and navigation in supported desktop browsers.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test desktop layout?",
+      "For a student, Please help me with this SPRINT query: How should QA test desktop layout?",
+      "For a student, I would like to know: How should QA test desktop layout?",
+      "For a student, Can you clarify this for me: How should QA test desktop layout?",
+      "For a student, Quick question: How should QA test desktop layout?",
+      "For a student, Please explain this: How should QA test desktop layout?",
+      "For a student, I have a question: How should QA test desktop layout?",
+      "For a student, Can you tell me: How should QA test desktop layout?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1021
+  },
+  {
+    "id": "REG-234",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA test keyboard-only flow?",
+    "answer": "Complete the wizard without a mouse and check focus order, visible focus, and keyboard operation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test keyboard-only flow?",
+      "For a student, Please help me with this SPRINT query: How should QA test keyboard-only flow?",
+      "For a student, I would like to know: How should QA test keyboard-only flow?",
+      "For a student, Can you clarify this for me: How should QA test keyboard-only flow?",
+      "For a student, Quick question: How should QA test keyboard-only flow?",
+      "For a student, Please explain this: How should QA test keyboard-only flow?",
+      "For a student, I have a question: How should QA test keyboard-only flow?",
+      "For a student, Can you tell me: How should QA test keyboard-only flow?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1022
+  },
+  {
+    "id": "REG-235",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA test screen-reader labels?",
+    "answer": "Confirm fields, required status, errors, buttons, and step changes are announced meaningfully.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test screen-reader labels?",
+      "For a student, Please help me with this SPRINT query: How should QA test screen-reader labels?",
+      "For a student, I would like to know: How should QA test screen-reader labels?",
+      "For a student, Can you clarify this for me: How should QA test screen-reader labels?",
+      "For a student, Quick question: How should QA test screen-reader labels?",
+      "For a student, Please explain this: How should QA test screen-reader labels?",
+      "For a student, I have a question: How should QA test screen-reader labels?",
+      "For a student, Can you tell me: How should QA test screen-reader labels?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1023
+  },
+  {
+    "id": "REG-236",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA test contrast?",
+    "answer": "Measure text and control contrast against the approved accessibility standard and avoid colour-only status cues.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test contrast?",
+      "For a student, Please help me with this SPRINT query: How should QA test contrast?",
+      "For a student, I would like to know: How should QA test contrast?",
+      "For a student, Can you clarify this for me: How should QA test contrast?",
+      "For a student, Quick question: How should QA test contrast?",
+      "For a student, Please explain this: How should QA test contrast?",
+      "For a student, I have a question: How should QA test contrast?",
+      "For a student, Can you tell me: How should QA test contrast?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1024
+  },
+  {
+    "id": "REG-237",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA test browser zoom?",
+    "answer": "Test enlarged zoom and text settings and confirm no required control becomes inaccessible.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test browser zoom?",
+      "For a student, Please help me with this SPRINT query: How should QA test browser zoom?",
+      "For a student, I would like to know: How should QA test browser zoom?",
+      "For a student, Can you clarify this for me: How should QA test browser zoom?",
+      "For a student, Quick question: How should QA test browser zoom?",
+      "For a student, Please explain this: How should QA test browser zoom?",
+      "For a student, I have a question: How should QA test browser zoom?",
+      "For a student, Can you tell me: How should QA test browser zoom?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1025
+  },
+  {
+    "id": "REG-238",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA test loading states?",
+    "answer": "Verify continue and submit actions provide feedback and prevent accidental repeated requests where appropriate.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test loading states?",
+      "For a student, Please help me with this SPRINT query: How should QA test loading states?",
+      "For a student, I would like to know: How should QA test loading states?",
+      "For a student, Can you clarify this for me: How should QA test loading states?",
+      "For a student, Quick question: How should QA test loading states?",
+      "For a student, Please explain this: How should QA test loading states?",
+      "For a student, I have a question: How should QA test loading states?",
+      "For a student, Can you tell me: How should QA test loading states?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1026
+  },
+  {
+    "id": "REG-239",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA test validation placement?",
+    "answer": "Ensure errors appear near relevant fields, explain fixes, and are announced to assistive technology.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test validation placement?",
+      "For a student, Please help me with this SPRINT query: How should QA test validation placement?",
+      "For a student, I would like to know: How should QA test validation placement?",
+      "For a student, Can you clarify this for me: How should QA test validation placement?",
+      "For a student, Quick question: How should QA test validation placement?",
+      "For a student, Please explain this: How should QA test validation placement?",
+      "For a student, I have a question: How should QA test validation placement?",
+      "For a student, Can you tell me: How should QA test validation placement?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1027
+  },
+  {
+    "id": "REG-240",
+    "category": "qa_tests_responsive_and_accessibility",
+    "question": "How should QA document a defect?",
+    "answer": "Record title, environment, preconditions, numbered steps, expected/actual result, severity, and sanitised evidence.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA document a defect?",
+      "For a student, Please help me with this SPRINT query: How should QA document a defect?",
+      "For a student, I would like to know: How should QA document a defect?",
+      "For a student, Can you clarify this for me: How should QA document a defect?",
+      "For a student, Quick question: How should QA document a defect?",
+      "For a student, Please explain this: How should QA document a defect?",
+      "For a student, I have a question: How should QA document a defect?",
+      "For a student, Can you tell me: How should QA document a defect?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1028
+  },
+  {
+    "id": "REG-251",
+    "category": "final_production_readiness",
+    "question": "Should this dataset be treated as official policy?",
+    "answer": "No. It is a support and QA reference. Confirm policy-dependent answers with current approved SPRINT documentation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should this dataset be treated as official policy?",
+      "For a student, Please help me with this SPRINT query: Should this dataset be treated as official policy?",
+      "For a student, I would like to know: Should this dataset be treated as official policy?",
+      "For a student, Can you clarify this for me: Should this dataset be treated as official policy?",
+      "For a student, Quick question: Should this dataset be treated as official policy?",
+      "For a student, Please explain this: Should this dataset be treated as official policy?",
+      "For a student, I have a question: Should this dataset be treated as official policy?",
+      "For a student, Can you tell me: Should this dataset be treated as official policy?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1039
+  },
+  {
+    "id": "REG-252",
+    "category": "final_production_readiness",
+    "question": "What should be verified before publishing these FAQs?",
+    "answer": "Verify live routes, required fields, specialization options, learning paths, validation, verification emails, privacy text, and support details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What should be verified before publishing these FAQs?",
+      "For a student, Please help me with this SPRINT query: What should be verified before publishing these FAQs?",
+      "For a student, I would like to know: What should be verified before publishing these FAQs?",
+      "For a student, Can you clarify this for me: What should be verified before publishing these FAQs?",
+      "For a student, Quick question: What should be verified before publishing these FAQs?",
+      "For a student, Please explain this: What should be verified before publishing these FAQs?",
+      "For a student, I have a question: What should be verified before publishing these FAQs?",
+      "For a student, Can you tell me: What should be verified before publishing these FAQs?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1040
+  },
+  {
+    "id": "REG-253",
+    "category": "final_production_readiness",
+    "question": "What if the live form differs from this dataset?",
+    "answer": "Treat approved live requirements as authoritative, document the mismatch, and update the dataset after confirmation from the project owner.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if the live form differs from this dataset?",
+      "For a student, Please help me with this SPRINT query: What if the live form differs from this dataset?",
+      "For a student, I would like to know: What if the live form differs from this dataset?",
+      "For a student, Can you clarify this for me: What if the live form differs from this dataset?",
+      "For a student, Quick question: What if the live form differs from this dataset?",
+      "For a student, Please explain this: What if the live form differs from this dataset?",
+      "For a student, I have a question: What if the live form differs from this dataset?",
+      "For a student, Can you tell me: What if the live form differs from this dataset?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1041
+  },
+  {
+    "id": "REG-254",
+    "category": "final_production_readiness",
+    "question": "Should QA use real student information?",
+    "answer": "Use synthetic test accounts and test inboxes whenever possible. Avoid exposing real students' data in evidence.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should QA use real student information?",
+      "For a student, Please help me with this SPRINT query: Should QA use real student information?",
+      "For a student, I would like to know: Should QA use real student information?",
+      "For a student, Can you clarify this for me: Should QA use real student information?",
+      "For a student, Quick question: Should QA use real student information?",
+      "For a student, Please explain this: Should QA use real student information?",
+      "For a student, I have a question: Should QA use real student information?",
+      "For a student, Can you tell me: Should QA use real student information?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1042
+  },
+  {
+    "id": "REG-255",
+    "category": "final_production_readiness",
+    "question": "How should test accounts be managed?",
+    "answer": "Use clearly identified accounts in a controlled environment and remove or disable them according to the team's test-data process.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should test accounts be managed?",
+      "For a student, Please help me with this SPRINT query: How should test accounts be managed?",
+      "For a student, I would like to know: How should test accounts be managed?",
+      "For a student, Can you clarify this for me: How should test accounts be managed?",
+      "For a student, Quick question: How should test accounts be managed?",
+      "For a student, Please explain this: How should test accounts be managed?",
+      "For a student, I have a question: How should test accounts be managed?",
+      "For a student, Can you tell me: How should test accounts be managed?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1043
+  },
+  {
+    "id": "REG-256",
+    "category": "final_production_readiness",
+    "question": "What should be tested after a release?",
+    "answer": "Run smoke tests for enrolment, account creation, email verification, sign-in, password reset, protected routes, and dashboard access.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What should be tested after a release?",
+      "For a student, Please help me with this SPRINT query: What should be tested after a release?",
+      "For a student, I would like to know: What should be tested after a release?",
+      "For a student, Can you clarify this for me: What should be tested after a release?",
+      "For a student, Quick question: What should be tested after a release?",
+      "For a student, Please explain this: What should be tested after a release?",
+      "For a student, I have a question: What should be tested after a release?",
+      "For a student, Can you tell me: What should be tested after a release?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1044
+  },
+  {
+    "id": "REG-257",
+    "category": "final_production_readiness",
+    "question": "What belongs in a QA report?",
+    "answer": "Include environment/build, coverage, pass/fail counts, open defects, severity, evidence, limitations, and release recommendation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What belongs in a QA report?",
+      "For a student, Please help me with this SPRINT query: What belongs in a QA report?",
+      "For a student, I would like to know: What belongs in a QA report?",
+      "For a student, Can you clarify this for me: What belongs in a QA report?",
+      "For a student, Quick question: What belongs in a QA report?",
+      "For a student, Please explain this: What belongs in a QA report?",
+      "For a student, I have a question: What belongs in a QA report?",
+      "For a student, Can you tell me: What belongs in a QA report?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1045
+  },
+  {
+    "id": "REG-258",
+    "category": "final_production_readiness",
+    "question": "Who should approve registration requirement changes?",
+    "answer": "The designated product owner or authorised SPRINT stakeholder should approve flow and policy changes.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Who should approve registration requirement changes?",
+      "For a student, Please help me with this SPRINT query: Who should approve registration requirement changes?",
+      "For a student, I would like to know: Who should approve registration requirement changes?",
+      "For a student, Can you clarify this for me: Who should approve registration requirement changes?",
+      "For a student, Quick question: Who should approve registration requirement changes?",
+      "For a student, Please explain this: Who should approve registration requirement changes?",
+      "For a student, I have a question: Who should approve registration requirement changes?",
+      "For a student, Can you tell me: Who should approve registration requirement changes?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1046
+  },
+  {
+    "id": "REG-259",
+    "category": "final_production_readiness",
+    "question": "How can the dataset be used for chatbot testing?",
+    "answer": "Use each question as a test prompt, compare answers with approved policies, flag unsupported claims, and escalate account-specific issues.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can the dataset be used for chatbot testing?",
+      "For a student, Please help me with this SPRINT query: How can the dataset be used for chatbot testing?",
+      "For a student, I would like to know: How can the dataset be used for chatbot testing?",
+      "For a student, Can you clarify this for me: How can the dataset be used for chatbot testing?",
+      "For a student, Quick question: How can the dataset be used for chatbot testing?",
+      "For a student, Please explain this: How can the dataset be used for chatbot testing?",
+      "For a student, I have a question: How can the dataset be used for chatbot testing?",
+      "For a student, Can you tell me: How can the dataset be used for chatbot testing?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1047
+  },
+  {
+    "id": "REG-260",
+    "category": "final_production_readiness",
+    "question": "How often should this dataset be reviewed?",
+    "answer": "Review it whenever registration flow, fields, program choices, verification, privacy terms, or support procedures change.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How often should this dataset be reviewed?",
+      "For a student, Please help me with this SPRINT query: How often should this dataset be reviewed?",
+      "For a student, I would like to know: How often should this dataset be reviewed?",
+      "For a student, Can you clarify this for me: How often should this dataset be reviewed?",
+      "For a student, Quick question: How often should this dataset be reviewed?",
+      "For a student, Please explain this: How often should this dataset be reviewed?",
+      "For a student, I have a question: How often should this dataset be reviewed?",
+      "For a student, Can you tell me: How often should this dataset be reviewed?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1048
+  }
+]

@@ -1,0 +1,2315 @@
+[
+  {
+    "id": "SUP-161",
+    "category": "privacy_and_data_protection",
+    "question": "Why does the enquiry form ask for my contact details?",
+    "answer": "Contact details allow SPRINT to respond to your enquiry. Provide accurate information and review the website's privacy notice for applicable data practices.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why does the enquiry form ask for my contact details?",
+      "For a student, Please help me with this SPRINT query: Why does the enquiry form ask for my contact details?",
+      "For a student, I would like to know: Why does the enquiry form ask for my contact details?",
+      "For a student, Can you clarify this for me: Why does the enquiry form ask for my contact details?",
+      "For a student, Quick question: Why does the enquiry form ask for my contact details?",
+      "For a student, Please explain this: Why does the enquiry form ask for my contact details?",
+      "For a student, I have a question: Why does the enquiry form ask for my contact details?",
+      "For a student, Can you tell me: Why does the enquiry form ask for my contact details?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 439
+  },
+  {
+    "id": "SUP-162",
+    "category": "privacy_and_data_protection",
+    "question": "Is it safe to share my information through the form?",
+    "answer": "Use the official website and share only information needed for the enquiry. Review the privacy notice and avoid submitting passwords or payment secrets.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is it safe to share my information through the form?",
+      "For a student, Please help me with this SPRINT query: Is it safe to share my information through the form?",
+      "For a student, I would like to know: Is it safe to share my information through the form?",
+      "For a student, Can you clarify this for me: Is it safe to share my information through the form?",
+      "For a student, Quick question: Is it safe to share my information through the form?",
+      "For a student, Please explain this: Is it safe to share my information through the form?",
+      "For a student, I have a question: Is it safe to share my information through the form?",
+      "For a student, Can you tell me: Is it safe to share my information through the form?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 440
+  },
+  {
+    "id": "SUP-163",
+    "category": "privacy_and_data_protection",
+    "question": "Should I include sensitive personal information in my message?",
+    "answer": "No. Keep messages relevant and avoid identity numbers, financial account details, passwords, health details, or other unnecessary sensitive information.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should I include sensitive personal information in my message?",
+      "For a student, Please help me with this SPRINT query: Should I include sensitive personal information in my message?",
+      "For a student, I would like to know: Should I include sensitive personal information in my message?",
+      "For a student, Can you clarify this for me: Should I include sensitive personal information in my message?",
+      "For a student, Quick question: Should I include sensitive personal information in my message?",
+      "For a student, Please explain this: Should I include sensitive personal information in my message?",
+      "For a student, I have a question: Should I include sensitive personal information in my message?",
+      "For a student, Can you tell me: Should I include sensitive personal information in my message?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 441
+  },
+  {
+    "id": "SUP-164",
+    "category": "privacy_and_data_protection",
+    "question": "Can I ask what information SPRINT holds about me?",
+    "answer": "Contact SPRINT through an official channel and ask about the applicable privacy-request process and identity verification requirements.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I ask what information SPRINT holds about me?",
+      "For a student, Please help me with this SPRINT query: Can I ask what information SPRINT holds about me?",
+      "For a student, I would like to know: Can I ask what information SPRINT holds about me?",
+      "For a student, Can you clarify this for me: Can I ask what information SPRINT holds about me?",
+      "For a student, Quick question: Can I ask what information SPRINT holds about me?",
+      "For a student, Please explain this: Can I ask what information SPRINT holds about me?",
+      "For a student, I have a question: Can I ask what information SPRINT holds about me?",
+      "For a student, Can you tell me: Can I ask what information SPRINT holds about me?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 442
+  },
+  {
+    "id": "SUP-165",
+    "category": "privacy_and_data_protection",
+    "question": "Can I request correction of my contact details?",
+    "answer": "Email SPRINT from a suitable contact channel and explain which details need correction. Follow any identity-verification steps the team provides.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I request correction of my contact details?",
+      "For a student, Please help me with this SPRINT query: Can I request correction of my contact details?",
+      "For a student, I would like to know: Can I request correction of my contact details?",
+      "For a student, Can you clarify this for me: Can I request correction of my contact details?",
+      "For a student, Quick question: Can I request correction of my contact details?",
+      "For a student, Please explain this: Can I request correction of my contact details?",
+      "For a student, I have a question: Can I request correction of my contact details?",
+      "For a student, Can you tell me: Can I request correction of my contact details?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 443
+  },
+  {
+    "id": "SUP-166",
+    "category": "privacy_and_data_protection",
+    "question": "Can I ask for my data to be deleted?",
+    "answer": "Contact SPRINT and request information about the applicable data-deletion process, legal obligations, and any records that must be retained.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I ask for my data to be deleted?",
+      "For a student, Please help me with this SPRINT query: Can I ask for my data to be deleted?",
+      "For a student, I would like to know: Can I ask for my data to be deleted?",
+      "For a student, Can you clarify this for me: Can I ask for my data to be deleted?",
+      "For a student, Quick question: Can I ask for my data to be deleted?",
+      "For a student, Please explain this: Can I ask for my data to be deleted?",
+      "For a student, I have a question: Can I ask for my data to be deleted?",
+      "For a student, Can you tell me: Can I ask for my data to be deleted?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 444
+  },
+  {
+    "id": "SUP-167",
+    "category": "privacy_and_data_protection",
+    "question": "Will SPRINT share my information with third parties?",
+    "answer": "Check the current privacy notice for details about data sharing. Ask SPRINT directly if you need clarification about a specific use.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Will SPRINT share my information with third parties?",
+      "For a student, Please help me with this SPRINT query: Will SPRINT share my information with third parties?",
+      "For a student, I would like to know: Will SPRINT share my information with third parties?",
+      "For a student, Can you clarify this for me: Will SPRINT share my information with third parties?",
+      "For a student, Quick question: Will SPRINT share my information with third parties?",
+      "For a student, Please explain this: Will SPRINT share my information with third parties?",
+      "For a student, I have a question: Will SPRINT share my information with third parties?",
+      "For a student, Can you tell me: Will SPRINT share my information with third parties?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 445
+  },
+  {
+    "id": "SUP-168",
+    "category": "privacy_and_data_protection",
+    "question": "Can I send my password to prove account ownership?",
+    "answer": "No. Support should not need your password. Use the official account-recovery or verification process instead.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I send my password to prove account ownership?",
+      "For a student, Please help me with this SPRINT query: Can I send my password to prove account ownership?",
+      "For a student, I would like to know: Can I send my password to prove account ownership?",
+      "For a student, Can you clarify this for me: Can I send my password to prove account ownership?",
+      "For a student, Quick question: Can I send my password to prove account ownership?",
+      "For a student, Please explain this: Can I send my password to prove account ownership?",
+      "For a student, I have a question: Can I send my password to prove account ownership?",
+      "For a student, Can you tell me: Can I send my password to prove account ownership?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 446
+  },
+  {
+    "id": "SUP-169",
+    "category": "privacy_and_data_protection",
+    "question": "What should I do if I receive a suspicious message claiming to be SPRINT?",
+    "answer": "Do not click unknown links or share codes. Verify the sender through the official website, email, or phone numbers.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What should I do if I receive a suspicious message claiming to be SPRINT?",
+      "For a student, Please help me with this SPRINT query: What should I do if I receive a suspicious message claiming to be SPRINT?",
+      "For a student, I would like to know: What should I do if I receive a suspicious message claiming to be SPRINT?",
+      "For a student, Can you clarify this for me: What should I do if I receive a suspicious message claiming to be SPRINT?",
+      "For a student, Quick question: What should I do if I receive a suspicious message claiming to be SPRINT?",
+      "For a student, Please explain this: What should I do if I receive a suspicious message claiming to be SPRINT?",
+      "For a student, I have a question: What should I do if I receive a suspicious message claiming to be SPRINT?",
+      "For a student, Can you tell me: What should I do if I receive a suspicious message claiming to be SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 447
+  },
+  {
+    "id": "SUP-170",
+    "category": "privacy_and_data_protection",
+    "question": "How should I share screenshots with support?",
+    "answer": "Remove or blur passwords, OTPs, payment details, private messages, and other personal information that is not needed to diagnose the issue.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should I share screenshots with support?",
+      "For a student, Please help me with this SPRINT query: How should I share screenshots with support?",
+      "For a student, I would like to know: How should I share screenshots with support?",
+      "For a student, Can you clarify this for me: How should I share screenshots with support?",
+      "For a student, Quick question: How should I share screenshots with support?",
+      "For a student, Please explain this: How should I share screenshots with support?",
+      "For a student, I have a question: How should I share screenshots with support?",
+      "For a student, Can you tell me: How should I share screenshots with support?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 448
+  },
+  {
+    "id": "SUP-221",
+    "category": "security_and_suspicious_activity",
+    "question": "I think someone is using my student account. What should I do?",
+    "answer": "Change your password through the official process, secure your email account, sign out of other sessions if possible, and contact SPRINT support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I think someone is using my student account. What should I do?",
+      "For a student, Please help me with this SPRINT query: I think someone is using my student account. What should I do?",
+      "For a student, I would like to know: I think someone is using my student account. What should I do?",
+      "For a student, Can you clarify this for me: I think someone is using my student account. What should I do?",
+      "For a student, Quick question: I think someone is using my student account. What should I do?",
+      "For a student, Please explain this: I think someone is using my student account. What should I do?",
+      "For a student, I have a question: I think someone is using my student account. What should I do?",
+      "For a student, Can you tell me: I think someone is using my student account. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 499
+  },
+  {
+    "id": "SUP-222",
+    "category": "security_and_suspicious_activity",
+    "question": "I received an unexpected login code. What should I do?",
+    "answer": "Do not share the code or click suspicious links. If you did not request it, secure your account and contact support through official channels.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I received an unexpected login code. What should I do?",
+      "For a student, Please help me with this SPRINT query: I received an unexpected login code. What should I do?",
+      "For a student, I would like to know: I received an unexpected login code. What should I do?",
+      "For a student, Can you clarify this for me: I received an unexpected login code. What should I do?",
+      "For a student, Quick question: I received an unexpected login code. What should I do?",
+      "For a student, Please explain this: I received an unexpected login code. What should I do?",
+      "For a student, I have a question: I received an unexpected login code. What should I do?",
+      "For a student, Can you tell me: I received an unexpected login code. What should I do?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 500
+  },
+  {
+    "id": "SUP-223",
+    "category": "security_and_suspicious_activity",
+    "question": "A person is asking me to pay through a personal account. Is that safe?",
+    "answer": "Do not pay until you verify the request and payment instructions directly with SPRINT using its official contact details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: A person is asking me to pay through a personal account. Is that safe?",
+      "For a student, Please help me with this SPRINT query: A person is asking me to pay through a personal account. Is that safe?",
+      "For a student, I would like to know: A person is asking me to pay through a personal account. Is that safe?",
+      "For a student, Can you clarify this for me: A person is asking me to pay through a personal account. Is that safe?",
+      "For a student, Quick question: A person is asking me to pay through a personal account. Is that safe?",
+      "For a student, Please explain this: A person is asking me to pay through a personal account. Is that safe?",
+      "For a student, I have a question: A person is asking me to pay through a personal account. Is that safe?",
+      "For a student, Can you tell me: A person is asking me to pay through a personal account. Is that safe?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 501
+  },
+  {
+    "id": "SUP-224",
+    "category": "security_and_suspicious_activity",
+    "question": "How can I verify that a message is genuinely from SPRINT?",
+    "answer": "Check the sender carefully and confirm through the official website, info@sprint.naturalelements.co.in, or the listed phone numbers.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can I verify that a message is genuinely from SPRINT?",
+      "For a student, Please help me with this SPRINT query: How can I verify that a message is genuinely from SPRINT?",
+      "For a student, I would like to know: How can I verify that a message is genuinely from SPRINT?",
+      "For a student, Can you clarify this for me: How can I verify that a message is genuinely from SPRINT?",
+      "For a student, Quick question: How can I verify that a message is genuinely from SPRINT?",
+      "For a student, Please explain this: How can I verify that a message is genuinely from SPRINT?",
+      "For a student, I have a question: How can I verify that a message is genuinely from SPRINT?",
+      "For a student, Can you tell me: How can I verify that a message is genuinely from SPRINT?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 502
+  },
+  {
+    "id": "SUP-225",
+    "category": "security_and_suspicious_activity",
+    "question": "What should I do if I clicked a suspicious link?",
+    "answer": "Do not enter credentials or payment information. If you did, change affected passwords through official sites and contact your bank or service provider as appropriate.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What should I do if I clicked a suspicious link?",
+      "For a student, Please help me with this SPRINT query: What should I do if I clicked a suspicious link?",
+      "For a student, I would like to know: What should I do if I clicked a suspicious link?",
+      "For a student, Can you clarify this for me: What should I do if I clicked a suspicious link?",
+      "For a student, Quick question: What should I do if I clicked a suspicious link?",
+      "For a student, Please explain this: What should I do if I clicked a suspicious link?",
+      "For a student, I have a question: What should I do if I clicked a suspicious link?",
+      "For a student, Can you tell me: What should I do if I clicked a suspicious link?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 503
+  },
+  {
+    "id": "SUP-226",
+    "category": "security_and_suspicious_activity",
+    "question": "Can support ask for my OTP?",
+    "answer": "Do not share one-time passcodes with anyone, including someone claiming to be support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can support ask for my OTP?",
+      "For a student, Please help me with this SPRINT query: Can support ask for my OTP?",
+      "For a student, I would like to know: Can support ask for my OTP?",
+      "For a student, Can you clarify this for me: Can support ask for my OTP?",
+      "For a student, Quick question: Can support ask for my OTP?",
+      "For a student, Please explain this: Can support ask for my OTP?",
+      "For a student, I have a question: Can support ask for my OTP?",
+      "For a student, Can you tell me: Can support ask for my OTP?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 504
+  },
+  {
+    "id": "SUP-227",
+    "category": "security_and_suspicious_activity",
+    "question": "How should I report a suspected phishing email?",
+    "answer": "Forward or describe the suspicious message through an official SPRINT contact channel, after removing any sensitive personal data.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should I report a suspected phishing email?",
+      "For a student, Please help me with this SPRINT query: How should I report a suspected phishing email?",
+      "For a student, I would like to know: How should I report a suspected phishing email?",
+      "For a student, Can you clarify this for me: How should I report a suspected phishing email?",
+      "For a student, Quick question: How should I report a suspected phishing email?",
+      "For a student, Please explain this: How should I report a suspected phishing email?",
+      "For a student, I have a question: How should I report a suspected phishing email?",
+      "For a student, Can you tell me: How should I report a suspected phishing email?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 505
+  },
+  {
+    "id": "SUP-228",
+    "category": "security_and_suspicious_activity",
+    "question": "Can I send a database dump or production credentials to support?",
+    "answer": "No. Never send production credentials, access tokens, private keys, or unredacted user data. Share a sanitised error report instead.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I send a database dump or production credentials to support?",
+      "For a student, Please help me with this SPRINT query: Can I send a database dump or production credentials to support?",
+      "For a student, I would like to know: Can I send a database dump or production credentials to support?",
+      "For a student, Can you clarify this for me: Can I send a database dump or production credentials to support?",
+      "For a student, Quick question: Can I send a database dump or production credentials to support?",
+      "For a student, Please explain this: Can I send a database dump or production credentials to support?",
+      "For a student, I have a question: Can I send a database dump or production credentials to support?",
+      "For a student, Can you tell me: Can I send a database dump or production credentials to support?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 506
+  },
+  {
+    "id": "SUP-229",
+    "category": "security_and_suspicious_activity",
+    "question": "What if I see another learner's private information?",
+    "answer": "Do not copy, distribute, or access more information. Report the page and time to SPRINT promptly without sharing the exposed data broadly.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I see another learner's private information?",
+      "For a student, Please help me with this SPRINT query: What if I see another learner's private information?",
+      "For a student, I would like to know: What if I see another learner's private information?",
+      "For a student, Can you clarify this for me: What if I see another learner's private information?",
+      "For a student, Quick question: What if I see another learner's private information?",
+      "For a student, Please explain this: What if I see another learner's private information?",
+      "For a student, I have a question: What if I see another learner's private information?",
+      "For a student, Can you tell me: What if I see another learner's private information?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 507
+  },
+  {
+    "id": "SUP-230",
+    "category": "security_and_suspicious_activity",
+    "question": "How can I protect my device during online learning?",
+    "answer": "Keep your operating system and browser updated, use reputable security tools, avoid untrusted downloads, and use unique passwords.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can I protect my device during online learning?",
+      "For a student, Please help me with this SPRINT query: How can I protect my device during online learning?",
+      "For a student, I would like to know: How can I protect my device during online learning?",
+      "For a student, Can you clarify this for me: How can I protect my device during online learning?",
+      "For a student, Quick question: How can I protect my device during online learning?",
+      "For a student, Please explain this: How can I protect my device during online learning?",
+      "For a student, I have a question: How can I protect my device during online learning?",
+      "For a student, Can you tell me: How can I protect my device during online learning?"
+    ],
+    "source_files": [
+      "SPRINT_Contact_Support_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 508
+  },
+  {
+    "id": "DASH-111",
+    "category": "account_security",
+    "question": "Where are dashboard account settings?",
+    "answer": "Look for Profile, Settings, or the account menu in the Student Portal.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Where are dashboard account settings?",
+      "For a student, Please help me with this SPRINT query: Where are dashboard account settings?",
+      "For a student, I would like to know: Where are dashboard account settings?",
+      "For a student, Can you clarify this for me: Where are dashboard account settings?",
+      "For a student, Quick question: Where are dashboard account settings?",
+      "For a student, Please explain this: Where are dashboard account settings?",
+      "For a student, I have a question: Where are dashboard account settings?",
+      "For a student, Can you tell me: Where are dashboard account settings?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 629
+  },
+  {
+    "id": "DASH-112",
+    "category": "account_security",
+    "question": "How do I change my password?",
+    "answer": "Use the account settings if password change is available, or sign out and use the official Forgot Password flow.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I change my password?",
+      "For a student, Please help me with this SPRINT query: How do I change my password?",
+      "For a student, I would like to know: How do I change my password?",
+      "For a student, Can you clarify this for me: How do I change my password?",
+      "For a student, Quick question: How do I change my password?",
+      "For a student, Please explain this: How do I change my password?",
+      "For a student, I have a question: How do I change my password?",
+      "For a student, Can you tell me: How do I change my password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 630
+  },
+  {
+    "id": "DASH-113",
+    "category": "account_security",
+    "question": "How do I protect my student account?",
+    "answer": "Use a unique password, keep your email secure, sign out on shared devices, and never share verification codes.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I protect my student account?",
+      "For a student, Please help me with this SPRINT query: How do I protect my student account?",
+      "For a student, I would like to know: How do I protect my student account?",
+      "For a student, Can you clarify this for me: How do I protect my student account?",
+      "For a student, Quick question: How do I protect my student account?",
+      "For a student, Please explain this: How do I protect my student account?",
+      "For a student, I have a question: How do I protect my student account?",
+      "For a student, Can you tell me: How do I protect my student account?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 631
+  },
+  {
+    "id": "DASH-114",
+    "category": "account_security",
+    "question": "I suspect someone accessed my account.",
+    "answer": "Reset your password through the official portal and contact SPRINT support promptly if you suspect unauthorized access.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I suspect someone accessed my account.",
+      "For a student, Please help me with this SPRINT query: I suspect someone accessed my account.",
+      "For a student, I would like to know: I suspect someone accessed my account.",
+      "For a student, Can you clarify this for me: I suspect someone accessed my account.",
+      "For a student, Quick question: I suspect someone accessed my account.",
+      "For a student, Please explain this: I suspect someone accessed my account.",
+      "For a student, I have a question: I suspect someone accessed my account.",
+      "For a student, Can you tell me: I suspect someone accessed my account."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 632
+  },
+  {
+    "id": "DASH-115",
+    "category": "account_security",
+    "question": "Can I see active sessions?",
+    "answer": "Check account security settings if session management is provided. If not, contact support for advice about securing the account.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I see active sessions?",
+      "For a student, Please help me with this SPRINT query: Can I see active sessions?",
+      "For a student, I would like to know: Can I see active sessions?",
+      "For a student, Can you clarify this for me: Can I see active sessions?",
+      "For a student, Quick question: Can I see active sessions?",
+      "For a student, Please explain this: Can I see active sessions?",
+      "For a student, I have a question: Can I see active sessions?",
+      "For a student, Can you tell me: Can I see active sessions?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 633
+  },
+  {
+    "id": "DASH-116",
+    "category": "account_security",
+    "question": "How do I log out of a shared computer?",
+    "answer": "Choose Logout, close the browser window, and avoid saving your password on the shared device.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I log out of a shared computer?",
+      "For a student, Please help me with this SPRINT query: How do I log out of a shared computer?",
+      "For a student, I would like to know: How do I log out of a shared computer?",
+      "For a student, Can you clarify this for me: How do I log out of a shared computer?",
+      "For a student, Quick question: How do I log out of a shared computer?",
+      "For a student, Please explain this: How do I log out of a shared computer?",
+      "For a student, I have a question: How do I log out of a shared computer?",
+      "For a student, Can you tell me: How do I log out of a shared computer?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 634
+  },
+  {
+    "id": "DASH-117",
+    "category": "account_security",
+    "question": "Can support ask me for my password?",
+    "answer": "You should never share your password. Use official account-recovery steps instead.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can support ask me for my password?",
+      "For a student, Please help me with this SPRINT query: Can support ask me for my password?",
+      "For a student, I would like to know: Can support ask me for my password?",
+      "For a student, Can you clarify this for me: Can support ask me for my password?",
+      "For a student, Quick question: Can support ask me for my password?",
+      "For a student, Please explain this: Can support ask me for my password?",
+      "For a student, I have a question: Can support ask me for my password?",
+      "For a student, Can you tell me: Can support ask me for my password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 635
+  },
+  {
+    "id": "DASH-118",
+    "category": "account_security",
+    "question": "I received an unexpected password-reset email.",
+    "answer": "If you did not request it, do not click unknown links. Secure your account through the official portal and contact support if concerned.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I received an unexpected password-reset email.",
+      "For a student, Please help me with this SPRINT query: I received an unexpected password-reset email.",
+      "For a student, I would like to know: I received an unexpected password-reset email.",
+      "For a student, Can you clarify this for me: I received an unexpected password-reset email.",
+      "For a student, Quick question: I received an unexpected password-reset email.",
+      "For a student, Please explain this: I received an unexpected password-reset email.",
+      "For a student, I have a question: I received an unexpected password-reset email.",
+      "For a student, Can you tell me: I received an unexpected password-reset email."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 636
+  },
+  {
+    "id": "DASH-119",
+    "category": "account_security",
+    "question": "Can I delete my student account?",
+    "answer": "Contact SPRINT to ask about account deletion, data retention, and any implications for course access or records.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I delete my student account?",
+      "For a student, Please help me with this SPRINT query: Can I delete my student account?",
+      "For a student, I would like to know: Can I delete my student account?",
+      "For a student, Can you clarify this for me: Can I delete my student account?",
+      "For a student, Quick question: Can I delete my student account?",
+      "For a student, Please explain this: Can I delete my student account?",
+      "For a student, I have a question: Can I delete my student account?",
+      "For a student, Can you tell me: Can I delete my student account?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 637
+  },
+  {
+    "id": "DASH-120",
+    "category": "account_security",
+    "question": "What should I do if I lose access to my email?",
+    "answer": "Contact SPRINT through its official channel and ask about account recovery. Be prepared to follow identity verification.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What should I do if I lose access to my email?",
+      "For a student, Please help me with this SPRINT query: What should I do if I lose access to my email?",
+      "For a student, I would like to know: What should I do if I lose access to my email?",
+      "For a student, Can you clarify this for me: What should I do if I lose access to my email?",
+      "For a student, Quick question: What should I do if I lose access to my email?",
+      "For a student, Please explain this: What should I do if I lose access to my email?",
+      "For a student, I have a question: What should I do if I lose access to my email?",
+      "For a student, Can you tell me: What should I do if I lose access to my email?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 638
+  },
+  {
+    "id": "DASH-171",
+    "category": "privacy_and_data_protection",
+    "question": "Where can I find course materials?",
+    "answer": "Open the relevant course and look for its lessons, resources, or downloads section.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Where can I find course materials?",
+      "For a student, Please help me with this SPRINT query: Where can I find course materials?",
+      "For a student, I would like to know: Where can I find course materials?",
+      "For a student, Can you clarify this for me: Where can I find course materials?",
+      "For a student, Quick question: Where can I find course materials?",
+      "For a student, Please explain this: Where can I find course materials?",
+      "For a student, I have a question: Where can I find course materials?",
+      "For a student, Can you tell me: Where can I find course materials?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 689
+  },
+  {
+    "id": "DASH-172",
+    "category": "privacy_and_data_protection",
+    "question": "A learning resource is missing.",
+    "answer": "Check the lesson instructions and course announcements. If the resource is still missing, contact the instructor or support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: A learning resource is missing.",
+      "For a student, Please help me with this SPRINT query: A learning resource is missing.",
+      "For a student, I would like to know: A learning resource is missing.",
+      "For a student, Can you clarify this for me: A learning resource is missing.",
+      "For a student, Quick question: A learning resource is missing.",
+      "For a student, Please explain this: A learning resource is missing.",
+      "For a student, I have a question: A learning resource is missing.",
+      "For a student, Can you tell me: A learning resource is missing."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 690
+  },
+  {
+    "id": "DASH-173",
+    "category": "privacy_and_data_protection",
+    "question": "How do I download a course file?",
+    "answer": "Use the download link provided within the course and follow any file access instructions.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I download a course file?",
+      "For a student, Please help me with this SPRINT query: How do I download a course file?",
+      "For a student, I would like to know: How do I download a course file?",
+      "For a student, Can you clarify this for me: How do I download a course file?",
+      "For a student, Quick question: How do I download a course file?",
+      "For a student, Please explain this: How do I download a course file?",
+      "For a student, I have a question: How do I download a course file?",
+      "For a student, Can you tell me: How do I download a course file?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 691
+  },
+  {
+    "id": "DASH-174",
+    "category": "privacy_and_data_protection",
+    "question": "A PDF or slide file will not open.",
+    "answer": "Download it again, try a current PDF viewer, and check whether the file completed downloading. Report persistent errors.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: A PDF or slide file will not open.",
+      "For a student, Please help me with this SPRINT query: A PDF or slide file will not open.",
+      "For a student, I would like to know: A PDF or slide file will not open.",
+      "For a student, Can you clarify this for me: A PDF or slide file will not open.",
+      "For a student, Quick question: A PDF or slide file will not open.",
+      "For a student, Please explain this: A PDF or slide file will not open.",
+      "For a student, I have a question: A PDF or slide file will not open.",
+      "For a student, Can you tell me: A PDF or slide file will not open."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 692
+  },
+  {
+    "id": "DASH-175",
+    "category": "privacy_and_data_protection",
+    "question": "Can I access course materials offline?",
+    "answer": "Offline access depends on the resource and program rules. Use offline downloads only when the portal explicitly supports them.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I access course materials offline?",
+      "For a student, Please help me with this SPRINT query: Can I access course materials offline?",
+      "For a student, I would like to know: Can I access course materials offline?",
+      "For a student, Can you clarify this for me: Can I access course materials offline?",
+      "For a student, Quick question: Can I access course materials offline?",
+      "For a student, Please explain this: Can I access course materials offline?",
+      "For a student, I have a question: Can I access course materials offline?",
+      "For a student, Can you tell me: Can I access course materials offline?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 693
+  },
+  {
+    "id": "DASH-176",
+    "category": "privacy_and_data_protection",
+    "question": "Can I share course materials with friends?",
+    "answer": "Follow SPRINT’s course terms and any copyright or access restrictions. Do not share protected materials without permission.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I share course materials with friends?",
+      "For a student, Please help me with this SPRINT query: Can I share course materials with friends?",
+      "For a student, I would like to know: Can I share course materials with friends?",
+      "For a student, Can you clarify this for me: Can I share course materials with friends?",
+      "For a student, Quick question: Can I share course materials with friends?",
+      "For a student, Please explain this: Can I share course materials with friends?",
+      "For a student, I have a question: Can I share course materials with friends?",
+      "For a student, Can you tell me: Can I share course materials with friends?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 694
+  },
+  {
+    "id": "DASH-177",
+    "category": "privacy_and_data_protection",
+    "question": "A learning video has no sound.",
+    "answer": "Check device volume, player mute settings, and audio output. If other videos work but this one does not, report the specific lesson.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: A learning video has no sound.",
+      "For a student, Please help me with this SPRINT query: A learning video has no sound.",
+      "For a student, I would like to know: A learning video has no sound.",
+      "For a student, Can you clarify this for me: A learning video has no sound.",
+      "For a student, Quick question: A learning video has no sound.",
+      "For a student, Please explain this: A learning video has no sound.",
+      "For a student, I have a question: A learning video has no sound.",
+      "For a student, Can you tell me: A learning video has no sound."
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 695
+  },
+  {
+    "id": "DASH-178",
+    "category": "privacy_and_data_protection",
+    "question": "Can I bookmark a lesson?",
+    "answer": "Use a bookmark or save control if the course player provides one. Otherwise, use the course navigation to return later.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I bookmark a lesson?",
+      "For a student, Please help me with this SPRINT query: Can I bookmark a lesson?",
+      "For a student, I would like to know: Can I bookmark a lesson?",
+      "For a student, Can you clarify this for me: Can I bookmark a lesson?",
+      "For a student, Quick question: Can I bookmark a lesson?",
+      "For a student, Please explain this: Can I bookmark a lesson?",
+      "For a student, I have a question: Can I bookmark a lesson?",
+      "For a student, Can you tell me: Can I bookmark a lesson?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 696
+  },
+  {
+    "id": "DASH-179",
+    "category": "privacy_and_data_protection",
+    "question": "Why can I not download a resource?",
+    "answer": "The file may not be downloadable or your access may be limited. Check the course instructions or ask the instructor.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why can I not download a resource?",
+      "For a student, Please help me with this SPRINT query: Why can I not download a resource?",
+      "For a student, I would like to know: Why can I not download a resource?",
+      "For a student, Can you clarify this for me: Why can I not download a resource?",
+      "For a student, Quick question: Why can I not download a resource?",
+      "For a student, Please explain this: Why can I not download a resource?",
+      "For a student, I have a question: Why can I not download a resource?",
+      "For a student, Can you tell me: Why can I not download a resource?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 697
+  },
+  {
+    "id": "DASH-180",
+    "category": "privacy_and_data_protection",
+    "question": "How do I report outdated learning content?",
+    "answer": "Share the course, lesson title, and what appears outdated with the instructor or SPRINT support.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I report outdated learning content?",
+      "For a student, Please help me with this SPRINT query: How do I report outdated learning content?",
+      "For a student, I would like to know: How do I report outdated learning content?",
+      "For a student, Can you clarify this for me: How do I report outdated learning content?",
+      "For a student, Quick question: How do I report outdated learning content?",
+      "For a student, Please explain this: How do I report outdated learning content?",
+      "For a student, I have a question: How do I report outdated learning content?",
+      "For a student, Can you tell me: How do I report outdated learning content?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 698
+  },
+  {
+    "id": "DASH-221",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "Does the dashboard show career support?",
+    "answer": "Check for Career Support, Resources, or Announcements if those features are available for your program.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Does the dashboard show career support?",
+      "For a student, Please help me with this SPRINT query: Does the dashboard show career support?",
+      "For a student, I would like to know: Does the dashboard show career support?",
+      "For a student, Can you clarify this for me: Does the dashboard show career support?",
+      "For a student, Quick question: Does the dashboard show career support?",
+      "For a student, Please explain this: Does the dashboard show career support?",
+      "For a student, I have a question: Does the dashboard show career support?",
+      "For a student, Can you tell me: Does the dashboard show career support?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 739
+  },
+  {
+    "id": "DASH-222",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "Can I book a career counselling session?",
+    "answer": "Use a booking option if provided or contact SPRINT to ask whether counselling sessions are currently available.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I book a career counselling session?",
+      "For a student, Please help me with this SPRINT query: Can I book a career counselling session?",
+      "For a student, I would like to know: Can I book a career counselling session?",
+      "For a student, Can you clarify this for me: Can I book a career counselling session?",
+      "For a student, Quick question: Can I book a career counselling session?",
+      "For a student, Please explain this: Can I book a career counselling session?",
+      "For a student, I have a question: Can I book a career counselling session?",
+      "For a student, Can you tell me: Can I book a career counselling session?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 740
+  },
+  {
+    "id": "DASH-223",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "Can I upload my resume?",
+    "answer": "Upload a resume only through an official feature that requests it. Remove unnecessary personal information before sharing.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I upload my resume?",
+      "For a student, Please help me with this SPRINT query: Can I upload my resume?",
+      "For a student, I would like to know: Can I upload my resume?",
+      "For a student, Can you clarify this for me: Can I upload my resume?",
+      "For a student, Quick question: Can I upload my resume?",
+      "For a student, Please explain this: Can I upload my resume?",
+      "For a student, I have a question: Can I upload my resume?",
+      "For a student, Can you tell me: Can I upload my resume?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 741
+  },
+  {
+    "id": "DASH-224",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "Can I get help preparing for interviews?",
+    "answer": "Check your program’s support options or ask SPRINT whether interview preparation is included.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I get help preparing for interviews?",
+      "For a student, Please help me with this SPRINT query: Can I get help preparing for interviews?",
+      "For a student, I would like to know: Can I get help preparing for interviews?",
+      "For a student, Can you clarify this for me: Can I get help preparing for interviews?",
+      "For a student, Quick question: Can I get help preparing for interviews?",
+      "For a student, Please explain this: Can I get help preparing for interviews?",
+      "For a student, I have a question: Can I get help preparing for interviews?",
+      "For a student, Can you tell me: Can I get help preparing for interviews?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 742
+  },
+  {
+    "id": "DASH-225",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "Does SPRINT guarantee placement?",
+    "answer": "The chatbot should not promise a job or placement. Ask SPRINT for its written placement-support terms and any verified outcome information.",
+    "alternative_questions": [
+      "In the safe use and fraud prevention category: Does SPRINT guarantee placement?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 743
+  },
+  {
+    "id": "DASH-226",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "Where can I find internship opportunities?",
+    "answer": "Check official announcements or career resources if available. Verify opportunities through official channels before sharing personal information.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Where can I find internship opportunities?",
+      "For a student, Please help me with this SPRINT query: Where can I find internship opportunities?",
+      "For a student, I would like to know: Where can I find internship opportunities?",
+      "For a student, Can you clarify this for me: Where can I find internship opportunities?",
+      "For a student, Quick question: Where can I find internship opportunities?",
+      "For a student, Please explain this: Where can I find internship opportunities?",
+      "For a student, I have a question: Where can I find internship opportunities?",
+      "For a student, Can you tell me: Where can I find internship opportunities?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 744
+  },
+  {
+    "id": "DASH-227",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "Can I get feedback on my resume?",
+    "answer": "Use an official career-support option if offered. You can also ask for general resume feedback without sharing sensitive personal data.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I get feedback on my resume?",
+      "For a student, Please help me with this SPRINT query: Can I get feedback on my resume?",
+      "For a student, I would like to know: Can I get feedback on my resume?",
+      "For a student, Can you clarify this for me: Can I get feedback on my resume?",
+      "For a student, Quick question: Can I get feedback on my resume?",
+      "For a student, Please explain this: Can I get feedback on my resume?",
+      "For a student, I have a question: Can I get feedback on my resume?",
+      "For a student, Can you tell me: Can I get feedback on my resume?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 745
+  },
+  {
+    "id": "DASH-228",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "Can the dashboard match me to jobs?",
+    "answer": "Only if an authorized job-matching feature is enabled. Otherwise, the chatbot can offer general career guidance, not verified job availability.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can the dashboard match me to jobs?",
+      "For a student, Please help me with this SPRINT query: Can the dashboard match me to jobs?",
+      "For a student, I would like to know: Can the dashboard match me to jobs?",
+      "For a student, Can you clarify this for me: Can the dashboard match me to jobs?",
+      "For a student, Quick question: Can the dashboard match me to jobs?",
+      "For a student, Please explain this: Can the dashboard match me to jobs?",
+      "For a student, I have a question: Can the dashboard match me to jobs?",
+      "For a student, Can you tell me: Can the dashboard match me to jobs?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 746
+  },
+  {
+    "id": "DASH-229",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "How can I track my career preparation?",
+    "answer": "Use any roadmap or checklist available in your account. You can also maintain a personal record of skills, projects, and applications.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can I track my career preparation?",
+      "For a student, Please help me with this SPRINT query: How can I track my career preparation?",
+      "For a student, I would like to know: How can I track my career preparation?",
+      "For a student, Can you clarify this for me: How can I track my career preparation?",
+      "For a student, Quick question: How can I track my career preparation?",
+      "For a student, Please explain this: How can I track my career preparation?",
+      "For a student, I have a question: How can I track my career preparation?",
+      "For a student, Can you tell me: How can I track my career preparation?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 747
+  },
+  {
+    "id": "DASH-230",
+    "category": "safe_use_and_fraud_prevention",
+    "question": "Who can answer program-specific placement questions?",
+    "answer": "Contact SPRINT through its official career-support channel and ask for the current written policy.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Who can answer program-specific placement questions?",
+      "For a student, Please help me with this SPRINT query: Who can answer program-specific placement questions?",
+      "For a student, I would like to know: Who can answer program-specific placement questions?",
+      "For a student, Can you clarify this for me: Who can answer program-specific placement questions?",
+      "For a student, Quick question: Who can answer program-specific placement questions?",
+      "For a student, Please explain this: Who can answer program-specific placement questions?",
+      "For a student, I have a question: Who can answer program-specific placement questions?",
+      "For a student, Can you tell me: Who can answer program-specific placement questions?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Dashboard_Chatbot_QA_240.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 748
+  },
+  {
+    "id": "REG-091",
+    "category": "terms_and_privacy",
+    "question": "Why must I review the terms?",
+    "answer": "The account flow may require acknowledgement of applicable terms. Read them before accepting.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why must I review the terms?",
+      "For a student, Please help me with this SPRINT query: Why must I review the terms?",
+      "For a student, I would like to know: Why must I review the terms?",
+      "For a student, Can you clarify this for me: Why must I review the terms?",
+      "For a student, Quick question: Why must I review the terms?",
+      "For a student, Please explain this: Why must I review the terms?",
+      "For a student, I have a question: Why must I review the terms?",
+      "For a student, Can you tell me: Why must I review the terms?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 879
+  },
+  {
+    "id": "REG-092",
+    "category": "terms_and_privacy",
+    "question": "Can I proceed without accepting required terms?",
+    "answer": "If acceptance is required, the form may block continuation. If you do not agree, do not proceed and contact SPRINT for clarification.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I proceed without accepting required terms?",
+      "For a student, Please help me with this SPRINT query: Can I proceed without accepting required terms?",
+      "For a student, I would like to know: Can I proceed without accepting required terms?",
+      "For a student, Can you clarify this for me: Can I proceed without accepting required terms?",
+      "For a student, Quick question: Can I proceed without accepting required terms?",
+      "For a student, Please explain this: Can I proceed without accepting required terms?",
+      "For a student, I have a question: Can I proceed without accepting required terms?",
+      "For a student, Can you tell me: Can I proceed without accepting required terms?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 880
+  },
+  {
+    "id": "REG-093",
+    "category": "terms_and_privacy",
+    "question": "Why is a privacy notice provided?",
+    "answer": "It explains how personal information may be collected and used. Review the current notice before submitting details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Why is a privacy notice provided?",
+      "For a student, Please help me with this SPRINT query: Why is a privacy notice provided?",
+      "For a student, I would like to know: Why is a privacy notice provided?",
+      "For a student, Can you clarify this for me: Why is a privacy notice provided?",
+      "For a student, Quick question: Why is a privacy notice provided?",
+      "For a student, Please explain this: Why is a privacy notice provided?",
+      "For a student, I have a question: Why is a privacy notice provided?",
+      "For a student, Can you tell me: Why is a privacy notice provided?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 881
+  },
+  {
+    "id": "REG-094",
+    "category": "terms_and_privacy",
+    "question": "Should a consent checkbox be preselected?",
+    "answer": "QA should verify the actual implementation against approved requirements and applicable consent expectations.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should a consent checkbox be preselected?",
+      "For a student, Please help me with this SPRINT query: Should a consent checkbox be preselected?",
+      "For a student, I would like to know: Should a consent checkbox be preselected?",
+      "For a student, Can you clarify this for me: Should a consent checkbox be preselected?",
+      "For a student, Quick question: Should a consent checkbox be preselected?",
+      "For a student, Please explain this: Should a consent checkbox be preselected?",
+      "For a student, I have a question: Should a consent checkbox be preselected?",
+      "For a student, Can you tell me: Should a consent checkbox be preselected?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 882
+  },
+  {
+    "id": "REG-095",
+    "category": "terms_and_privacy",
+    "question": "What if the terms link does not open?",
+    "answer": "Report the broken link and seek clarification before accepting terms you cannot review.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if the terms link does not open?",
+      "For a student, Please help me with this SPRINT query: What if the terms link does not open?",
+      "For a student, I would like to know: What if the terms link does not open?",
+      "For a student, Can you clarify this for me: What if the terms link does not open?",
+      "For a student, Quick question: What if the terms link does not open?",
+      "For a student, Please explain this: What if the terms link does not open?",
+      "For a student, I have a question: What if the terms link does not open?",
+      "For a student, Can you tell me: What if the terms link does not open?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 883
+  },
+  {
+    "id": "REG-096",
+    "category": "terms_and_privacy",
+    "question": "What if the privacy policy is unavailable?",
+    "answer": "Report the missing or broken policy link and avoid assuming undocumented data practices.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if the privacy policy is unavailable?",
+      "For a student, Please help me with this SPRINT query: What if the privacy policy is unavailable?",
+      "For a student, I would like to know: What if the privacy policy is unavailable?",
+      "For a student, Can you clarify this for me: What if the privacy policy is unavailable?",
+      "For a student, Quick question: What if the privacy policy is unavailable?",
+      "For a student, Please explain this: What if the privacy policy is unavailable?",
+      "For a student, I have a question: What if the privacy policy is unavailable?",
+      "For a student, Can you tell me: What if the privacy policy is unavailable?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 884
+  },
+  {
+    "id": "REG-097",
+    "category": "terms_and_privacy",
+    "question": "Can I ask how my data is used?",
+    "answer": "Yes. Contact SPRINT through an official channel and ask about the applicable privacy process.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I ask how my data is used?",
+      "For a student, Please help me with this SPRINT query: Can I ask how my data is used?",
+      "For a student, I would like to know: Can I ask how my data is used?",
+      "For a student, Can you clarify this for me: Can I ask how my data is used?",
+      "For a student, Quick question: Can I ask how my data is used?",
+      "For a student, Please explain this: Can I ask how my data is used?",
+      "For a student, I have a question: Can I ask how my data is used?",
+      "For a student, Can you tell me: Can I ask how my data is used?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 885
+  },
+  {
+    "id": "REG-098",
+    "category": "terms_and_privacy",
+    "question": "What should I avoid putting in optional fields?",
+    "answer": "Do not include passwords, OTPs, payment-card details, government ID numbers, or unnecessary sensitive information.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What should I avoid putting in optional fields?",
+      "For a student, Please help me with this SPRINT query: What should I avoid putting in optional fields?",
+      "For a student, I would like to know: What should I avoid putting in optional fields?",
+      "For a student, Can you clarify this for me: What should I avoid putting in optional fields?",
+      "For a student, Quick question: What should I avoid putting in optional fields?",
+      "For a student, Please explain this: What should I avoid putting in optional fields?",
+      "For a student, I have a question: What should I avoid putting in optional fields?",
+      "For a student, Can you tell me: What should I avoid putting in optional fields?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 886
+  },
+  {
+    "id": "REG-099",
+    "category": "terms_and_privacy",
+    "question": "Can a parent or guardian help me register?",
+    "answer": "Ask SPRINT to confirm any age-related or guardian requirements that apply to your situation.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can a parent or guardian help me register?",
+      "For a student, Please help me with this SPRINT query: Can a parent or guardian help me register?",
+      "For a student, I would like to know: Can a parent or guardian help me register?",
+      "For a student, Can you clarify this for me: Can a parent or guardian help me register?",
+      "For a student, Quick question: Can a parent or guardian help me register?",
+      "For a student, Please explain this: Can a parent or guardian help me register?",
+      "For a student, I have a question: Can a parent or guardian help me register?",
+      "For a student, Can you tell me: Can a parent or guardian help me register?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 887
+  },
+  {
+    "id": "REG-100",
+    "category": "terms_and_privacy",
+    "question": "How can I request a personal-data correction?",
+    "answer": "Contact SPRINT through an official channel and follow its identity-verification process.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How can I request a personal-data correction?",
+      "For a student, Please help me with this SPRINT query: How can I request a personal-data correction?",
+      "For a student, I would like to know: How can I request a personal-data correction?",
+      "For a student, Can you clarify this for me: How can I request a personal-data correction?",
+      "For a student, Quick question: How can I request a personal-data correction?",
+      "For a student, Please explain this: How can I request a personal-data correction?",
+      "For a student, I have a question: How can I request a personal-data correction?",
+      "For a student, Can you tell me: How can I request a personal-data correction?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 888
+  },
+  {
+    "id": "REG-171",
+    "category": "privacy_and_account_security",
+    "question": "Is my registration information private?",
+    "answer": "Use the official portal and review its current privacy notice for collection, use, retention, and sharing details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is my registration information private?",
+      "For a student, Please help me with this SPRINT query: Is my registration information private?",
+      "For a student, I would like to know: Is my registration information private?",
+      "For a student, Can you clarify this for me: Is my registration information private?",
+      "For a student, Quick question: Is my registration information private?",
+      "For a student, Please explain this: Is my registration information private?",
+      "For a student, I have a question: Is my registration information private?",
+      "For a student, Can you tell me: Is my registration information private?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 959
+  },
+  {
+    "id": "REG-172",
+    "category": "privacy_and_account_security",
+    "question": "Should I enter false information to bypass a field?",
+    "answer": "No. Provide accurate details and contact support if a validation rule appears wrong.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Should I enter false information to bypass a field?",
+      "For a student, Please help me with this SPRINT query: Should I enter false information to bypass a field?",
+      "For a student, I would like to know: Should I enter false information to bypass a field?",
+      "For a student, Can you clarify this for me: Should I enter false information to bypass a field?",
+      "For a student, Quick question: Should I enter false information to bypass a field?",
+      "For a student, Please explain this: Should I enter false information to bypass a field?",
+      "For a student, I have a question: Should I enter false information to bypass a field?",
+      "For a student, Can you tell me: Should I enter false information to bypass a field?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 960
+  },
+  {
+    "id": "REG-173",
+    "category": "privacy_and_account_security",
+    "question": "Can I share an OTP with someone helping me?",
+    "answer": "No. Never share one-time codes, verification links, passwords, or reset tokens.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I share an OTP with someone helping me?",
+      "For a student, Please help me with this SPRINT query: Can I share an OTP with someone helping me?",
+      "For a student, I would like to know: Can I share an OTP with someone helping me?",
+      "For a student, Can you clarify this for me: Can I share an OTP with someone helping me?",
+      "For a student, Quick question: Can I share an OTP with someone helping me?",
+      "For a student, Please explain this: Can I share an OTP with someone helping me?",
+      "For a student, I have a question: Can I share an OTP with someone helping me?",
+      "For a student, Can you tell me: Can I share an OTP with someone helping me?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 961
+  },
+  {
+    "id": "REG-174",
+    "category": "privacy_and_account_security",
+    "question": "Is it safe to register on a public computer?",
+    "answer": "Prefer a trusted device. If using a shared computer, do not save your password and sign out completely.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Is it safe to register on a public computer?",
+      "For a student, Please help me with this SPRINT query: Is it safe to register on a public computer?",
+      "For a student, I would like to know: Is it safe to register on a public computer?",
+      "For a student, Can you clarify this for me: Is it safe to register on a public computer?",
+      "For a student, Quick question: Is it safe to register on a public computer?",
+      "For a student, Please explain this: Is it safe to register on a public computer?",
+      "For a student, I have a question: Is it safe to register on a public computer?",
+      "For a student, Can you tell me: Is it safe to register on a public computer?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 962
+  },
+  {
+    "id": "REG-175",
+    "category": "privacy_and_account_security",
+    "question": "What should I do after using a shared device?",
+    "answer": "Sign out, close the browser, and ensure the password was not saved. Change it from a trusted device if exposure is suspected.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What should I do after using a shared device?",
+      "For a student, Please help me with this SPRINT query: What should I do after using a shared device?",
+      "For a student, I would like to know: What should I do after using a shared device?",
+      "For a student, Can you clarify this for me: What should I do after using a shared device?",
+      "For a student, Quick question: What should I do after using a shared device?",
+      "For a student, Please explain this: What should I do after using a shared device?",
+      "For a student, I have a question: What should I do after using a shared device?",
+      "For a student, Can you tell me: What should I do after using a shared device?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 963
+  },
+  {
+    "id": "REG-176",
+    "category": "privacy_and_account_security",
+    "question": "I suspect someone accessed my account. What now?",
+    "answer": "Change your password through the official process, secure your email account, and contact support promptly.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: I suspect someone accessed my account. What now?",
+      "For a student, Please help me with this SPRINT query: I suspect someone accessed my account. What now?",
+      "For a student, I would like to know: I suspect someone accessed my account. What now?",
+      "For a student, Can you clarify this for me: I suspect someone accessed my account. What now?",
+      "For a student, Quick question: I suspect someone accessed my account. What now?",
+      "For a student, Please explain this: I suspect someone accessed my account. What now?",
+      "For a student, I have a question: I suspect someone accessed my account. What now?",
+      "For a student, Can you tell me: I suspect someone accessed my account. What now?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 964
+  },
+  {
+    "id": "REG-177",
+    "category": "privacy_and_account_security",
+    "question": "Can I email identity documents?",
+    "answer": "Only send documents through a channel SPRINT explicitly approves. Ask support for secure instructions first.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can I email identity documents?",
+      "For a student, Please help me with this SPRINT query: Can I email identity documents?",
+      "For a student, I would like to know: Can I email identity documents?",
+      "For a student, Can you clarify this for me: Can I email identity documents?",
+      "For a student, Quick question: Can I email identity documents?",
+      "For a student, Please explain this: Can I email identity documents?",
+      "For a student, I have a question: Can I email identity documents?",
+      "For a student, Can you tell me: Can I email identity documents?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 965
+  },
+  {
+    "id": "REG-178",
+    "category": "privacy_and_account_security",
+    "question": "What if I receive a suspicious registration email?",
+    "answer": "Do not click unfamiliar links or share codes. Verify the message through official SPRINT contact channels.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: What if I receive a suspicious registration email?",
+      "For a student, Please help me with this SPRINT query: What if I receive a suspicious registration email?",
+      "For a student, I would like to know: What if I receive a suspicious registration email?",
+      "For a student, Can you clarify this for me: What if I receive a suspicious registration email?",
+      "For a student, Quick question: What if I receive a suspicious registration email?",
+      "For a student, Please explain this: What if I receive a suspicious registration email?",
+      "For a student, I have a question: What if I receive a suspicious registration email?",
+      "For a student, Can you tell me: What if I receive a suspicious registration email?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 966
+  },
+  {
+    "id": "REG-179",
+    "category": "privacy_and_account_security",
+    "question": "Can support ask for my password?",
+    "answer": "Do not disclose your password. Share the error message and use official recovery steps.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: Can support ask for my password?",
+      "For a student, Please help me with this SPRINT query: Can support ask for my password?",
+      "For a student, I would like to know: Can support ask for my password?",
+      "For a student, Can you clarify this for me: Can support ask for my password?",
+      "For a student, Quick question: Can support ask for my password?",
+      "For a student, Please explain this: Can support ask for my password?",
+      "For a student, I have a question: Can support ask for my password?",
+      "For a student, Can you tell me: Can support ask for my password?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 967
+  },
+  {
+    "id": "REG-180",
+    "category": "privacy_and_account_security",
+    "question": "How do I request a data correction?",
+    "answer": "Contact SPRINT through an official channel and follow the identity-verification process.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How do I request a data correction?",
+      "For a student, Please help me with this SPRINT query: How do I request a data correction?",
+      "For a student, I would like to know: How do I request a data correction?",
+      "For a student, Can you clarify this for me: How do I request a data correction?",
+      "For a student, Quick question: How do I request a data correction?",
+      "For a student, Please explain this: How do I request a data correction?",
+      "For a student, I have a question: How do I request a data correction?",
+      "For a student, Can you tell me: How do I request a data correction?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 968
+  },
+  {
+    "id": "REG-221",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test password visibility?",
+    "answer": "Confirm the password is masked by default and the show/hide control and accessible label update correctly.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test password visibility?",
+      "For a student, Please help me with this SPRINT query: How should QA test password visibility?",
+      "For a student, I would like to know: How should QA test password visibility?",
+      "For a student, Can you clarify this for me: How should QA test password visibility?",
+      "For a student, Quick question: How should QA test password visibility?",
+      "For a student, Please explain this: How should QA test password visibility?",
+      "For a student, I have a question: How should QA test password visibility?",
+      "For a student, Can you tell me: How should QA test password visibility?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1009
+  },
+  {
+    "id": "REG-222",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test password storage?",
+    "answer": "Verify passwords are never stored or logged in plaintext and the approved authentication method is used.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test password storage?",
+      "For a student, Please help me with this SPRINT query: How should QA test password storage?",
+      "For a student, I would like to know: How should QA test password storage?",
+      "For a student, Can you clarify this for me: How should QA test password storage?",
+      "For a student, Quick question: How should QA test password storage?",
+      "For a student, Please explain this: How should QA test password storage?",
+      "For a student, I have a question: How should QA test password storage?",
+      "For a student, Can you tell me: How should QA test password storage?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1010
+  },
+  {
+    "id": "REG-223",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test account enumeration?",
+    "answer": "Check that login, registration, and reset responses do not reveal unnecessary account-existence details.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test account enumeration?",
+      "For a student, Please help me with this SPRINT query: How should QA test account enumeration?",
+      "For a student, I would like to know: How should QA test account enumeration?",
+      "For a student, Can you clarify this for me: How should QA test account enumeration?",
+      "For a student, Quick question: How should QA test account enumeration?",
+      "For a student, Please explain this: How should QA test account enumeration?",
+      "For a student, I have a question: How should QA test account enumeration?",
+      "For a student, Can you tell me: How should QA test account enumeration?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1011
+  },
+  {
+    "id": "REG-224",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test rate limiting?",
+    "answer": "In a controlled test environment, verify appropriate limits on repeated login, registration, and reset requests.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test rate limiting?",
+      "For a student, Please help me with this SPRINT query: How should QA test rate limiting?",
+      "For a student, I would like to know: How should QA test rate limiting?",
+      "For a student, Can you clarify this for me: How should QA test rate limiting?",
+      "For a student, Quick question: How should QA test rate limiting?",
+      "For a student, Please explain this: How should QA test rate limiting?",
+      "For a student, I have a question: How should QA test rate limiting?",
+      "For a student, Can you tell me: How should QA test rate limiting?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1012
+  },
+  {
+    "id": "REG-225",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test session handling?",
+    "answer": "Verify session creation, expiry, logout, and rejection of unauthenticated dashboard access.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test session handling?",
+      "For a student, Please help me with this SPRINT query: How should QA test session handling?",
+      "For a student, I would like to know: How should QA test session handling?",
+      "For a student, Can you clarify this for me: How should QA test session handling?",
+      "For a student, Quick question: How should QA test session handling?",
+      "For a student, Please explain this: How should QA test session handling?",
+      "For a student, I have a question: How should QA test session handling?",
+      "For a student, Can you tell me: How should QA test session handling?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1013
+  },
+  {
+    "id": "REG-226",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test access control?",
+    "answer": "Attempt protected student routes while logged out and confirm private information is not returned.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test access control?",
+      "For a student, Please help me with this SPRINT query: How should QA test access control?",
+      "For a student, I would like to know: How should QA test access control?",
+      "For a student, Can you clarify this for me: How should QA test access control?",
+      "For a student, Quick question: How should QA test access control?",
+      "For a student, Please explain this: How should QA test access control?",
+      "For a student, I have a question: How should QA test access control?",
+      "For a student, Can you tell me: How should QA test access control?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1014
+  },
+  {
+    "id": "REG-227",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test sensitive logging?",
+    "answer": "Inspect test logs to ensure passwords, OTPs, reset tokens, and unnecessary personal data are not recorded.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test sensitive logging?",
+      "For a student, Please help me with this SPRINT query: How should QA test sensitive logging?",
+      "For a student, I would like to know: How should QA test sensitive logging?",
+      "For a student, Can you clarify this for me: How should QA test sensitive logging?",
+      "For a student, Quick question: How should QA test sensitive logging?",
+      "For a student, Please explain this: How should QA test sensitive logging?",
+      "For a student, I have a question: How should QA test sensitive logging?",
+      "For a student, Can you tell me: How should QA test sensitive logging?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1015
+  },
+  {
+    "id": "REG-228",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test HTTPS?",
+    "answer": "Confirm production registration and authentication actions use HTTPS.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test HTTPS?",
+      "For a student, Please help me with this SPRINT query: How should QA test HTTPS?",
+      "For a student, I would like to know: How should QA test HTTPS?",
+      "For a student, Can you clarify this for me: How should QA test HTTPS?",
+      "For a student, Quick question: How should QA test HTTPS?",
+      "For a student, Please explain this: How should QA test HTTPS?",
+      "For a student, I have a question: How should QA test HTTPS?",
+      "For a student, Can you tell me: How should QA test HTTPS?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1016
+  },
+  {
+    "id": "REG-229",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test privacy consent?",
+    "answer": "Verify privacy/terms links and ensure consent behaviour matches approved requirements.",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test privacy consent?",
+      "For a student, Please help me with this SPRINT query: How should QA test privacy consent?",
+      "For a student, I would like to know: How should QA test privacy consent?",
+      "For a student, Can you clarify this for me: How should QA test privacy consent?",
+      "For a student, Quick question: How should QA test privacy consent?",
+      "For a student, Please explain this: How should QA test privacy consent?",
+      "For a student, I have a question: How should QA test privacy consent?",
+      "For a student, Can you tell me: How should QA test privacy consent?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1017
+  },
+  {
+    "id": "REG-230",
+    "category": "qa_tests_security_and_privacy",
+    "question": "How should QA test duplicate account protection?",
+    "answer": "Submit repeated requests with test data and verify duplicate handling is safe and understandable. QA Tests — Responsive and Accessibility",
+    "alternative_questions": [
+      "For a student, Could you answer this question: How should QA test duplicate account protection?",
+      "For a student, Please help me with this SPRINT query: How should QA test duplicate account protection?",
+      "For a student, I would like to know: How should QA test duplicate account protection?",
+      "For a student, Can you clarify this for me: How should QA test duplicate account protection?",
+      "For a student, Quick question: How should QA test duplicate account protection?",
+      "For a student, Please explain this: How should QA test duplicate account protection?",
+      "For a student, I have a question: How should QA test duplicate account protection?",
+      "For a student, Can you tell me: How should QA test duplicate account protection?"
+    ],
+    "source_files": [
+      "SPRINT_Student_Registration_QA_Dataset_220.pdf"
+    ],
+    "source_location": "",
+    "verification_status": "needs_review",
+    "confidence": "low",
+    "last_verified": "",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "SPRINT_Chatbot_10K_QA_Training.jsonl",
+      "sprint-qa-dataset2.jsonl"
+    ],
+    "_master_order": 1018
+  }
+]
