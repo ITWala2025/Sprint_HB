@@ -10,8 +10,6 @@ import {
   ChevronDown,
   Heart,
   Laptop,
-  Pause,
-  Play,
   Search,
   SlidersHorizontal,
   X,
@@ -384,9 +382,6 @@ export default function CourseCatalogue({ items }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [heroSlide, setHeroSlide] = useState(0);
-  const [heroPaused, setHeroPaused] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const filterCategories = useMemo(
     () => [...new Set(catalogueItems.filter((item) => item.kind === "course").map((item) => item.category).filter(Boolean))].sort(),
@@ -417,30 +412,6 @@ export default function CourseCatalogue({ items }) {
     void loadCourses();
     return () => { active = false; };
   }, [items, supabase]);
-
-  useEffect(() => {
-    const motionPreference = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    );
-    const updateMotionPreference = () =>
-      setPrefersReducedMotion(motionPreference.matches);
-
-    updateMotionPreference();
-    motionPreference.addEventListener("change", updateMotionPreference);
-
-    return () =>
-      motionPreference.removeEventListener("change", updateMotionPreference);
-  }, []);
-
-  useEffect(() => {
-    if (heroPaused || prefersReducedMotion) return;
-
-    const intervalId = window.setInterval(() => {
-      setHeroSlide((currentSlide) => (currentSlide === 0 ? 1 : 0));
-    }, 6000);
-
-    return () => window.clearInterval(intervalId);
-  }, [heroPaused, prefersReducedMotion]);
 
   useEffect(() => {
     const value = new URLSearchParams(window.location.search).get(
@@ -503,109 +474,110 @@ export default function CourseCatalogue({ items }) {
   return (
     <div className="courses-page">
       <section
-        className="courses-hero"
+        className="courses-hero relative min-h-0 overflow-hidden bg-[#061a40] md:!min-h-[480px] lg:!min-h-[540px]"
         role="region"
         aria-label="Courses featured content"
-        aria-roledescription="carousel"
       >
         <div
-          className={`courses-hero__inner courses-hero__slide--content${heroSlide === 0 ? " is-active" : ""}`}
-          role="group"
-          aria-roledescription="slide"
-          aria-label="1 of 2: Courses catalogue"
-          aria-hidden={heroSlide !== 0}
-        >
-          {/*<p className="courses-eyebrow">
-            SPRINT learning catalogue
-          </p> */}
-
-          <h1>
-            Tailored pathways for every
-            career stage
-          </h1>
-
-          <p>
-            Explore 20+ practical courses, specialization packages,
-            and guided pathways designed to turn learning into
-            confident action.
-          </p>
-
-          <div className="course-search">
-            <Search size={20} aria-hidden="true" />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search courses, skills, or tools"
-              aria-label="Search courses"
-              onFocus={() => setHeroPaused(true)}
-            />
-            {query ? (
-              <div className="course-search__suggestions">
-                {suggestions.length ? (
-                  suggestions.map((item) => (
-                    <Link
-                      key={`${item.kind}-${item.slug}`}
-                      href={itemHref(item, audience)}
-                    >
-                      {item.title}
-                      <ArrowRight size={15} />
-                    </Link>
-                  ))
-                ) : (
-                  <p>No matching courses yet.</p>
-                )}
-              </div>
-            ) : null}
-          </div>
-        </div>
-
-        <div
-          className={`courses-hero__slide--pathway${heroSlide === 1 ? " is-active" : ""}`}
-          role="group"
-          aria-roledescription="slide"
-          aria-label="2 of 2: Learning pathways"
-          aria-hidden={heroSlide !== 1}
+          className="pointer-events-none absolute inset-0 z-0 hidden md:block"
+          aria-hidden="true"
         >
           <Image
-            src="/images/courses/courses-hero.png"
+            src="/images/courses/courses-hero.jpeg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="pointer-events-none scale-125 object-cover object-center opacity-90 blur-3xl"
+          />
+        </div>
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] hidden bg-[#061a40]/35 md:block"
+          aria-hidden="true"
+        />
+
+        <div className="relative z-20 mx-auto w-full max-w-[1400px] px-5 md:flex md:min-h-[480px] md:items-center md:px-6 lg:min-h-[540px] lg:px-12">
+          <div className="courses-hero__inner relative !z-20 !m-0 !w-full !max-w-xl !px-0 !py-12 md:!w-[46%] md:!px-0 lg:!py-16">
+            <h1 className="!text-3xl !leading-tight md:whitespace-nowrap lg:!text-4xl xl:!text-[2.6rem]">
+              <span>Tailored pathways</span>
+              <span>for every career stage</span>
+            </h1>
+
+            <p className="!max-w-md text-base">
+              Explore 20+ practical courses, specialization packages,
+              and guided pathways designed to turn learning into
+              confident action.
+            </p>
+
+            <div className="course-search !w-full !max-w-md">
+              <Search size={20} aria-hidden="true" />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search courses, skills, or tools"
+                aria-label="Search courses"
+              />
+              {query ? (
+                <div className="course-search__suggestions">
+                  {suggestions.length ? (
+                    suggestions.map((item) => (
+                      <Link
+                        key={`${item.kind}-${item.slug}`}
+                        href={itemHref(item, audience)}
+                      >
+                        {item.title}
+                        <ArrowRight size={15} />
+                      </Link>
+                    ))
+                  ) : (
+                    <p>No matching courses yet.</p>
+                  )}
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          <div
+            className="relative z-10 aspect-[16/9] w-full pb-6 md:hidden"
+            aria-hidden="true"
+          >
+            <Image
+              src="/images/courses/courses-hero.jpeg"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="!object-contain !object-right"
+              style={{
+                WebkitMaskImage:
+                  "linear-gradient(to right, transparent 0%, black 35%), linear-gradient(to bottom, transparent 0%, black 14%)",
+                maskImage:
+                  "linear-gradient(to right, transparent 0%, black 35%), linear-gradient(to bottom, transparent 0%, black 14%)",
+                WebkitMaskComposite: "source-in",
+                maskComposite: "intersect",
+              }}
+            />
+          </div>
+        </div>
+        <div
+          className="absolute inset-y-0 right-0 z-10 hidden w-[58%] pb-6 md:block"
+          aria-hidden="true"
+        >
+          <Image
+            src="/images/courses/courses-hero.jpeg"
             alt=""
             fill
             priority
-            sizes="100vw"
-          />
-        </div>
-
-        <div className="courses-hero__controls" role="group" aria-label="Carousel controls">
-          <button
-            type="button"
-            className={heroSlide === 0 ? "is-active" : ""}
-            aria-label="Show courses catalogue slide"
-            aria-pressed={heroSlide === 0}
-            onClick={() => {
-              setHeroSlide(0);
-              setHeroPaused(true);
+            sizes="(min-width: 768px) 58vw, 100vw"
+            className="!object-contain !object-right"
+            style={{
+              WebkitMaskImage:
+                "linear-gradient(to right, transparent 0%, black 35%), linear-gradient(to bottom, transparent 0%, black 14%), linear-gradient(to top, transparent 0%, black 10%)",
+              maskImage:
+                "linear-gradient(to right, transparent 0%, black 35%), linear-gradient(to bottom, transparent 0%, black 14%), linear-gradient(to top, transparent 0%, black 10%)",
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect",
             }}
           />
-          <button
-            type="button"
-            className={heroSlide === 1 ? "is-active" : ""}
-            aria-label="Show learning pathways slide"
-            aria-pressed={heroSlide === 1}
-            onClick={() => {
-              setHeroSlide(1);
-              setHeroPaused(true);
-            }}
-          />
-          {!prefersReducedMotion ? (
-            <button
-              type="button"
-              className="courses-hero__toggle"
-              aria-label={heroPaused ? "Resume slide rotation" : "Pause slide rotation"}
-              onClick={() => setHeroPaused((isPaused) => !isPaused)}
-            >
-              {heroPaused ? <Play size={14} /> : <Pause size={14} />}
-            </button>
-          ) : null}
         </div>
       </section>
 
