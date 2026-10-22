@@ -40,6 +40,14 @@ beforeAll(() => {
 });
 
 describe("AboutPage", () => {
+  it("renders the updated hero heading", () => {
+    render(<AboutPage />);
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Who we are?" }),
+    ).toBeInTheDocument();
+  });
+
   it("renders the Connect With SPRINT CTA section", () => {
     render(<AboutPage />);
 

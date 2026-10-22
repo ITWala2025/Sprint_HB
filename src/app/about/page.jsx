@@ -10,7 +10,6 @@ import ProfileCard from "@/components/cards/ProfileCard";
 import SkillCard from "@/components/cards/SkillCard";
 import WhyChooseSprint from "@/components/sections/WhyChooseSprint";
 
-
 // About Us — "/about". Spec: docs/md/About_Page.md (10 approved sections).
 // Sections 1 (Header) and 10 (Footer) render via the root layout; this page
 // implements sections 2–7 and the final CTA in the approved stacking order.
@@ -117,7 +116,7 @@ export default function AboutPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
 
-      {/* ============ 2. HERO — Who is SPRINT? (§3.2) ============ */}
+      {/* ============ 2. HERO — Who we are? (§3.2) ============ */}
       <section
         id="who-is-sprint"
         className="sprint-hero-bg sprint-anchor relative overflow-hidden"
@@ -259,11 +258,12 @@ export default function AboutPage() {
         accessibleBrandRed
         sectionClassName="sprint-section bg-brand-white"
         contentClassName="mx-auto max-w-[1200px] px-6 py-[1.4rem] md:py-[1.925rem] lg:py-[2.45rem]"
-        profilesContent={<FacultyFilmstrip profiles={aboutFacultyAndAcademicProfiles} />}
+        profilesContent={
+          <FacultyFilmstrip profiles={aboutFacultyAndAcademicProfiles} />
+        }
       />
 
       <WhyChooseSprint />
-      
 
       {/* ============ 7. INDUSTRY / ACADEMIC CONNECTION (§3.7) ============ */}
       <section

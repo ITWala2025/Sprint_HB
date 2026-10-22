@@ -63,7 +63,7 @@ function CourseArt({ category }) {
 function CourseTile({ item, audience }) {
   const level = item.difficulty_level || item.difficulty || item.level || "Beginner";
   return (
-    <article className="course-tile">
+    <article className="course-tile min-w-0">
       <div className="course-tile__art">
         {item.image?.startsWith("/") ? <Image src={item.image} alt="" fill sizes="(min-width: 1024px) 26vw, (min-width: 640px) 45vw, 100vw" className="object-cover" /> : item.image ? <div aria-hidden="true" className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(0deg, rgba(1,31,62,.18), rgba(1,31,62,.04)), url("${item.image}")` }} /> : <CourseArt category={item.category} />}
 
@@ -72,7 +72,7 @@ function CourseTile({ item, audience }) {
         ) : null}
       </div>
 
-      <div className="course-tile__body">
+      <div className="course-tile__body !min-h-0 md:!min-h-[282px]">
         <p className="course-tile__category">{item.category}</p>
 
         <h2>{item.title}</h2>
@@ -472,9 +472,9 @@ export default function CourseCatalogue({ items }) {
   );
 
   return (
-    <div className="courses-page">
+    <div className="courses-page min-w-0">
       <section
-        className="courses-hero relative min-h-0 overflow-hidden bg-[#061a40] md:!min-h-[480px] lg:!min-h-[540px]"
+        className="courses-hero relative min-h-0 overflow-hidden bg-[#061a40] pb-6 md:!min-h-[480px] md:pb-0 lg:!min-h-[540px]"
         role="region"
         aria-label="Courses featured content"
       >
@@ -509,8 +509,9 @@ export default function CourseCatalogue({ items }) {
             </p>
 
             <div className="course-search !w-full !max-w-md">
-              <Search size={20} aria-hidden="true" />
+              <Search className="shrink-0" size={20} aria-hidden="true" />
               <input
+                className="min-w-0"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search courses, skills, or tools"
@@ -537,7 +538,7 @@ export default function CourseCatalogue({ items }) {
           </div>
 
           <div
-            className="relative z-10 aspect-[16/9] w-full pb-6 md:hidden"
+            className="relative z-10 -mt-4 aspect-[16/9] w-full md:hidden"
             aria-hidden="true"
           >
             <Image
@@ -546,15 +547,7 @@ export default function CourseCatalogue({ items }) {
               fill
               priority
               sizes="100vw"
-              className="!object-contain !object-right"
-              style={{
-                WebkitMaskImage:
-                  "linear-gradient(to right, transparent 0%, black 35%), linear-gradient(to bottom, transparent 0%, black 14%)",
-                maskImage:
-                  "linear-gradient(to right, transparent 0%, black 35%), linear-gradient(to bottom, transparent 0%, black 14%)",
-                WebkitMaskComposite: "source-in",
-                maskComposite: "intersect",
-              }}
+              className="!object-contain !object-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_25%)]"
             />
           </div>
         </div>
@@ -585,7 +578,7 @@ export default function CourseCatalogue({ items }) {
         className="course-audience"
         aria-label="Choose your audience"
       >
-        <div className="course-audience__inner">
+        <div className="course-audience__inner !flex-col !items-stretch !gap-2 md:!flex-row md:!items-center md:!gap-4">
           <div
             className="course-audience__desktop"
             role="tablist"
@@ -611,7 +604,7 @@ export default function CourseCatalogue({ items }) {
             ))}
           </div>
 
-          <label className="course-audience__mobile">
+          <label className="course-audience__mobile !w-full md:!w-auto">
             <span>Learning for</span>
 
             <select
@@ -636,7 +629,7 @@ export default function CourseCatalogue({ items }) {
             />
           </label>
 
-          <div className="course-filter-actions">
+          <div className="course-filter-actions !ml-0 !w-full !justify-between md:!ml-auto md:!w-auto md:!justify-start">
             <button
               type="button"
               className="course-filter-trigger"
@@ -663,8 +656,8 @@ export default function CourseCatalogue({ items }) {
 
       <FeaturedPrograms />
 
-      <main id="individual-modular-courses" className="courses-content">
-        <div className="courses-results">
+      <main id="individual-modular-courses" className="courses-content min-w-0">
+        <div className="courses-results min-w-0">
           <div className="courses-results__meta">
             <span>
               {visibleItems.length} learning options
@@ -768,7 +761,7 @@ export default function CourseCatalogue({ items }) {
       ) : null}
 
       <section className="courses-cta">
-        <div>
+        <div className="min-w-0">
           {/* <p className="courses-eyebrow">
             Not sure where to start?
           </p> */}
