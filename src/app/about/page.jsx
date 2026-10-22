@@ -5,6 +5,7 @@ import about from "@/data/about.json";
 import siteConfig from "@/config/site.config.json";
 import StoryVisionMission from "@/components/sections/StoryVisionMission";
 import FacultyExperts from "@/components/sections/FacultyExperts";
+import FacultyFilmstrip from "@/components/Home/FacultyFilmstrip";
 import ProfileCard from "@/components/cards/ProfileCard";
 import SkillCard from "@/components/cards/SkillCard";
 import WhyChooseSprint from "@/components/sections/WhyChooseSprint";
@@ -86,6 +87,26 @@ function SectionHeader({ heading, subtitle, center = false, id }) {
     </div>
   );
 }
+
+/* Build the same faculty+academic-lead profile list used on the Home Page.
+   The academic lead ("Priya Verma") is pulled from leadership and prepended
+   with her home-page portrait so the filmstrip is identical on both pages. */
+const aboutFacultyProfiles = about.faculty.profiles.map((profile) => ({
+  ...profile,
+  image:
+    profile.image ??
+    (profile.name === "Ananya Roy" ? "/images/home/Ananya.jpeg" : undefined),
+}));
+const aboutAcademicLead = about.leadership.profiles.find(
+  (profile) => profile.name === "Priya Verma",
+);
+const aboutFacultyAndAcademicProfiles = [
+  ...aboutFacultyProfiles,
+  {
+    ...aboutAcademicLead,
+    image: "/images/home/Priya.jpeg",
+  },
+];
 
 export default function AboutPage() {
   return (
@@ -232,7 +253,14 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 6. FACULTY / EXPERTS (§3.6) ============ */}
-      <FacultyExperts />
+      {/* Reuses the exact same FacultyFilmstrip component and profile data as
+          the Home Page — no duplication, identical layout/animations/images. */}
+      <FacultyExperts
+        accessibleBrandRed
+        sectionClassName="sprint-section bg-brand-white"
+        contentClassName="mx-auto max-w-[1200px] px-6 py-[1.4rem] md:py-[1.925rem] lg:py-[2.45rem]"
+        profilesContent={<FacultyFilmstrip profiles={aboutFacultyAndAcademicProfiles} />}
+      />
 
       <WhyChooseSprint />
       

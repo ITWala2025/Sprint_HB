@@ -73,7 +73,10 @@ body {
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior is set via data-scroll-behavior="smooth" on the <html>
+     element in layout.jsx — Next.js App Router requires this pattern so that
+     route transitions are not disrupted by CSS scroll-behavior: smooth.
+     See: https://nextjs.org/docs/messages/missing-data-scroll-behavior */
 }
 
 /* ========================================
