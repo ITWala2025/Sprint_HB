@@ -56,7 +56,7 @@ export const whyJoinContent = [
   {
     id: "para-1",
     content:
-      "At SPRINT, <span className=\"text-brand-red\">learning meets impact</span> every single day. We are not building another content library — we are building the bridge between academic theory and industry reality. Every program we design, every mentor we onboard, and every project we ship is measured by one outcome: does it accelerate a learner's journey from classroom to career?"
+      "At SPRINT, <span className=\"text-brand-red\">learning meets impact</span> every single day. We are not building another content library. We are building the bridge between academic theory and industry reality. Every program we design, every mentor we onboard, and every project we ship is measured by one outcome: does it accelerate a learner's journey from classroom to career?"
   },
   {
     id: "para-2",
@@ -66,7 +66,7 @@ export const whyJoinContent = [
   {
     id: "para-3",
     content:
-      "Joining SPRINT means joining a <span className=\"text-brand-red\">community of builders</span> who believe the academic–industry gap is solvable — not with more content, but with better context. You will have access to our full course library, weekly tech talks with partner-company engineers, and a network of alumni now placed at leading tech companies. Your growth here doesn't stop at your role; it compounds through every learner you help succeed."
+      "Joining SPRINT means joining a <span className=\"text-brand-red\">community of builders</span> who believe the academic to industry gap is solvable, not with more content, but with better context. You will have access to our full course library, weekly tech talks with partner-company engineers, and a network of alumni now placed at leading tech companies. Your growth here doesn't stop at your role; it compounds through every learner you help succeed."
   },
 ];
 
