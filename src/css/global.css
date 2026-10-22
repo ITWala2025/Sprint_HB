@@ -5291,12 +5291,16 @@ a {
   }
 }
 
-/* --- Arrow Animation (ThreeUI-inspired) --- */
+/* --- Arrow Animation (ThreeUI-inspired) ---
+   The arrow slides on :hover (desktop), and on :active / :focus-visible
+   so touch and keyboard users get the same affordance without a mouse. */
 .sprint-enroll-button .enroll-arrow {
   transition: transform 0.3s ease;
 }
 
-.sprint-enroll-button:hover .enroll-arrow {
+.sprint-enroll-button:hover .enroll-arrow,
+.sprint-enroll-button:active .enroll-arrow,
+.sprint-enroll-button:focus-visible .enroll-arrow {
   transform: translateX(4px);
 }
 
@@ -5309,7 +5313,9 @@ a {
   .sprint-enroll-button .enroll-arrow {
     transition: none;
   }
-  .sprint-enroll-button:hover .enroll-arrow {
+  .sprint-enroll-button:hover .enroll-arrow,
+  .sprint-enroll-button:active .enroll-arrow,
+  .sprint-enroll-button:focus-visible .enroll-arrow {
     transform: none;
   }
 }
