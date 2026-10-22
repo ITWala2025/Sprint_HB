@@ -70,7 +70,7 @@ export default function MobileNavigation({
               accessibleBrandRed ? "bg-brand-red-accessible" : "bg-brand-red"
             }`}
           >
-            <span className="floating-dots" aria-hidden="true"><i className="dot" /><i className="dot" /><i className="dot" /><i className="dot" /><i className="dot" /><i className="dot" /><i className="dot" /><i className="dot" /><i className="dot" /><i className="dot" /></span>
+            <span className="floating-dots" aria-hidden="true">{Array.from({ length: 10 }).map((_, i) => <i key={i} className="dot" aria-hidden="true" style={{ animationName: "sprint-floating-dots" }} />)}</span>
             <span className="min-[420px]:hidden">Enroll</span>
             <span className="hidden min-[420px]:inline">Enroll Now</span>
             <ArrowRight className="enroll-arrow size-4" aria-hidden="true" />

@@ -35,7 +35,7 @@ describe("MobileEnrollButton", () => {
       const dots = wrapper.querySelectorAll(".dot");
       expect(dots.length).toBe(10);
       for (const dot of dots) {
-        expect(dot.style.animationName).toContain("sprint-floating-dots");
+        expect((dot as HTMLElement).style.animationName).toContain("sprint-floating-dots");
         expect(dot.getAttribute("aria-hidden")).toBeTruthy();
       }
     });
@@ -71,7 +71,7 @@ describe("MobileEnrollButton", () => {
       // preference active, each dot's inline `animation` is overridden to none
       // via the cascade. jsdom won't run media queries, so we assert the rule is
       // *present* in the parsed stylesheet so the guard keeps meaning to exist.
-      const match = stylesheet.match(
+      const match = (stylesheet as string).match(
         /\.sprint-enroll-button \.floating-dots \.dot \{[\s\S]*?animation:\s*none;/,
       );
       expect(match).not.toBeNull();
