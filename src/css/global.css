@@ -6106,8 +6106,15 @@ a {
 
 .course-audience__mobile {
   display: none;
-  flex: 1 1 15rem;
+  flex: 0 0 auto;
+  height: auto;
   min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .course-audience__mobile {
+    flex: 1 1 15rem;
+  }
 }
 
 .course-filter-trigger {
