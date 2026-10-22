@@ -142,7 +142,7 @@ export default function HiringProcess() {
         {/* CTA */}
         <div className="mt-10 text-center lg:mt-9">
           <a
-            href="#application-form"
+            href="mailto:info@sprint.naturalelements.co.in?subject=Careers%20Application%20-%20SPRINT&body=Name%3A%20%0ARole%20Applied%20For%3A%20%0AResume%2FPortfolio%20Link%3A%20"
             className="process-cta relative inline-flex min-h-11 items-center justify-center gap-2 overflow-hidden rounded-full bg-[#ef233c] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-red-950/20 transition duration-300 hover:-translate-y-0.5 hover:bg-[#d91f35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
           >
             <span className="relative z-10">Start Your Application</span>

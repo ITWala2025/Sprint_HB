@@ -38,12 +38,12 @@ export default function OpenPositions() {
   return (
     <section
       id="open-positions"
-      className="bg-white pt-6 pb-14 sm:pt-8 sm:pb-16 lg:pt-10 lg:pb-16"
+      className="bg-white pt-2 pb-14 sm:pt-4 sm:pb-16 lg:pt-6 lg:pb-16"
       aria-labelledby="open-positions-heading"
     >
       <div className="mx-auto max-w-[1200px] px-5 sm:px-8 lg:px-6">
         {/* Section heading */}
-        <div className="mb-7 text-center">
+        <div className="mb-5 text-center">
           <span className="inline-flex rounded-full bg-rose-50 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ef3e43]">
             Open Positions
           </span>
@@ -58,7 +58,7 @@ export default function OpenPositions() {
 
         {/* Filter tabs */}
         <div
-          className="mb-7 flex flex-wrap items-center justify-center gap-2"
+          className="mb-5 flex flex-wrap items-center justify-center gap-2"
           role="tablist"
           aria-label="Filter by role type"
         >

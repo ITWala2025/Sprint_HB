@@ -30,7 +30,7 @@ export default function CareerHero() {
       />
 
       {/* Hero content */}
-      <div className="relative z-20 mx-auto flex min-h-[480px] w-full max-w-[1200px] items-center px-5 py-10 sm:px-8 sm:py-12 lg:min-h-[430px] lg:px-6">
+      <div className="relative z-20 mx-auto flex min-h-[480px] w-full max-w-[1200px] items-center px-5 pt-5 pb-10 sm:px-8 sm:pt-6 sm:pb-12 lg:min-h-[430px] lg:px-6 lg:pt-7">
         <div className="w-full max-w-[570px]">
           {/* Breadcrumb */}
           <nav
@@ -68,8 +68,8 @@ export default function CareerHero() {
 
           {/* Description */}
           <p className="mt-6 max-w-[510px] text-sm leading-7 text-white/90 sm:text-base">
-            Join a team that bridges the academic-industry gap with
-            hands-on, mentor-led programs. We are looking for engineers,
+            Join a team that bridges the academic industry gap with
+            hands on, mentor led programs. We are looking for engineers,
             educators, and operators who want to shape how India learns
             emerging technologies.
           </p>
@@ -86,35 +86,25 @@ export default function CareerHero() {
           </div>
 
           {/* Key highlights */}
-          <div className="mt-9 grid max-w-[540px] grid-cols-2 gap-x-5 gap-y-5 text-xs sm:grid-cols-4">
-            <div>
-              <p className="font-semibold text-white">Meaningful Impact</p>
-              <p className="mt-1 leading-5 text-white/70">
-                Shape future talent
-              </p>
+          <div className="mt-9 grid w-full grid-cols-2 gap-3 text-xs sm:grid-cols-4">
+            <div className="group flex flex-col justify-center gap-0.5 rounded-xl border border-white/16 bg-white/8 px-4 py-3 backdrop-blur-md shadow-sm transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:transform-none">
+              <p className="font-semibold leading-tight text-white">Meaningful Impact</p>
+              <p className="leading-5 text-white/72">Shape future talent</p>
             </div>
 
-            <div>
-              <p className="font-semibold text-white">
-                Collaborative Culture
-              </p>
-              <p className="mt-1 leading-5 text-white/70">
-                Learn and grow together
-              </p>
+            <div className="group flex flex-col justify-center gap-0.5 rounded-xl border border-white/16 bg-white/8 px-4 py-3 backdrop-blur-md shadow-sm transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:transform-none">
+              <p className="font-semibold leading-tight text-white">Collaborative Culture</p>
+              <p className="leading-5 text-white/72">Learn and grow together</p>
             </div>
 
-            <div>
-              <p className="font-semibold text-white">Flexible Work</p>
-              <p className="mt-1 leading-5 text-white/70">
-                People-first policies
-              </p>
+            <div className="group flex flex-col justify-center gap-0.5 rounded-xl border border-white/16 bg-white/8 px-4 py-3 backdrop-blur-md shadow-sm transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:transform-none">
+              <p className="font-semibold leading-tight text-white">Flexible Work</p>
+              <p className="leading-5 text-white/72">People-first policies</p>
             </div>
 
-            <div>
-              <p className="font-semibold text-white">Career Growth</p>
-              <p className="mt-1 leading-5 text-white/70">
-                Build what matters
-              </p>
+            <div className="group flex flex-col justify-center gap-0.5 rounded-xl border border-white/16 bg-white/8 px-4 py-3 backdrop-blur-md shadow-sm transition-transform duration-150 ease-out hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:transform-none">
+              <p className="font-semibold leading-tight text-white">Career Growth</p>
+              <p className="leading-5 text-white/72">Build what matters</p>
             </div>
           </div>
         </div>
