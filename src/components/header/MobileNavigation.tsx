@@ -66,13 +66,14 @@ export default function MobileNavigation({
             href="/student/enroll"
             aria-label="Enroll Now"
             title="Enroll Now"
-            className={`sprint-focus inline-flex min-h-10 shrink-0 items-center justify-center gap-1 rounded-xl px-3 py-2 text-sm font-bold text-white shadow-sm ${
+            className={`sprint-enroll-button sprint-focus inline-flex min-h-10 shrink-0 items-center justify-center gap-1 rounded-xl px-3 py-2 text-sm font-bold text-white shadow-sm ${
               accessibleBrandRed ? "bg-brand-red-accessible" : "bg-brand-red"
             }`}
           >
+            <span className="floating-dots" aria-hidden="true">{Array.from({ length: 10 }).map((_, i) => <i key={i} className="dot" aria-hidden="true" style={{ animationName: "sprint-floating-dots" }} />)}</span>
             <span className="min-[420px]:hidden">Enroll</span>
             <span className="hidden min-[420px]:inline">Enroll Now</span>
-            <ArrowRight className="size-4" aria-hidden="true" />
+            <ArrowRight className="enroll-arrow size-4" aria-hidden="true" />
           </a>
         )}
         <button
