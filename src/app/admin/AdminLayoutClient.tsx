@@ -48,7 +48,7 @@ const navigationGroups: NavigationGroup[] = [
             { label: "About Us CMS", href: "/admin/cms/about", icon: FileEdit },
             { label: "Course & Bundle CMS", href: "/admin/cms/courses", icon: Layers },
             { label: "Contact & Center CMS", href: "/admin/cms/contact", icon: PhoneCall },
-            { label: "Careers & Openings CMS", href: "/admin/cms/careers", icon: Briefcase },
+            { label: "Careers & Openings CMS", href: "/admin/careers", icon: Briefcase },
             { label: "Ticker & Campus Announcements", href: "/admin/cms/announcements", icon: Megaphone },
             { label: "Legal & Compliance CMS", href: "/admin/cms/legal", icon: ShieldCheck },
         ]

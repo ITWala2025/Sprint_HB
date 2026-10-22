@@ -34,6 +34,8 @@ export const moduleCategories = [
             ["cms_courses", "Course & Bundle CMS", "Manage course catalogue and bundle presentation."],
             ["cms_contact", "Contact & Center CMS", "Maintain contact details and center information."],
             ["cms_careers", "Careers & Openings CMS", "Publish vacancies and hiring information."],
+            ["careers", "Careers", "Manage career listings and hiring information."],
+            ["admin", "Careers Administration", "Manage career listings through the admin permission key."],
             ["course_bundle_cms", "Course & Bundle CMS", "Manage course catalogue and flagship program content."],
             ["cms_announcements", "Announcements", "Publish ticker messages and campus updates."],
             ["cms_legal", "Legal & Compliance CMS", "Maintain privacy and terms content."],

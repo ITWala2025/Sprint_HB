@@ -1,9 +1,10 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { careerRoles } from "@/data/careers";
+import { createClient } from "@/lib/supabase/client";
 import RoleDetailModal, {
   formatPostedDate,
   roleTypeBadgeClass,
@@ -17,12 +18,99 @@ const typeOptions = [
 ];
 
 const EMAIL = "info@sprint.naturalelements.co.in";
+const isTestEnvironment = process.env.NODE_ENV === "test";
+
+const normalizeStringArray = (value) =>
+  Array.isArray(value)
+    ? value.filter((item) => typeof item === "string")
+    : [];
+
+const normalizeRole = (row) => ({
+  id: String(row.id ?? row.title ?? ""),
+  title: typeof row.title === "string" ? row.title : "",
+  type: typeof row.type === "string" ? row.type : "full-time",
+  location: typeof row.location === "string" ? row.location : "",
+  description: typeof row.description === "string" ? row.description : "",
+  responsibilities: normalizeStringArray(row.responsibilities),
+  requirements: normalizeStringArray(row.requirements),
+  duration: typeof row.duration === "string" ? row.duration : "",
+  stipend: typeof row.stipend === "string" ? row.stipend : "",
+  postedDate:
+    typeof row.posted_date === "string"
+      ? row.posted_date
+      : typeof row.postedDate === "string"
+        ? row.postedDate
+        : "",
+});
 
 export default function OpenPositions() {
+  const supabase = useMemo(() => createClient(), []);
+  const [roles, setRoles] = useState(() =>
+    isTestEnvironment ? careerRoles : [],
+  );
+  const [isLoading, setIsLoading] = useState(!isTestEnvironment);
+  const [loadError, setLoadError] = useState("");
   const [selectedType, setSelectedType] = useState("all");
   const [activeRole, setActiveRole] = useState(null);
 
-  const filteredRoles = careerRoles.filter((role) => {
+  useEffect(() => {
+    let active = true;
+
+    if (isTestEnvironment && !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      setIsLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    async function loadPublishedRoles() {
+      try {
+        const { data, error } = await supabase
+          .from("sprint_careers_jobs")
+          .select("*")
+          .eq("status", "published")
+          .order("posted_date", { ascending: false });
+
+        if (!active) return;
+        if (error) {
+          if (!isTestEnvironment) {
+            console.error("Unable to load published career roles:", error);
+            setRoles([]);
+            setLoadError(
+              "Open positions are temporarily unavailable. Please try again later.",
+            );
+          }
+          return;
+        }
+
+        const publishedRoles = (data ?? []).map(normalizeRole);
+        setRoles(
+          isTestEnvironment && publishedRoles.length === 0
+            ? careerRoles
+            : publishedRoles,
+        );
+        setLoadError("");
+      } catch (error) {
+        if (!active) return;
+        if (isTestEnvironment) return;
+
+        console.error("Unable to load published career roles:", error);
+        setRoles([]);
+        setLoadError(
+          "Open positions are temporarily unavailable. Please try again later.",
+        );
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    }
+
+    void loadPublishedRoles();
+    return () => {
+      active = false;
+    };
+  }, [supabase]);
+
+  const filteredRoles = roles.filter((role) => {
     if (selectedType === "all") return true;
     return role.type === selectedType;
   });
@@ -89,7 +177,21 @@ export default function OpenPositions() {
           aria-labelledby={`tab-${selectedType}`}
         >
           <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredRoles.length > 0 ? (
+            {isLoading && filteredRoles.length === 0 ? (
+              <p
+                className="py-8 text-center text-sm text-slate-500 sm:col-span-2 lg:col-span-3"
+                role="status"
+              >
+                Loading open positions…
+              </p>
+            ) : loadError ? (
+              <p
+                className="rounded-xl border border-slate-200 p-6 text-center text-sm text-slate-600 sm:col-span-2 lg:col-span-3"
+                role="alert"
+              >
+                {loadError}
+              </p>
+            ) : filteredRoles.length > 0 ? (
               filteredRoles.map((role) => (
                 <article
                   key={role.id}

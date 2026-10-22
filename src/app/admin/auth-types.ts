@@ -35,6 +35,7 @@ export const adminRoutePermissions: Record<string, string[]> = {
     "/admin/cms/courses": ["cms_courses", "courses"],
     "/admin/cms/contact": ["cms_contact", "support"],
     "/admin/cms/careers": ["cms_careers", "marketing"],
+    "/admin/careers": ["careers", "cms_careers", "admin"],
     "/admin/cms/announcements": ["cms_announcements", "marketing"],
     "/admin/cms/legal": ["cms_legal"],
     "/admin/students": ["student_ops"],
