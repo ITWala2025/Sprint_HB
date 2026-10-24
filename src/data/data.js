@@ -140,7 +140,7 @@ export const featuredCourse = {
 export const videoTestimonials = [
   {
     id: "v1",
-    name: "Survesh",
+    name: "Sarvesh",
     role: "BTech Graduate",
     videoUrl: "/testimonials/testimonials1.mp4",
   },
@@ -155,6 +155,12 @@ export const videoTestimonials = [
     name: "Raman Munda",
     role: "BTech Graduate",
     videoUrl: "/testimonials/Raman_munda testimonial.mp4",
+  },
+   {
+    id: "v4",
+    name: "Farhat",
+    role: "BTech Graduate",
+    videoUrl: "#",
   },
 ];
 

@@ -446,11 +446,11 @@ export default function VideoTestimonials() {
         onTouchStart={() => { pauseRef.current.touching = true; lastInteractionRef.current = Date.now(); }}
         onTouchEnd={() => { pauseRef.current.touching = false; lastInteractionRef.current = Date.now(); }}
         onTouchCancel={() => { pauseRef.current.touching = false; }}
-        className={`sprint-focus flex min-w-0 snap-x snap-mandatory items-start gap-5 overflow-x-auto overscroll-x-contain rounded-2xl pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-6 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`sprint-focus flex min-w-0 snap-x snap-mandatory items-start gap-8 overflow-x-auto overscroll-x-contain rounded-2xl pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-10 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
       >
         {videoTestimonials.map((testimonial, index) => (
           <article key={testimonial.id} aria-label={`Video testimonial ${index + 1} of ${videoTestimonials.length}`}
-            className="w-full shrink-0 snap-start select-none overflow-hidden rounded-2xl md:w-[calc((100%_-_24px)/2)] lg:w-[calc((100%_-_48px)/3)]">
+            className="w-full shrink-0 snap-start select-none overflow-hidden rounded-2xl md:w-[calc((100%_-_32px)/2)] lg:w-[calc((100%_-_64px)/3)]">
             <VideoTestimonial testimonial={testimonial} registerVideo={registerVideo} onVideoPlay={handleVideoPlay} onVideoPause={handleVideoPause} />
           </article>
         ))}
