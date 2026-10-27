@@ -241,7 +241,7 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 
 ### Package Metadata
 
-- `package.json` declares `packageManager: "npm@10"` to keep dependency installation and Next/Tailwind package discovery consistent across development environments.
+- `package.json` declares `packageManager: "npm@10.9.2"` to keep dependency installation and Next/Tailwind package discovery consistent across development environments.
 
 1. **Centralized Contact Information**:
    - **Never** hardcode telephone numbers, email addresses, or social media URLs inside individual components.
