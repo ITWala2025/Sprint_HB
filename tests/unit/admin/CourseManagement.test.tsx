@@ -1,7 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import CourseManagementPage, { generateSlug } from "@/app/admin/courses/page";
+import CourseManagementPage from "@/app/admin/courses/page";
+import { generateSlug } from "@/lib/course-utils";
 
 const mocks = vi.hoisted(() => ({
     from: vi.fn(),

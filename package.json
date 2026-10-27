@@ -6,7 +6,7 @@
   "description": "SPRINT Institutional Training Hub - Next.js website (Hazaribagh, Jharkhand)",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint",
     "chatbot:qa:build": "node scripts/build/build-chatbot-qa-master.js",
@@ -37,7 +37,7 @@
     "@types/node": "26.6.2",
     "@types/react": "19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
-    "happy-dom": "^20.14.5",
+    "happy-dom": "^21.0.4",
     "jsdom": "^29.1.1",
     "tailwindcss": "^4.1.0",
     "typescript": "7.0.2",

@@ -6,38 +6,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAdminPermissions } from "@/app/admin/permissions-context";
-
-export interface SyllabusModule {
-    title: string;
-    sessions: number;
-    topics?: string[];
-}
-
-export interface CourseItem {
-    id: string;
-    slug: string;
-    title: string;
-    category: string;
-    difficulty_level: string;
-    audience: "undergraduate" | "working_professional";
-    audience_type: "undergraduate" | "working_professional";
-    delivery_method: "Hybrid" | "Online" | "Offline";
-    duration: string;
-    description: string;
-    long_description: string | null;
-    badge_label: string;
-    prerequisites: string | null;
-    tools: string[];
-    curriculum: SyllabusModule[];
-    outcomes: string[];
-    target_roles: string[];
-    is_featured: boolean;
-    is_published: boolean;
-    pathway: string | null;
-    target_role: string | null;
-    certificate_included: boolean;
-    thumbnail_url: string | null;
-}
+import { type CourseItem, type SyllabusModule, generateSlug } from "@/lib/course-utils";
 
 type CoursePayload = Omit<CourseItem, "id">;
 type RoadmapStage = { title: string; duration: string; subjects: string[] };
@@ -83,15 +52,6 @@ const inputClass = "sprint-focus mt-1.5 w-full rounded-lg border border-slate-20
 const labelClass = "block text-xs font-bold text-brand-navy";
 const iconButtonClass = "sprint-focus inline-flex size-9 items-center justify-center rounded-lg border border-slate-200 text-brand-navy transition hover:border-brand-navy hover:bg-brand-surface disabled:opacity-50";
 
-export function generateSlug(title: string) {
-    return title
-        .normalize("NFKD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
-}
 
 function normalizeCourse(row: CourseItem): CourseItem {
     const curriculum = Array.isArray(row.curriculum) ? row.curriculum : [];
