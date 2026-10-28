@@ -2,6 +2,8 @@
 
 > **Single Source of Truth** for codebase architecture, technical stack, core entities, directory structures, design guidelines, and business constraints for the SPRINT Training Hub web platform.
 
+> **Change log rule:** Update this root `memory.md` with a dated entry whenever code changes are made. Record the affected areas, user-visible or operational behavior, and relevant validation results. Treat `docs/md/memory.md` as a separate document, not a synchronized copy.
+
 ---
 
 ## 1. Project Overview & Mission
@@ -26,13 +28,13 @@
 
 | Layer                      | Technologies                                            | Notes & Versions                                                                                                                                                                   |
 | -------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Framework**              | Next.js (App Router), React 19, React-DOM 19            | Next.js ^16.3.5, React ^19.1.0 (modern Server & Client components)                                                                                                                 |
+| **Framework**              | Next.js (App Router), React 19, React-DOM 19            | Next.js ^16.4.1, React ^19.1.0 (modern Server & Client components)                                                                                                                 |
 | **Language & Type Safety** | TypeScript, JavaScript                                  | TypeScript 7.0.2; `tsconfig.json` uses bundler module resolution and `react-jsx`                                                                                                   |
 | **Styling**                | Tailwind CSS v4, PostCSS, Custom CSS                    | Tailwind v4 with `@theme` directive; PostCSS `@tailwindcss/postcss`                                                                                                                |
 | **Design Tokens**          | Brand theme in [src/css/global.css](src/css/global.css) | Custom palette (`brand-navy`, `brand-red`, surfaces, typography)                                                                                                                   |
 | **Icons**                  | Lucide React, React Icons                               | `lucide-react` (^0.525.0), `react-icons` (^5.7.0)                                                                                                                                  |
 | **Typography**             | Space Grotesk (Headings), Inter (Body)                  | Configured via `next/font/google` in root layout                                                                                                                                   |
-| **Database & Auth**        | Supabase (PostgreSQL 15+)                               | Complete schema, enums, triggers, and RLS policies in [src/Supabase/.sql](src/Supabase/.sql)                                                                                       |
+| **Database & Auth**        | Supabase (PostgreSQL 15+)                               | Base schema and incremental auth, RBAC, staff, course, and careers migrations live in [src/Supabase/](src/Supabase/)                                                               |
 | **Testing**                | Vitest, React Testing Library, jsdom, happy-dom         | Vitest ^5.0.1, `@testing-library/react` ^16.3.3, `@testing-library/jest-dom` ^7.0.1, `@testing-library/user-event` ^14.6.7                                                         |
 | **Type Definitions**       | `tests/vitest.d.ts`                                     | Triple-slash references to `vitest/globals` and `@testing-library/jest-dom/vitest` so TypeScript picks up `afterEach`, `toBeInTheDocument`, `toHaveAttribute`, `toHaveClass`, etc. |
 | **Runtime & Node**         | Node.js >= 20 (Node v24 tested), npm >= 10              | Target OS: macOS / Linux / Windows                                                                                                                                                 |
@@ -43,87 +45,30 @@
 
 ```text
 .
-├── backlog_features.feature       # Gherkin specification for feature requirements & acceptance criteria
-├── jsconfig.json                  # Path aliases (@/* -> ./src/*)
-├── next.config.mjs                # Next.js build and image optimization settings
-├── package.json                   # Dependencies, devDependencies, and npm scripts
-├── postcss.config.mjs             # PostCSS plugins for Tailwind v4
-├── README.md                      # Project onboarding and developer documentation
-├── vitest.config.js               # Vitest runner configuration with jsdom & path aliases
-├── vitest.config.mjs              # TSX header-test runner configuration with happy-dom
-├── vitest.setup.js                # Global test setup (jest-dom matchers)
-├── config/
-│   └── environments/              # Environment-specific configuration (development, staging, production)
-├── docs/
-│   ├── architecture/              # Architecture diagrams and specifications (e.g., Auth_Model_Sprint.pdf)
-│   ├── decisions/                 # Architecture Decision Records (ADRs)
-│   ├── md/                        # Markdown requirement specifications:
-│   │   ├── About_Page.md          # 10-section About Us specification
-│   │   ├── Contact_Us.md          # Multi-audience contact & enquiry specification
-│   │   ├── FOOTER_DOCUMENTATION.md# Footer requirements and column specifications
-│   │   ├── HEADER_DOCUMENTATION.md# Sticky navigation, mobile drawer, actions spec
-│   │   ├── Home_Page_Requirements.md # Home page requirements
-│   │   └── sprint_websit_markdown.md # Global requirement tracker (P0–P4 priority matrix)
-│   └── releases/                  # Release notes and changelogs
-├── public/                        # Static assets, robots.txt, videos, favicons, fonts, images
-├── scripts/                       # Build, deployment, and verification shell scripts
+├── memory.md                        # Root project memory and dated change history
+├── package.json / package-lock.json # npm scripts and pinned dependency graph
+├── next.config.mjs / tsconfig.json / jsconfig.json
+├── config/environments/             # Development, staging, and production config
+├── data/chatbot/                    # Topic Q&A, evaluation data, generated master dataset
+├── docs/                             # Product specs, chatbot guidance, audits, wireframes, tests
+├── scripts/                          # Chatbot dataset build and build/deploy/verify utilities
+├── public/                           # Public images, videos, icons, and other static assets
 ├── src/
-│   ├── app/                       # Next.js App Router routes & layouts
-│   │   ├── layout.jsx             # Global Root Layout (Header, News Ticker, Footer, WhatsApp floating CTA)
-│   │   ├── page.jsx               # Home Page
-│   │   ├── about/page.jsx         # About Us Page (/about)
-│   │   ├── courses/page.jsx       # Course Catalogue (/courses)
-│   │   ├── courses/[slug]/page.jsx# Dynamic Course Detail (/courses/:slug)
-│   │   ├── bundles/[slug]/page.jsx# Dynamic Career Package Detail (/bundles/:slug)
-│   │   ├── contact/page.jsx       # Contact & Multi-Audience Enquiry Page (/contact)
-│   │   ├── careers/page.jsx       # Careers & Open Positions (/careers)
-│   │   ├── updates/page.jsx       # Campus News & Updates (/updates)
-│   │   ├── terms/page.jsx         # Terms & Conditions (/terms)
-│   │   ├── privacy/page.jsx       # Privacy Policy (/privacy)
-│   │   ├── register/              # Registration portal routes
-│   │   ├── student/login/         # Student portal login
-│   │   └── admin/login/           # Admin dashboard login
-│   ├── components/                # Reusable React components
-│   │   ├── cards/                 # ProfileCard, SkillCard, StatCounter, VisionMissionCard, Reveal
-│   │   ├── careers/               # CareerHero, WhyJoinSprint, OpenPositions, HiringProcess, ApplicationForm
-│   │   ├── contact/               # ContactHero, EnquirySection, StudentForm, WorkingProfessionalForm,
-│   │   │                          # InstituteForm, CompanyForm, ContactMethods, LocationSection, FAQSection
-│   │   ├── courses/               # CourseCatalogue, CourseDetail, DetailPage
-│   │   ├── footer/                # Global 5-column Footer (Footer.jsx)
-│   │   ├── header/                # Header.tsx, DesktopNavigation.tsx, MobileNavigation.tsx, HeaderLogo.tsx, HeaderActions.tsx
-│   │   ├── Home/                  # Hero, PartnerCarousel, FeaturedProgram, MoreCourses, Instructors, Testimonials, FAQSection, ContactCTA
-│   │   ├── layout/                # CampusNewsTicker.tsx, ConditionalCampusNewsTicker.jsx
-│   │   ├── legal/                 # LegalLayout, LegalNotice, LegalSection, LegalTableOfContents
-│   │   └── sections/              # StoryVisionMission and section wrappers
-│   ├── config/                    # Centralized JSON configuration
-│   │   ├── navigation.json        # Single source of truth for header navigation items
-│   │   └── site.config.json       # Centralized contact numbers, emails, addresses, social profiles
-│   ├── css/                       # Stylesheets
-│   │   ├── global.css             # Tailwind v4 theme, CSS variables, glassmorphism utilities, floating button
-│   │   ├── header.css             # Header-specific styling
-│   │   ├── footer.css             # Footer-specific layout & typography styling
-│   │   └── contact.css            # Contact section styling
-│   ├── data/                      # Structured JSON and JS data sources
-│   │   ├── about.json             # Leadership, faculty, timeline, values, impact statistics
-│   │   ├── courses.json           # Raw course catalogue and curriculum data
-│   │   ├── courses.js             # Course accessor methods (`courses`, `bundles`, `catalogueItems`, `getCourse`, `getBundle`)
-│   │   ├── careers.js             # Open job positions, hiring steps, perks, company values
-│   │   └── data.js                # Shared data exports
-│   ├── Supabase/
-│   │   └── .sql                   # Complete PostgreSQL schema, RLS, functions, triggers
-│   └── utils/                     # Shared utility functions
+│   ├── app/                          # Public, admin, staff, student, and API routes
+│   ├── components/                   # Shared public UI, admin/staff auth, chatbot, student portal
+│   ├── config/                       # Site, public navigation, and student navigation JSON
+│   ├── css/                          # Tailwind v4 theme and global/component styles
+│   ├── data/                         # Courses, programs, learning paths, careers, student/about data
+│   ├── lib/                          # Supabase clients, course utilities, server helpers
+│   ├── Supabase/                     # Base schema and incremental SQL migrations
+│   └── utils/                        # Shared date utilities
 └── tests/
-    ├── setup.tsx                  # TSX test setup and Next.js component mocks
-    ├── e2e/                       # End-to-end test scenarios
-    ├── fixtures/                  # Test mock data and fixtures
-    ├── integration/               # Integration tests
-    ├── unit/                      # Component unit tests
-    │   │   ├── contact/               # Contact and enquiry component tests
-    │   │   ├── header_unit_test/      # Header, navigation, logo, and action tests
-    │   │   ├── layout/                # Campus news ticker tests
-    │   │   └── legal/                 # Legal page layout tests
-    └── vitest.d.ts                # Vitest global & jest-dom matcher type declarations
+    ├── unit/                         # Public UI, chatbot, admin, staff, student, and route tests
+    ├── integration/ / e2e/           # Reserved test groups (currently placeholders)
+    └── setup.tsx / vitest.config.*   # Test setup and runner configuration
 ```
+
+The tree is a high-level map, not an exhaustive listing of routes or assets; see §57 for the current route families and behavior.
 
 ---
 
@@ -149,7 +94,7 @@
 
 3. **Courses & Learning Pathways (`/courses`)** — [src/app/courses/page.jsx](src/app/courses/page.jsx):
    - Filterable catalogue by audience (Undergraduate vs. Graduate & Above) and technology track.
-   - Course cards displaying duration, mode (Online / Hybrid / Offline), difficulty, tools, and pricing.
+   - Course cards displaying duration, mode (Online / Hybrid / Offline), difficulty, and tools; current course forms and payloads do not use pricing.
    - Dynamic individual course route: `/courses/[slug]` handled by [src/app/courses/[slug]/page.jsx](src/app/courses/[slug]/page.jsx).
    - Career bundle route: `/bundles/[slug]` handled by [src/app/bundles/[slug]/page.jsx](src/app/bundles/[slug]/page.jsx).
 
@@ -176,7 +121,7 @@
 
 ## 5. Database Schema & Supabase Architecture
 
-The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with strict Row Level Security (RLS), custom PostgreSQL enum types, and automated triggers.
+The database schema is defined by the base schema and incremental SQL files in [src/Supabase/](src/Supabase/), including custom PostgreSQL enums, Row Level Security (RLS), RPC functions, and triggers.
 
 ### Custom PostgreSQL Enums
 
@@ -238,6 +183,8 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 ---
 
 ## 7. Critical Project Rules & Conventions
+
+Sections 8 onward are dated implementation history. Where an older entry describes behavior that has since changed, §57 is the current-state reference.
 
 ### Package Metadata
 
@@ -636,3 +583,54 @@ The database schema is defined in [src/Supabase/.sql](src/Supabase/.sql) with st
 - Both direct and intercepted `/student/enroll` navigation render the enrollment wizard as a normal page, without the student modal or close control.
 - `/student/dashboard` is also outside the modal. A successful active student login redirects to `/student/dashboard`; the Supabase proxy sends unauthenticated or inactive sessions to `/student/login`.
 - Focused route-shell and navigation tests cover the two full-page routes.
+
+## 56. Staff Setup Completion and RBAC Role Unassignment — 2026-10-28
+
+- The pending change in [src/app/admin/roles/page.tsx](src/app/admin/roles/page.tsx) allows a staff member's role to be unassigned from the Users view. Blank and `"unassigned"` role values are normalized to `null` before updating `profiles.role_id`.
+- The pending change in [src/app/staff/login/actions.ts](src/app/staff/login/actions.ts) verifies the signed-in user before completing first-time staff setup, sets `must_change_password` and `first_login` to `false` and activates the profile, then revalidates `/staff/dashboard`.
+- When an invitation token is supplied, marking its matching pending invitation as used is now best-effort: update errors and thrown errors are logged, while setup can still succeed. Unexpected setup errors return a failure result.
+- These application changes were already present in the worktree when this memory update began. No application code was changed and no tests were run for them as part of this documentation-only update.
+
+## 57. Current Codebase Reconciliation — 2026-10-28
+
+This section records the current implementation where earlier entries are incomplete or describe an older state. The repository has 433 tracked files, including 225 files under `src/` and 70 under `tests/`; this is a feature and architecture map, not a line-by-line inventory of static assets.
+
+### Routes, shells, and session handling
+
+- Public content routes currently include `/`, `/home`, `/about`, `/courses`, `/courses/[slug]`, `/bundles/[slug]`, `/learning-paths/[slug]`, `/programs/sprint-rise`, `/programs/career-accelerator`, `/careers`, `/contact`, `/updates`, `/terms`, and `/privacy`.
+- Public authentication routes include `/login`, `/forgot-password`, and `/set-password`. Student auth routes currently exist at `/student/login`, `/student/forgot-password`, `/student/check-email`, `/student/reset-password`, and `/student/password-reset-success`. This supersedes §42's historical note that the student auth routes had been removed.
+- Student routes use the parallel/intercepted modal shell in [src/app/student/layout.jsx](src/app/student/layout.jsx) and [src/components/student/StudentPortalRouteShell.jsx](src/components/student/StudentPortalRouteShell.jsx). `/student/dashboard` and `/student/enroll` render as full pages; secondary portal sections include assignments, certificates, help/support, courses, profile, resources, results, and settings. The secondary sections still use the shared “being built” placeholder, so the complete portal workflows are not implemented.
+- Student login and password recovery use Supabase Auth. Enrollment uses a multi-step wizard; its presence does not imply that every downstream enrollment workflow or student portal section is complete.
+- The public shell is centralized in [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx). It conditionally displays public chrome, the chatbot, and the intercepted student modal; admin and focused auth layouts have different chrome behavior.
+- [src/proxy.ts](src/proxy.ts) delegates session checks to [src/lib/supabase/middleware.ts](src/lib/supabase/middleware.ts) for admin, staff, and student route families. [next.config.mjs](next.config.mjs) rewrites `/admin/login` to `/admin` and eligible `/staff/*` routes to the corresponding admin route.
+
+### Admin RBAC, staff access, and password security
+
+- The admin shell is split between server-side session/profile loading in [src/app/admin/layout.tsx](src/app/admin/layout.tsx) and the responsive client shell in [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx). Route visibility and permission checks are shared through [src/app/admin/auth-types.ts](src/app/admin/auth-types.ts) and [src/app/admin/authorization.ts](src/app/admin/authorization.ts); server pages can also call `assertModuleAccess`, which verifies the session and `current_user_has_permission` RPC.
+- The admin navigation groups admissions/enquiries, website CMS, courses, student operations, academics, partners, trainers, and access management. Not every navigation destination is backed by a page in the current route tree; consult the actual App Router files before assuming a listed link is implemented.
+- [ForcePasswordChangeModal](src/components/admin/auth/ForcePasswordChangeModal.tsx) is mounted by the admin shell when the authenticated profile has `must_change_password`. It has first-login and password-reset modes, enforces an 8-character minimum with uppercase and numeric characters, confirms the password, blocks dismissal, and reports update failures. The password-reset mode clears profile reset flags, signs the user out, and returns to `/admin`; the first-login mode confirms completion through the `complete_staff_password_reset` RPC.
+- The server-side staff directory actions in [src/app/admin/users/actions.ts](src/app/admin/users/actions.ts) use the Supabase service-role client only after verifying the current session, active profile, and admin or role permission. They provision/reinvite/delete staff accounts and manage invitation tokens and temporary passwords. Keep the service-role key server-only.
+- Staff sign-in and invitation/password setup are implemented under `/staff` in [src/app/staff/](src/app/staff/), with first-time setup submitted through a server action. The `/staff/dashboard` URL is rewritten to the admin dashboard; access still depends on the active authenticated staff profile.
+- The role catalog at `/admin/roles` manages custom roles, permissions, and profile role assignments. The current worktree additionally allows removing a role assignment by storing `null` in `profiles.role_id` (see §56).
+
+### Chatbot and verified content
+
+- The public assistant UI is [src/components/ai/AiAssistant.tsx](src/components/ai/AiAssistant.tsx), rendered by the public shell. It posts to `/api/chat`; `/api/ai-chat` is a compatibility endpoint. Request handling and response limits are implemented in [src/app/api/chat/route.ts](src/app/api/chat/route.ts).
+- Shared deterministic responses live in [src/app/chatbot/chatbot-core.js](src/app/chatbot/chatbot-core.js); server-only response selection and Ollama integration live in [src/app/chatbot/chatbot-service.server.js](src/app/chatbot/chatbot-service.server.js). Do not import the browser-fetching [src/app/chatbot/chatbot-service.js](src/app/chatbot/chatbot-service.js) into an API route.
+- Verified chatbot context is assembled from published course, bundle, program, role-path, site-contact, and verified Q&A data. Q&A topic sources live in `data/chatbot/`; regenerate the consolidated `sprint-qa-master.json` with `npm run chatbot:qa:build` after editing source topics. Fees and other unverified policies must be handed off to admissions rather than invented. See [docs/chatbot-integration.md](docs/chatbot-integration.md).
+
+### Data, integrations, and database
+
+- Current structured sources include [src/data/courses.js](src/data/courses.js), [src/data/programs.js](src/data/programs.js), [src/data/learningPaths.js](src/data/learningPaths.js), [src/data/careers.js](src/data/careers.js), [src/data/about.json](src/data/about.json), and [src/config/site.config.json](src/config/site.config.json). The public learning-path and program detail routes draw from these sources.
+- Course interfaces and `generateSlug` are shared from [src/lib/course-utils.ts](src/lib/course-utils.ts); the course catalogue, admin course manager, and course detail components should reuse these shared definitions rather than duplicate them.
+- Supabase integration is split into browser, cookie-aware server, public server, service-role, and request-session helpers under [src/lib/supabase/](src/lib/supabase/). The schema is not a single `src/Supabase/.sql` file: migrations include the initial schema, admin auth, staff auth/invitations/first-time setup/password reset, RBAC and granular course permissions, course structure, careers jobs, and student auth. Apply migrations in their documented dependency order; the staff invitations migration explicitly depends on the staff auth/RBAC migration.
+- Careers and course management have admin surfaces and Supabase-backed behavior; do not assume public fallback content or a displayed UI means a database operation succeeded.
+- The Next image configuration allows Supabase Storage-hosted images. A portion of static image assets was moved to Supabase Storage; media paths and the configured remote host are deployment dependencies.
+
+### Tests and recent implementation work
+
+- Tests are organized under `tests/unit/` by public site, chatbot, admin, staff, and student features. `tests/integration/` and `tests/e2e/` currently contain placeholders rather than populated suites. The project test command is `npm test`; `npm run test:run` runs the alternate Vitest configuration.
+- Changes after the previous dated memory entry added/refined: home faculty-filmstrip auto-scroll and mobile touch behavior; Featured Program responsive layout; Supabase-backed More Courses loading with loading/error/fallback states; careers imagery, responsive layout, application CTA, and job-management behavior; About hero/“Why Choose SPRINT” content; course catalogue visuals and mobile audience display; public chatbot factual matching and a large topic Q&A corpus; student auth responsive layouts and a canonical fallback for intercepted modal routes; video testimonials; and mobile navigation/theme animations. These changes are visible in the relevant files and recent Git history from 2026-10-16 through 2026-10-25.
+- The current package metadata is `next` `^16.4.1`, npm package manager `10.9.2`; the build script uses `next build --webpack`. Shared course types/utilities were extracted to `src/lib/course-utils.ts` on 2026-10-27. Package and Node dependency security updates were also committed on 2026-10-27; consult `package.json` and `package-lock.json` for exact current versions.
+
+No application code was changed for this reconciliation. The local role-unassignment and staff setup changes remain the pre-existing worktree edits noted in §56.
