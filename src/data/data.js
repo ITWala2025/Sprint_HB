@@ -140,21 +140,22 @@ export const featuredCourse = {
 export const videoTestimonials = [
   {
     id: "v1",
-    name: "Sarvesh",
+    name: "Myank Aman",
     role: "BTech Graduate",
-    videoUrl: "/testimonials/testimonials1.mp4",
+    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/myank_aman_testimonial.mp4",
   },
   {
     id: "v2",
-    name: "Myank Aman",
+    name: "Sarvesh",
     role: "BTech Graduate",
-    videoUrl: "/testimonials/testimonials2.mp4",
+    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/sarvesh_testimonial.mp4",
   },
+
   {
     id: "v3",
     name: "Raman Munda",
     role: "BTech Graduate",
-    videoUrl: "/testimonials/Raman_munda testimonial.mp4",
+    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/Raman_munda%20testimonial.mp4",
   },
    {
     id: "v4",
