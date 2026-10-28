@@ -6,9 +6,8 @@ import { catalogueItems } from "@/data/courses";
 
 const mocks = vi.hoisted(() => ({
     from: vi.fn(),
-    select: vi.fn(),
-    eq: vi.fn(),
-    order: vi.fn(),
+    results: {},
+    queries: [],
 }));
 
 vi.mock("@/lib/supabase/client", () => ({
@@ -34,7 +33,9 @@ const databaseCourse = {
 describe("CourseCatalogue Supabase integration", () => {
     beforeEach(() => {
         window.history.replaceState({}, "", "/courses");
-        mocks.order.mockResolvedValue({
+        mocks.results = {};
+        mocks.queries = [];
+        mocks.results.courses = {
             data: [databaseCourse, {
                 ...databaseCourse,
                 id: "database-course-2",
@@ -46,11 +47,28 @@ describe("CourseCatalogue Supabase integration", () => {
                 difficulty_level: "Beginner",
                 description: "Automate cloud operations with practical workflows.",
                 tools: ["Terraform"],
-            }], error: null
+            }],
+            error: null,
+        };
+        mocks.results.learning_paths = { data: [], error: null };
+        mocks.results.course_bundles = { data: [], error: null };
+        mocks.from.mockImplementation((table) => {
+            mocks.queries.push(table);
+            return {
+                select: (columns) => {
+                    expect(columns).toBe("*");
+                    return {
+                        eq: (column, value) => {
+                            expect(column).toBe("is_published");
+                            expect(value).toBe(true);
+                            return {
+                                order: () => Promise.resolve(mocks.results[table]),
+                            };
+                        },
+                    };
+                },
+            };
         });
-        mocks.eq.mockReturnValue({ order: mocks.order });
-        mocks.select.mockReturnValue({ eq: mocks.eq });
-        mocks.from.mockReturnValue({ select: mocks.select });
     });
 
     it("renders and filters published database courses using the public card model", async () => {
@@ -58,15 +76,13 @@ describe("CourseCatalogue Supabase integration", () => {
         render(<CourseCatalogue items={catalogueItems} />);
 
         expect(await screen.findByRole("heading", { name: databaseCourse.title })).toBeInTheDocument();
-        expect(mocks.from).toHaveBeenCalledWith("courses");
-        expect(mocks.select).toHaveBeenCalledWith("*");
-        expect(mocks.eq).toHaveBeenCalledWith("is_published", true);
-        expect(mocks.order).toHaveBeenCalledWith("created_at", { ascending: false });
+        expect(mocks.queries).toEqual(expect.arrayContaining(["courses", "learning_paths", "course_bundles"]));
         expect(screen.getByText("Course", { selector: "span" })).toBeInTheDocument();
         expect(screen.getByText("12 weeks")).toBeInTheDocument();
         expect(screen.getByText("Intermediate", { selector: ".course-tile__chips span" })).toBeInTheDocument();
         expect(screen.getByRole("link", { name: `Know more about ${databaseCourse.title}` })).toHaveAttribute("href", `/courses/${databaseCourse.slug}?audience=student`);
 
+        await user.click(screen.getByRole("button", { name: /filter & sort/i }));
         await user.click(screen.getByRole("checkbox", { name: databaseCourse.category }));
         expect(screen.getByRole("heading", { name: databaseCourse.title })).toBeInTheDocument();
         await user.click(screen.getByRole("radio", { name: "Intermediate" }));
@@ -78,16 +94,54 @@ describe("CourseCatalogue Supabase integration", () => {
     });
 
     it("falls back to local catalogue courses when the database is empty", async () => {
-        mocks.order.mockResolvedValueOnce({ data: [], error: null });
+        mocks.results.courses = { data: [], error: null };
         render(<CourseCatalogue items={catalogueItems} />);
 
         await waitFor(() => expect(screen.getByRole("heading", { name: "Python & AI Foundations" })).toBeInTheDocument());
     });
 
+    it("renders published database learning paths and signature programs", async () => {
+        mocks.results.learning_paths = {
+            data: [{
+                id: "path-1",
+                slug: "data-engineer",
+                title: "Data Engineer",
+                eyebrow: "CAREER PATHWAY",
+                target_audience: "undergraduate",
+                total_hours: 90,
+                stages: [{ number: "01", title: "Data Foundations", hours: "90 Hours", learn: "Build data skills." }],
+                certifications: ["Pass the assessment."],
+                is_published: true,
+                is_featured: false,
+            }],
+            error: null,
+        };
+        mocks.results.course_bundles = {
+            data: [{
+                id: "program-1",
+                slug: "ai-signature",
+                title: "Industry AI Program",
+                program_type: "signature",
+                audience: "undergraduate",
+                tagline: "Learn by building.",
+                description: "A live signature program.",
+                roadmap: [{ stage: "PROGRAM STAGE", title: "Build", hours: "90 Hours", topics: ["AI"] }],
+                is_published: true,
+            }],
+            error: null,
+        };
+        render(<CourseCatalogue items={catalogueItems} />);
+
+        expect(await screen.findByRole("heading", { name: "Data Engineer" })).toBeInTheDocument();
+        expect(screen.getByRole("link", { name: "Explore the Data Engineer learning path" })).toHaveAttribute("href", "/learning-paths/data-engineer");
+        expect(await screen.findByText("Industry AI Program")).toBeInTheDocument();
+        expect(screen.getByRole("link", { name: /Explore Program/ })).toHaveAttribute("href", "/programs/ai-signature");
+    });
+
     it("renders the six SPRINT RISE journey milestones in order", () => {
         render(<CourseCatalogue items={catalogueItems} />);
 
-        const journey = screen.getByRole("region", { name: "Program Journey" });
+        const journey = screen.getByRole("region", { name: "SPRINT RISE Journey" });
         const milestones = within(journey).getByRole("list", {
             name: "Program milestones",
         });
@@ -176,7 +230,7 @@ describe("CourseCatalogue Supabase integration", () => {
             "courses-content",
             "courses-cta",
         ]);
-        expect(groups).toEqual(["Career Bundles", "Individual & Modular Courses"]);
+        expect(groups).toEqual(["Role-Based Learning Paths", "Career Bundles", "Individual & Modular Courses"]);
         expect(root.querySelectorAll(".course-audience")).toHaveLength(1);
     });
 });

@@ -634,3 +634,11 @@ This section records the current implementation where earlier entries are incomp
 - The current package metadata is `next` `^16.4.1`, npm package manager `10.9.2`; the build script uses `next build --webpack`. Shared course types/utilities were extracted to `src/lib/course-utils.ts` on 2026-10-27. Package and Node dependency security updates were also committed on 2026-10-27; consult `package.json` and `package-lock.json` for exact current versions.
 
 No application code was changed for this reconciliation. The local role-unassignment and staff setup changes remain the pre-existing worktree edits noted in §56.
+
+## 58. Role-Based Learning Paths & Live Program Management — 2026-10-28
+
+- `/admin/courses` now has separate Standard Courses, Role-Based Learning Paths, and Flagship Programs & Bundles views. Learning paths support permission-gated create, edit, publish/unpublish, and delete operations against `public.learning_paths`, including editable stages, certification criteria, audience, and visibility. Stage hours are summed for the stored total.
+- Flagship/bundle reads use `select("*")` and normalize audience from `audience`, `audience_type`, or `target_audience`. The editor supports program type, descriptive fields, program facts, and editable roadmap stages; saves populate all supported audience aliases and metadata fields.
+- The public courses catalogue now fetches published courses, learning paths, and bundles/programs from Supabase in parallel, falling back to the existing static datasets for each empty or failed table result. Learning-path and signature-program detail routes resolve published database records before static fallback.
+- Added [src/Supabase/Learning Paths and Program Management Migration.sql](src/Supabase/Learning%20Paths%20and%20Program%20Management%20Migration.sql) to extend bundle metadata, create and secure `public.learning_paths` with permission-aware RLS, seed four role paths and the Career Accelerator program, and notify PostgREST to reload its schema.
+- Validation on 2026-10-28: `npx tsc --noEmit`, the focused admin/catalogue Vitest tests (11 tests), and `git diff --check` passed. The separate `tests/unit/courses/CourseDetail.test.jsx` run has two failures concerning mismatched curriculum fixtures/rendering; those tests and the `CourseDetail` component were not changed for this work.

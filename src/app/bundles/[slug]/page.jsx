@@ -4,6 +4,7 @@ import DetailPage from "@/components/courses/DetailPage";
 import { bundles, getBundle, getCourse } from "@/data/courses";
 import { getProgram } from "@/data/programs";
 import { createPublicServerClient } from "@/lib/supabase/public-server";
+import { normalizeBundle } from "@/lib/course-utils";
 
 export const dynamic = "force-dynamic";
 export function generateStaticParams() { return [...bundles, ...getStaticPrograms()].map(({ slug }) => ({ slug })); }
@@ -13,43 +14,44 @@ function getStaticPrograms() {
 }
 
 function toFlagshipItem(bundle) {
+  const normalized = normalizeBundle(bundle);
   return {
     kind: "flagship",
-    slug: bundle.slug,
-    title: bundle.title,
-    badgeLabel: bundle.badge_label || bundle.badgeLabel || bundle.category || "Flagship Program",
-    tagline: bundle.tagline || bundle.headline || "",
-    description: bundle.description || "",
-    longDescription: bundle.long_description || bundle.longDescription || bundle.description || "",
-    duration: bundle.duration || "",
-    trainingMode: bundle.training_mode || bundle.delivery || "",
-    eligibility: bundle.eligibility || "",
-    audienceLabel: bundle.audience === "working_professional" ? "Working Professional" : "Undergraduate",
-    highlights: Array.isArray(bundle.highlights) ? bundle.highlights : Array.isArray(bundle.outcomes) ? bundle.outcomes : [],
-    roadmap: Array.isArray(bundle.roadmap) ? bundle.roadmap : [],
-    curriculum: Array.isArray(bundle.roadmap)
-      ? bundle.roadmap.map((stage) => ({ title: stage.title, label: stage.duration, topics: stage.subjects || [] }))
+    slug: normalized.slug,
+    title: normalized.title,
+    badgeLabel: normalized.badge_label || bundle.category || "Flagship Program",
+    tagline: normalized.tagline,
+    description: normalized.description,
+    longDescription: normalized.long_description || normalized.description,
+    duration: normalized.duration,
+    trainingMode: normalized.delivery_method,
+    eligibility: normalized.designed_for,
+    audienceLabel: normalized.audience === "working_professional" ? "Working Professional" : "Undergraduate",
+    highlights: normalized.highlights,
+    roadmap: normalized.roadmap,
+    curriculum: normalized.roadmap.length
+      ? normalized.roadmap.map((stage) => ({ title: stage.title, label: stage.hours, topics: stage.topics }))
       : Array.isArray(bundle.curriculum)
         ? bundle.curriculum.map((stage) => ({ ...stage, topics: stage.topics || [] }))
         : [],
-    image: bundle.image_url || bundle.image || "/images/courses/abstract-code.svg",
+    image: normalized.image_url || bundle.image || "/images/courses/abstract-code.svg",
   };
 }
 
 async function findBundle(slug) {
-  const localBundle = getBundle(slug);
-  if (localBundle) return localBundle;
-
   const supabase = createPublicServerClient();
   if (supabase) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("course_bundles")
-      .select("slug,title,badge_label,tagline,description,long_description,audience,duration,training_mode,eligibility,highlights,roadmap,image_url,is_published")
+      .select("*")
       .eq("slug", slug)
       .maybeSingle();
+    if (error) console.error(`[SPRINT Programs] Could not load "${slug}" from Supabase:`, error.message);
     if (data) return data.is_published ? toFlagshipItem(data) : null;
   }
 
+  const localBundle = getBundle(slug);
+  if (localBundle) return localBundle;
   const fallback = getProgram(slug);
   return fallback ? toFlagshipItem(fallback) : null;
 }

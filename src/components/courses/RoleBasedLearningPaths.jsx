@@ -1,15 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { rolePaths } from "@/data/learningPaths";
+import { normalizeLearningPath } from "@/lib/course-utils";
 
-function getTotalHours(path) {
-  return path.courses.reduce(
-    (total, course) => total + Number.parseInt(course.duration, 10),
-    0,
-  );
-}
-
-export default function RoleBasedLearningPaths() {
+export default function RoleBasedLearningPaths({ paths = rolePaths.map(normalizeLearningPath) }) {
   return (
     <section
       className="courses-results__group role-pathways"
@@ -29,27 +23,25 @@ export default function RoleBasedLearningPaths() {
       </div>
 
       <div className="role-pathways__grid">
-        {rolePaths.map((path) => (
+        {paths.map((path) => (
           <article className="role-pathway" key={path.slug}>
             <div className="role-pathway__header">
-              <span className="role-pathway__eyebrow">Career Pathway</span>
-              <h3>{path.role}</h3>
-              <span className="role-pathway__count">3 learning stages</span>
+              <span className="role-pathway__eyebrow">{path.eyebrow || "CAREER PATHWAY"}</span>
+              <h3>{path.title || path.role}</h3>
+              <span className="role-pathway__count">{path.stages.length} learning stages</span>
             </div>
 
             <div className="role-pathway__progress" aria-hidden="true">
-              <span />
-              <span />
-              <span />
+              {path.stages.map((stage, index) => <span key={`${stage.number}-${index}`} />)}
             </div>
             <p className="role-pathway__hours">
-              {getTotalHours(path)} total learning hours
+              {path.total_hours} total learning hours
             </p>
 
             <Link
               className="role-pathway__link"
               href={`/learning-paths/${path.slug}`}
-              aria-label={`Explore the ${path.role} learning path`}
+              aria-label={`Explore the ${path.title || path.role} learning path`}
             >
               Explore Learning Path
               <ArrowRight size={16} aria-hidden="true" />

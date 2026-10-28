@@ -2,11 +2,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import CourseManagementPage from "@/app/admin/courses/page";
-import { generateSlug } from "@/lib/course-utils";
+import { generateSlug, normalizeBundle } from "@/lib/course-utils";
 
 const mocks = vi.hoisted(() => ({
     from: vi.fn(),
-    order: vi.fn(),
     update: vi.fn(),
     insert: vi.fn(),
     eq: vi.fn(),
@@ -15,6 +14,10 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/supabase/client", () => ({
     createClient: () => ({ from: mocks.from }),
+}));
+
+vi.mock("@/app/admin/permissions-context", () => ({
+    useAdminPermissions: () => ({ hasPermission: () => true }),
 }));
 
 const course = {
@@ -43,20 +46,33 @@ const course = {
 
 describe("CourseManagementPage", () => {
     beforeEach(() => {
-        mocks.order.mockResolvedValue({ data: [course], error: null });
+        mocks.from.mockImplementation((table: string) => ({
+            select: vi.fn(() => ({
+                order: vi.fn().mockResolvedValue({
+                    data: table === "courses" ? [course] : [],
+                    error: null,
+                }),
+            })),
+            update: mocks.update,
+            insert: mocks.insert,
+            delete: vi.fn(() => ({ eq: mocks.eq })),
+        }));
         mocks.eq.mockResolvedValue({ error: null });
         mocks.single.mockResolvedValue({ data: { ...course, id: "new-course" }, error: null });
         mocks.update.mockReturnValue({ eq: mocks.eq });
         mocks.insert.mockReturnValue({ select: () => ({ single: mocks.single }) });
-        mocks.from.mockReturnValue({
-            select: vi.fn(() => ({ order: mocks.order })),
-            update: mocks.update,
-            insert: mocks.insert,
-        });
     });
 
     it("normalizes course titles into editable URL slugs", () => {
         expect(generateSlug("  Applied Machine Learning! ")).toBe("applied-machine-learning");
+    });
+
+    it("normalizes bundle audience aliases in the requested precedence order", () => {
+        expect(normalizeBundle({
+            slug: "career-package",
+            audience_type: "working_professional",
+            target_audience: "undergraduate",
+        }).audience).toBe("working_professional");
     });
 
     it("creates courses with both audience columns and a difficulty fallback", async () => {
@@ -101,5 +117,29 @@ describe("CourseManagementPage", () => {
 
         await waitFor(() => expect(mocks.update).toHaveBeenCalledWith({ is_featured: true }));
         expect(await screen.findByRole("status")).toHaveTextContent("featured");
+    });
+
+    it("creates and publishes learning paths with stage hours derived from free-text values", async () => {
+        const user = userEvent.setup();
+        render(<CourseManagementPage />);
+        await user.click(screen.getByRole("tab", { name: /role-based learning paths/i }));
+        await user.click(screen.getByRole("button", { name: /add learning path/i }));
+        await user.type(screen.getByLabelText("Title"), "AI Engineer");
+        await user.click(screen.getByRole("button", { name: "Add Stage" }));
+        await user.type(screen.getByPlaceholderText("Applied Machine Learning & Scikit-Learn"), "Applied Machine Learning & Scikit-Learn");
+        await user.type(screen.getByPlaceholderText("60 Hours"), "60 Hours");
+        await user.type(screen.getByPlaceholderText("Core statistical modeling, regression, classification..."), "Core statistical modeling, regression");
+        await user.click(screen.getByRole("button", { name: "Add Certification Requirement" }));
+        await user.type(screen.getByPlaceholderText("Stage title: Passing score on the practical assessment."), "Applied Machine Learning: Passing score on the practical assessment.");
+        await user.click(screen.getByRole("button", { name: "Save Learning Path" }));
+
+        await waitFor(() => expect(mocks.from).toHaveBeenCalledWith("learning_paths"));
+        expect(mocks.insert).toHaveBeenCalledWith(expect.objectContaining({
+            title: "AI Engineer",
+            slug: "ai-engineer",
+            total_hours: 60,
+            stages: [expect.objectContaining({ title: "Applied Machine Learning & Scikit-Learn", hours: "60 Hours" })],
+            certifications: ["Applied Machine Learning: Passing score on the practical assessment."],
+        }));
     });
 });

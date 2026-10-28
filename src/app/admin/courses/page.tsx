@@ -2,35 +2,22 @@
 
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import {
-    BookOpen, Check, CheckCircle2, Clock, Edit3, Eye, Layers, LayoutGrid, List, Plus, Search, Sparkles, Star, Tag, Trash2, X,
+    BookOpen, Check, CheckCircle2, Clock, Edit3, Eye, GraduationCap, Layers, LayoutGrid, List, Plus, Search, Sparkles, Star, Tag, Trash2, X,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAdminPermissions } from "@/app/admin/permissions-context";
-import { type CourseItem, type SyllabusModule, generateSlug } from "@/lib/course-utils";
+import {
+    type BundleItem, type CourseAudience, type CourseItem, type LearningPathItem,
+    type LearningPathStage, type ProgramRoadmapStage, type SyllabusModule,
+    generateSlug, normalizeBundle, normalizeLearningPath,
+} from "@/lib/course-utils";
 
 type CoursePayload = Omit<CourseItem, "id">;
-type RoadmapStage = { title: string; duration: string; subjects: string[] };
-type BundleItem = {
-    id: string;
-    slug: string;
-    title: string;
-    badge_label: string;
-    tagline: string;
-    description: string;
-    long_description: string;
-    audience: "undergraduate" | "working_professional";
-    duration: string;
-    training_mode: "Hybrid" | "Online" | "Offline";
-    eligibility: string;
-    highlights: string[];
-    roadmap: RoadmapStage[];
-    is_published: boolean;
-    is_featured: boolean;
-};
 type BundlePayload = Omit<BundleItem, "id">;
+type LearningPathPayload = Omit<LearningPathItem, "id">;
 type Notice = { type: "success" | "error"; message: string };
 type CatalogView = "grid" | "table";
-type DashboardView = "courses" | "bundles";
+type DashboardView = "courses" | "learningPaths" | "bundles";
 
 const categories = [
     "Artificial Intelligence & ML",
@@ -92,6 +79,7 @@ export default function CourseManagementPage() {
     const { hasPermission } = useAdminPermissions();
     const [courses, setCourses] = useState<CourseItem[]>([]);
     const [bundles, setBundles] = useState<BundleItem[]>([]);
+    const [learningPaths, setLearningPaths] = useState<LearningPathItem[]>([]);
     const [dashboardView, setDashboardView] = useState<DashboardView>("courses");
     const [search, setSearch] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("all");
@@ -103,15 +91,17 @@ export default function CourseManagementPage() {
     const [notice, setNotice] = useState<Notice | null>(null);
     const [editingCourse, setEditingCourse] = useState<CourseItem | null | undefined>(undefined);
     const [editingBundle, setEditingBundle] = useState<BundleItem | null | undefined>(undefined);
+    const [editingLearningPath, setEditingLearningPath] = useState<LearningPathItem | null | undefined>(undefined);
     const [viewingCourse, setViewingCourse] = useState<CourseItem | null>(null);
     const hasCoursePermission = (capability: string) => hasPermission(["courses", "cms_courses"], capability);
     const hasBundlePermission = (capability: string) => hasPermission(["course_bundle_cms", "cms_courses"], capability);
+    const hasLearningPathPermission = (capability: string) => hasPermission(["courses", "course_bundle_cms", "cms_courses"], capability);
 
     useEffect(() => {
         let active = true;
         async function loadCourses() {
             setIsLoading(true);
-            const { data, error } = await supabase.from("courses").select("id,slug,title,category,difficulty_level,audience,audience_type,delivery_method,duration,description,long_description,badge_label,prerequisites,tools,curriculum,outcomes,target_roles,is_featured,is_published,pathway,target_role,certificate_included,thumbnail_url").order("title");
+            const { data, error } = await supabase.from("courses").select("*").order("title");
             if (!active) return;
             if (error) {
                 setNotice({ type: "error", message: `Courses could not be loaded: ${error.message}` });
@@ -129,23 +119,28 @@ export default function CourseManagementPage() {
         let active = true;
         async function loadBundles() {
             setIsLoading(true);
-            const { data, error } = await supabase.from("course_bundles").select("id,slug,title,badge_label,tagline,description,long_description,audience,duration,training_mode,eligibility,highlights,roadmap,is_published,is_featured,created_at").order("created_at", { ascending: false });
+            const { data, error } = await supabase.from("course_bundles").select("*").order("created_at", { ascending: false });
             if (!active) return;
             if (error) setNotice({ type: "error", message: `Flagship programs could not be loaded: ${error.message}` });
-            else setBundles(((data ?? []) as BundleItem[]).map((bundle) => ({
-                ...bundle,
-                badge_label: bundle.badge_label || "Flagship Program",
-                tagline: bundle.tagline || "",
-                audience: bundle.audience || "undergraduate",
-                duration: bundle.duration || "",
-                training_mode: bundle.training_mode || "Hybrid",
-                eligibility: bundle.eligibility || "",
-                highlights: Array.isArray(bundle.highlights) ? bundle.highlights : [],
-                roadmap: Array.isArray(bundle.roadmap) ? bundle.roadmap : [],
-            })));
+            else setBundles(((data ?? []) as (Partial<BundleItem> & Record<string, unknown>)[]).map(normalizeBundle));
             setIsLoading(false);
         }
         void loadBundles();
+        return () => { active = false; };
+    }, [dashboardView, supabase]);
+
+    useEffect(() => {
+        if (dashboardView !== "learningPaths") return;
+        let active = true;
+        async function fetchLearningPaths() {
+            setIsLoading(true);
+            const { data, error } = await supabase.from("learning_paths").select("*").order("title");
+            if (!active) return;
+            if (error) setNotice({ type: "error", message: `Learning paths could not be loaded: ${error.message}` });
+            else setLearningPaths(((data ?? []) as (Partial<LearningPathItem> & Record<string, unknown>)[]).map(normalizeLearningPath));
+            setIsLoading(false);
+        }
+        void fetchLearningPaths();
         return () => { active = false; };
     }, [dashboardView, supabase]);
 
@@ -205,20 +200,98 @@ export default function CourseManagementPage() {
         }
         setSavingId(id ?? "new-bundle");
         setNotice(null);
-        const upsertPayload = { ...payload, ...(id ? { id } : {}) };
-        const { data, error } = await supabase.from("course_bundles").upsert(upsertPayload as BundlePayload).select("*").single();
+        const audience = payload.audience || payload.audience_type || payload.target_audience || "undergraduate";
+        const upsertPayload = {
+            ...payload,
+            audience,
+            audience_type: audience,
+            target_audience: audience,
+            program_type: payload.program_type === "signature" ? "signature" : "bundle",
+            delivery_method: payload.delivery_method || payload.training_mode || "Hybrid",
+            training_mode: payload.training_mode || payload.delivery_method || "Hybrid",
+            designed_for: payload.designed_for || payload.eligibility || "",
+            eligibility: payload.eligibility || payload.designed_for || "",
+            ...(id ? { id } : {}),
+        };
+        const { data, error } = await supabase.from("course_bundles").upsert(upsertPayload).select("*").single();
         setSavingId(null);
         if (error) {
             setNotice({ type: "error", message: `Flagship program could not be saved: ${error.message}` });
             return false;
         }
-        const saved = data as BundleItem;
+        const saved = normalizeBundle(data as Partial<BundleItem> & Record<string, unknown>);
         setBundles((current) => id
             ? current.map((bundle) => bundle.id === id ? saved : bundle)
             : [saved, ...current]);
         setEditingBundle(undefined);
         setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
         return true;
+    }
+
+    async function saveLearningPath(payload: LearningPathPayload, id?: string) {
+        const capability = id ? "edit" : "create";
+        if (!hasLearningPathPermission(capability)) {
+            setNotice({ type: "error", message: `You do not have permission to ${capability} learning paths.` });
+            return false;
+        }
+        setSavingId(id ?? "new-learning-path");
+        setNotice(null);
+        const normalizedPayload = {
+            ...payload,
+            slug: payload.slug || generateSlug(payload.title),
+            eyebrow: payload.eyebrow.trim() || "CAREER PATHWAY",
+            total_hours: payload.stages.reduce((total, stage) => total + (Number.parseInt(stage.hours, 10) || 0), 0),
+        };
+        const query = id
+            ? supabase.from("learning_paths").update(normalizedPayload).eq("id", id).select("*").single()
+            : supabase.from("learning_paths").insert(normalizedPayload).select("*").single();
+        const { data, error } = await query;
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Learning path could not be saved: ${error.message}` });
+            return false;
+        }
+        const saved = normalizeLearningPath(data as Partial<LearningPathItem> & Record<string, unknown>);
+        setLearningPaths((current) => id
+            ? current.map((path) => path.id === id ? saved : path)
+            : [...current, saved].sort((first, second) => first.title.localeCompare(second.title)));
+        setEditingLearningPath(undefined);
+        setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
+        return true;
+    }
+
+    async function toggleLearningPathPublished(path: LearningPathItem) {
+        if (!hasLearningPathPermission("edit")) {
+            setNotice({ type: "error", message: "You do not have permission to edit learning paths." });
+            return;
+        }
+        setSavingId(path.id);
+        const isPublished = !path.is_published;
+        const { error } = await supabase.from("learning_paths").update({ is_published: isPublished }).eq("id", path.id);
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Learning path visibility could not be changed: ${error.message}` });
+            return;
+        }
+        setLearningPaths((current) => current.map((item) => item.id === path.id ? { ...item, is_published: isPublished } : item));
+        setNotice({ type: "success", message: `${path.title} ${isPublished ? "published" : "unpublished"}.` });
+    }
+
+    async function deleteLearningPath(path: LearningPathItem) {
+        if (!hasLearningPathPermission("delete")) {
+            setNotice({ type: "error", message: "You do not have permission to delete learning paths." });
+            return;
+        }
+        if (!window.confirm(`Delete “${path.title}”? This cannot be undone.`)) return;
+        setSavingId(path.id);
+        const { error } = await supabase.from("learning_paths").delete().eq("id", path.id);
+        setSavingId(null);
+        if (error) {
+            setNotice({ type: "error", message: `Learning path could not be deleted: ${error.message}` });
+            return;
+        }
+        setLearningPaths((current) => current.filter((item) => item.id !== path.id));
+        setNotice({ type: "success", message: `${path.title} deleted.` });
     }
 
     async function deleteBundle(bundle: BundleItem) {
@@ -315,14 +388,15 @@ export default function CourseManagementPage() {
                         <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Course Management</h2>
                         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Manage SPRINT technology pathways, learning outcomes, and catalogue visibility.</p>
                     </div>
-                    {(dashboardView === "courses" ? hasCoursePermission("create") : hasBundlePermission("create")) && <button type="button" onClick={() => dashboardView === "courses" ? setEditingCourse(null) : setEditingBundle(null)} className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-red px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">
-                        <Plus className="size-4" aria-hidden="true" /> {dashboardView === "courses" ? "Add Course" : "Add Flagship Program"}
+                    {(dashboardView === "courses" ? hasCoursePermission("create") : dashboardView === "learningPaths" ? hasLearningPathPermission("create") : hasBundlePermission("create")) && <button type="button" onClick={() => dashboardView === "courses" ? setEditingCourse(null) : dashboardView === "learningPaths" ? setEditingLearningPath(null) : setEditingBundle(null)} className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-red px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">
+                        <Plus className="size-4" aria-hidden="true" /> {dashboardView === "courses" ? "Add Course" : dashboardView === "learningPaths" ? "Add Learning Path" : "Add Flagship Program"}
                     </button>}
                 </div>
             </section>
 
-            <div className="inline-flex max-w-full rounded-lg border border-slate-200 bg-white p-1" role="tablist" aria-label="Course management views">
+            <div className="flex max-w-full flex-wrap rounded-lg border border-slate-200 bg-white p-1" role="tablist" aria-label="Course management views">
                 <button type="button" role="tab" aria-selected={dashboardView === "courses"} onClick={() => setDashboardView("courses")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "courses" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><BookOpen className="size-4" aria-hidden="true" />Standard Courses</button>
+                <button type="button" role="tab" aria-selected={dashboardView === "learningPaths"} onClick={() => setDashboardView("learningPaths")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "learningPaths" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><GraduationCap className="size-4" aria-hidden="true" />Role-Based Learning Paths</button>
                 <button type="button" role="tab" aria-selected={dashboardView === "bundles"} onClick={() => setDashboardView("bundles")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "bundles" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><Layers className="size-4" aria-hidden="true" />Flagship Programs &amp; Bundles</button>
             </div>
 
@@ -395,8 +469,22 @@ export default function CourseManagementPage() {
                 {isLoading ? <p className="col-span-full py-16 text-center text-sm text-brand-text-muted">Loading flagship programs…</p> : bundles.length ? bundles.map((bundle) => <BundleCard key={bundle.id} bundle={bundle} isBusy={savingId === bundle.id} canEdit={hasBundlePermission("edit")} canDelete={hasBundlePermission("delete")} onEdit={() => setEditingBundle(bundle)} onDelete={() => void deleteBundle(bundle)} onToggle={(field) => void toggleBundle(bundle, field)} />) : <div className="col-span-full rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center"><Sparkles className="mx-auto size-7 text-brand-red" aria-hidden="true" /><p className="mt-3 font-display font-bold text-brand-navy">No flagship programs yet</p><p className="mt-1 text-sm text-brand-text-muted">Add SPRINT RISE or a degree-integrated pathway to begin.</p></div>}
             </section>}
 
+            {dashboardView === "learningPaths" && <section aria-label="Role-based learning paths" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {isLoading ? <p className="col-span-full py-16 text-center text-sm text-brand-text-muted">Loading learning paths…</p> : learningPaths.length ? learningPaths.map((path) => <LearningPathCard
+                    key={path.id}
+                    path={path}
+                    isBusy={savingId === path.id}
+                    canEdit={hasLearningPathPermission("edit")}
+                    canDelete={hasLearningPathPermission("delete")}
+                    onEdit={() => setEditingLearningPath(path)}
+                    onTogglePublished={() => void toggleLearningPathPublished(path)}
+                    onDelete={() => void deleteLearningPath(path)}
+                />) : <div className="col-span-full rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center"><GraduationCap className="mx-auto size-7 text-brand-red" aria-hidden="true" /><p className="mt-3 font-display font-bold text-brand-navy">No learning paths yet</p><p className="mt-1 text-sm text-brand-text-muted">Add a role-based pathway to begin.</p></div>}
+            </section>}
+
             {editingCourse !== undefined && <CourseModal course={editingCourse} isSaving={savingId === (editingCourse?.id ?? "new")} onClose={() => setEditingCourse(undefined)} onSave={(payload) => saveCourse(payload, editingCourse?.id)} />}
             {editingBundle !== undefined && <BundleModal bundle={editingBundle} isSaving={savingId === (editingBundle?.id ?? "new-bundle")} onClose={() => setEditingBundle(undefined)} onSave={(payload) => saveBundle(payload, editingBundle?.id)} />}
+            {editingLearningPath !== undefined && <LearningPathModal path={editingLearningPath} isSaving={savingId === (editingLearningPath?.id ?? "new-learning-path")} onClose={() => setEditingLearningPath(undefined)} onSave={(payload) => saveLearningPath(payload, editingLearningPath?.id)} />}
             {viewingCourse && <CourseDetailsModal course={viewingCourse} canEdit={hasCoursePermission("edit")} onClose={() => setViewingCourse(null)} onEdit={() => { setViewingCourse(null); setEditingCourse(viewingCourse); }} />}
         </div>
     );
@@ -642,8 +730,162 @@ function TagList({ items, empty }: { items: string[]; empty: string }) {
     return items.length ? <ul className="flex flex-wrap gap-2">{items.map((item) => <li key={item} className="rounded-full bg-brand-surface px-3 py-1 text-xs font-semibold text-brand-navy">{item}</li>)}</ul> : <p className="text-sm text-brand-text-muted">{empty}</p>;
 }
 
+function LearningPathCard({ path, isBusy, canEdit, canDelete, onEdit, onTogglePublished, onDelete }: {
+    path: LearningPathItem;
+    isBusy: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
+    onEdit: () => void;
+    onTogglePublished: () => void;
+    onDelete: () => void;
+}) {
+    return <article className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex-1 border-t-4 border-brand-blue p-5">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-red">{path.eyebrow || "CAREER PATHWAY"}</p>
+            <h2 className="mt-2 font-display text-xl font-bold text-brand-navy">{path.title}</h2>
+            <p className="mt-1 text-sm text-brand-text-secondary">{path.stages.length} learning stages · {path.total_hours} total learning hours</p>
+            <div className="mt-5 space-y-2">
+                {path.stages.map((stage, index) => <div key={`${stage.number}-${stage.title}-${index}`} className="flex items-center gap-3 rounded-lg bg-slate-50 px-3 py-2">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-full bg-brand-navy text-xs font-bold text-white">{stage.number || String(index + 1).padStart(2, "0")}</span>
+                    <span className="min-w-0 flex-1 truncate text-sm font-semibold text-brand-navy">{stage.title}</span>
+                    <span className="shrink-0 text-xs text-brand-text-muted">{stage.hours}</span>
+                </div>)}
+            </div>
+            <p className="mt-4 text-xs font-semibold text-brand-text-muted">{path.certifications.length} certification criteria</p>
+        </div>
+        <footer className="flex flex-wrap items-center gap-2 border-t border-slate-100 p-4">
+            {canEdit && <button type="button" onClick={onEdit} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-brand-surface"><Edit3 className="size-3.5" aria-hidden="true" />Edit</button>}
+            {canEdit && <button type="button" onClick={onTogglePublished} disabled={isBusy} className="sprint-focus inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-brand-navy hover:bg-brand-surface disabled:opacity-50"><Check className="size-3.5" aria-hidden="true" />Toggle Publish</button>}
+            {canDelete && <button type="button" onClick={onDelete} disabled={isBusy} className="sprint-focus ml-auto inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs font-bold text-brand-red hover:bg-brand-red-light disabled:opacity-50"><Trash2 className="size-3.5" aria-hidden="true" />Delete</button>}
+        </footer>
+    </article>;
+}
+
+function emptyLearningPath(): LearningPathPayload {
+    return {
+        slug: "",
+        title: "",
+        eyebrow: "CAREER PATHWAY",
+        target_audience: "undergraduate",
+        total_hours: 0,
+        stages: [],
+        certifications: [],
+        is_published: false,
+        is_featured: false,
+    };
+}
+
+function LearningPathModal({ path, isSaving, onClose, onSave }: {
+    path: LearningPathItem | null;
+    isSaving: boolean;
+    onClose: () => void;
+    onSave: (payload: LearningPathPayload) => Promise<boolean>;
+}) {
+    const [form, setForm] = useState<LearningPathPayload>(() => path
+        ? { ...path, stages: path.stages.map((stage) => ({ ...stage })), certifications: [...path.certifications] }
+        : emptyLearningPath());
+    const [slugEdited, setSlugEdited] = useState(Boolean(path));
+    const closeRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        closeRef.current?.focus();
+        function onKeyDown(event: KeyboardEvent) { if (event.key === "Escape" && !isSaving) onClose(); }
+        document.addEventListener("keydown", onKeyDown);
+        return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", onKeyDown); };
+    }, [isSaving, onClose]);
+
+    function setField<Key extends keyof LearningPathPayload>(key: Key, value: LearningPathPayload[Key]) {
+        setForm((current) => ({ ...current, [key]: value }));
+    }
+
+    function updateStage(index: number, patch: Partial<LearningPathStage>) {
+        const stages = form.stages.map((stage, stageIndex) => stageIndex === index ? { ...stage, ...patch } : stage);
+        setForm((current) => ({
+            ...current,
+            stages,
+            total_hours: stages.reduce((total, stage) => total + (Number.parseInt(stage.hours, 10) || 0), 0),
+        }));
+    }
+
+    function removeStage(index: number) {
+        const stages = form.stages.filter((_, stageIndex) => stageIndex !== index);
+        setForm((current) => ({
+            ...current,
+            stages,
+            total_hours: stages.reduce((total, stage) => total + (Number.parseInt(stage.hours, 10) || 0), 0),
+        }));
+    }
+
+    function updateCertification(index: number, value: string) {
+        setField("certifications", form.certifications.map((certification, certificationIndex) => certificationIndex === index ? value : certification));
+    }
+
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        await onSave({
+            ...form,
+            certifications: form.certifications.map((certification) => certification.trim()).filter(Boolean),
+        });
+    }
+
+    return <div className="fixed inset-0 z-[100] flex items-end justify-center bg-brand-navy/55 p-0 backdrop-blur-sm sm:items-center sm:p-5" onMouseDown={(event) => { if (event.target === event.currentTarget && !isSaving) onClose(); }}>
+        <section role="dialog" aria-modal="true" aria-labelledby="learning-path-modal-title" className="flex max-h-[96dvh] w-full max-w-4xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[92vh] sm:rounded-2xl">
+            <header className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7">
+                <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-red">Role-Based Learning Paths</p><h2 id="learning-path-modal-title" className="mt-1 font-display text-xl font-bold text-brand-navy">{path ? "Edit Learning Path" : "Add Learning Path"}</h2></div>
+                <button ref={closeRef} type="button" onClick={onClose} disabled={isSaving} className={iconButtonClass} aria-label="Close learning path form"><X className="size-4" aria-hidden="true" /></button>
+            </header>
+            <form onSubmit={(event) => void handleSubmit(event)} className="flex min-h-0 flex-1 flex-col">
+                <div className="min-h-0 flex-1 space-y-7 overflow-y-auto px-5 py-5 sm:px-7">
+                    <FormSection title="Basic Details"><div className="grid gap-4 sm:grid-cols-2">
+                        <label className={`${labelClass} sm:col-span-2`}>Title<input required value={form.title} onChange={(event) => { const title = event.target.value; setField("title", title); if (!slugEdited) setField("slug", generateSlug(title)); }} className={inputClass} placeholder="AI Engineer" /></label>
+                        <label className={labelClass}>Slug<input required value={form.slug} onChange={(event) => { setSlugEdited(true); setField("slug", generateSlug(event.target.value)); }} className={inputClass} placeholder="ai-engineer" /></label>
+                        <label className={labelClass}>Eyebrow<input value={form.eyebrow} onChange={(event) => setField("eyebrow", event.target.value)} className={inputClass} placeholder="CAREER PATHWAY" /></label>
+                        <label className={labelClass}>Target Audience<select value={form.target_audience} onChange={(event) => setField("target_audience", event.target.value as CourseAudience)} className={inputClass}>{audiences.map((audience) => <option key={audience.value} value={audience.value}>{audience.label}</option>)}</select></label>
+                        <label className={labelClass}>Total Hours<input type="number" min="0" value={form.total_hours} readOnly className={`${inputClass} bg-slate-50`} aria-describedby="learning-path-hours-help" /><span id="learning-path-hours-help" className="mt-1 block font-normal text-brand-text-muted">Calculated from the stage hours below.</span></label>
+                    </div></FormSection>
+                    <FormSection title="Learning Stages">
+                        <div className="space-y-4">{form.stages.map((stage, index) => <article key={`path-stage-${index}`} className="rounded-lg border border-slate-200 p-4">
+                            <div className="grid gap-3 sm:grid-cols-[100px_1fr_150px]">
+                                <label className={labelClass}>Number<input value={stage.number} onChange={(event) => updateStage(index, { number: event.target.value })} className={inputClass} placeholder="01" /></label>
+                                <label className={labelClass}>Stage Title<input value={stage.title} onChange={(event) => updateStage(index, { title: event.target.value })} className={inputClass} placeholder="Applied Machine Learning & Scikit-Learn" /></label>
+                                <label className={labelClass}>Hours<input value={stage.hours} onChange={(event) => updateStage(index, { hours: event.target.value })} className={inputClass} placeholder="60 Hours" /></label>
+                            </div>
+                            <label className={`${labelClass} mt-3`}>What You&apos;ll Learn<textarea rows={3} value={stage.learn} onChange={(event) => updateStage(index, { learn: event.target.value })} className={inputClass} placeholder="Core statistical modeling, regression, classification..." /></label>
+                            <button type="button" onClick={() => removeStage(index)} className="sprint-focus mt-2 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-brand-red hover:bg-brand-red-light"><Trash2 className="size-3.5" aria-hidden="true" />Remove Stage</button>
+                        </article>)}</div>
+                        <button type="button" onClick={() => setForm((current) => ({ ...current, stages: [...current.stages, { number: String(current.stages.length + 1).padStart(2, "0"), title: "", hours: "", learn: "" }] }))} className="sprint-focus inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-brand-navy hover:bg-slate-50"><Plus className="size-4" aria-hidden="true" />Add Stage</button>
+                    </FormSection>
+                    <FormSection title="Certification Criteria">
+                        <div className="space-y-3">{form.certifications.map((certification, index) => <div key={`certification-${index}`} className="flex items-start gap-2">
+                            <textarea rows={2} value={certification} onChange={(event) => updateCertification(index, event.target.value)} className={`${inputClass} mt-0`} aria-label={`Certification requirement ${index + 1}`} placeholder="Stage title: Passing score on the practical assessment." />
+                            <button type="button" onClick={() => setField("certifications", form.certifications.filter((_, certificationIndex) => certificationIndex !== index))} className={`${iconButtonClass} shrink-0 text-brand-red`} aria-label={`Remove certification requirement ${index + 1}`}><X className="size-4" aria-hidden="true" /></button>
+                        </div>)}</div>
+                        <button type="button" onClick={() => setField("certifications", [...form.certifications, ""])} className="sprint-focus inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-brand-navy hover:bg-slate-50"><Plus className="size-4" aria-hidden="true" />Add Certification Requirement</button>
+                    </FormSection>
+                    <FormSection title="Visibility"><div className="flex flex-col gap-3 sm:flex-row sm:gap-8">
+                        <label className="inline-flex items-center gap-2.5 text-sm font-semibold text-brand-navy"><input type="checkbox" checked={form.is_published} onChange={(event) => setField("is_published", event.target.checked)} className="size-4 accent-brand-red" />Published</label>
+                        <label className="inline-flex items-center gap-2.5 text-sm font-semibold text-brand-navy"><input type="checkbox" checked={form.is_featured} onChange={(event) => setField("is_featured", event.target.checked)} className="size-4 accent-brand-red" />Featured</label>
+                    </div></FormSection>
+                </div>
+                <footer className="flex justify-end gap-2 border-t border-slate-200 bg-white px-5 py-4 sm:px-7">
+                    <button type="button" onClick={onClose} disabled={isSaving} className="sprint-focus rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-brand-navy hover:bg-slate-50">Cancel</button>
+                    <button type="submit" disabled={isSaving || !form.stages.length} className="sprint-focus inline-flex min-w-32 items-center justify-center gap-2 rounded-lg bg-brand-red px-4 py-2.5 text-sm font-bold text-white hover:brightness-110 disabled:opacity-70">{isSaving ? "Saving…" : "Save Learning Path"}</button>
+                </footer>
+            </form>
+        </section>
+    </div>;
+}
+
 function emptyBundle(): BundlePayload {
-    return { slug: "", title: "", badge_label: "Flagship Program", tagline: "", description: "", long_description: "", audience: "undergraduate", duration: "", training_mode: "Hybrid", eligibility: "", highlights: [], roadmap: [], is_published: false, is_featured: false };
+    return {
+        slug: "", title: "", program_type: "signature", badge_label: "Flagship Program", tagline: "",
+        description: "", long_description: "", audience: "undergraduate", audience_type: "undergraduate",
+        target_audience: "undergraduate", duration: "", level: "", delivery_method: "Hybrid",
+        credential: "", designed_for: "", training_mode: "Hybrid", eligibility: "", highlights: [],
+        roadmap: [], is_published: false, is_featured: false,
+    };
 }
 
 function BundleCard({ bundle, isBusy, canEdit, canDelete, onEdit, onDelete, onToggle }: { bundle: BundleItem; isBusy: boolean; canEdit: boolean; canDelete: boolean; onEdit: () => void; onDelete: () => void; onToggle: (field: "is_published" | "is_featured") => void }) {
@@ -666,7 +908,7 @@ function BundleCard({ bundle, isBusy, canEdit, canDelete, onEdit, onDelete, onTo
 }
 
 function BundleModal({ bundle, isSaving, onClose, onSave }: { bundle: BundleItem | null; isSaving: boolean; onClose: () => void; onSave: (payload: BundlePayload) => Promise<boolean> }) {
-    const [form, setForm] = useState<BundlePayload>(() => bundle ? { ...emptyBundle(), ...bundle, highlights: [...(bundle.highlights || [])], roadmap: (bundle.roadmap || []).map((stage) => ({ ...stage, subjects: [...(stage.subjects || [])] })) } : emptyBundle());
+    const [form, setForm] = useState<BundlePayload>(() => bundle ? { ...emptyBundle(), ...bundle, roadmap: (bundle.roadmap || []).map((stage) => ({ ...stage, topics: [...(stage.topics || [])] })) } : emptyBundle());
     const [slugEdited, setSlugEdited] = useState(Boolean(bundle));
     const [highlightInput, setHighlightInput] = useState("");
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -685,27 +927,38 @@ function BundleModal({ bundle, isSaving, onClose, onSave }: { bundle: BundleItem
         setField("highlights", [...form.highlights, value]);
         setHighlightInput("");
     }
-    function updateStage(index: number, patch: Partial<RoadmapStage>) { setField("roadmap", form.roadmap.map((stage, stageIndex) => stageIndex === index ? { ...stage, ...patch } : stage)); }
+    function updateStage(index: number, patch: Partial<ProgramRoadmapStage>) { setField("roadmap", form.roadmap.map((stage, stageIndex) => stageIndex === index ? { ...stage, ...patch } : stage)); }
     async function handleSubmit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); await onSave(form); }
     return <div className="fixed inset-0 z-[100] flex items-end justify-center bg-brand-navy/55 p-0 backdrop-blur-sm sm:items-center sm:p-5" onMouseDown={(event) => { if (event.target === event.currentTarget && !isSaving) onClose(); }}>
         <section role="dialog" aria-modal="true" aria-labelledby="bundle-modal-title" className="flex max-h-[96dvh] w-full max-w-4xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-h-[92vh] sm:rounded-2xl">
-            <header className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7"><div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-red">Flagship Programs &amp; Bundles</p><h2 id="bundle-modal-title" className="mt-1 font-display text-xl font-bold text-brand-navy">{bundle ? "Edit Flagship Program" : "Add Flagship Program"}</h2></div><button ref={closeRef} type="button" onClick={onClose} disabled={isSaving} className={iconButtonClass} aria-label="Close flagship program form"><X className="size-4" aria-hidden="true" /></button></header>
+            <header className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7"><div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-red">Flagship Programs &amp; Bundles</p><h2 id="bundle-modal-title" className="mt-1 font-display text-xl font-bold text-brand-navy">{bundle ? "Edit Program or Bundle" : "Add Program or Bundle"}</h2></div><button ref={closeRef} type="button" onClick={onClose} disabled={isSaving} className={iconButtonClass} aria-label="Close flagship program form"><X className="size-4" aria-hidden="true" /></button></header>
             <form onSubmit={(event) => void handleSubmit(event)} className="flex min-h-0 flex-1 flex-col">
                 <div className="min-h-0 flex-1 space-y-7 overflow-y-auto px-5 py-5 sm:px-7">
                     <FormSection title="Basic Information"><div className="grid gap-4 sm:grid-cols-2">
+                        <label className={labelClass}>Program Type<select value={form.program_type} onChange={(event) => setField("program_type", event.target.value as BundlePayload["program_type"])} className={inputClass}><option value="signature">Signature Program</option><option value="bundle">Career Package Bundle</option></select></label>
                         <label className={`${labelClass} sm:col-span-2`}>Title<input required value={form.title} onChange={(event) => { const title = event.target.value; setField("title", title); if (!slugEdited) setField("slug", generateSlug(title)); }} className={inputClass} placeholder="SPRINT RISE" /></label>
                         <label className={labelClass}>Slug<div className="flex gap-2"><input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={form.slug} onChange={(event) => { setSlugEdited(true); setField("slug", generateSlug(event.target.value)); }} className={`${inputClass} mt-1.5`} /><button type="button" onClick={() => { setSlugEdited(false); setField("slug", generateSlug(form.title)); }} className="sprint-focus mt-1.5 shrink-0 rounded-lg border border-slate-200 px-3 text-xs font-bold text-brand-navy hover:bg-slate-50">Reset</button></div></label>
                         <label className={labelClass}>Badge Label<input value={form.badge_label} onChange={(event) => setField("badge_label", event.target.value)} className={inputClass} placeholder="Flagship Program" /></label>
                         <label className={`${labelClass} sm:col-span-2`}>Tagline<input value={form.tagline} onChange={(event) => setField("tagline", event.target.value)} className={inputClass} placeholder="Campus to Corporate in 6 Months" /></label>
                         <label className={labelClass}>Target Audience<select value={form.audience} onChange={(event) => setField("audience", event.target.value as BundlePayload["audience"])} className={inputClass}>{audiences.map((audience) => <option key={audience.value} value={audience.value}>{audience.label}</option>)}</select></label>
                         <label className={labelClass}>Duration<input value={form.duration} onChange={(event) => setField("duration", event.target.value)} className={inputClass} placeholder="6 Months Intensive" /></label>
-                        <label className={labelClass}>Training Mode<select value={form.training_mode} onChange={(event) => setField("training_mode", event.target.value as BundlePayload["training_mode"])} className={inputClass}>{modes.map((mode) => <option key={mode}>{mode}</option>)}</select></label>
+                        <label className={labelClass}>Level<input value={form.level} onChange={(event) => setField("level", event.target.value)} className={inputClass} placeholder="Beginner to Intermediate" /></label>
+                        <label className={labelClass}>Delivery Method<select value={form.delivery_method} onChange={(event) => { setField("delivery_method", event.target.value); setField("training_mode", event.target.value as BundlePayload["training_mode"]); }} className={inputClass}>{modes.map((mode) => <option key={mode}>{mode}</option>)}</select></label>
+                        <label className={labelClass}>Credential<input value={form.credential} onChange={(event) => setField("credential", event.target.value)} className={inputClass} placeholder="Certification" /></label>
+                        <label className={`${labelClass} sm:col-span-2`}>Designed For<input value={form.designed_for} onChange={(event) => setField("designed_for", event.target.value)} className={inputClass} placeholder="Undergraduate students preparing for industry roles" /></label>
                         <label className={`${labelClass} sm:col-span-2`}>Short Description<textarea rows={3} value={form.description} onChange={(event) => setField("description", event.target.value)} className={inputClass} /></label>
                         <label className={`${labelClass} sm:col-span-2`}>Detailed Description<textarea rows={6} value={form.long_description || ""} onChange={(event) => setField("long_description", event.target.value)} className={inputClass} placeholder="Full roadmap vision" /></label>
-                        <label className={`${labelClass} sm:col-span-2`}>Eligibility<textarea rows={3} value={form.eligibility} onChange={(event) => setField("eligibility", event.target.value)} className={inputClass} /></label>
                     </div></FormSection>
                     <TagSection title="Program Highlights" tags={form.highlights} value={highlightInput} onChange={setHighlightInput} onAdd={addHighlight} onRemove={(tag) => setField("highlights", form.highlights.filter((item) => item !== tag))} placeholder="Industry mentorship, internship, applied projects" />
-                    <FormSection title="Multi-Semester Roadmap"><div className="space-y-3">{form.roadmap.map((stage, index) => <div key={`stage-${index}`} className="rounded-lg border border-slate-200 p-3"><div className="grid gap-3 sm:grid-cols-2"><label className={labelClass}>Stage / Semester<input value={stage.title} onChange={(event) => updateStage(index, { title: event.target.value })} className={inputClass} placeholder="Semester 1" /></label><label className={labelClass}>Duration<input value={stage.duration} onChange={(event) => updateStage(index, { duration: event.target.value })} className={inputClass} placeholder="6 months" /></label></div><label className={labelClass}>Subjects<input value={stage.subjects.join(", ")} onChange={(event) => updateStage(index, { subjects: event.target.value.split(",").map((subject) => subject.trim()).filter(Boolean) })} className={inputClass} placeholder="Foundations, AI, Cloud" /></label><button type="button" onClick={() => setField("roadmap", form.roadmap.filter((_, stageIndex) => stageIndex !== index))} className="sprint-focus mt-2 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-brand-red hover:bg-brand-red-light"><Trash2 className="size-3.5" aria-hidden="true" />Remove Stage</button></div>)}<button type="button" onClick={() => setField("roadmap", [...form.roadmap, { title: "", duration: "", subjects: [] }])} className="sprint-focus inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-brand-navy hover:bg-slate-50"><Plus className="size-4" aria-hidden="true" />Add Stage / Semester</button></div></FormSection>
+                    <FormSection title="Program Stages / Phases"><div className="space-y-3">{form.roadmap.map((stage, index) => <div key={`program-stage-${index}`} className="rounded-lg border border-slate-200 p-3">
+                        <div className="grid gap-3 sm:grid-cols-3">
+                            <label className={labelClass}>Stage Label<input value={stage.stage} onChange={(event) => updateStage(index, { stage: event.target.value })} className={inputClass} placeholder="PROGRAM STAGE" /></label>
+                            <label className={`${labelClass} sm:col-span-2`}>Title<input value={stage.title} onChange={(event) => updateStage(index, { title: event.target.value })} className={inputClass} placeholder="Technical Sessions" /></label>
+                            <label className={labelClass}>Hours / Duration<input value={stage.hours} onChange={(event) => updateStage(index, { hours: event.target.value })} className={inputClass} placeholder="124 hours" /></label>
+                        </div>
+                        <label className={labelClass}>Topics<input value={stage.topics.join(", ")} onChange={(event) => updateStage(index, { topics: event.target.value.split(",").map((topic) => topic.trim()).filter(Boolean) })} className={inputClass} placeholder="Cloud, AI, DevOps" /></label>
+                        <button type="button" onClick={() => setField("roadmap", form.roadmap.filter((_, stageIndex) => stageIndex !== index))} className="sprint-focus mt-2 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-brand-red hover:bg-brand-red-light"><Trash2 className="size-3.5" aria-hidden="true" />Remove Stage</button>
+                    </div>)}<button type="button" onClick={() => setField("roadmap", [...form.roadmap, { stage: "PROGRAM STAGE", title: "", hours: "", topics: [] }])} className="sprint-focus inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-bold text-brand-navy hover:bg-slate-50"><Plus className="size-4" aria-hidden="true" />Add Stage</button></div></FormSection>
                     <FormSection title="Program Status"><div className="flex flex-col gap-3 sm:flex-row sm:gap-8"><label className="inline-flex items-center gap-2.5 text-sm font-semibold text-brand-navy"><input type="checkbox" checked={form.is_published} onChange={(event) => setField("is_published", event.target.checked)} className="size-4 accent-brand-red" />Visible on Website</label><label className="inline-flex items-center gap-2.5 text-sm font-semibold text-brand-navy"><input type="checkbox" checked={form.is_featured} onChange={(event) => setField("is_featured", event.target.checked)} className="size-4 accent-brand-red" />Highlight as Featured</label></div></FormSection>
                 </div>
                 <footer className="flex justify-end gap-2 border-t border-slate-200 bg-white px-5 py-4 sm:px-7"><button type="button" onClick={onClose} disabled={isSaving} className="sprint-focus rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-brand-navy hover:bg-slate-50">Cancel</button><button type="submit" disabled={isSaving} className="sprint-focus inline-flex min-w-32 items-center justify-center gap-2 rounded-lg bg-brand-red px-4 py-2.5 text-sm font-bold text-white hover:brightness-110 disabled:opacity-70">{isSaving ? "Saving…" : "Save Program"}</button></footer>

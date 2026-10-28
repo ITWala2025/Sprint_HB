@@ -21,6 +21,49 @@ import {
   audienceOptions,
   normalizeDatabaseCourse,
 } from "@/data/courses";
+import { rolePaths } from "@/data/learningPaths";
+import { programs } from "@/data/programs";
+import {
+  normalizeBundle,
+  normalizeLearningPath,
+} from "@/lib/course-utils";
+
+const staticLearningPaths = rolePaths.map(normalizeLearningPath);
+
+function toCatalogueBundle(source) {
+  const bundle = normalizeBundle(source);
+  return {
+    ...bundle,
+    kind: "bundle",
+    category: source.category || "Career Package",
+    audience: bundle.audience === "undergraduate" ? ["student"] : ["it-pro", "non-it"],
+    level: bundle.level || "Curated pathway",
+    difficulty_level: bundle.level || "Curated pathway",
+    delivery_method: bundle.delivery_method || "Hybrid",
+    certificate: Boolean(bundle.credential),
+    image: bundle.image_url || null,
+  };
+}
+
+function toCatalogueProgram(program) {
+  const roadmap = Array.isArray(program.roadmap)
+    ? program.roadmap
+    : (program.curriculum || []).map((stage) => ({
+        stage: "PROGRAM STAGE",
+        title: stage.title,
+        hours: "",
+        topics: (stage.children || []).flatMap((child) => child.topics || []),
+      }));
+  return {
+    ...program,
+    kind: "signature",
+    program_type: "signature",
+    badge_label: program.badge_label || program.badgeLabel || "Signature Program",
+    tagline: program.tagline || program.headline || "",
+    audience: program.audience === "working_professional" ? ["it-pro", "non-it"] : ["student"],
+    roadmap,
+  };
+}
 
 const itemHref = (item, audience) => {
   const href = `/${item.kind === "bundle" ? "bundles" : "courses"}/${item.slug}`;
@@ -178,198 +221,97 @@ function FilterContent({
   );
 }
 
-function FeaturedPrograms() {
-  const milestones = [
-    {
-      title: "Day One",
-      description: "An introduction to SPRINT RISE and the six-month program.",
-      image: "/images/courses/abstract-people.svg",
-    },
-    {
-      title: "Technical Sessions (124 hours)",
-      description: "Build in-demand skills across Cloud, AI, and DevOps.",
-      image: "/images/courses/abstract-code.svg",
-    },
-    {
-      title: "Personality Development (46 hours)",
-      description: "A dedicated 46-hour personality development track.",
-      image: "/images/courses/abstract-people.svg",
-    },
-    {
-      title: "Industry Ways of Working (40 hours)",
-      description: "A focused 40-hour module on industry ways of working.",
-      image: "/images/courses/abstract-devops.svg",
-    },
-    {
-      title: "Internship (90 hours)",
-      description: "A 90-hour internship component in the program.",
-      image: "/images/courses/abstract-web.svg",
-    },
-    {
-      title: "Industry-Ready",
-      description:
-        "Bring together in-demand skills and hands-on project experience.",
-      image: "/images/courses/abstract-security.svg",
-    },
+function FeaturedPrograms({ programs: signaturePrograms }) {
+  const rise = signaturePrograms.find((program) => program.slug === "sprint-rise");
+  const careerAccelerator = signaturePrograms.find((program) => program.slug === "career-accelerator");
+  const stageImages = [
+    "/images/courses/abstract-people.svg",
+    "/images/courses/abstract-code.svg",
+    "/images/courses/abstract-data.svg",
+    "/images/courses/abstract-devops.svg",
+    "/images/courses/abstract-web.svg",
+    "/images/courses/abstract-security.svg",
   ];
-  const careerAcceleratorPhases = [
-    {
-      title: "Foundations",
-      phase: "Phase 1",
-      image: "/images/courses/abstract-code.svg",
-    },
-    {
-      title: "Ignite",
-      phase: "Phase 2",
-      image: "/images/courses/abstract-data.svg",
-    },
-    {
-      title: "Outperform",
-      phase: "Phase 3",
-      image: "/images/courses/abstract-web.svg",
-    },
-  ];
+  const toMilestone = (stage, index, description) => ({
+    title: stage.hours && !stage.title.toLowerCase().includes(stage.hours.toLowerCase())
+      ? `${stage.title} (${stage.hours})`
+      : stage.title,
+    description: stage.topics?.join(", ") || description,
+    image: stageImages[index % stageImages.length],
+  });
+  const riseStages = rise?.roadmap?.length
+    ? rise.roadmap.map((stage, index) => toMilestone(stage, index, rise.description))
+    : [];
+  const careerStages = careerAccelerator?.roadmap?.map((stage, index) => {
+    const match = stage.title.match(/^(Phase\s*\d+)[\s—-]*(.*)$/i);
+    return {
+      title: match?.[2] || stage.title,
+      phase: stage.stage?.match(/^Phase\s*\d+/i)?.[0] || match?.[1] || `Phase ${index + 1}`,
+      image: stageImages[index % stageImages.length],
+    };
+  }) || [];
+  const otherPrograms = signaturePrograms.filter(
+    (program) => program !== rise && program !== careerAccelerator,
+  );
+
+  if (!signaturePrograms.length) return null;
 
   return (
-    <section
-      className="courses-signature-programs"
-      aria-labelledby="signature-programs-heading"
-    >
+    <section className="courses-signature-programs" aria-labelledby="signature-programs-heading">
       <div className="courses-signature-programs__heading">
         <h2 id="signature-programs-heading">Our Signature Programs</h2>
-        <p>
-          Immersive, structured learning experiences for long-term career
-          growth.
-        </p>
+        <p>Immersive, structured learning experiences for long-term career growth.</p>
       </div>
 
-      <div className="courses-signature-programs__panel courses-signature-programs__panel--rise">
+      {rise ? <div className="courses-signature-programs__panel courses-signature-programs__panel--rise">
         <div className="courses-signature-programs__overview">
-          <p className="courses-signature-programs__name">SPRINT RISE</p>
-          <h3>Campus to Corporate in 6 Months</h3>
-          <p className="courses-signature-programs__description">
-            An intensive, industry-focused program to build in-demand skills in
-            Cloud, AI, DevOps and more with hands-on projects and expert
-            mentorship.
-          </p>
-
+          <p className="courses-signature-programs__name">{rise.title}</p>
+          <h3>{rise.tagline}</h3>
+          <p className="courses-signature-programs__description">{rise.description}</p>
           <ul className="courses-signature-programs__metadata">
-            <li>
-              <BarChart3 size={19} aria-hidden="true" />
-              <span>Beginner to Intermediate</span>
-            </li>
-            <li>
-              <Laptop size={19} aria-hidden="true" />
-              <span>Online + In Campus</span>
-            </li>
-            <li>
-              <BadgeCheck size={19} aria-hidden="true" />
-              <span>Certification</span>
-            </li>
+            <li><BarChart3 size={19} aria-hidden="true" /><span>{rise.level || "Program Level"}</span></li>
+            <li><Laptop size={19} aria-hidden="true" /><span>{rise.delivery_method || "Delivery details"}</span></li>
+            <li><BadgeCheck size={19} aria-hidden="true" /><span>{rise.credential || "Certification"}</span></li>
           </ul>
-
-          <Link
-            href="/programs/sprint-rise"
-            className="courses-signature-programs__cta"
-          >
-            Explore Program
-            <ArrowRight size={18} aria-hidden="true" />
-          </Link>
+          <Link href={`/programs/${rise.slug}`} className="courses-signature-programs__cta">Explore Program<ArrowRight size={18} aria-hidden="true" /></Link>
         </div>
-
-        <section
-          className="courses-signature-programs__journey"
-          aria-labelledby="signature-programs-journey-heading"
-        >
-          <h3
-            id="signature-programs-journey-heading"
-            className="courses-signature-programs__journey-heading"
-          >
-            Program Journey
-          </h3>
+        {riseStages.length ? <section className="courses-signature-programs__journey" aria-labelledby="signature-programs-journey-heading">
+          <h3 id="signature-programs-journey-heading" className="courses-signature-programs__journey-heading">{rise.title} Journey</h3>
           <JourneyScroller label="Program milestones">
-            {milestones.map((milestone) => (
-              <li
-                className="courses-signature-programs__milestone"
-                key={milestone.title}
-              >
-                <div className="courses-signature-programs__milestone-image">
-                  <Image
-                    src={milestone.image}
-                    alt=""
-                    fill
-                    sizes="(max-width: 767px) 74vw, (max-width: 1023px) 168px, 190px"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="courses-signature-programs__milestone-content">
-                  <h4>{milestone.title}</h4>
-                  <p>{milestone.description}</p>
-                </div>
-              </li>
-            ))}
+            {riseStages.map((stage) => <li className="courses-signature-programs__milestone" key={stage.title}>
+              <div className="courses-signature-programs__milestone-image"><Image src={stage.image} alt="" fill sizes="(max-width: 767px) 74vw, (max-width: 1023px) 168px, 190px" className="object-cover" /></div>
+              <div className="courses-signature-programs__milestone-content"><h4>{stage.title}</h4><p>{stage.description}</p></div>
+            </li>)}
           </JourneyScroller>
-        </section>
-      </div>
+        </section> : null}
+      </div> : null}
 
-      <div
-        className="courses-signature-programs__panel courses-signature-programs__panel--three-year"
-      >
+      {careerAccelerator ? <div className="courses-signature-programs__panel courses-signature-programs__panel--three-year">
         <div className="courses-signature-programs__overview">
-          <p className="courses-signature-programs__name">
-            SPRINT Career Accelerator
-          </p>
-          <h3>Campus to Corporate, Confidently.</h3>
-          <p className="courses-signature-programs__description">
-            A career-development program for B.Tech and MCA students, progressing
-            through Foundations, Ignite, and Outperform.
-          </p>
-          <Link
-            href="/programs/career-accelerator"
-            className="courses-signature-programs__cta"
-          >
-            Explore Program
-            <ArrowRight size={18} aria-hidden="true" />
-          </Link>
+          <p className="courses-signature-programs__name">{careerAccelerator.title}</p>
+          <h3>{careerAccelerator.tagline}</h3>
+          <p className="courses-signature-programs__description">{careerAccelerator.description}</p>
+          <Link href={`/programs/${careerAccelerator.slug}`} className="courses-signature-programs__cta">Explore Program<ArrowRight size={18} aria-hidden="true" /></Link>
         </div>
-        <section
-          className="courses-signature-programs__journey"
-          aria-labelledby="career-accelerator-journey-heading"
-        >
-          <h3
-            id="career-accelerator-journey-heading"
-            className="courses-signature-programs__journey-heading"
-          >
-            Career Accelerator Journey
-          </h3>
-          <JourneyScroller
-            label="SPRINT Career Accelerator phases"
-            listClassName="courses-signature-programs__milestones--three-year"
-          >
-            {careerAcceleratorPhases.map((stage) => (
-              <li
-                className="courses-signature-programs__milestone courses-signature-programs__milestone--three-year"
-                key={stage.phase}
-              >
-                <div className="courses-signature-programs__milestone-image">
-                  <Image
-                    src={stage.image}
-                    alt=""
-                    fill
-                    sizes="(max-width: 767px) 74vw, (max-width: 1023px) 168px, 220px"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="courses-signature-programs__milestone-content courses-signature-programs__milestone-content--stage">
-                  <span className="courses-signature-programs__stage-label">
-                    {stage.phase} — {stage.title}
-                  </span>
-                </div>
-              </li>
-            ))}
+        {careerStages.length ? <section className="courses-signature-programs__journey" aria-labelledby="career-accelerator-journey-heading">
+          <h3 id="career-accelerator-journey-heading" className="courses-signature-programs__journey-heading">Career Accelerator Journey</h3>
+          <JourneyScroller label="SPRINT Career Accelerator phases" listClassName="courses-signature-programs__milestones--three-year">
+            {careerStages.map((stage) => <li className="courses-signature-programs__milestone courses-signature-programs__milestone--three-year" key={stage.phase}>
+              <div className="courses-signature-programs__milestone-image"><Image src={stage.image} alt="" fill sizes="(max-width: 767px) 74vw, (max-width: 1023px) 168px, 220px" className="object-cover" /></div>
+              <div className="courses-signature-programs__milestone-content courses-signature-programs__milestone-content--stage"><span className="courses-signature-programs__stage-label">{stage.phase} — {stage.title}</span></div>
+            </li>)}
           </JourneyScroller>
-        </section>
-      </div>
+        </section> : null}
+      </div> : null}
+
+      {otherPrograms.map((program) => <article key={program.slug} className="courses-signature-programs__panel">
+        <div className="courses-signature-programs__overview">
+          <p className="courses-signature-programs__name">{program.title}</p>
+          <h3>{program.tagline}</h3>
+          <p className="courses-signature-programs__description">{program.description}</p>
+          <Link href={`/programs/${program.slug}`} className="courses-signature-programs__cta">Explore Program<ArrowRight size={18} aria-hidden="true" /></Link>
+        </div>
+      </article>)}
     </section>
   );
 }
@@ -377,6 +319,8 @@ function FeaturedPrograms() {
 export default function CourseCatalogue({ items }) {
   const supabase = useMemo(() => createClient(), []);
   const [catalogueItems, setCatalogueItems] = useState(items);
+  const [learningPaths, setLearningPaths] = useState(staticLearningPaths);
+  const [signaturePrograms, setSignaturePrograms] = useState(programs.map(toCatalogueProgram));
   const [audience, setAudience] = useState("student");
   const [query, setQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -391,25 +335,43 @@ export default function CourseCatalogue({ items }) {
   useEffect(() => {
     let active = true;
 
-    async function loadCourses() {
-      const { data: dbCourses, error } = await supabase
-        .from("courses")
-        .select("*")
-        .eq("is_published", true)
-        .order("created_at", { ascending: false });
+    async function loadCatalogue() {
+      const [courseResult, learningPathResult, bundleResult] = await Promise.all([
+        supabase.from("courses").select("*").eq("is_published", true).order("created_at", { ascending: false }),
+        supabase.from("learning_paths").select("*").eq("is_published", true).order("title"),
+        supabase.from("course_bundles").select("*").eq("is_published", true).order("created_at", { ascending: false }),
+      ]);
 
       if (!active) return;
 
-      if (error || !dbCourses?.length) {
-        setCatalogueItems(items);
-        return;
-      }
+      if (courseResult.error) console.error("[SPRINT Catalogue] Could not load published courses:", courseResult.error.message);
+      if (learningPathResult.error) console.error("[SPRINT Catalogue] Could not load published learning paths:", learningPathResult.error.message);
+      if (bundleResult.error) console.error("[SPRINT Catalogue] Could not load published programs and bundles:", bundleResult.error.message);
 
-      const localPackages = items.filter((item) => item.kind === "bundle");
-      setCatalogueItems([...dbCourses.map(normalizeDatabaseCourse), ...localPackages]);
+      const resolvedCourses = courseResult.error || !courseResult.data?.length
+        ? items.filter((item) => item.kind === "course")
+        : courseResult.data.map(normalizeDatabaseCourse);
+      const resolvedPaths = learningPathResult.error || !learningPathResult.data?.length
+        ? staticLearningPaths
+        : learningPathResult.data.map(normalizeLearningPath);
+      const resolvedProgramsAndBundles = bundleResult.error || !bundleResult.data?.length
+        ? [...items.filter((item) => item.kind === "bundle"), ...programs.map(toCatalogueProgram)]
+        : bundleResult.data.map((row) => {
+            const bundle = normalizeBundle(row);
+            return bundle.program_type === "signature"
+              ? toCatalogueProgram({ ...bundle, kind: "program" })
+              : toCatalogueBundle(row);
+          });
+
+      setCatalogueItems([
+        ...resolvedCourses,
+        ...resolvedProgramsAndBundles.filter((item) => item.kind === "bundle"),
+      ]);
+      setLearningPaths(resolvedPaths);
+      setSignaturePrograms(resolvedProgramsAndBundles.filter((item) => item.kind === "signature"));
     }
 
-    void loadCourses();
+    void loadCatalogue();
     return () => { active = false; };
   }, [items, supabase]);
 
@@ -654,7 +616,7 @@ export default function CourseCatalogue({ items }) {
         </div>
       </section>
 
-      <FeaturedPrograms />
+      <FeaturedPrograms programs={signaturePrograms} />
 
       <main id="individual-modular-courses" className="courses-content min-w-0">
         <div className="courses-results min-w-0">
@@ -664,7 +626,7 @@ export default function CourseCatalogue({ items }) {
             </span>
           </div>
 
-          <RoleBasedLearningPaths />
+          <RoleBasedLearningPaths paths={learningPaths} />
 
           {visibleItems.length ? (
             <>

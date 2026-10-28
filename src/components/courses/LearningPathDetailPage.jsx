@@ -2,6 +2,21 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export default function LearningPathDetailPage({ path }) {
+  const stages = path.stages || path.courses.map((course, index) => ({
+    number: String(index + 1).padStart(2, "0"),
+    title: course.title,
+    hours: course.duration,
+    learn: course.learn,
+  }));
+  const certifications = path.certifications || path.courses.map(
+    (course) => `${course.title}: ${course.certification}`,
+  );
+  const title = path.title || path.role;
+  const totalHours = path.total_hours ?? stages.reduce(
+    (total, stage) => total + (Number.parseInt(stage.hours, 10) || 0),
+    0,
+  );
+
   return (
     <div className="learning-path-detail">
       <nav className="course-breadcrumb" aria-label="Breadcrumb">
@@ -9,44 +24,39 @@ export default function LearningPathDetailPage({ path }) {
         <span aria-hidden="true">&gt;</span>
         <Link href="/courses#role-pathways-heading">Role-Based Learning Paths</Link>
         <span aria-hidden="true">&gt;</span>
-        <span aria-current="page">{path.role}</span>
+        <span aria-current="page">{title}</span>
       </nav>
 
       <header className="learning-path-detail__hero">
-        <p className="courses-eyebrow">Career Pathway</p>
-        <h1>{path.role}</h1>
+        <p className="courses-eyebrow">{path.eyebrow || "CAREER PATHWAY"}</p>
+        <h1>{title}</h1>
         <p className="learning-path-detail__summary">
-          Three learning stages ·{" "}
-          {path.courses.reduce(
-            (total, course) =>
-              total + Number.parseInt(course.duration, 10),
-            0,
-          )}{" "}
+          {stages.length} learning stages · {totalHours}{" "}
           total learning hours
         </p>
       </header>
 
       <section
         className="learning-path-detail__stages"
-        aria-label={`${path.role} curriculum`}
+        aria-label={`${title} curriculum`}
       >
-        {path.courses.map((course, index) => (
+        {stages.map((stage, index) => (
           <article
             className="learning-path-detail__stage"
-            key={course.title}
+            key={`${stage.number}-${stage.title}`}
           >
             <span className="learning-path-detail__stage-number">
-              {String(index + 1).padStart(2, "0")}
+              {stage.number || String(index + 1).padStart(2, "0")}
             </span>
             <div className="learning-path-detail__stage-content">
               <div className="learning-path-detail__stage-heading">
-                <h2>{course.title}</h2>
+                <h2>{stage.title}</h2>
                 <span className="learning-path-detail__duration">
-                  {course.duration}
+                  {stage.hours}
                 </span>
               </div>
               <h3>What You&apos;ll Learn</h3>
-              <p>{course.learn}</p>
+              <p>{stage.learn}</p>
             </div>
           </article>
         ))}
@@ -58,11 +68,9 @@ export default function LearningPathDetailPage({ path }) {
       >
         <h2 id="learning-path-certification-heading">CERTIFICATION</h2>
         <ul className="course-outcomes">
-          {path.courses.map((course) => (
-            <li key={course.title}>
-              <span>
-                {course.title}: {course.certification}
-              </span>
+          {certifications.map((certification, index) => (
+            <li key={`${certification}-${index}`}>
+              <span>{certification}</span>
             </li>
           ))}
         </ul>

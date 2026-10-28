@@ -1,16 +1,20 @@
 import { notFound } from "next/navigation";
 import DetailPage from "@/components/courses/DetailPage";
-import { getProgram } from "@/data/programs";
+import { findProgramBySlug } from "@/lib/program-data.server";
 
-const program = getProgram("sprint-rise");
+export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: program.title,
-  description: program.description,
-  alternates: { canonical: `/programs/${program.slug}` },
-};
+export async function generateMetadata() {
+  const program = await findProgramBySlug("sprint-rise");
+  return program ? {
+    title: program.title,
+    description: program.description,
+    alternates: { canonical: `/programs/${program.slug}` },
+  } : {};
+}
 
-export default function SprintRisePage() {
+export default async function SprintRisePage() {
+  const program = await findProgramBySlug("sprint-rise");
   if (!program) notFound();
 
   return <DetailPage item={program} />;
