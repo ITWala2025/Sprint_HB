@@ -297,9 +297,9 @@ export default function TextTestimonials() {
           </span>
         </h2>
 
-        <p className="mt-3 text-sm sm:text-base text-slate-500 max-w-xl mx-auto leading-relaxed">
+        {/* <p className="mt-3 text-sm sm:text-base text-slate-500 max-w-xl mx-auto leading-relaxed">
           Real stories. Real growth. Hear from our learners who have built new skills and achieved their goals with us.
-        </p>
+        </p> */}
       </div>
 
       {/* STAGE WRAPPER */}

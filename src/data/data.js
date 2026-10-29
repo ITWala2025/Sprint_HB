@@ -161,7 +161,7 @@ export const videoTestimonials = [
     id: "v4",
     name: "Farhat",
     role: "BTech Graduate",
-    videoUrl: "#",
+    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/Farhat_Afreen%20testimonial.mp4",
   },
 ];
 
