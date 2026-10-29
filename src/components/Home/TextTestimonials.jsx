@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Star, CheckCircle2 } from "lucide-react";
 import { textTestimonials } from "@/data/data";
@@ -59,6 +59,9 @@ export default function TextTestimonials() {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef(null);
+  const suppressCardClickRef = useRef(false);
 
   const handleNext = useCallback(() => {
     if (total === 0) return;
@@ -69,6 +72,76 @@ export default function TextTestimonials() {
     if (total === 0) return;
     setActiveIndex((prev) => (prev - 1 + total) % total);
   }, [total]);
+
+  const handleStagePointerDown = (event) => {
+    if (
+      !event.isPrimary ||
+      (event.pointerType === "mouse" && event.button !== 0) ||
+      event.target.closest("button, a, input")
+    ) {
+      return;
+    }
+
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      moved: false,
+    };
+  };
+
+  const handleStagePointerMove = (event) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - drag.startX;
+    const deltaY = event.clientY - drag.startY;
+
+    if (!drag.moved) {
+      if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) < 8) return;
+      if (Math.abs(deltaX) <= Math.abs(deltaY)) {
+        dragRef.current = null;
+        return;
+      }
+
+      drag.moved = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setIsDragging(true);
+    }
+
+    event.preventDefault();
+  };
+
+  const finishStagePointer = (event, shouldNavigate = true) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    dragRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setIsDragging(false);
+
+    if (!shouldNavigate || !drag.moved) return;
+
+    suppressCardClickRef.current = true;
+    window.setTimeout(() => {
+      suppressCardClickRef.current = false;
+    }, 0);
+
+    const deltaX = event.clientX - drag.startX;
+    if (Math.abs(deltaX) < 40) return;
+
+    if (deltaX < 0) handleNext();
+    else handlePrev();
+  };
+
+  const handleStageClickCapture = (event) => {
+    if (!suppressCardClickRef.current) return;
+    event.preventDefault();
+    event.stopPropagation();
+    suppressCardClickRef.current = false;
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -91,11 +164,11 @@ export default function TextTestimonials() {
 
   return (
     <section
-      className="relative w-full overflow-hidden py-20 px-4 sm:px-6 select-none"
+      className="relative w-full overflow-hidden p-5 select-none mt-10"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Enterprise Keyframe Animations */}
+      {/* Enterprise Keyframe Animations & Responsive 3D Positioning Rules */}
       <style jsx>{`
         @keyframes borderGlow {
           0%, 100% {
@@ -134,13 +207,84 @@ export default function TextTestimonials() {
         .paused .animate-progress {
           animation-play-state: paused;
         }
+
+        /* Responsive 3D Card Positioning Classes for Consistent Spacing */
+        .card-center {
+          transform: translate3d(0px, 0px, 0px) rotateY(0deg) skewY(0deg) scale(1);
+          z-index: 30;
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        /* Tablet (md) Spacing */
+        .card-left {
+          z-index: 20;
+          opacity: 0.85;
+          pointer-events: auto;
+          transform: translate3d(-290px, 0px, -40px) rotateY(18deg) skewY(-1deg) scale(0.85);
+        }
+        .card-right {
+          z-index: 20;
+          opacity: 0.85;
+          pointer-events: auto;
+          transform: translate3d(290px, 0px, -40px) rotateY(-18deg) skewY(1deg) scale(0.85);
+        }
+
+        /* Laptop / Small Desktop (lg) Spacing */
+        @media (min-width: 1024px) {
+          .card-left {
+            transform: translate3d(-355px, 0px, -40px) rotateY(21deg) skewY(-1.5deg) scale(0.88);
+          }
+          .card-right {
+            transform: translate3d(355px, 0px, -40px) rotateY(-21deg) skewY(1.5deg) scale(0.88);
+          }
+        }
+
+        /* Desktop / Enterprise (xl+) Spacing */
+        @media (min-width: 1280px) {
+          .card-left {
+            transform: translate3d(-370px, 0px, -40px) rotateY(24deg) skewY(-2deg) scale(0.92);
+          }
+          .card-right {
+            transform: translate3d(370px, 0px, -40px) rotateY(-24deg) skewY(2deg) scale(0.92);
+          }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .card-center {
+            max-width: 330px;
+          }
+          .card-left,
+          .card-right {
+            width: 180px;
+          }
+          .card-left {
+            transform: translate3d(-260px, 0px, -40px) rotateY(18deg) skewY(-1deg) scale(0.85);
+          }
+          .card-right {
+            transform: translate3d(260px, 0px, -40px) rotateY(-18deg) skewY(1deg) scale(0.85);
+          }
+        }
+
+        .card-hidden-left {
+          transform: translate3d(-480px, 0px, -180px) rotateY(35deg) scale(0.7);
+          z-index: 10;
+          opacity: 0;
+          pointer-events: none;
+        }
+        .card-hidden-right {
+          transform: translate3d(480px, 0px, -180px) rotateY(-35deg) scale(0.7);
+          z-index: 10;
+          opacity: 0;
+          pointer-events: none;
+        }
       `}</style>
 
       {/* Ambient Moving Background Glows */}
       <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[320px] bg-gradient-to-r from-blue-100/60 via-indigo-100/50 to-red-100/40 blur-[120px] rounded-full transition-all duration-1000" />
 
       {/* Section Header */}
-      <div className="relative z-10 mx-auto max-w-3xl text-center mb-12">
+      <div className="relative z-10 mx-auto max-w-3xl text-center mb-10 sm:mb-12">
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] font-bold tracking-[0.2em] uppercase border border-red-200 bg-red-50 text-red-600 shadow-2xs">
           <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-ping" />
           TESTIMONIALS
@@ -158,40 +302,29 @@ export default function TextTestimonials() {
         </p>
       </div>
 
-      {/* =====================================================================
-          STAGE WRAPPER:
-          Max-width 1280px (`max-w-7xl`).
-          Center Card = 410px, Side Cards = 300px pushed out by 375px.
-          Total Card Span = 375 + 150 + 375 + 150 = 1050px.
-          Arrows sit at the far edges of 1240px container -> 0% Overlap!
-          ===================================================================== */}
-      <div className="relative mx-auto max-w-7xl px-12 sm:px-16">
-        
-        {/* LEFT ARROW BUTTON (Far Left Edge - Never touches Left Card) */}
+      {/* STAGE WRAPPER */}
+      <div className="relative mx-auto grid max-w-7xl grid-cols-[2.75rem_minmax(0,1fr)_2.75rem] items-center gap-1 sm:gap-2">
         <button
           onClick={handlePrev}
           aria-label="Previous Testimonial"
-          className="group absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-lg transition-all duration-300 hover:border-blue-600 hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/25 active:scale-95"
+          className="sprint-focus z-40 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-navy shadow-sm transition-colors hover:border-brand-navy hover:bg-slate-50"
         >
-          <ChevronLeft size={20} strokeWidth={2.4} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
-        </button>
-
-        {/* RIGHT ARROW BUTTON (Far Right Edge - Never touches Right Card) */}
-        <button
-          onClick={handleNext}
-          aria-label="Next Testimonial"
-          className="group absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-lg transition-all duration-300 hover:border-blue-600 hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/25 active:scale-95"
-        >
-          <ChevronRight size={20} strokeWidth={2.4} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+          <ChevronLeft size={20} aria-hidden="true" />
         </button>
 
         {/* 3D ANIMATED STAGE CONTAINER */}
         <div
-          className="relative mx-auto h-[275px] w-full flex items-center justify-center"
+          onPointerDown={handleStagePointerDown}
+          onPointerMove={handleStagePointerMove}
+          onPointerUp={finishStagePointer}
+          onPointerCancel={(event) => finishStagePointer(event, false)}
+          onClickCapture={handleStageClickCapture}
+          className={`relative mx-auto h-[275px] w-full flex items-center justify-center touch-pan-y ${
+            isDragging ? "cursor-grabbing" : "cursor-grab"
+          }`}
           style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
         >
           {testimonials.map((item, index) => {
-            // Calculate circular distance from activeIndex
             let offset = index - activeIndex;
             if (offset < -Math.floor(total / 2)) offset += total;
             if (offset > Math.floor(total / 2)) offset -= total;
@@ -200,41 +333,12 @@ export default function TextTestimonials() {
             const isLeft = offset === -1 || (activeIndex === 0 && index === total - 1 && total > 2);
             const isRight = offset === 1 || (activeIndex === total - 1 && index === 0 && total > 1);
 
-            // Pixel-exact 3D Transform state so cards NEVER collide with each other
-            let transformStyle = "translate3d(0px, 0px, -300px) rotateY(0deg) scale(0.6)";
-            let zIndex = 0;
-            let opacity = 0;
-            let pointerEvents = "none";
-
-            if (isCenter) {
-              // CENTER CARD: Flat 2D Projection at X = 0px
-              transformStyle = "translate3d(0px, 0px, 0px) rotateY(0deg) skewY(0deg) scale(1)";
-              zIndex = 30;
-              opacity = 1;
-              pointerEvents = "auto";
-            } else if (isLeft) {
-              // LEFT CARD: Pushed -370px Left + 3D Inward Tilt (Leaves 20px clear gap from center card)
-              transformStyle = "translate3d(-370px, 0px, -40px) rotateY(24deg) skewY(-2deg) scale(0.92)";
-              zIndex = 20;
-              opacity = 0.88;
-              pointerEvents = "auto";
-            } else if (isRight) {
-              // RIGHT CARD: Pushed +370px Right + 3D Inward Tilt (Leaves 20px clear gap from center card)
-              transformStyle = "translate3d(370px, 0px, -40px) rotateY(-24deg) skewY(2deg) scale(0.92)";
-              zIndex = 20;
-              opacity = 0.88;
-              pointerEvents = "auto";
-            } else if (offset < -1) {
-              // Hidden Far Left
-              transformStyle = "translate3d(-550px, 0px, -180px) rotateY(35deg) scale(0.7)";
-              zIndex = 10;
-              opacity = 0;
-            } else {
-              // Hidden Far Right
-              transformStyle = "translate3d(550px, 0px, -180px) rotateY(-35deg) scale(0.7)";
-              zIndex = 10;
-              opacity = 0;
-            }
+            // Determine position class name for CSS media-query handling
+            let positionClassName = "card-hidden-left";
+            if (isCenter) positionClassName = "card-center";
+            else if (isLeft) positionClassName = "card-left";
+            else if (isRight) positionClassName = "card-right";
+            else if (offset > 1) positionClassName = "card-hidden-right";
 
             return (
               <div
@@ -244,18 +348,14 @@ export default function TextTestimonials() {
                   if (isRight) handleNext();
                 }}
                 style={{
-                  transform: transformStyle,
-                  zIndex: zIndex,
-                  opacity: opacity,
-                  pointerEvents: pointerEvents,
                   transition: "all 700ms cubic-bezier(0.22, 1, 0.36, 1)",
                 }}
                 className={`
-                  absolute rounded-2xl
+                  absolute rounded-2xl ${positionClassName}
                   ${
                     isCenter
-                      ? "w-full max-w-[400px] sm:max-w-[410px] h-[255px] cursor-default"
-                      : "hidden xl:block w-[300px] h-[235px] cursor-pointer hover:!opacity-100"
+                      ? "w-full max-w-[380px] sm:max-w-[410px] md:max-w-[360px] lg:max-w-[410px] h-[255px] cursor-default"
+                      : "hidden md:block w-[210px] lg:w-[260px] xl:w-[300px] h-[235px] cursor-pointer hover:!opacity-100"
                   }
                 `}
               >
@@ -361,6 +461,14 @@ export default function TextTestimonials() {
             );
           })}
         </div>
+
+        <button
+          onClick={handleNext}
+          aria-label="Next Testimonial"
+          className="sprint-focus z-40 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-navy shadow-sm transition-colors hover:border-brand-navy hover:bg-slate-50"
+        >
+          <ChevronRight size={20} aria-hidden="true" />
+        </button>
       </div>
 
       {/* Animated Pagination Dots with Live Auto-Play Progress Bar */}
