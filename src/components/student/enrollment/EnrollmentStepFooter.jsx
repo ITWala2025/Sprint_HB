@@ -27,6 +27,7 @@ export default function EnrollmentStepFooter({
   submitLabel,
   onSkip,
   skipLabel = "Skip for now",
+  isSubmitting = false,
   className = "",
 }) {
   const [isSiteFooterVisible, setIsSiteFooterVisible] = useState(false);
@@ -69,6 +70,7 @@ export default function EnrollmentStepFooter({
       type="button"
       variant="secondary"
       onClick={onBack}
+      disabled={isSubmitting}
       className="md:w-auto md:min-w-32"
     >
       <ArrowLeft aria-hidden="true" className="size-4" />
@@ -77,7 +79,13 @@ export default function EnrollmentStepFooter({
   );
 
   const skipButton = onSkip ? (
-    <AuthButton type="button" variant="ghost" onClick={onSkip} className="md:w-auto md:min-w-32">
+    <AuthButton
+      type="button"
+      variant="ghost"
+      onClick={onSkip}
+      disabled={isSubmitting}
+      className="md:w-auto md:min-w-32"
+    >
       {skipLabel}
     </AuthButton>
   ) : null;
@@ -109,6 +117,9 @@ export default function EnrollmentStepFooter({
           type="submit"
           icon={<ArrowRight aria-hidden="true" className="size-4" />}
           className="md:w-auto md:min-w-32"
+          loading={isSubmitting}
+          loadingLabel={isLast ? "Submitting…" : "Please wait…"}
+          disabled={isSubmitting}
         >
           {label}
         </AuthButton>

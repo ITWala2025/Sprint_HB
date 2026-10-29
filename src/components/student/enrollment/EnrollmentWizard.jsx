@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CircleCheck } from "lucide-react";
 
 import HeaderLogo from "@/components/header/HeaderLogo";
+import { submitStudentEnrollmentAction } from "@/app/student/enroll/actions";
 
 import EnrollmentProgress from "./EnrollmentProgress";
 import EnrollmentStepFooter from "./EnrollmentStepFooter";
@@ -43,6 +44,8 @@ export default function EnrollmentWizard() {
   const [values, setValues] = useState(createEmptyEnrollment);
   const [errors, setErrors] = useState({});
   const [isComplete, setIsComplete] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   // One-off message for a visible action (today: skipping an optional step).
   // Cleared by the next navigation so it never lingers on the wrong screen.
   const [statusNotice, setStatusNotice] = useState(null);
@@ -54,6 +57,7 @@ export default function EnrollmentWizard() {
 
   const goToStep = (index, notice = null) => {
     setErrors({});
+    setSubmitError("");
     setIsComplete(false);
     setStatusNotice(notice);
     setStepIndex(index);
@@ -68,6 +72,7 @@ export default function EnrollmentWizard() {
       ...previous,
       [sliceId]: { ...previous[sliceId], [field]: value },
     }));
+    setSubmitError("");
     // Clear this field's error as soon as the student starts fixing it.
     setErrors((previous) =>
       previous[field] ? { ...previous, [field]: "" } : previous,
@@ -76,7 +81,7 @@ export default function EnrollmentWizard() {
 
   const handleChange = handleChangeIn(step.id);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const nextErrors = compactErrors(step.validate(values[step.id] ?? {}));
@@ -90,7 +95,30 @@ export default function EnrollmentWizard() {
     }
 
     if (isLast) {
-      setIsComplete(true);
+      setSubmitError("");
+      setIsSubmitting(true);
+
+      try {
+        const result = await submitStudentEnrollmentAction({
+          personal: values.personal,
+          education: values.education,
+        });
+
+        if (!result.success) {
+          setSubmitError(result.error);
+          return;
+        }
+
+        setIsComplete(true);
+      } catch (error) {
+        setSubmitError(
+          error instanceof Error
+            ? error.message
+            : "The enrollment could not be submitted right now.",
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
       return;
     }
 
@@ -185,6 +213,15 @@ export default function EnrollmentWizard() {
           </div>
         ) : null}
 
+        {submitError ? (
+          <div
+            role="alert"
+            className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-sm"
+          >
+            {submitError}
+          </div>
+        ) : null}
+
         {isComplete ? (
           <EnrollmentSuccessPanel
             headingId={SUCCESS_HEADING_ID}
@@ -227,6 +264,7 @@ export default function EnrollmentWizard() {
                 isLast={isLast}
                 stepNumber={stepIndex + 1}
                 totalSteps={ENROLLMENT_STEP_COUNT}
+                isSubmitting={isSubmitting}
               />
             </EnrollmentStepPanel>
           </form>

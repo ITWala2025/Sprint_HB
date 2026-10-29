@@ -121,9 +121,9 @@ export default function AccountStep({
             Account creation
           </h4>
           <p className="mt-1 text-xs leading-relaxed text-brand-text-secondary">
-            The next implementation will add secure password creation, Terms of
-            Service and Privacy Policy consent, account creation, email
-            verification and enrollment confirmation.
+            This enrollment is submitted for review, and the student portal will
+            continue with account creation and payment verification once the next
+            secure steps are completed.
           </p>
         </div>
       </section>

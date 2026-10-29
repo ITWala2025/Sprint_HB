@@ -52,8 +52,7 @@ export default function EnrollmentSuccessPanel({
         Your enrollment details are ready
       </h2>
       <p className="mt-1.5 text-sm leading-relaxed text-brand-text-secondary">
-        In the live portal this is the moment your application reaches the admissions team. For now
-        everything you entered is captured below.
+        Your enrollment has been submitted and is now waiting for payment verification.
       </p>
 
       {rows.length ? (
@@ -72,7 +71,7 @@ export default function EnrollmentSuccessPanel({
       ) : null}
 
       <p className="mt-4 rounded-xl bg-brand-surface px-3.5 py-3 text-[11px] font-medium leading-relaxed text-brand-text-secondary">
-        Preview build — nothing has been submitted and no account has been created yet.
+        SPRINT will review your enrollment, confirm the payment status, and contact you if any details need attention.
       </p>
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
