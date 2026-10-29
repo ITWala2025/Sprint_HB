@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 import StudentSidebar from "./StudentSidebar";
-import { mockStudent } from "@/data/student";
 
 const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 
@@ -21,11 +20,12 @@ const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
  * - <lg : the sidebar becomes a slide-down top drawer opened from a compact
  *         portal bar. No auth, no route guards — this pass is UI only.
  */
-export default function StudentLayout({ children }) {
+export default function StudentLayout({ children, student = null }) {
   const pathname = usePathname() ?? "";
   const isDashboard = pathname === "/student/dashboard";
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const profile = student ?? { fullName: "Student", initials: "S" };
 
   /* Close the drawer automatically when the layout reaches the desktop rail. */
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function StudentLayout({ children }) {
             </p>
           ) : null}
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-navy text-[11px] font-bold text-white">
-            {mockStudent.initials}
+            {profile.initials}
           </span>
         </div>
       </div>
@@ -111,6 +111,7 @@ export default function StudentLayout({ children }) {
             </div>
             <div id="student-sidebar-drawer">
               <StudentSidebar
+                student={student}
                 variant="drawer"
                 onNavigate={() => setIsDrawerOpen(false)}
               />
@@ -127,6 +128,7 @@ export default function StudentLayout({ children }) {
           }`}
         >
           <StudentSidebar
+            student={student}
             collapsed={isCollapsed}
             onToggleCollapse={() => setIsCollapsed((value) => !value)}
           />

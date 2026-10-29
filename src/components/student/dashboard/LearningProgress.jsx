@@ -1,7 +1,6 @@
 import { TrendingUp } from "lucide-react";
 
 import StudentCard from "@/components/student/StudentCard";
-import { mockEnrollment, mockLearningProgress } from "@/data/student";
 import { formatDateRange, formatShortDate } from "@/utils/dates";
 
 const RADIUS = 54;
@@ -54,16 +53,18 @@ function CircularProgress({ value, compact = false }) {
  * counters. The counters stay inline: attendance is no longer its own portal
  * section, so the card is the single source for the learner's session record.
  */
-export default function LearningProgress({ compact = false }) {
-  const {
-    completionPercent,
-    status,
-    attendedSessions,
-    missedSessions,
-    totalSessions,
-    streakDays,
-    lastUpdated,
-  } = mockLearningProgress;
+export default function LearningProgress({
+  compact = false,
+  enrollment = null,
+  progress = null,
+}) {
+  const completionPercent = Number(progress?.completionPercent ?? enrollment?.progressPercent ?? 0);
+  const status = progress?.status ?? (completionPercent > 0 ? "On track" : "Awaiting activation");
+  const lastUpdated = progress?.lastUpdated ?? null;
+  const attendedSessions = 0;
+  const missedSessions = 0;
+  const totalSessions = 0;
+  const streakDays = 0;
 
   const stats = [
     {
@@ -102,12 +103,10 @@ export default function LearningProgress({ compact = false }) {
           <div className="flex min-w-0 flex-col items-center gap-1.5">
             <CircularProgress value={completionPercent} compact />
             <p className="text-center text-[11px] font-medium text-brand-white/80">
-              Cohort:{" "}
-              {formatDateRange(
-                mockEnrollment.cohortStart,
-                mockEnrollment.cohortEnd,
-                " – ",
-              )}
+              Cohort: {" "}
+              {enrollment?.cohortStart && enrollment?.cohortEnd
+                ? formatDateRange(enrollment.cohortStart, enrollment.cohortEnd, " – ")
+                : "Awaiting cohort"}
             </p>
           </div>
           <span className="inline-flex shrink-0 items-center rounded-full bg-emerald-300/15 px-3 py-1.5 text-xs font-bold text-emerald-100 ring-1 ring-emerald-200/30">
@@ -122,7 +121,11 @@ export default function LearningProgress({ compact = false }) {
     <StudentCard
       title="My Learning Progress"
       icon={TrendingUp}
-      description={`Updated ${formatShortDate(lastUpdated)} · ${streakDays}-day learning streak`}
+      description={
+        lastUpdated
+          ? `Updated ${formatShortDate(lastUpdated)} · ${streakDays}-day learning streak`
+          : "Awaiting active enrollment data"
+      }
     >
       <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
         <CircularProgress value={completionPercent} />

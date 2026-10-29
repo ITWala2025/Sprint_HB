@@ -1,11 +1,11 @@
 import Image from "next/image";
 
-import { mockStudent } from "@/data/student";
-
 /**
  * Dashboard hero — welcome heading alongside the learner's progress summary.
  */
-export default function WelcomeBanner({ children }) {
+export default function WelcomeBanner({ children, student = null }) {
+  const studentName = student?.firstName || student?.fullName || "Student";
+
   return (
     <section
       className="relative overflow-hidden rounded-2xl bg-brand-navy text-brand-white"
@@ -30,7 +30,7 @@ export default function WelcomeBanner({ children }) {
             id="student-welcome-heading"
             className="font-display text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl"
           >
-            Welcome back, {mockStudent.firstName}!
+            Welcome back, {studentName}!
           </h1>
         </div>
         <div className="min-w-0">{children}</div>

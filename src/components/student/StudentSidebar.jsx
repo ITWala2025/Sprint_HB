@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 
 import navigation from "@/config/student-navigation.json";
-import { mockStudent } from "@/data/student";
 import LogoutButton from "./LogoutButton";
 
 /* Icon registry — the nav config stays JSON-only (SSOT) while icons stay typed. */
@@ -45,10 +44,16 @@ export default function StudentSidebar({
   onNavigate,
   variant = "sidebar",
   className = "",
+  student = null,
 }) {
   const pathname = usePathname() ?? "";
   const isActive = (href) =>
     pathname === href || pathname.startsWith(`${href}/`);
+  const profile = student ?? {
+    id: "",
+    fullName: "Student",
+    initials: "S",
+  };
 
   return (
     <nav
@@ -134,15 +139,15 @@ export default function StudentSidebar({
           }`}
         >
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-navy text-[11px] font-bold text-white">
-            {mockStudent.initials}
+            {profile.initials}
           </span>
           {!collapsed ? (
             <span className="min-w-0">
               <span className="block truncate text-xs font-bold text-brand-navy">
-                {mockStudent.fullName}
+                {profile.fullName}
               </span>
               <span className="block truncate text-[11px] text-brand-text-muted">
-                {mockStudent.id}
+                {profile.id || "Student profile"}
               </span>
             </span>
           ) : null}
