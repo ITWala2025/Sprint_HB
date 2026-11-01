@@ -239,7 +239,7 @@ export default function FeaturedProgram() {
     <section
       ref={sectionRef}
       aria-labelledby="featured-program-heading"
-      className="sprint-section relative isolate overflow-hidden bg-[linear-gradient(145deg,var(--color-brand-blue-light)_0%,#f5faff_48%,#dcecff_100%)] pt-7 pb-9 text-brand-navy sm:pt-9 sm:pb-11 lg:pt-9 lg:pb-10"
+      className="sprint-section relative isolate overflow-hidden bg-[linear-gradient(145deg,var(--color-brand-blue-light)_0%,#f5faff_48%,#dcecff_100%)] py-6 text-brand-navy md:py-8 lg:py-10"
     >
       {/* Background */}
       <div
@@ -247,7 +247,7 @@ export default function FeaturedProgram() {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto max-w-[1200px] px-5 sm:px-6">
+      <div className="relative mx-auto max-w-[1200px] px-4 sm:px-6">
         {/* Heading */}
         <header className="mx-auto w-full max-w-2xl text-center">
           <h2

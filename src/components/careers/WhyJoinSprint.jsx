@@ -29,7 +29,7 @@ export default function WhyJoinSprint() {
   return (
     <section
       aria-labelledby="why-join-heading"
-      className="overflow-hidden bg-white pt-8 sm:pt-10 lg:pt-12 pb-6 sm:pb-8 lg:pb-10"
+      className="overflow-hidden bg-white py-6 md:py-8 lg:py-10"
     >
       <div className="mx-auto max-w-[1200px] px-5 sm:px-8 lg:px-6">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">

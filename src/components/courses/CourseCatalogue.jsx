@@ -457,8 +457,8 @@ export default function CourseCatalogue({ items }) {
           aria-hidden="true"
         />
 
-        <div className="relative z-20 mx-auto w-full max-w-[1400px] px-5 md:flex md:min-h-[480px] md:items-center md:px-6 lg:min-h-[540px] lg:px-12">
-          <div className="courses-hero__inner relative !z-20 !m-0 !w-full !max-w-xl !px-0 !py-12 md:!w-[46%] md:!px-0 lg:!py-16">
+        <div className="relative z-20 mx-auto w-full max-w-[1200px] px-4 sm:px-6 md:flex md:min-h-[480px] md:items-center lg:min-h-[540px]">
+          <div className="courses-hero__inner relative !z-20 !m-0 !w-full !max-w-xl !px-0 !py-6 md:!w-[46%] md:!px-0 md:!py-8 lg:!py-10">
             <h1 className="!text-3xl !leading-tight md:whitespace-nowrap lg:!text-4xl xl:!text-[2.6rem]">
               <span>Tailored pathways</span>
               <span>for every career stage</span>

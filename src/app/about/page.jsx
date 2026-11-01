@@ -137,7 +137,7 @@ export default function AboutPage() {
         </picture>
         <div className="sprint-hero-overlay" aria-hidden="true" />
 
-        <div className="sprint-hero-content mx-auto max-w-[1200px] px-6">
+        <div className="sprint-hero-content mx-auto max-w-[1200px] px-4 sm:px-6">
           <nav className="sprint-hero-breadcrumb" aria-label="Breadcrumb">
             <Link href="/home">Home</Link>
             <span aria-hidden="true">›</span>
@@ -218,7 +218,7 @@ export default function AboutPage() {
         aria-labelledby="our-story-heading"
         className="sprint-section sprint-anchor bg-brand-off-white"
       >
-        <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
+        <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:py-10">
           <SectionHeader
             heading={`${about.story.heading}, ${about.visionMission.heading}`}
             subtitle="Why SPRINT was established, and what drives everything we build"
@@ -238,12 +238,12 @@ export default function AboutPage() {
         id="leadership"
         className="sprint-section sprint-anchor bg-brand-off-white"
       >
-        <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
+        <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:py-10">
           <SectionHeader
             heading={about.leadership.heading}
             subtitle={about.leadership.subtitle}
           />
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {about.leadership.profiles.map((profile) => (
               <ProfileCard key={profile.name} profile={profile} />
             ))}
@@ -257,7 +257,7 @@ export default function AboutPage() {
       <FacultyExperts
         accessibleBrandRed
         sectionClassName="sprint-section bg-brand-white"
-        contentClassName="mx-auto max-w-[1200px] px-6 py-[1.4rem] md:py-[1.925rem] lg:py-[2.45rem]"
+        contentClassName="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:py-10"
         profilesContent={
           <FacultyFilmstrip profiles={aboutFacultyAndAcademicProfiles} />
         }
@@ -270,7 +270,7 @@ export default function AboutPage() {
         id="industry-connection"
         className="sprint-section sprint-anchor bg-brand-surface"
       >
-        <div className="mx-auto max-w-[1200px] px-6 py-8 md:py-11 lg:py-14">
+        <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:py-10">
           <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
             {/* Left: narrative */}
             <div>
@@ -314,7 +314,7 @@ export default function AboutPage() {
         id="connect"
         className="sprint-cta-bg sprint-anchor relative overflow-hidden"
       >
-        <div className="mx-auto max-w-[1200px] px-6 py-8 text-center md:py-11 lg:py-14">
+        <div className="mx-auto max-w-[1200px] px-4 py-6 text-center sm:px-6 md:py-8 lg:py-10">
           <p className="inline-flex items-center rounded-full bg-brand-red-light px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-brand-red">
             {about.cta.kicker}
           </p>

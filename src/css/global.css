@@ -310,7 +310,7 @@ a {
   flex-direction: column;
   justify-content: center;
   min-height: min(700px, calc(100vh - 5rem));
-  padding: 2rem 0 3.25rem;
+  padding: 2rem 0 2.5rem;
 }
 
 .sprint-hero-breadcrumb {
@@ -580,7 +580,7 @@ a {
 @media (max-width: 767px) {
   .sprint-hero-content {
     min-height: auto;
-    padding: 2.5rem 0.75rem 2rem;
+    padding: 1.5rem 0 1.5rem;
   }
 
   .sprint-hero-image {
@@ -598,7 +598,7 @@ a {
   }
 
   .sprint-hero-breadcrumb {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     font-size: 0.8rem;
   }
 
@@ -620,6 +620,18 @@ a {
 
   .sprint-hero-stats {
     gap: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .sprint-hero-content {
+    padding-block: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sprint-hero-content {
+    padding-block: 2.5rem;
   }
 }
 
@@ -802,10 +814,10 @@ a {
 .contact-hero__content {
   position: relative;
   z-index: 2;
-  width: min(calc(100% - 2rem), 1280px);
+  width: min(calc(100% - 2rem), 1200px);
   min-height: inherit;
   margin-inline: auto;
-  padding: 2rem 0 3.25rem;
+  padding: 2rem 0 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -923,7 +935,7 @@ a {
 
   .contact-hero__content {
     width: min(calc(100% - 3rem), 920px);
-    padding: clamp(1.75rem, 4vw, 2.5rem) 0 clamp(2.5rem, 5vw, 3.25rem);
+    padding: 2rem 0;
   }
 
   .contact-hero__breadcrumb {
@@ -977,14 +989,14 @@ a {
   }
 
   .contact-hero__content {
-    width: min(calc(100% - 1.5rem), 620px);
+    width: min(calc(100% - 2rem), 620px);
     min-height: inherit;
-    padding: 2.5rem 0.75rem 2rem;
+    padding: 1.5rem 0;
     justify-content: flex-start;
   }
 
   .contact-hero__breadcrumb {
-    margin-bottom: 1.35rem;
+    margin-bottom: 1rem;
     font-size: 0.8rem;
   }
 
@@ -1026,6 +1038,18 @@ a {
   .contact-hero__cta {
     width: 100%;
     margin-top: 1.2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .contact-hero__content {
+    padding-block: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .contact-hero__content {
+    padding-block: 2.5rem;
   }
 }
 
@@ -1357,16 +1381,16 @@ a {
 
 .enquiry-section {
   width: 100%;
-  padding: 3rem 0;
+  padding: 1.5rem 0;
   background: var(--color-brand-off-white);
 }
 
 .enquiry-section__container {
-  width: min(100% - 2rem, 1180px);
+  width: min(100% - 2rem, 1200px);
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 0.4fr) minmax(0, 0.6fr);
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: stretch;
 }
 
@@ -1377,7 +1401,7 @@ a {
 .enquiry-section__contact {
   min-width: 0;
   height: 100%;
-  padding: 2rem;
+  padding: 1.5rem;
   border: 1px solid var(--color-brand-border);
   border-radius: 1.25rem;
   background: rgba(255, 255, 255, 0.7);
@@ -1424,7 +1448,7 @@ a {
 
 .enquiry-section__form-wrapper {
   min-width: 0;
-  padding: 2rem;
+  padding: 1.5rem;
   border: 1px solid var(--color-brand-border);
   border-radius: 1.25rem;
   background: var(--color-brand-white);
@@ -1536,7 +1560,7 @@ a {
 @media (max-width: 900px) {
   .enquiry-section__container {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 1.5rem;
   }
 
   .enquiry-section__form-wrapper {
@@ -1550,11 +1574,11 @@ a {
 
 @media (max-width: 767px) {
   .enquiry-section {
-    padding: 2.25rem 0;
+    padding: 1.5rem 0;
   }
 
   .enquiry-section__container {
-    width: min(100% - 1.5rem, 620px);
+    width: min(100% - 2rem, 620px);
     gap: 1.5rem;
   }
 
@@ -1607,9 +1631,15 @@ a {
   }
 }
 
+@media (min-width: 640px) {
+  .enquiry-section__container {
+    width: min(100% - 3rem, 1200px);
+  }
+}
+
 @media (max-width: 380px) {
   .enquiry-section__container {
-    width: min(100% - 1rem, 620px);
+    width: min(100% - 2rem, 620px);
   }
 
   .enquiry-section__contact,
@@ -3040,7 +3070,7 @@ a {
 
 .location-section {
   position: relative;
-  padding: 3rem 24px;
+  padding: 1.5rem 24px;
   background: var(--color-brand-off-white);
   overflow: hidden;
 }
@@ -3054,7 +3084,7 @@ a {
 
 .location-section__header {
   max-width: 720px;
-  margin: 0 auto 48px;
+  margin: 0 auto 1.5rem;
   text-align: center;
 }
 
@@ -3636,7 +3666,7 @@ a {
 
 @media (max-width: 1100px) {
   .location-section {
-    padding: 3rem 20px;
+    padding: 2rem 24px;
   }
 
   .location-section__grid {
@@ -3662,17 +3692,37 @@ a {
   }
 }
 
+@media (min-width: 768px) {
+  .enquiry-section {
+    padding-block: 2rem;
+  }
+
+  .location-section {
+    padding-block: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .enquiry-section {
+    padding-block: 2.5rem;
+  }
+
+  .location-section {
+    padding-block: 2.5rem;
+  }
+}
+
 /* =========================================================
    MOBILE
    ========================================================= */
 
 @media (max-width: 767px) {
   .location-section {
-    padding: 3rem 16px;
+    padding: 1.5rem 16px;
   }
 
   .location-section__header {
-    margin-bottom: 32px;
+    margin-bottom: 1.5rem;
   }
 
   .location-section__eyebrow {
@@ -3841,7 +3891,7 @@ a {
 
 .faq-section {
   position: relative;
-  padding: 3rem 24px;
+  padding: 1.5rem 16px;
   background: var(--color-brand-white);
   overflow: hidden;
 }
@@ -3857,7 +3907,7 @@ a {
 
 .faq-section__header {
   max-width: 760px;
-  margin: 0 auto 42px;
+  margin: 0 auto 1.5rem;
   text-align: center;
 }
 
@@ -4194,11 +4244,11 @@ a {
 
 @media (max-width: 767px) {
   .faq-section {
-    padding: 3rem 18px;
+    padding: 1.5rem 16px;
   }
 
   .faq-section__header {
-    margin-bottom: 30px;
+    margin-bottom: 1.5rem;
   }
 
   .faq-section__header h2 {
@@ -4264,7 +4314,7 @@ a {
 
 @media (max-width: 480px) {
   .faq-section {
-    padding: 3rem 14px;
+    padding: 1.5rem 16px;
   }
 
   .faq-section__eyebrow {
@@ -4292,6 +4342,18 @@ a {
 
   .faq-answer {
     padding-left: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .faq-section {
+    padding-block: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .faq-section {
+    padding-block: 2.5rem;
   }
 }
 
@@ -5338,7 +5400,7 @@ a {
 /* Courses: Signature Programs */
 .courses-signature-programs {
   width: min(100% - 2rem, 1200px);
-  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  margin: 1.5rem auto 0;
   background: var(--color-brand-white);
 }
 
@@ -5386,7 +5448,7 @@ a {
 }
 
 .courses-results__group + .courses-results__group {
-  margin-top: 2.5rem;
+  margin-top: 1.5rem;
 }
 
 .courses-results__group-heading {
@@ -5401,7 +5463,7 @@ a {
   align-items: end;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1rem;
 }
 
 .role-pathways__heading .courses-eyebrow {
@@ -5854,7 +5916,7 @@ a {
 
 @media (max-width: 767px) {
   .courses-signature-programs {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
   }
 
   .courses-signature-programs__cta {
@@ -6074,6 +6136,18 @@ a {
   padding: 0.85rem 0;
 }
 
+@media (min-width: 640px) {
+  .courses-signature-programs,
+  .courses-content,
+  .courses-cta {
+    width: min(100% - 3rem, 1200px);
+  }
+
+  .course-audience__inner {
+    width: min(100% - 3rem, 1200px);
+  }
+}
+
 .course-audience__desktop {
   display: inline-flex;
   overflow: hidden;
@@ -6153,7 +6227,7 @@ a {
   gap: clamp(2rem, 4vw, 4.5rem);
   width: min(100% - 2rem, 1200px);
   margin: 0 auto;
-  padding: 3rem 0 5rem;
+  padding: 1.5rem 0 2.5rem;
 }
 
 .course-filter {
@@ -6466,8 +6540,8 @@ a {
   justify-content: space-between;
   gap: 2rem;
   width: min(100% - 2rem, 1200px);
-  margin: 0 auto 3rem;
-  padding: 2.25rem 4rem;
+  margin: 0 auto 2.5rem;
+  padding: 1.5rem;
   border-radius: 1.25rem;
   background: var(--color-brand-navy);
   color: #fff;
@@ -6798,6 +6872,30 @@ a {
   }
 }
 
+@media (min-width: 768px) {
+  .courses-content {
+    padding-top: 2rem;
+  }
+
+  .courses-cta {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .courses-signature-programs {
+    margin-top: 2.5rem;
+  }
+
+  .courses-content {
+    padding-top: 2.5rem;
+  }
+
+  .courses-cta {
+    padding: 2.5rem;
+  }
+}
+
 @media (max-width: 767px) {
   .courses-hero {
     min-height: 0;
@@ -6920,7 +7018,7 @@ a {
 
   .courses-content {
     display: block;
-    padding-top: 2rem;
+    padding-top: 1.5rem;
   }
 
   .course-filter {
@@ -6970,11 +7068,14 @@ a {
 
   /* Mobile */
 @media (max-width: 768px) {
+
+
+
   .courses-cta {
     align-items: flex-start;
     flex-direction: column;
-    padding: 2rem;
-    margin-bottom: 3rem;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
   }
 
   .courses-cta a {

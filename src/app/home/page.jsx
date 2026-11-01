@@ -51,7 +51,7 @@ export default function HomePage() {
       <FacultyExperts
         accessibleBrandRed
         sectionClassName="sprint-section bg-brand-white"
-        contentClassName="mx-auto max-w-[1200px] px-6 py-[1.4rem] md:py-[1.925rem] lg:py-[2.45rem]"
+        contentClassName="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:py-10"
         profilesContent={<FacultyFilmstrip profiles={homeFacultyAndAcademicProfiles} />}
       />
        {/* <WhyChooseSprint />  */}

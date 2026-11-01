@@ -126,7 +126,7 @@ function FeatureImagePanel({ feature, visible, className = "" }) {
 
   return (
     <div
-      className={`relative mx-auto w-full min-w-0 max-w-2xl px-1 py-2 transition-all duration-700 motion-reduce:transition-none md:max-w-none ${
+      className={`relative mx-auto w-full min-w-0 max-w-2xl px-1 py-1 transition-all duration-700 motion-reduce:transition-none md:max-w-none ${
         visible
           ? "translate-y-0 opacity-100"
           : "translate-y-8 opacity-0"
@@ -222,7 +222,7 @@ export default function WhyChooseSprint() {
     <section
       ref={sectionRef}
       aria-labelledby="unique-heading"
-      className="relative isolate overflow-hidden bg-gradient-to-br from-white via-white to-blue-50/70 py-[2.1rem] md:py-[3.5rem] lg:py-[4.375rem]"
+      className="relative isolate overflow-hidden bg-gradient-to-br from-white via-white to-blue-50/70 py-6 md:py-8 lg:py-10"
     >
       {/* Background decorations */}
 
@@ -248,11 +248,11 @@ export default function WhyChooseSprint() {
         ))}
       </div>
 
-      <div className="mx-auto max-w-[1200px] px-6">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
         {/* Section heading */}
 
         <header
-          className={`mx-auto mb-8 max-w-4xl text-center transition-all duration-700 motion-reduce:transition-none sm:mb-12 lg:mb-14 ${
+          className={`mx-auto mb-6 max-w-4xl text-center transition-all duration-700 motion-reduce:transition-none ${
             visible
               ? "translate-y-0 opacity-100"
               : "translate-y-6 opacity-0"
@@ -377,7 +377,7 @@ export default function WhyChooseSprint() {
         {/* Interactive pagination */}
 
         <div
-          className="mt-7 flex items-center justify-center gap-2.5 sm:mt-10 sm:gap-3"
+          className="mt-5 flex items-center justify-center gap-2.5 sm:mt-6 sm:gap-3"
           aria-label="Choose a SPRINT benefit"
         >
           {features.map((feature, index) => (

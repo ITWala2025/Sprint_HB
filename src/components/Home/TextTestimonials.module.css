@@ -1,0 +1,122 @@
+@keyframes borderGlow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes floatQuote {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes progressFill {
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+.animateBorderGlow {
+  background-size: 200% 200%;
+  animation: borderGlow 4s ease infinite;
+}
+
+.animateFloatQuote {
+  animation: floatQuote 3s ease-in-out infinite;
+}
+
+.animateProgress {
+  animation: progressFill 5.5s linear infinite;
+}
+
+.paused .animateProgress {
+  animation-play-state: paused;
+}
+
+.cardCenter {
+  transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg) scale(1);
+  z-index: 30;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cardLeft {
+  z-index: 20;
+  opacity: 0.85;
+  pointer-events: auto;
+  transform: translate3d(-290px, 0, -40px) rotateY(18deg) skewY(-1deg) scale(0.85);
+}
+
+.cardRight {
+  z-index: 20;
+  opacity: 0.85;
+  pointer-events: auto;
+  transform: translate3d(290px, 0, -40px) rotateY(-18deg) skewY(1deg) scale(0.85);
+}
+
+.cardHiddenLeft {
+  transform: translate3d(-480px, 0, -180px) rotateY(35deg) scale(0.7);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cardHiddenRight {
+  transform: translate3d(480px, 0, -180px) rotateY(-35deg) scale(0.7);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cardCenter {
+    max-width: 330px;
+  }
+
+  .cardLeft,
+  .cardRight {
+    width: 180px;
+  }
+
+  .cardLeft {
+    transform: translate3d(-260px, 0, -40px) rotateY(18deg) skewY(-1deg) scale(0.85);
+  }
+
+  .cardRight {
+    transform: translate3d(260px, 0, -40px) rotateY(-18deg) skewY(1deg) scale(0.85);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cardLeft {
+    transform: translate3d(-355px, 0, -40px) rotateY(21deg) skewY(-1.5deg) scale(0.88);
+  }
+
+  .cardRight {
+    transform: translate3d(355px, 0, -40px) rotateY(-21deg) skewY(1.5deg) scale(0.88);
+  }
+}
+
+@media (min-width: 1280px) {
+  .cardLeft {
+    transform: translate3d(-370px, 0, -40px) rotateY(24deg) skewY(-2deg) scale(0.92);
+  }
+
+  .cardRight {
+    transform: translate3d(370px, 0, -40px) rotateY(-24deg) skewY(2deg) scale(0.92);
+  }
+}

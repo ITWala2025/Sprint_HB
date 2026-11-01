@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Star, CheckCircle2 } from "lucide-react";
 import { textTestimonials } from "@/data/data";
+import styles from "./TextTestimonials.module.css";
 
 // ========================================
 // Student Avatar Component
@@ -164,122 +165,10 @@ export default function TextTestimonials() {
 
   return (
     <section
-      className="relative w-full overflow-hidden p-5 select-none mt-10"
+      className="relative mt-6 w-full select-none overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Enterprise Keyframe Animations & Responsive 3D Positioning Rules */}
-      <style jsx>{`
-        @keyframes borderGlow {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-        @keyframes floatQuote {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-4px);
-          }
-        }
-        @keyframes progressFill {
-          0% {
-            width: 0%;
-          }
-          100% {
-            width: 100%;
-          }
-        }
-        .animate-border-glow {
-          background-size: 200% 200%;
-          animation: borderGlow 4s ease infinite;
-        }
-        .animate-float-quote {
-          animation: floatQuote 3s ease-in-out infinite;
-        }
-        .animate-progress {
-          animation: progressFill 5.5s linear infinite;
-        }
-        .paused .animate-progress {
-          animation-play-state: paused;
-        }
-
-        /* Responsive 3D Card Positioning Classes for Consistent Spacing */
-        .card-center {
-          transform: translate3d(0px, 0px, 0px) rotateY(0deg) skewY(0deg) scale(1);
-          z-index: 30;
-          opacity: 1;
-          pointer-events: auto;
-        }
-
-        /* Tablet (md) Spacing */
-        .card-left {
-          z-index: 20;
-          opacity: 0.85;
-          pointer-events: auto;
-          transform: translate3d(-290px, 0px, -40px) rotateY(18deg) skewY(-1deg) scale(0.85);
-        }
-        .card-right {
-          z-index: 20;
-          opacity: 0.85;
-          pointer-events: auto;
-          transform: translate3d(290px, 0px, -40px) rotateY(-18deg) skewY(1deg) scale(0.85);
-        }
-
-        /* Laptop / Small Desktop (lg) Spacing */
-        @media (min-width: 1024px) {
-          .card-left {
-            transform: translate3d(-355px, 0px, -40px) rotateY(21deg) skewY(-1.5deg) scale(0.88);
-          }
-          .card-right {
-            transform: translate3d(355px, 0px, -40px) rotateY(-21deg) skewY(1.5deg) scale(0.88);
-          }
-        }
-
-        /* Desktop / Enterprise (xl+) Spacing */
-        @media (min-width: 1280px) {
-          .card-left {
-            transform: translate3d(-370px, 0px, -40px) rotateY(24deg) skewY(-2deg) scale(0.92);
-          }
-          .card-right {
-            transform: translate3d(370px, 0px, -40px) rotateY(-24deg) skewY(2deg) scale(0.92);
-          }
-        }
-
-        @media (min-width: 768px) and (max-width: 1023px) {
-          .card-center {
-            max-width: 330px;
-          }
-          .card-left,
-          .card-right {
-            width: 180px;
-          }
-          .card-left {
-            transform: translate3d(-260px, 0px, -40px) rotateY(18deg) skewY(-1deg) scale(0.85);
-          }
-          .card-right {
-            transform: translate3d(260px, 0px, -40px) rotateY(-18deg) skewY(1deg) scale(0.85);
-          }
-        }
-
-        .card-hidden-left {
-          transform: translate3d(-480px, 0px, -180px) rotateY(35deg) scale(0.7);
-          z-index: 10;
-          opacity: 0;
-          pointer-events: none;
-        }
-        .card-hidden-right {
-          transform: translate3d(480px, 0px, -180px) rotateY(-35deg) scale(0.7);
-          z-index: 10;
-          opacity: 0;
-          pointer-events: none;
-        }
-      `}</style>
-
       {/* Ambient Moving Background Glows */}
       <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[320px] bg-gradient-to-r from-blue-100/60 via-indigo-100/50 to-red-100/40 blur-[120px] rounded-full transition-all duration-1000" />
 
@@ -334,11 +223,11 @@ export default function TextTestimonials() {
             const isRight = offset === 1 || (activeIndex === total - 1 && index === 0 && total > 1);
 
             // Determine position class name for CSS media-query handling
-            let positionClassName = "card-hidden-left";
-            if (isCenter) positionClassName = "card-center";
-            else if (isLeft) positionClassName = "card-left";
-            else if (isRight) positionClassName = "card-right";
-            else if (offset > 1) positionClassName = "card-hidden-right";
+            let positionClassName = styles.cardHiddenLeft;
+            if (isCenter) positionClassName = styles.cardCenter;
+            else if (isLeft) positionClassName = styles.cardLeft;
+            else if (isRight) positionClassName = styles.cardRight;
+            else if (offset > 1) positionClassName = styles.cardHiddenRight;
 
             return (
               <div
@@ -363,7 +252,7 @@ export default function TextTestimonials() {
                 <div
                   className={`h-full w-full rounded-2xl transition-all duration-700 ${
                     isCenter
-                      ? "p-[2.5px] bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 animate-border-glow shadow-[0_20px_45px_rgba(30,58,138,0.15),0_0_25px_rgba(56,189,248,0.25)]"
+                      ? `p-[2.5px] bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-600 ${styles.animateBorderGlow} shadow-[0_20px_45px_rgba(30,58,138,0.15),0_0_25px_rgba(56,189,248,0.25)]`
                       : "p-[1px] bg-slate-300 shadow-[0_10px_25px_rgba(15,23,42,0.07)]"
                   }`}
                 >
@@ -375,7 +264,7 @@ export default function TextTestimonials() {
                         <span
                           className={`font-serif font-black leading-none select-none transition-all duration-500 ${
                             isCenter
-                              ? "text-3xl text-blue-600 animate-float-quote"
+                              ? `text-3xl text-blue-600 ${styles.animateFloatQuote}`
                               : "text-2xl text-blue-500/75"
                           }`}
                         >
@@ -472,7 +361,7 @@ export default function TextTestimonials() {
       </div>
 
       {/* Animated Pagination Dots with Live Auto-Play Progress Bar */}
-      <div className={`flex justify-center items-center gap-2 mt-6 ${isPaused ? "paused" : ""}`}>
+      <div className={`flex justify-center items-center gap-2 mt-6 ${isPaused ? styles.paused : ""}`}>
         {testimonials.map((_, dotIndex) => {
           const isActive = activeIndex === dotIndex;
           return (
@@ -487,7 +376,7 @@ export default function TextTestimonials() {
               {isActive && (
                 <span
                   key={activeIndex}
-                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full animate-progress"
+                  className={`absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full ${styles.animateProgress}`}
                 />
               )}
             </button>

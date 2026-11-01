@@ -209,9 +209,9 @@ export default function PartnerCarousel() {
     <section
       ref={sectionRef}
       aria-labelledby="sprint-partners-title"
-      className="relative overflow-hidden border-y border-[#e9f2f9] bg-white px-4 py-10 text-[#161d2a] sm:px-6 sm:py-12 lg:py-8"
+      className="relative overflow-hidden border-y border-[#e9f2f9] bg-white px-4 py-6 text-[#161d2a] sm:px-6 md:py-8 lg:py-10"
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1200px]">
         <header className="mx-auto mb-5 max-w-7xl text-center sm:mb-6">
 
           <h2
