@@ -5,13 +5,6 @@ import Link from "next/link";
 import { ArrowUpRight, Award, Building2, CalendarDays, CheckCircle2, Clock3, GraduationCap, PhoneCall, Users } from "lucide-react";
 import { roleHasPermission, type AdminPermissionMap } from "@/app/admin/auth-types";
 
-const metrics = [
-    { label: "Total Active Students", value: "248", note: "Across 1-Yr, 2-Yr & 3-Yr tracks", icon: Users, accent: "bg-brand-blue-light text-brand-blue", moduleKeys: ["student_ops"] },
-    { label: "Pending Student Callbacks", value: "14", note: "New callback requests", icon: PhoneCall, accent: "bg-brand-red-light text-brand-red", moduleKeys: ["admissions", "marketing", "support"] },
-    { label: "B2B & College Leads", value: "9", note: "6 corporate + 3 institutional", icon: Building2, accent: "bg-orange-50 text-orange-600", moduleKeys: ["partners"] },
-    { label: "Upcoming Evaluations", value: "8", note: "Mock defenses & lab assessments", icon: CalendarDays, accent: "bg-emerald-50 text-emerald-600", moduleKeys: ["academic_ops", "academics"] },
-];
-
 const callbacks = [
     { name: "Ananya Sinha", background: "B.Tech", track: "Cloud & DevOps", date: "Today, 10:30 AM", status: "New" },
     { name: "Rohan Kumar", background: "BCA", track: "AI / ML Foundations", date: "Today, 09:15 AM", status: "Contacted" },
@@ -75,6 +68,48 @@ export default async function AdminDashboardPage() {
     if (profileError) throw new Error(`Workspace profile could not be loaded: ${profileError.message}`);
     if (!profile || profile.is_active !== true) redirect("/admin");
 
+    const dashboardQueryDefinitions = [
+        { name: "registrations_status_summary", table: "public.registrations", run: () => supabase.from("registrations").select("status") },
+        { name: "students_count", table: "public.students", run: () => supabase.from("students").select("id", { count: "exact", head: true }) },
+        { name: "active_enrollments_count", table: "public.enrollments", run: () => supabase.from("enrollments").select("id", { count: "exact", head: true }).eq("status", "active") },
+    ] as const;
+
+    const queryResults = await Promise.allSettled(dashboardQueryDefinitions.map((query) => query.run()));
+    for (const [index, result] of queryResults.entries()) {
+        if (result.status === "rejected") {
+            console.error("[admin-dashboard] summary query failed", {
+                query: dashboardQueryDefinitions[index].name,
+                table: dashboardQueryDefinitions[index].table,
+                code: result.reason?.code ?? null,
+                message: result.reason?.message ?? String(result.reason),
+            });
+        }
+    }
+
+    const registrationsResult = queryResults[0];
+    const studentsResult = queryResults[1];
+    const enrollmentsResult = queryResults[2];
+    const registrationsData = registrationsResult.status === "fulfilled" ? (registrationsResult.value as { data: Array<{ status?: string | null }> | null }).data : null;
+    const registrationsError = registrationsResult.status === "rejected" ? registrationsResult.reason : null;
+    const studentsCount = studentsResult.status === "fulfilled" ? (studentsResult.value as { count: number | null }).count : null;
+    const studentsError = studentsResult.status === "rejected" ? studentsResult.reason : null;
+    const activeEnrollmentCount = enrollmentsResult.status === "fulfilled" ? (enrollmentsResult.value as { count: number | null }).count : null;
+    const enrollmentsError = enrollmentsResult.status === "rejected" ? enrollmentsResult.reason : null;
+
+    const metricsError = registrationsError ?? studentsError ?? enrollmentsError;
+    const registrationCounts = (registrationsData ?? []).reduce<Record<string, number>>((counts, row) => {
+        const status = typeof row.status === "string" ? row.status.toLowerCase() : "";
+        if (status) counts[status] = (counts[status] ?? 0) + 1;
+        return counts;
+    }, {});
+
+    const computedMetrics = [
+        { label: "Total Students", value: String(studentsCount ?? 0), note: "Registered student records", icon: Users, accent: "bg-brand-blue-light text-brand-blue", moduleKeys: ["student_ops"] },
+        { label: "Pending Registrations", value: String(registrationCounts.pending ?? 0), note: "Applications waiting for review", icon: PhoneCall, accent: "bg-brand-red-light text-brand-red", moduleKeys: ["admissions", "marketing", "support", "student_ops"] },
+        { label: "Approved Registrations", value: String(registrationCounts.approved ?? 0), note: "Applications approved in the queue", icon: Building2, accent: "bg-orange-50 text-orange-600", moduleKeys: ["admissions", "marketing", "support", "student_ops"] },
+        { label: "Active Enrollments", value: String(activeEnrollmentCount ?? 0), note: "Students currently active in batches", icon: CalendarDays, accent: "bg-emerald-50 text-emerald-600", moduleKeys: ["student_ops", "academic_ops", "academics"] },
+    ];
+
     const assignedRole = Array.isArray(profile.roles) ? profile.roles[0] as RoleRow | undefined : profile.roles as RoleRow | null;
     const permissions = assignedRole?.is_active ? assignedRole.permissions : null;
     const isSuperAdmin = profile.role === "admin" || permissions?.full_access === true;
@@ -86,7 +121,7 @@ export default async function AdminDashboardPage() {
     const canView = (moduleKeys: string | string[]) =>
         isSuperAdmin || (Array.isArray(moduleKeys) ? moduleKeys : [moduleKeys])
             .some((moduleKey) => roleHasPermission(permissions, moduleKey, "view"));
-    const visibleMetrics = metrics.filter((metric) => canView(metric.moduleKeys));
+    const visibleMetrics = computedMetrics.filter((metric) => canView(metric.moduleKeys));
     const visibleShortcuts = shortcuts.filter((shortcut) => canView(shortcut.moduleKeys));
     const showCallbacks = canView(["admissions", "marketing", "support"]);
     const showSchedule = canView(["academic_ops", "academics"]);
@@ -108,6 +143,12 @@ export default async function AdminDashboardPage() {
                     {showCallbacks && <Link href={workspaceHref("/admin/admissions")} className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-red to-brand-purple px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">Review callbacks <ArrowUpRight className="size-4" aria-hidden="true" /></Link>}
                 </div>
             </section>
+
+            {metricsError ? (
+                <section className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-800 shadow-sm" aria-live="polite">
+                    We couldn&apos;t load the dashboard summary data right now. {metricsError.message}
+                </section>
+            ) : null}
 
             {visibleMetrics.length > 0 && <section aria-label="Key performance indicators" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{visibleMetrics.map((metric) => { const Icon = metric.icon; return <article key={metric.label} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-start justify-between gap-4"><div><p className="text-sm font-medium text-brand-text-secondary">{metric.label}</p><p className="mt-3 font-display text-3xl font-bold text-brand-navy">{metric.value}</p></div><span className={`flex size-11 items-center justify-center rounded-xl ${metric.accent}`}><Icon className="size-5" aria-hidden="true" /></span></div><p className="mt-3 text-xs text-brand-text-muted">{metric.note}</p></article>; })}</section>}
 

@@ -17,6 +17,30 @@ const inter = Inter({
 });
 export const metadata = {
   metadataBase: new URL("https://sprint.institute"),
+  manifest: "/favicons/site.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicons/favicon.ico", sizes: "any" },
+      {
+        url: "/favicons/favicon-16x16.png",
+        type: "image/png",
+        sizes: "16x16",
+      },
+      {
+        url: "/favicons/favicon-32x32.png",
+        type: "image/png",
+        sizes: "32x32",
+      },
+    ],
+    shortcut: "/favicons/favicon.ico",
+    apple: [
+      {
+        url: "/favicons/apple-touch-icon.png",
+        type: "image/png",
+        sizes: "180x180",
+      },
+    ],
+  },
   title: {
     default: "SPRINT",
     template: "%s | SPRINT",
