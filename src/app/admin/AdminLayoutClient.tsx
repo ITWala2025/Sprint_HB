@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
     Award, Bell, BookOpen, Briefcase, Building2, ChevronDown, ChevronRight, ClipboardCheck,
-    ExternalLink, FileEdit, FileText, Globe, GraduationCap, LayoutDashboard, Layers, LogOut,
+    ExternalLink, FileEdit, FileText, Globe, GraduationCap, Hourglass, LayoutDashboard, Layers, LogOut,
     Menu, Megaphone, PhoneCall, Search, School, ShieldAlert, ShieldCheck, UserCheck, Users,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -61,7 +61,7 @@ const navigationGroups: NavigationGroup[] = [
     },
     {
         label: "Student Operations", icon: Users, items: [
-            { label: "Enrollment Applications", href: "/admin/students/enrollments", icon: GraduationCap, badge: "7" },
+            { label: "Enrollment Applications", href: "/admin/students/enrollments", icon: GraduationCap },
             { label: "Student Directory & Attendance", href: "/admin/students/list", icon: Users },
         ]
     },
@@ -148,7 +148,7 @@ function canViewItem(item: NavigationItem, permissionMap: PermissionMap | null, 
     return isAdmin || moduleKeys.some((moduleKey) => roleHasPermission(permissionMap, moduleKey, "view"));
 }
 
-function Sidebar({ pathname, onNavigate, permissionMap, brandSubtitle, displayName, email, isAdmin, isStaffWorkspace, isLoading }: { pathname: string; onNavigate?: () => void; permissionMap: PermissionMap | null; brandSubtitle: string; displayName: string; email: string; isAdmin: boolean; isStaffWorkspace: boolean; isLoading: boolean }) {
+function Sidebar({ pathname, onNavigate, permissionMap, brandSubtitle, displayName, email, isAdmin, isStaffWorkspace, isLoading, pendingRegistrationCount }: { pathname: string; onNavigate?: () => void; permissionMap: PermissionMap | null; brandSubtitle: string; displayName: string; email: string; isAdmin: boolean; isStaffWorkspace: boolean; isLoading: boolean; pendingRegistrationCount: number | null }) {
     const showStandardNavigation = isLoading || isAdmin;
     const canNavigateToDashboard = isAdmin || roleHasPermission(permissionMap, "dashboard", "view");
     const visibleGroups = useMemo(() => showStandardNavigation ? navigationGroups : navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => canViewItem(item, permissionMap, isAdmin, isLoading)) })).filter((group) => group.items.length > 0), [isAdmin, isLoading, permissionMap, showStandardNavigation]);
@@ -163,12 +163,15 @@ function Sidebar({ pathname, onNavigate, permissionMap, brandSubtitle, displayNa
         const href = isStaffWorkspace && item.href.startsWith("/admin/")
             ? `/staff${item.href.slice("/admin".length)}`
             : item.href;
+        const badge = item.href === "/admin/students/enrollments" && pendingRegistrationCount !== null
+            ? String(pendingRegistrationCount)
+            : item.badge;
         return (
             <Link key={item.href} href={href} onClick={onNavigate} aria-current={active ? "page" : undefined}
                 className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${nested ? "ml-3 pl-4" : ""} ${active ? "bg-brand-navy text-white shadow-sm" : "text-brand-text-secondary hover:bg-brand-surface hover:text-brand-navy"}`}>
                 <ItemIcon className={`size-4 shrink-0 ${active ? "text-brand-red-light" : "text-brand-text-muted group-hover:text-brand-navy"}`} aria-hidden="true" />
                 <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                {item.badge && <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${active ? "bg-white/15 text-white" : "bg-brand-red-light text-brand-red"}`}>{item.badge}</span>}
+                {badge !== undefined && <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${active ? "bg-white/15 text-white" : "bg-brand-red-light text-brand-red"}`}>{badge}</span>}
             </Link>
         );
     }
@@ -201,9 +204,11 @@ function Sidebar({ pathname, onNavigate, permissionMap, brandSubtitle, displayNa
 export default function AdminLayoutClient({
     children,
     initialProfile,
+    pendingRegistrationCount,
 }: {
     children: ReactNode;
     initialProfile: InitialProfile | null;
+    pendingRegistrationCount: number | null;
 }) {
     const pathname = usePathname();
     const router = useRouter();
@@ -305,7 +310,14 @@ export default function AdminLayoutClient({
     if (isLoginRoute) return children;
 
     if (isAccessLoading || verifiedPath !== pathname) {
-        return <main className="flex min-h-screen items-center justify-center bg-brand-off-white" role="status" aria-live="polite"><p className="text-sm font-medium text-brand-text-secondary">Verifying staff access...</p></main>;
+        return (
+            <main className="flex min-h-[50vh] w-full items-center justify-center bg-brand-off-white px-4" role="status" aria-live="polite">
+                <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <Hourglass className="size-5 animate-spin text-brand-red" aria-hidden="true" />
+                    {/* <p className="font-display text-sm font-medium text-brand-navy">Verifying staff access...</p> */}
+                </div>
+            </main>
+        );
     }
 
     if (!isAuthorized || !canAccessAdminRoute(adminPathname, permissionMap as AdminPermissionMap | null, profileRole)) {
@@ -329,107 +341,107 @@ export default function AdminLayoutClient({
 
     return (
         <>
-        <div className="min-h-[calc(100vh-5rem)] bg-slate-50 lg:flex">
-            {/* Mobile Backdrop */}
-            <div
-                className={`fixed inset-0 z-[60] bg-brand-navy/35 transition-opacity lg:hidden ${isMobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
-                    }`}
-                onClick={() => setIsMobileOpen(false)}
-                aria-hidden="true"
-            />
+            <div className="min-h-[calc(100vh-5rem)] bg-slate-50 lg:flex">
+                {/* Mobile Backdrop */}
+                <div
+                    className={`fixed inset-0 z-[60] bg-brand-navy/35 transition-opacity lg:hidden ${isMobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+                        }`}
+                    onClick={() => setIsMobileOpen(false)}
+                    aria-hidden="true"
+                />
 
-            {/* Sidebar Container */}
-            <div
-                className={`fixed inset-y-0 left-0 z-[70] transition-transform duration-300 lg:static lg:translate-x-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full"
-                    }`}
-            >
-                <Sidebar pathname={adminPathname} onNavigate={() => setIsMobileOpen(false)} permissionMap={permissionMap} brandSubtitle={brandSubtitle} displayName={displayName} email={email} isAdmin={isAdmin} isStaffWorkspace={isStaffWorkspace} isLoading={isAccessLoading} />
-            </div>
+                {/* Sidebar Container */}
+                <div
+                    className={`fixed inset-y-0 left-0 z-[70] transition-transform duration-300 lg:static lg:translate-x-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full"
+                        }`}
+                >
+                    <Sidebar pathname={adminPathname} onNavigate={() => setIsMobileOpen(false)} permissionMap={permissionMap} brandSubtitle={brandSubtitle} displayName={displayName} email={email} isAdmin={isAdmin} isStaffWorkspace={isStaffWorkspace} isLoading={isAccessLoading} pendingRegistrationCount={pendingRegistrationCount} />
+                </div>
 
-            {/* Main Content Area */}
-            <div className="min-w-0 flex-1">
-                <header className="sticky top-0 z-40 flex h-20 items-center justify-between gap-4 border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
-                    <div className="flex min-w-0 items-center gap-3">
-                        <button
-                            type="button"
-                            onClick={() => setIsMobileOpen(true)}
-                            className="sprint-focus flex size-10 items-center justify-center rounded-xl border border-slate-200 text-brand-navy lg:hidden"
-                            aria-label={isAdmin ? "Open admin navigation" : "Open workspace navigation"}
-                        >
-                            <Menu className="size-5" aria-hidden="true" />
-                        </button>
-                        <div className="min-w-0">
-                            <div className="hidden items-center gap-2 text-xs text-brand-text-muted sm:flex">
-                                <span>{isAdmin ? "Admin" : "Workspace"}</span>
-                                <ChevronRight className="size-3" aria-hidden="true" />
-                                <span className="font-semibold text-brand-navy">{currentLabel}</span>
+                {/* Main Content Area */}
+                <div className="min-w-0 flex-1">
+                    <header className="sticky top-0 z-40 flex h-20 items-center justify-between gap-4 border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+                        <div className="flex min-w-0 items-center gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setIsMobileOpen(true)}
+                                className="sprint-focus flex size-10 items-center justify-center rounded-xl border border-slate-200 text-brand-navy lg:hidden"
+                                aria-label={isAdmin ? "Open admin navigation" : "Open workspace navigation"}
+                            >
+                                <Menu className="size-5" aria-hidden="true" />
+                            </button>
+                            <div className="min-w-0">
+                                <div className="hidden items-center gap-2 text-xs text-brand-text-muted sm:flex">
+                                    <span>{isAdmin ? "Admin" : "Workspace"}</span>
+                                    <ChevronRight className="size-3" aria-hidden="true" />
+                                    <span className="font-semibold text-brand-navy">{currentLabel}</span>
+                                </div>
+                                <h1 className="truncate font-display text-lg font-bold text-brand-navy sm:mt-1 sm:text-xl">
+                                    {currentLabel}
+                                </h1>
                             </div>
-                            <h1 className="truncate font-display text-lg font-bold text-brand-navy sm:mt-1 sm:text-xl">
-                                {currentLabel}
-                            </h1>
                         </div>
-                    </div>
 
-                    <div className="flex items-center gap-2 sm:gap-4">
-                        <label className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-brand-text-muted md:flex">
-                            <Search className="size-4" aria-hidden="true" />
-                            <span className="sr-only">{isAdmin ? "Search admin console" : "Search workspace"}</span>
-                            <input
-                                type="search"
-                                placeholder={isAdmin ? "Search console" : "Search workspace"}
-                                className="w-32 bg-transparent outline-none placeholder:text-brand-text-muted lg:w-44"
-                            />
-                        </label>
+                        <div className="flex items-center gap-2 sm:gap-4">
+                            <label className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-brand-text-muted md:flex">
+                                <Search className="size-4" aria-hidden="true" />
+                                <span className="sr-only">{isAdmin ? "Search admin console" : "Search workspace"}</span>
+                                <input
+                                    type="search"
+                                    placeholder={isAdmin ? "Search console" : "Search workspace"}
+                                    className="w-32 bg-transparent outline-none placeholder:text-brand-text-muted lg:w-44"
+                                />
+                            </label>
 
-                        <button
-                            type="button"
-                            className="relative hidden size-10 items-center justify-center rounded-xl text-brand-text-secondary hover:bg-brand-surface sm:flex"
-                            aria-label="View notifications"
-                        >
-                            <Bell className="size-5" aria-hidden="true" />
-                            <span className="absolute right-2 top-2 size-2 rounded-full bg-brand-red" />
-                        </button>
+                            <button
+                                type="button"
+                                className="relative hidden size-10 items-center justify-center rounded-xl text-brand-text-secondary hover:bg-brand-surface sm:flex"
+                                aria-label="View notifications"
+                            >
+                                <Bell className="size-5" aria-hidden="true" />
+                                <span className="absolute right-2 top-2 size-2 rounded-full bg-brand-red" />
+                            </button>
 
-                        <Link
-                            href="/home"
-                            className="sprint-focus inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-surface sm:px-4"
-                        >
-                            <ExternalLink className="size-4" aria-hidden="true" />
-                            <span className="hidden sm:inline">View Website</span>
-                            <span className="sm:hidden">Home</span>
-                        </Link>
+                            <Link
+                                href="/home"
+                                className="sprint-focus inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-surface sm:px-4"
+                            >
+                                <ExternalLink className="size-4" aria-hidden="true" />
+                                <span className="hidden sm:inline">View Website</span>
+                                <span className="sm:hidden">Home</span>
+                            </Link>
 
-                        <div className="hidden items-center gap-2 border-l border-slate-200 pl-4 md:flex">
-                            <span className="flex size-9 items-center justify-center rounded-full bg-brand-navy text-xs font-bold text-white">
-                                {displayName.slice(0, 2).toUpperCase()}
-                            </span>
-                            <span className="hidden text-right xl:block">
-                                <span className="block text-xs font-bold text-brand-navy">
-                                    {displayRoleName}
+                            <div className="hidden items-center gap-2 border-l border-slate-200 pl-4 md:flex">
+                                <span className="flex size-9 items-center justify-center rounded-full bg-brand-navy text-xs font-bold text-white">
+                                    {displayName.slice(0, 2).toUpperCase()}
                                 </span>
-                                <span className="block text-[11px] text-emerald-600">● Active · {displayName}</span>
-                            </span>
+                                <span className="hidden text-right xl:block">
+                                    <span className="block text-xs font-bold text-brand-navy">
+                                        {displayRoleName}
+                                    </span>
+                                    <span className="block text-[11px] text-emerald-600">● Active · {displayName}</span>
+                                </span>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleSignOut}
+                                className="sprint-focus inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-red-light hover:text-brand-red sm:px-4"
+                            >
+                                <LogOut className="size-4" aria-hidden="true" />
+                                <span className="hidden sm:inline">Sign Out</span>
+                            </button>
                         </div>
+                    </header>
 
-                        <button
-                            type="button"
-                            onClick={handleSignOut}
-                            className="sprint-focus inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-red-light hover:text-brand-red sm:px-4"
-                        >
-                            <LogOut className="size-4" aria-hidden="true" />
-                            <span className="hidden sm:inline">Sign Out</span>
-                        </button>
-                    </div>
-                </header>
-
-                <main className="min-h-[calc(100vh-10rem)] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-                    <AdminPermissionsProvider permissions={permissionMap} isSuperAdmin={isAdmin}>
-                        {children}
-                    </AdminPermissionsProvider>
-                </main>
+                    <main className="min-h-[calc(100vh-10rem)] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+                        <AdminPermissionsProvider permissions={permissionMap} isSuperAdmin={isAdmin}>
+                            {children}
+                        </AdminPermissionsProvider>
+                    </main>
+                </div>
             </div>
-        </div>
-        {mustChangePassword && <ForcePasswordChangeModal mode="first_login" onSuccess={() => { setMustChangePassword(false); router.refresh(); }} />}
+            {mustChangePassword && <ForcePasswordChangeModal mode="first_login" onSuccess={() => { setMustChangePassword(false); router.refresh(); }} />}
         </>
     );
 }

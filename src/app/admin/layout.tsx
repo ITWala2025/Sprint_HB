@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import type { AdminPermissionMap } from "@/app/admin/authorization";
 import AdminLayoutClient from "@/app/admin/AdminLayoutClient";
+import { getPendingRegistrationCount } from "@/app/admin/students/enrollments/actions";
 import { redirect } from "next/navigation";
 
 type InitialProfile = {
@@ -63,5 +64,21 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         }
     }
 
-    return <AdminLayoutClient initialProfile={initialProfile}>{children}</AdminLayoutClient>;
+    const canViewEnrollmentApplications = Boolean(
+        initialProfile?.role === "admin" ||
+        initialProfile?.permissions?.full_access === true ||
+        initialProfile?.permissions?.student_ops?.view === true,
+    );
+    const pendingRegistrationCount = canViewEnrollmentApplications
+        ? await getPendingRegistrationCount()
+        : null;
+
+    return (
+        <AdminLayoutClient
+            initialProfile={initialProfile}
+            pendingRegistrationCount={pendingRegistrationCount}
+        >
+            {children}
+        </AdminLayoutClient>
+    );
 }
