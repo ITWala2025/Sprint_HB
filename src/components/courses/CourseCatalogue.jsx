@@ -30,6 +30,11 @@ import {
 
 const staticLearningPaths = rolePaths.map(normalizeLearningPath);
 
+function isDegreeIntegratedProgram(program) {
+  return program?.slug === "sprint-3-year-program"
+    || program?.title === "SPRINT 3-Year Degree-Integrated Program";
+}
+
 function toCatalogueBundle(source) {
   const bundle = normalizeBundle(source);
   return {
@@ -251,7 +256,9 @@ function FeaturedPrograms({ programs: signaturePrograms }) {
     };
   }) || [];
   const otherPrograms = signaturePrograms.filter(
-    (program) => program !== rise && program !== careerAccelerator,
+    (program) => program !== rise
+      && program !== careerAccelerator
+      && !isDegreeIntegratedProgram(program),
   );
 
   if (!signaturePrograms.length) return null;
@@ -368,7 +375,19 @@ export default function CourseCatalogue({ items }) {
         ...resolvedProgramsAndBundles.filter((item) => item.kind === "bundle"),
       ]);
       setLearningPaths(resolvedPaths);
-      setSignaturePrograms(resolvedProgramsAndBundles.filter((item) => item.kind === "signature"));
+      const databaseSignaturePrograms = resolvedProgramsAndBundles.filter(
+        (item) => item.kind === "signature" && !isDegreeIntegratedProgram(item),
+      );
+      const localSignaturePrograms = programs.map(toCatalogueProgram);
+      const mergedSignaturePrograms = [
+        ...databaseSignaturePrograms,
+        ...localSignaturePrograms.filter(
+          (localProgram) => !databaseSignaturePrograms.some(
+            (databaseProgram) => databaseProgram.slug === localProgram.slug,
+          ),
+        ),
+      ];
+      setSignaturePrograms(mergedSignaturePrograms);
     }
 
     void loadCatalogue();

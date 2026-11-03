@@ -135,7 +135,33 @@ describe("CourseCatalogue Supabase integration", () => {
         expect(await screen.findByRole("heading", { name: "Data Engineer" })).toBeInTheDocument();
         expect(screen.getByRole("link", { name: "Explore the Data Engineer learning path" })).toHaveAttribute("href", "/learning-paths/data-engineer");
         expect(await screen.findByText("Industry AI Program")).toBeInTheDocument();
-        expect(screen.getByRole("link", { name: /Explore Program/ })).toHaveAttribute("href", "/programs/ai-signature");
+        const industryProgram = screen.getByText("Industry AI Program").closest("article");
+        expect(industryProgram).not.toBeNull();
+        expect(within(industryProgram).getByRole("link", { name: /Explore Program/ })).toHaveAttribute("href", "/programs/ai-signature");
+    });
+
+    it("does not render the 3-Year Degree-Integrated signature section", async () => {
+        mocks.results.course_bundles = {
+            data: [{
+                id: "degree-program-1",
+                slug: "sprint-3-year-program",
+                title: "SPRINT 3-Year Degree-Integrated Program",
+                program_type: "signature",
+                audience: "undergraduate",
+                tagline: "Long-Term Academic & Industry Co-op",
+                description: "A degree-integrated technology pathway.",
+                roadmap: [],
+                is_published: true,
+            }],
+            error: null,
+        };
+        render(<CourseCatalogue items={catalogueItems} />);
+
+        await waitFor(() => {
+            expect(screen.queryByText("SPRINT 3-Year Degree-Integrated Program")).not.toBeInTheDocument();
+            expect(screen.queryByText("Long-Term Academic & Industry Co-op")).not.toBeInTheDocument();
+        });
+        expect(screen.getByText("SPRINT Career Accelerator")).toBeInTheDocument();
     });
 
     it("renders the six SPRINT RISE journey milestones in order", () => {
