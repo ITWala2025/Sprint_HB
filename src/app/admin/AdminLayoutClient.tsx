@@ -127,6 +127,7 @@ function getPageLabel(pathname: string, isAdmin: boolean) {
         "/admin/roles": "Roles & Permissions",
         "/admin/courses": "Courses",
         "/admin/students/enrollments": "Enrollment Applications",
+        "/admin/students/list": "Student Directory & Attendance",
     };
     if (labels[pathname]) return labels[pathname];
     const leaf = pathname.split("/").filter(Boolean).pop();

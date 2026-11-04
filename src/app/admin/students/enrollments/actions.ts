@@ -16,6 +16,44 @@ export type EnrollmentRegistration = {
     status: string;
 };
 
+export type EnrollmentRegistrationDetails = {
+    registration: {
+        id: string;
+        registration_number: string | null;
+        user_id: string | null;
+        full_name: string;
+        email: string;
+        phone: string;
+        college_institution: string | null;
+        course_degree: string | null;
+        specialization_branch: string | null;
+        year_semester: string | null;
+        city: string | null;
+        state: string | null;
+        employment_status: string | null;
+        organization_name: string | null;
+        source_of_info: string | null;
+        terms_accepted: boolean;
+        communication_consent: boolean;
+        admin_notes: string | null;
+        created_at: string;
+        updated_at: string;
+        status: string;
+    };
+    course: { title: string; category: string; difficulty_level: string; duration: string; delivery_method: string } | null;
+    bundle: { title: string; category: string; description: string; pathway: string | null } | null;
+    batch: { batch_code: string; batch_name: string; start_date: string; end_date: string | null; mode: string; status: string } | null;
+    enrollments: Array<{
+        status: string;
+        progress_percentage: number;
+        certificate_issued: boolean;
+        enrolled_at: string;
+        completed_at: string | null;
+        courseTitle: string | null;
+        batchName: string | null;
+    }>;
+};
+
 type RegistrationRecord = {
     id: string;
     user_id: string | null;
@@ -99,6 +137,122 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
     });
 }
 
+export async function getRegistrations(): Promise<EnrollmentRegistration[]> {
+    return getEnrollmentRegistrations();
+}
+
+function isRegistrationId(id: unknown): id is string {
+    return typeof id === "string" &&
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
+}
+
+export async function getEnrollmentRegistrationDetails(
+    id: string,
+): Promise<EnrollmentRegistrationDetails | null> {
+    if (!isRegistrationId(id)) {
+        throw new Error("Select a valid enrollment application.");
+    }
+
+    await assertModuleAccess("student_ops");
+    const supabase = requireServiceClient();
+    const { data: registration, error: registrationError } = await supabase
+        .from("registrations")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+
+    if (registrationError) {
+        throw new Error(`Could not load enrollment details: ${registrationError.message}`);
+    }
+    if (!registration) return null;
+
+    const [courseResult, bundleResult, batchResult, enrollmentsResult] = await Promise.all([
+        registration.course_id
+            ? supabase.from("courses").select("title, category, difficulty_level, duration, delivery_method").eq("id", registration.course_id).maybeSingle()
+            : Promise.resolve({ data: null, error: null }),
+        registration.bundle_id
+            ? supabase.from("course_bundles").select("title, category, description, pathway").eq("id", registration.bundle_id).maybeSingle()
+            : Promise.resolve({ data: null, error: null }),
+        registration.batch_id
+            ? supabase.from("batches").select("batch_code, batch_name, start_date, end_date, mode, status").eq("id", registration.batch_id).maybeSingle()
+            : Promise.resolve({ data: null, error: null }),
+        registration.user_id
+            ? supabase.from("enrollments").select("status, progress_percentage, certificate_issued, enrolled_at, completed_at, course_id, batch_id").eq("student_id", registration.user_id)
+            : Promise.resolve({ data: [], error: null }),
+    ]);
+
+    const relatedRecordErrors = [
+        courseResult.error && `course: ${courseResult.error.message}`,
+        bundleResult.error && `bundle: ${bundleResult.error.message}`,
+        batchResult.error && `batch: ${batchResult.error.message}`,
+        enrollmentsResult.error && `enrollments: ${enrollmentsResult.error.message}`,
+    ].filter(Boolean);
+    if (relatedRecordErrors.length > 0) {
+        throw new Error(`Could not load related enrollment details (${relatedRecordErrors.join("; ")}).`);
+    }
+
+    const enrollmentRecords = enrollmentsResult.data ?? [];
+    const enrollmentCourseIds = [...new Set(enrollmentRecords.map((item) => item.course_id))];
+    const enrollmentBatchIds = [...new Set(enrollmentRecords.map((item) => item.batch_id))];
+    const [enrollmentCoursesResult, enrollmentBatchesResult] = await Promise.all([
+        enrollmentCourseIds.length > 0
+            ? supabase.from("courses").select("id, title").in("id", enrollmentCourseIds)
+            : Promise.resolve({ data: [], error: null }),
+        enrollmentBatchIds.length > 0
+            ? supabase.from("batches").select("id, batch_name").in("id", enrollmentBatchIds)
+            : Promise.resolve({ data: [], error: null }),
+    ]);
+    if (enrollmentCoursesResult.error || enrollmentBatchesResult.error) {
+        throw new Error(
+            `Could not load linked course or batch names: ${[
+                enrollmentCoursesResult.error?.message,
+                enrollmentBatchesResult.error?.message,
+            ].filter(Boolean).join("; ")}`,
+        );
+    }
+
+    const courseNames = new Map((enrollmentCoursesResult.data ?? []).map((item) => [item.id, item.title]));
+    const batchNames = new Map((enrollmentBatchesResult.data ?? []).map((item) => [item.id, item.batch_name]));
+
+    return {
+        registration: {
+            id: registration.id,
+            registration_number: registration.registration_number,
+            user_id: registration.user_id,
+            full_name: registration.full_name,
+            email: registration.email,
+            phone: registration.phone,
+            college_institution: registration.college_institution,
+            course_degree: registration.course_degree,
+            specialization_branch: registration.specialization_branch,
+            year_semester: registration.year_semester,
+            city: registration.city,
+            state: registration.state,
+            employment_status: registration.employment_status,
+            organization_name: registration.organization_name,
+            source_of_info: registration.source_of_info,
+            terms_accepted: registration.terms_accepted,
+            communication_consent: registration.communication_consent,
+            admin_notes: registration.admin_notes,
+            created_at: registration.created_at,
+            updated_at: registration.updated_at,
+            status: registration.status,
+        },
+        course: courseResult.data,
+        bundle: bundleResult.data,
+        batch: batchResult.data,
+        enrollments: enrollmentRecords.map((enrollment) => ({
+            status: enrollment.status,
+            progress_percentage: enrollment.progress_percentage,
+            certificate_issued: enrollment.certificate_issued,
+            enrolled_at: enrollment.enrolled_at,
+            completed_at: enrollment.completed_at,
+            courseTitle: courseNames.get(enrollment.course_id) ?? null,
+            batchName: batchNames.get(enrollment.batch_id) ?? null,
+        })),
+    };
+}
+
 export async function getPendingRegistrationCount(): Promise<number> {
     await assertModuleAccess("student_ops");
     const supabase = requireServiceClient();
@@ -177,6 +331,27 @@ export async function verifyRegistration(
         return { success: false, error: "This enrollment application has already been reviewed." };
     }
 
+    if (newStatus === "rejected") {
+        const { data: updatedRegistration, error: updateError } = await supabase
+            .from("registrations")
+            .update({ status: "rejected" })
+            .eq("id", id)
+            .eq("status", "pending")
+            .select("id")
+            .maybeSingle();
+
+        if (updateError) {
+            return { success: false, error: `Could not reject the enrollment application: ${updateError.message}` };
+        }
+        if (!updatedRegistration) {
+            return { success: false, error: "This enrollment application was reviewed by someone else. Refresh the page and try again." };
+        }
+
+        revalidatePath("/admin/students/enrollments");
+        revalidatePath("/admin/students/list");
+        return { success: true, message: "Application rejected." };
+    }
+
     const record = registration as RegistrationRecord;
     let userId: string | null = null;
     let profile: {
@@ -252,77 +427,66 @@ export async function verifyRegistration(
         }
     }
 
-    const { data: updatedRegistration, error: updateError } = await supabase
-        .from("registrations")
-        .update(newStatus === "approved" ? { status: newStatus, user_id: userId } : { status: newStatus })
-        .eq("id", id)
-        .eq("status", "pending")
-        .select("id")
-        .maybeSingle();
+    if (!userId) {
+        return { success: false, error: "The applicant's student account could not be provisioned." };
+    }
 
-    if (updateError) {
-        const cleanupError = invitedUser && userId
-            ? await deactivateInvitedProfile(supabase, userId)
-            : null;
+    const { data: approvedUserId, error: approvalError } = await supabase.rpc("verify_and_approve_registration", {
+        p_reg_id: id,
+        p_user_id: userId,
+    });
+    if (approvalError || approvedUserId !== userId) {
+        const cleanupError = invitedUser ? await deactivateInvitedProfile(supabase, userId) : null;
         return {
             success: false,
             error: [
-                `Could not update the enrollment status: ${updateError.message}`,
+                `Could not approve the enrollment application: ${approvalError?.message ?? "The database did not confirm the student account."}`,
                 invitedUser ? "The student invitation was already sent." : null,
                 cleanupError ? `The invited profile could not be deactivated: ${cleanupError}` : null,
             ].filter(Boolean).join(" "),
         };
     }
-    if (!updatedRegistration) {
-        if (invitedUser && userId) {
-            const deactivateError = await deactivateInvitedProfile(supabase, userId);
-            if (deactivateError) {
-                return {
-                    success: false,
-                    error: `This application was reviewed by someone else, and the invited profile could not be deactivated: ${deactivateError}`,
-                };
-            }
-        }
-        return { success: false, error: "This enrollment application was reviewed by someone else. Refresh the page and try again." };
+
+    revalidatePath("/admin/students/enrollments");
+    revalidatePath("/admin/students/list");
+    return {
+        success: true,
+        message: invitedUser
+            ? `Application approved. A student account invitation was sent to ${record.email}.`
+            : "Application approved and student access enabled.",
+    };
+}
+
+export async function approveRegistration(id: string): Promise<VerifyRegistrationResult> {
+    return verifyRegistration(id, "approved");
+}
+
+export async function rejectRegistration(id: string): Promise<VerifyRegistrationResult> {
+    return verifyRegistration(id, "rejected");
+}
+
+export async function deleteRegistration(id: string): Promise<VerifyRegistrationResult> {
+    if (!isRegistrationId(id)) {
+        return { success: false, error: "Select a valid enrollment application." };
     }
 
-    if (newStatus === "approved" && userId) {
-        const isAdminProfile = profile?.role === "admin";
-        const { error: profileUpdateError } = await supabase.from("profiles").upsert({
-            id: userId,
-            email: profile?.email ?? record.email,
-            full_name: profile?.full_name || record.full_name,
-            phone: profile?.phone || record.phone,
-            role: isAdminProfile ? "admin" : "student",
-            role_id: isAdminProfile ? profile?.role_id ?? null : null,
-            is_active: true,
-        });
+    await assertModuleAccess("student_ops", "delete");
+    const supabase = requireServiceClient();
+    const { data, error } = await supabase
+        .from("registrations")
+        .delete()
+        .eq("id", id)
+        .select("id")
+        .maybeSingle();
 
-        if (profileUpdateError) {
-            const { error: rollbackError } = await supabase
-                .from("registrations")
-                .update({ status: "pending", user_id: record.user_id })
-                .eq("id", id)
-                .eq("status", "approved");
-            let cleanupError: string | null = null;
-            if (invitedUser) {
-                cleanupError = await deactivateInvitedProfile(supabase, userId);
-            }
-
-            const details = [
-                `The application could not be finalized for student access: ${profileUpdateError.message}`,
-                rollbackError ? `The registration status could not be restored: ${rollbackError.message}` : null,
-                cleanupError ? `The invited profile could not be deactivated: ${cleanupError}` : null,
-            ].filter(Boolean).join(" ");
-            return { success: false, error: details };
-        }
+    if (error) {
+        return { success: false, error: `Could not delete the enrollment application: ${error.message}` };
+    }
+    if (!data) {
+        return { success: false, error: "This enrollment application no longer exists." };
     }
 
     revalidatePath("/admin/students/enrollments");
-    const message = newStatus === "approved"
-        ? invitedUser
-            ? `Application approved. A student account invitation was sent to ${record.email}.`
-            : "Application approved and student access enabled."
-        : "Application rejected.";
-    return { success: true, message };
+    revalidatePath("/admin/students/list");
+    return { success: true, message: "Enrollment application deleted." };
 }
