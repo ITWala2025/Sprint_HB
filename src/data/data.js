@@ -139,14 +139,22 @@ export const featuredCourse = {
 
 export const videoTestimonials = [
   {
+    id: "v4",
+    name: "Farhat Afreen",
+    role: "BTech Grad | ITWala",
+    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/Farhat_Afreen%20testimonial.mp4",
+  },
+    
+  {
     id: "v1",
-    name: "Myank Aman",
-    role: "BTech Graduate",
+    name: "Mayank Aman",
+    role: "BTech Grad | TCS",
     videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/myank_aman_testimonial.mp4",
   },
+
   {
     id: "v2",
-    name: "Sarvesh",
+    name: "Sarvesh Chandra",
     role: "BTech Graduate",
     videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/sarvesh_testimonial.mp4",
   },
@@ -154,14 +162,8 @@ export const videoTestimonials = [
   {
     id: "v3",
     name: "Raman Munda",
-    role: "BTech Graduate",
+    role: "CS Student",
     videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/Raman_munda%20testimonial.mp4",
-  },
-   {
-    id: "v4",
-    name: "Farhat",
-    role: "BTech Graduate",
-    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/Farhat_Afreen%20testimonial.mp4",
   },
 ];
 
@@ -169,7 +171,7 @@ export const textTestimonials = [
   {
     id: "t1",
     name: "Shabba Kausar",
-    role: "BTech Graduate intern at JAK TECHNOLOGIES LTD",
+    role: "CSE Grad | Intern - JAK TECHNOLOGIES",
     photoUrl: "",
     quote:
       "SPRINT provides a great learning environment with a strong focus on practical skills.",
@@ -177,7 +179,7 @@ export const textTestimonials = [
   {
     id: "t2",
     name: "Sukumar Gope",
-    role: "BTech Graduate intern at Shaip",
+    role: "BTech Grad | Intern - ShaipAI",
     photoUrl: "",
     quote:
       "SPRINT provides excellent practical training, supportive mentors, and valuable guidance to improve students' technical skills.",
@@ -185,29 +187,29 @@ export const textTestimonials = [
   {
     id: "t3",
     name: "Chhavi",
-    role: "BTech Graduate intern at UPTITUDE",
+    role: "BTech Grad | Intern - UPTITUDE",
     photoUrl: "",
     quote:
   "The structured courses and supportive trainers made programming easier to understand and improved my coding confidence."
   },
   {
   id: "t4",
-  name: "Aarav Sharma",
+  name: "Arzoo Mehndi",
   role: "BTech Graduate",
   photoUrl: "",
   quote:
     "SPRINT helped me improve my technical knowledge through practical assignments, experienced mentors, and a professional learning environment focused on growth."},
 {
   id: "t5",
-  name: "Priya Kumari",
-  role: "MCA Graduate",
+  name: "Tanisha Pandit",
+  role: "IT Grad | Intern - ITWala",
   photoUrl: "",
   quote:
 "The trainers are helpful, and the structured sessions made programming easier to understand."
 },{
   id: "t6",
-  name: "Rohit Verma",
-  role: "BTech Graduate",
+  name: "Bunty Kumar",
+  role: "MCA Graduate",
   photoUrl: "",
   quote:
     "The trainers are helpful, and the structured sessions made programming easier to understand.",

@@ -174,10 +174,12 @@ export default function TextTestimonials() {
 
       {/* Section Header */}
       <div className="relative z-10 mx-auto max-w-3xl text-center mb-10 sm:mb-12">
+        {/*
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] font-bold tracking-[0.2em] uppercase border border-red-200 bg-red-50 text-red-600 shadow-2xs">
           <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-ping" />
           TESTIMONIALS
         </span>
+        */}
 
         <h2 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
           Words from our{" "}
