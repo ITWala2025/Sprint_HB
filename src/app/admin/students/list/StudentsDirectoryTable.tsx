@@ -4,10 +4,6 @@ import { useEffect, useState } from "react";
 import { Eye, X } from "lucide-react";
 import type { StudentDirectoryEntry } from "@/app/admin/students/list/actions";
 
-function displayValue(value: string | null | undefined) {
-    return value?.trim() || "Not provided";
-}
-
 function Detail({ label, value }: { label: string; value: string }) {
     return (
         <div className="min-w-0">
@@ -50,9 +46,9 @@ function StudentDetailsModal({
                     <div className="min-w-0">
                         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-red">Student Operations</p>
                         <h2 id="student-details-title" className="mt-1 font-display text-xl font-bold text-brand-navy">
-                            {student.profile.full_name}
+                            {student.name}
                         </h2>
-                        <p className="mt-1 text-xs text-brand-text-muted">{student.registration_number}</p>
+                        <p className="mt-1 text-xs text-brand-text-muted">{student.registrationNumber}</p>
                     </div>
                     <button
                         type="button"
@@ -70,45 +66,13 @@ function StudentDetailsModal({
                         <section aria-labelledby="student-contact-heading">
                             <h3 id="student-contact-heading" className="font-display text-sm font-bold text-brand-navy">Contact & Institution</h3>
                             <dl className="mt-3 grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
-                                <Detail label="Full Name" value={student.profile.full_name} />
-                                <Detail label="Email" value={student.profile.email} />
-                                <Detail label="Phone" value={displayValue(student.profile.phone)} />
-                                <Detail label="Registration Number" value={student.registration_number} />
-                                <Detail label="College / Institution" value={displayValue(student.college_institution)} />
-                                <Detail label="Degree / Program" value={displayValue(student.course_degree)} />
-                                <Detail label="Branch" value={displayValue(student.specialization_branch)} />
-                                <Detail label="Semester" value={displayValue(student.current_semester)} />
-                                <Detail label="City" value={displayValue(student.city)} />
-                                <Detail label="State" value={displayValue(student.state)} />
-                                <Detail label="Employment Status" value={displayValue(student.employment_status)} />
-                                <Detail label="Organization" value={displayValue(student.organization_name)} />
+                                <Detail label="Full Name" value={student.name} />
+                                <Detail label="Email" value={student.email} />
+                                <Detail label="Phone" value={student.phone} />
+                                <Detail label="Registration Number" value={student.registrationNumber} />
+                                <Detail label="College / Institution" value={student.college} />
+                                <Detail label="Status" value={student.status} />
                             </dl>
-                        </section>
-
-                        <section aria-labelledby="student-registrations-heading">
-                            <h3 id="student-registrations-heading" className="font-display text-sm font-bold text-brand-navy">Registration Details</h3>
-                            {student.registrations.length > 0 ? (
-                                <div className="mt-3 space-y-3">
-                                    {student.registrations.map((registration) => (
-                                        <dl key={registration.id} className="grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
-                                            <Detail label="Program Selection" value={[
-                                                registration.bundle && `Bundle: ${registration.bundle}`,
-                                                registration.course && `Course: ${registration.course}`,
-                                            ].filter(Boolean).join(" · ") || "Not specified"} />
-                                            <Detail label="Application Status" value={registration.status} />
-                                            <Detail label="Degree / Program" value={displayValue(registration.course_degree)} />
-                                            <Detail label="College / Institution" value={displayValue(registration.college_institution)} />
-                                            <Detail label="Branch" value={displayValue(registration.specialization_branch)} />
-                                            <Detail label="Semester / Year" value={displayValue(registration.year_semester)} />
-                                            <Detail label="Submitted" value={new Date(registration.created_at).toLocaleDateString("en-IN")} />
-                                        </dl>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="mt-3 rounded-xl border border-slate-200 p-4 text-sm text-brand-text-secondary">
-                                    No approved registration details are available.
-                                </p>
-                            )}
                         </section>
 
                         <section aria-labelledby="student-attendance-heading">
@@ -150,14 +114,13 @@ export default function StudentsDirectoryTable({
                             {students.map((student) => (
                                 <tr key={student.id} className="hover:bg-slate-50">
                                     <td className="px-6 py-4">
-                                        <p className="font-semibold text-brand-navy">{student.profile.full_name}</p>
-                                        <p className="mt-1 text-xs text-brand-text-muted">{student.course_degree || "Program not provided"}</p>
+                                        <p className="font-semibold text-brand-navy">{student.name}</p>
                                     </td>
-                                    <td className="whitespace-nowrap px-6 py-4 font-medium text-brand-navy">{student.registration_number}</td>
-                                    <td className="px-6 py-4 text-brand-text-secondary">{student.college_institution || "Not provided"}</td>
+                                    <td className="whitespace-nowrap px-6 py-4 font-medium text-brand-navy">{student.registrationNumber}</td>
+                                    <td className="px-6 py-4 text-brand-text-secondary">{student.college}</td>
                                     <td className="px-6 py-4">
-                                        <p className="text-brand-text-secondary">{student.profile.email}</p>
-                                        <p className="mt-1 text-xs text-brand-text-muted">{student.profile.phone || "Phone not provided"}</p>
+                                        <p className="text-brand-text-secondary">{student.email}</p>
+                                        <p className="mt-1 text-xs text-brand-text-muted">{student.phone}</p>
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ${
@@ -172,7 +135,7 @@ export default function StudentsDirectoryTable({
                                         <button
                                             type="button"
                                             onClick={() => setSelectedStudent(student)}
-                                            aria-label={`View details and attendance for ${student.profile.full_name}`}
+                                            aria-label={`View details and attendance for ${student.name}`}
                                             className="sprint-focus inline-flex size-9 items-center justify-center rounded-lg border border-slate-200 text-brand-navy transition hover:border-brand-navy hover:bg-slate-100"
                                         >
                                             <Eye className="size-4" aria-hidden="true" />
