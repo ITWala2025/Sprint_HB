@@ -241,8 +241,42 @@ CREATE TABLE IF NOT EXISTS public.registrations (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now())
 );
 
-/* Table: enrollments */
+/* Table: enrollment applications */
 CREATE TABLE IF NOT EXISTS public.enrollments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    legacy_registration_id UUID UNIQUE REFERENCES public.registrations(id) ON DELETE SET NULL,
+    application_number TEXT UNIQUE,
+    legacy_registration_status TEXT,
+    full_name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    college_institution TEXT,
+    course_degree TEXT,
+    specialization_branch TEXT,
+    year_semester TEXT,
+    city TEXT,
+    state TEXT,
+    employment_status TEXT,
+    organization_name TEXT,
+    source_of_info TEXT,
+    terms_accepted BOOLEAN NOT NULL DEFAULT false,
+    communication_consent BOOLEAN NOT NULL DEFAULT false,
+    course_id UUID REFERENCES public.courses(id) ON DELETE RESTRICT,
+    bundle_id UUID REFERENCES public.course_bundles(id) ON DELETE RESTRICT,
+    batch_id UUID REFERENCES public.batches(id) ON DELETE SET NULL,
+    student_id UUID REFERENCES public.students(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+    admin_notes TEXT,
+    rejection_reason TEXT,
+    reviewed_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    reviewed_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now()),
+    CONSTRAINT enrollments_selected_product_check CHECK (course_id IS NOT NULL OR bundle_id IS NOT NULL)
+);
+
+/* Table: student course participation */
+CREATE TABLE IF NOT EXISTS public.student_course_enrollments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     student_id UUID NOT NULL REFERENCES public.students(id) ON DELETE CASCADE,
     batch_id UUID NOT NULL REFERENCES public.batches(id) ON DELETE RESTRICT,
@@ -256,7 +290,7 @@ CREATE TABLE IF NOT EXISTS public.enrollments (
     completed_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now()),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now()),
-    CONSTRAINT uq_student_batch UNIQUE (student_id, batch_id)
+    CONSTRAINT uq_student_batch_course UNIQUE (student_id, batch_id, course_id)
 );
 
 /* Table: assessments */
@@ -468,8 +502,15 @@ CREATE INDEX IF NOT EXISTS idx_bundle_courses_course_id ON public.bundle_courses
 CREATE INDEX IF NOT EXISTS idx_registrations_user_id ON public.registrations(user_id);
 CREATE INDEX IF NOT EXISTS idx_registrations_course_id ON public.registrations(course_id);
 CREATE INDEX IF NOT EXISTS idx_registrations_batch_id ON public.registrations(batch_id);
+CREATE INDEX IF NOT EXISTS idx_enrollments_status_created_at ON public.enrollments(status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_enrollments_student_id ON public.enrollments(student_id);
+CREATE INDEX IF NOT EXISTS idx_enrollments_course_id ON public.enrollments(course_id);
+CREATE INDEX IF NOT EXISTS idx_enrollments_bundle_id ON public.enrollments(bundle_id);
 CREATE INDEX IF NOT EXISTS idx_enrollments_batch_id ON public.enrollments(batch_id);
+CREATE UNIQUE INDEX IF NOT EXISTS enrollments_one_pending_per_email_idx
+    ON public.enrollments(lower(email)) WHERE status = 'pending';
+CREATE INDEX IF NOT EXISTS idx_student_course_enrollments_student_id ON public.student_course_enrollments(student_id);
+CREATE INDEX IF NOT EXISTS idx_student_course_enrollments_batch_id ON public.student_course_enrollments(batch_id);
 CREATE INDEX IF NOT EXISTS idx_assessments_batch_id ON public.assessments(batch_id);
 CREATE INDEX IF NOT EXISTS idx_assessment_results_assessment_id ON public.assessment_results(assessment_id);
 CREATE INDEX IF NOT EXISTS idx_assessment_results_student_id ON public.assessment_results(student_id);
@@ -506,6 +547,7 @@ ALTER TABLE public.bundle_courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.batches ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.registrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.enrollments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.student_course_enrollments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.assessments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.assessment_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.enquiries ENABLE ROW LEVEL SECURITY;
@@ -612,19 +654,35 @@ CREATE POLICY "Admins have full control over registrations"
     TO authenticated
     USING (public.is_admin());
 
-/* Policies: enrollments */
-CREATE POLICY "Students can view their own enrollments"
+/* Policies: enrollment applications */
+CREATE POLICY "Applicants can view their own enrollment applications"
     ON public.enrollments FOR SELECT
     TO authenticated
     USING (student_id = auth.uid());
 
-CREATE POLICY "Staff can view all enrollments"
+CREATE POLICY "Staff can view all enrollment applications"
     ON public.enrollments FOR SELECT
     TO authenticated
     USING (public.is_staff());
 
-CREATE POLICY "Admins have full control over enrollments"
+CREATE POLICY "Admins have full control over enrollment applications"
     ON public.enrollments FOR ALL
+    TO authenticated
+    USING (public.is_admin());
+
+/* Policies: student course participation */
+CREATE POLICY "Students can view their own course enrollments"
+    ON public.student_course_enrollments FOR SELECT
+    TO authenticated
+    USING (student_id = auth.uid());
+
+CREATE POLICY "Staff can view all course enrollments"
+    ON public.student_course_enrollments FOR SELECT
+    TO authenticated
+    USING (public.is_staff());
+
+CREATE POLICY "Admins have full control over course enrollments"
+    ON public.student_course_enrollments FOR ALL
     TO authenticated
     USING (public.is_admin());
 
@@ -634,9 +692,9 @@ CREATE POLICY "Enrolled students can view published assessments"
     TO authenticated
     USING (
         is_published = true AND EXISTS (
-            SELECT 1 FROM public.enrollments
-            WHERE enrollments.batch_id = assessments.batch_id
-              AND enrollments.student_id = auth.uid()
+            SELECT 1 FROM public.student_course_enrollments
+            WHERE student_course_enrollments.batch_id = assessments.batch_id
+              AND student_course_enrollments.student_id = auth.uid()
         )
     );
 

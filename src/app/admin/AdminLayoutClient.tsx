@@ -61,6 +61,7 @@ const navigationGroups: NavigationGroup[] = [
     },
     {
         label: "Student Operations", icon: Users, items: [
+            { label: "Registrations", href: "/admin/students/registrations", icon: FileText },
             { label: "Enrollment Applications", href: "/admin/students/enrollments", icon: GraduationCap },
             { label: "Student Directory & Attendance", href: "/admin/students/list", icon: Users },
         ]
@@ -126,6 +127,7 @@ function getPageLabel(pathname: string, isAdmin: boolean) {
         "/admin/enquiries": "Enquiries",
         "/admin/roles": "Roles & Permissions",
         "/admin/courses": "Courses",
+        "/admin/students/registrations": "Registrations",
         "/admin/students/enrollments": "Enrollment Applications",
         "/admin/students/list": "Student Directory & Attendance",
     };

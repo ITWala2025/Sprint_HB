@@ -141,8 +141,8 @@ export default function RegistrationDetailsModal({
                                     <Detail label="Full Name" value={displayValue(registration.full_name)} />
                                     <Detail label="Email" value={displayValue(registration.email)} />
                                     <Detail label="Phone Number" value={displayValue(registration.phone)} />
-                                    <Detail label="Registration Number" value={displayValue(registration.registration_number)} />
-                                    <Detail label="Linked Student Account ID" value={displayValue(registration.user_id)} />
+                                    <Detail label="Application Number" value={displayValue(registration.application_number)} />
+                                    <Detail label="Linked Student Account ID" value={displayValue(registration.student_id)} />
                                     <Detail label="City" value={displayValue(registration.city)} />
                                     <Detail label="State" value={displayValue(registration.state)} />
                                     <Detail label="Employment Status" value={displayValue(registration.employment_status)} />

@@ -23,7 +23,7 @@ export type StudentEnrollmentInput = {
 };
 
 export type StudentEnrollmentResult =
-  | { success: true; registrationId: string; message: string }
+  | { success: true; applicationId: string; message: string }
   | { success: false; error: string };
 
 const NAME_PATTERN = /^[A-Za-z][A-Za-z\s.'-]*$/;
@@ -74,7 +74,7 @@ function isPendingEmailDuplicateInsertError(
     .toLowerCase();
 
   return (
-    haystack.includes("registrations_one_pending_per_email_idx") ||
+    haystack.includes("enrollments_one_pending_per_email_idx") ||
     haystack.includes("pending_per_email") ||
     haystack.includes("one_pending_per_email")
   );
@@ -133,32 +133,34 @@ export async function submitStudentEnrollmentAction(
       return { success: false, error: "The selected course is invalid." };
     }
 
+    if (!courseId) {
+      return { success: false, error: "Please select a course before submitting your application." };
+    }
+
     const serviceClient = createServiceClient();
     if (!serviceClient) {
       return { success: false, error: "Server-side Supabase is not configured." };
     }
 
-    if (courseId) {
-      const { data: course, error: courseError } = await serviceClient
-        .from("courses")
-        .select("id")
-        .eq("id", courseId)
-        .maybeSingle();
+    const { data: course, error: courseError } = await serviceClient
+      .from("courses")
+      .select("id")
+      .eq("id", courseId)
+      .maybeSingle();
 
-      if (courseError) {
-        return {
-          success: false,
-          error: `The selected course could not be verified: ${courseError.message}`,
-        };
-      }
+    if (courseError) {
+      return {
+        success: false,
+        error: `The selected course could not be verified: ${courseError.message}`,
+      };
+    }
 
-      if (!course) {
-        return { success: false, error: "The selected course is no longer available." };
-      }
+    if (!course) {
+      return { success: false, error: "The selected course is no longer available." };
     }
 
     const { data: existingPending, error: duplicateCheckError } = await serviceClient
-      .from("registrations")
+      .from("enrollments")
       .select("id")
       .eq("email", email)
       .eq("status", "pending")
@@ -179,9 +181,7 @@ export async function submitStudentEnrollmentAction(
     }
 
     const payload = {
-      registration_number: null,
-      user_id: null,
-      course_id: courseId || null,
+      course_id: courseId,
       bundle_id: null,
       batch_id: null,
       full_name: `${firstName} ${lastName}`,
@@ -203,7 +203,7 @@ export async function submitStudentEnrollmentAction(
     };
 
     const { data: inserted, error: insertError } = await serviceClient
-      .from("registrations")
+      .from("enrollments")
       .insert(payload)
       .select("id")
       .single();
@@ -231,7 +231,7 @@ export async function submitStudentEnrollmentAction(
 
     return {
       success: true,
-      registrationId: inserted.id,
+      applicationId: inserted.id,
       message: "Your enrollment has been received and is pending payment verification.",
     };
   } catch (error) {

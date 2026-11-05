@@ -139,26 +139,33 @@ The database schema is defined by the base schema and incremental SQL files in [
 ### Core Tables
 
 1. `profiles`: Extends `auth.users`, stores name, email, role, phone, avatar.
-2. `students`: Academic details, registration number, college, branch, semester.
+2. `students`: One record per student; academic details, registration number, college, branch, semester, and any student-scoped metadata. A student can have multiple course participation records.
 3. `courses`: Course titles, slug, category, difficulty, text duration, audience, delivery mode, curriculum (JSONB), tools, outcomes. Course management does not use pricing.
 4. `course_bundles`: Multi-course career bundles and packages.
 5. `bundle_courses`: Many-to-many relationship mapping courses to bundles.
 6. `batches`: Scheduled cohorts with start date, mode, seat capacity, status.
-7. `registrations`: Student course applications and intake submissions.
-8. `enrollments`: Student enrolled status per batch, progress %, certificate issuance.
+7. `enrollments`: Enrollment applications submitted for review; this is the application and approval flow used before a student is created or assigned a registration number. The Enrollment Applications UI sources data from `public.enrollments`.
+8. `student_course_enrollments`: Former participation table; stores each student's course participation/registration record for dashboard progress, activity tracking, and assessment authorization. A student can have multiple participation records, and the student participation, course/batch progress, and assessment authorization flows use `public.student_course_enrollments`.
 9. `assessments` & `assessment_results`: Quizzes, projects, grades, and feedback.
 10. `enquiries`: Multi-audience contact form submissions with assigned admin tracking.
 11. `career_openings` & `job_applications`: Jobs and applicant resumes.
 12. `campus_updates`: Live ticker announcements with expiration timestamp.
 13. `instructors`, `testimonials`, `partners`: Social proof entities displayed across the website.
+14. `registrations`: Legacy table retained for compatibility; existing records remain intact. The Registration UI continues to use `public.registrations`, while the current enrollment workflow stores applications in `public.enrollments` and participation in `public.student_course_enrollments`.
+
+- Enrollment redesign update — 2026-11-05:
+  - `public.students` remains one record per student.
+  - The Admin `Approve` action is the payment-verification step; student creation and registration-number generation happen only after approval.
+  - The legacy `public.registrations` table and its existing records remain intact.
 
 ### Row Level Security (RLS) & Helper Functions
 
 - `public.is_admin()`: Security definer checking if `auth.uid()` has `role = 'admin'`.
 - `public.is_staff()`: Security definer checking if `auth.uid()` has `admin`, `instructor`, or `staff` role.
 - Public read access is granted for active courses, active job openings, published updates, and public testimonials.
-- Authenticated users can read/modify their own profiles and registrations.
-- Anyone can submit new `enquiries`, `registrations`, and `job_applications`.
+- Authenticated users can read/modify their own profiles and enrollment-related records; the application submission and review flow uses `public.enrollments`, while dashboard participation/progress and assessment authorization use `public.student_course_enrollments`.
+- Anyone can submit new `enquiries`, `enrollments`, and `job_applications`.
+- The Admin approve action is the payment-verification step; student creation and registration-number generation happen only after approval.
 
 ---
 

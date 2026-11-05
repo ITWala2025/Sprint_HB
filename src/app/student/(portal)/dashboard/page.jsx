@@ -95,14 +95,14 @@ async function getStudentDashboardContext() {
     .eq("id", profile.id)
     .maybeSingle();
 
-  const { data: registrations } = await supabase
-    .from("registrations")
-    .select("id, status, registration_number, created_at, course_id, batch_id")
-    .eq("user_id", profile.id)
+  const { data: applications } = await supabase
+    .from("enrollments")
+    .select("id, status, created_at, course_id, bundle_id, batch_id")
+    .eq("student_id", profile.id)
     .order("created_at", { ascending: false });
 
   const { data: enrollments } = await supabase
-    .from("enrollments")
+    .from("student_course_enrollments")
     .select(
       "id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)"
     )
@@ -132,7 +132,7 @@ async function getStudentDashboardContext() {
       }
     : {
         completionPercent: 0,
-        status: registrations?.some((registration) => registration.status === "pending")
+        status: applications?.some((application) => application.status === "pending")
           ? "Payment pending"
           : "No active enrollment",
         lastUpdated: null,

@@ -1,10 +1,44 @@
 "use server";
 
 import "server-only";
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { createServerClient } from "@supabase/ssr";
 import type { User } from "@supabase/supabase-js";
 import { assertModuleAccess } from "@/app/admin/authorization";
 import { createServiceClient } from "@/lib/supabase/service";
+
+async function createAuthenticatedServerClient() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+        ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!supabaseUrl || !publishableKey) {
+        throw new Error("Supabase public environment variables are not configured.");
+    }
+
+    const cookieStore = await cookies();
+    return createServerClient(supabaseUrl, publishableKey, {
+        cookies: {
+            getAll: () => cookieStore.getAll(),
+            setAll: (cookiesToSet) => {
+                try {
+                    cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+                } catch {
+                    // Server Components cannot write refreshed auth cookies.
+                }
+            },
+        },
+    });
+}
+
+async function getCurrentReviewerId(): Promise<string> {
+    const supabase = await createAuthenticatedServerClient();
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) {
+        throw new Error(`Could not verify the reviewing administrator${error ? `: ${error.message}` : "."}`);
+    }
+    return data.user.id;
+}
 
 export type EnrollmentRegistration = {
     id: string;
@@ -19,8 +53,8 @@ export type EnrollmentRegistration = {
 export type EnrollmentRegistrationDetails = {
     registration: {
         id: string;
-        registration_number: string | null;
-        user_id: string | null;
+        application_number: string | null;
+        student_id: string | null;
         full_name: string;
         email: string;
         phone: string;
@@ -56,7 +90,8 @@ export type EnrollmentRegistrationDetails = {
 
 type RegistrationRecord = {
     id: string;
-    user_id: string | null;
+    student_id: string | null;
+    application_number: string | null;
     course_id: string | null;
     bundle_id: string | null;
     full_name: string;
@@ -82,9 +117,9 @@ function requireServiceClient() {
 
 export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistration[]> {
     await assertModuleAccess("student_ops");
-    const supabase = requireServiceClient();
+    const supabase = await createAuthenticatedServerClient();
     const { data, error } = await supabase
-        .from("registrations")
+        .from("enrollments")
         .select("*")
         .order("created_at", { ascending: false });
 
@@ -93,8 +128,11 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
     }
 
     const registrations = (data ?? []) as RegistrationRecord[];
-    const courseIds = [...new Set(registrations.flatMap((registration) => registration.course_id ? [registration.course_id] : []))];
-    const bundleIds = [...new Set(registrations.flatMap((registration) => registration.bundle_id ? [registration.bundle_id] : []))];
+    const qualifyingRegistrations = registrations.filter(
+        (registration) => registration.course_id !== null || registration.bundle_id !== null,
+    );
+    const courseIds = [...new Set(qualifyingRegistrations.flatMap((registration) => registration.course_id ? [registration.course_id] : []))];
+    const bundleIds = [...new Set(qualifyingRegistrations.flatMap((registration) => registration.bundle_id ? [registration.bundle_id] : []))];
 
     const [coursesResult, bundlesResult] = await Promise.all([
         courseIds.length > 0
@@ -115,7 +153,7 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
     const courseTitles = new Map((coursesResult.data ?? []).map((course) => [course.id, course.title]));
     const bundleTitles = new Map((bundlesResult.data ?? []).map((bundle) => [bundle.id, bundle.title]));
 
-    return registrations.map((registration) => {
+    return qualifyingRegistrations.map((registration) => {
         const references = [
             registration.course_id && courseTitles.get(registration.course_id)
                 ? `Course: ${courseTitles.get(registration.course_id)}`
@@ -154,9 +192,9 @@ export async function getEnrollmentRegistrationDetails(
     }
 
     await assertModuleAccess("student_ops");
-    const supabase = requireServiceClient();
+    const supabase = await createAuthenticatedServerClient();
     const { data: registration, error: registrationError } = await supabase
-        .from("registrations")
+        .from("enrollments")
         .select("*")
         .eq("id", id)
         .maybeSingle();
@@ -176,8 +214,8 @@ export async function getEnrollmentRegistrationDetails(
         registration.batch_id
             ? supabase.from("batches").select("batch_code, batch_name, start_date, end_date, mode, status").eq("id", registration.batch_id).maybeSingle()
             : Promise.resolve({ data: null, error: null }),
-        registration.user_id
-            ? supabase.from("enrollments").select("status, progress_percentage, certificate_issued, enrolled_at, completed_at, course_id, batch_id").eq("student_id", registration.user_id)
+        registration.student_id
+            ? supabase.from("student_course_enrollments").select("status, progress_percentage, certificate_issued, enrolled_at, completed_at, course_id, batch_id").eq("student_id", registration.student_id)
             : Promise.resolve({ data: [], error: null }),
     ]);
 
@@ -217,8 +255,8 @@ export async function getEnrollmentRegistrationDetails(
     return {
         registration: {
             id: registration.id,
-            registration_number: registration.registration_number,
-            user_id: registration.user_id,
+            application_number: registration.application_number,
+            student_id: registration.student_id,
             full_name: registration.full_name,
             email: registration.email,
             phone: registration.phone,
@@ -255,9 +293,9 @@ export async function getEnrollmentRegistrationDetails(
 
 export async function getPendingRegistrationCount(): Promise<number> {
     await assertModuleAccess("student_ops");
-    const supabase = requireServiceClient();
+    const supabase = await createAuthenticatedServerClient();
     const { count, error } = await supabase
-        .from("registrations")
+        .from("enrollments")
         .select("id", { count: "exact", head: true })
         .eq("status", "pending");
 
@@ -316,7 +354,7 @@ export async function verifyRegistration(
     await assertModuleAccess("student_ops", "edit");
     const supabase = requireServiceClient();
     const { data: registration, error: registrationError } = await supabase
-        .from("registrations")
+        .from("enrollments")
         .select("*")
         .eq("id", id)
         .maybeSingle();
@@ -333,8 +371,8 @@ export async function verifyRegistration(
 
     if (newStatus === "rejected") {
         const { data: updatedRegistration, error: updateError } = await supabase
-            .from("registrations")
-            .update({ status: "rejected" })
+            .from("enrollments")
+            .update({ status: "rejected", reviewed_by: await getCurrentReviewerId(), reviewed_at: new Date().toISOString() })
             .eq("id", id)
             .eq("status", "pending")
             .select("id")
@@ -349,6 +387,7 @@ export async function verifyRegistration(
 
         revalidatePath("/admin/students/enrollments");
         revalidatePath("/admin/students/list");
+        revalidatePath("/student/dashboard");
         return { success: true, message: "Application rejected." };
     }
 
@@ -365,8 +404,8 @@ export async function verifyRegistration(
     let invitedUser = false;
 
     if (newStatus === "approved") {
-        const profileQuery = record.user_id
-            ? supabase.from("profiles").select("id, email, full_name, phone, role, role_id").eq("id", record.user_id).maybeSingle()
+        const profileQuery = record.student_id
+            ? supabase.from("profiles").select("id, email, full_name, phone, role, role_id").eq("id", record.student_id).maybeSingle()
             : supabase.from("profiles").select("id, email, full_name, phone, role, role_id").eq("email", record.email).maybeSingle();
         const { data: foundProfile, error: profileLookupError } = await profileQuery;
         if (profileLookupError) {
@@ -374,10 +413,10 @@ export async function verifyRegistration(
         }
         profile = foundProfile;
 
-        if (record.user_id) {
-            userId = record.user_id;
+        if (record.student_id) {
+            userId = record.student_id;
             if (!profile) {
-                const { data: authUserData, error: authUserError } = await supabase.auth.admin.getUserById(record.user_id);
+                const { data: authUserData, error: authUserError } = await supabase.auth.admin.getUserById(record.student_id);
                 if (authUserError || !authUserData.user) {
                     return { success: false, error: `The linked applicant account could not be verified${authUserError ? `: ${authUserError.message}` : "."}` };
                 }
@@ -431,16 +470,21 @@ export async function verifyRegistration(
         return { success: false, error: "The applicant's student account could not be provisioned." };
     }
 
-    const { data: approvedUserId, error: approvalError } = await supabase.rpc("verify_and_approve_registration", {
-        p_reg_id: id,
+    const { data: approvalResult, error: approvalError } = await supabase.rpc("approve_enrollment_application", {
+        p_application_id: id,
         p_user_id: userId,
+        p_reviewer_id: await getCurrentReviewerId(),
+        p_notes: null,
     });
-    if (approvalError || approvedUserId !== userId) {
+    const approvalOutcome = Array.isArray(approvalResult) ? approvalResult[0] : approvalResult;
+    if (approvalError || !approvalOutcome || approvalOutcome.outcome !== "approved") {
         const cleanupError = invitedUser ? await deactivateInvitedProfile(supabase, userId) : null;
         return {
             success: false,
             error: [
-                `Could not approve the enrollment application: ${approvalError?.message ?? "The database did not confirm the student account."}`,
+                approvalError
+                    ? `Could not approve the enrollment application: ${approvalError.message}`
+                    : "The enrollment application could not be approved.",
                 invitedUser ? "The student invitation was already sent." : null,
                 cleanupError ? `The invited profile could not be deactivated: ${cleanupError}` : null,
             ].filter(Boolean).join(" "),
@@ -449,6 +493,7 @@ export async function verifyRegistration(
 
     revalidatePath("/admin/students/enrollments");
     revalidatePath("/admin/students/list");
+    revalidatePath("/student/dashboard");
     return {
         success: true,
         message: invitedUser
@@ -473,7 +518,7 @@ export async function deleteRegistration(id: string): Promise<VerifyRegistration
     await assertModuleAccess("student_ops", "delete");
     const supabase = requireServiceClient();
     const { data, error } = await supabase
-        .from("registrations")
+        .from("enrollments")
         .delete()
         .eq("id", id)
         .select("id")
@@ -488,5 +533,6 @@ export async function deleteRegistration(id: string): Promise<VerifyRegistration
 
     revalidatePath("/admin/students/enrollments");
     revalidatePath("/admin/students/list");
+    revalidatePath("/student/dashboard");
     return { success: true, message: "Enrollment application deleted." };
 }

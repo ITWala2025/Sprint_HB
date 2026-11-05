@@ -69,9 +69,9 @@ export default async function AdminDashboardPage() {
     if (!profile || profile.is_active !== true) redirect("/admin");
 
     const dashboardQueryDefinitions = [
-        { name: "registrations_status_summary", table: "public.registrations", run: () => supabase.from("registrations").select("status") },
+        { name: "enrollment_applications_status_summary", table: "public.enrollments", run: () => supabase.from("enrollments").select("status") },
         { name: "students_count", table: "public.students", run: () => supabase.from("students").select("id", { count: "exact", head: true }) },
-        { name: "active_enrollments_count", table: "public.enrollments", run: () => supabase.from("enrollments").select("id", { count: "exact", head: true }).eq("status", "active") },
+        { name: "active_enrollments_count", table: "public.student_course_enrollments", run: () => supabase.from("student_course_enrollments").select("id", { count: "exact", head: true }).eq("status", "active") },
     ] as const;
 
     const queryResults = await Promise.allSettled(dashboardQueryDefinitions.map((query) => query.run()));
