@@ -22,6 +22,22 @@ To support multi-course purchases, separate registration intakes, and secure adm
 
 When a student completes the public onboarding / enrollment form (`/student/enroll`), the application inspects the course selection array:
 
+### Email Verification and Redirect Configuration
+* Before accepting the enrollment, the wizard sends a Supabase magic link to the email address entered in Step 1.
+* Step 2 (education and course selection) is optional. The student can continue without selecting a course.
+* Step 3 requires the student to open the link in the same browser session; the server verifies that the authenticated, confirmed email matches the submitted email before saving.
+* The verification request includes the student's name and mobile number as Auth metadata so the new student profile is created with usable profile details.
+* A successful submission is linked to the verified Auth user through `enrollments.applicant_user_id`. `enrollments.student_id` remains unset until approval provisions the student record.
+* After the enrollment is saved, the server requests a Supabase password-recovery email that points to `<app-origin>/set-password`. This is a separate email from the Step 3 verification link. If password setup email delivery fails, the application remains saved and the completion screen directs the student to **Forgot Password**.
+* Add each deployed application's callback URL (`<app-origin>/student/enroll`) and password callback (`<app-origin>/set-password`) to **Supabase → Authentication → URL Configuration → Redirect URLs**. Include local development and production origins. If Next.js is running on port `3001`, add `http://localhost:3001/student/enroll` and `http://localhost:3001/set-password` (not only port `3000`). Configure a working SMTP/email provider so Supabase can deliver both messages.
+* A rejected redirect URL, email rate limit, or delivery-provider failure is shown with next steps; a failed verification request must not be treated as a successful verification.
+* Email verification does not create a password. After submission, students use the password setup link to create one and sign in with email and password. The dashboard shows their pending, approved, or rejected application status; course access remains subject to approval.
+
+### Student Dashboard Application Status
+* `/student/dashboard` reads applications by `applicant_user_id`, which lets a verified student see their application before a `public.students` row exists.
+* Each application shows the selected course or bundle and its review status. An application without a course selection is shown as **Course not selected**.
+* Run `src/Supabase/Enrollment Applicant Account Link Migration.sql` in existing Supabase projects before deploying this workflow. The migration adds the applicant identity foreign key, backfills matching verified accounts, and enables applicant-only RLS reads. The initial schema defines the same column and policy for new installations.
+
 ### Scenario 1.1: Pure Registration (No Courses Selected)
 * **Condition**: `course_ids` / `bundle_ids` array is empty.
 * **Intent**: User is creating an account or expressing general interest without purchasing a specific program.

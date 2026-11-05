@@ -21,9 +21,7 @@ import {
  * - `validate(values)` returns a `{ field: message }` map; `compactErrors` drops
  *   the valid entries.
  *
- * The last step — Account — is still scaffolded in this phase (`isScaffolded`):
- * it already owns its label, copy, state slice and navigation slot, so landing
- * its form is a change inside `steps/AccountStep.jsx` only.
+ * The last step — Account — verifies the student's email before submission.
  *
  * `isOptional` marks a step the student may skip: the wizard then renders the
  * third "Skip for now" action in the footer and shows `skipNotice` on the step
@@ -81,11 +79,12 @@ export const ENROLLMENT_STEPS = [
     id: "account",
     label: "Account",
     title: "Account",
-    description: "Set up the Student Portal account you will sign in with.",
+    description:
+      "Verify your email address with a secure magic link before submitting your enrollment.",
     Component: AccountStep,
     initialValues: {},
     validate: validateNoFieldsYet,
-    isScaffolded: true,
+    isScaffolded: false,
   },
 ];
 

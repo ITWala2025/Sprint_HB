@@ -128,9 +128,7 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
     }
 
     const registrations = (data ?? []) as RegistrationRecord[];
-    const qualifyingRegistrations = registrations.filter(
-        (registration) => registration.course_id !== null || registration.bundle_id !== null,
-    );
+    const qualifyingRegistrations = registrations;
     const courseIds = [...new Set(qualifyingRegistrations.flatMap((registration) => registration.course_id ? [registration.course_id] : []))];
     const bundleIds = [...new Set(qualifyingRegistrations.flatMap((registration) => registration.bundle_id ? [registration.bundle_id] : []))];
 

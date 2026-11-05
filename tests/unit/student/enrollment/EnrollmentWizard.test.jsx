@@ -6,7 +6,7 @@ import {
   within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import EnrollmentWizard from "@/components/student/enrollment/EnrollmentWizard";
 import { catalogueItems } from "@/data/courses";
@@ -20,10 +20,31 @@ const supabaseMocks = vi.hoisted(() => ({
       eq: () => ({ order: () => Promise.resolve({ data: [], error: null }) }),
     }),
   })),
+  getUser: vi.fn(),
+  onAuthStateChange: vi.fn(() => ({
+    data: { subscription: { unsubscribe: vi.fn() } },
+  })),
+  signInWithOtp: vi.fn(),
 }));
 
 vi.mock("@/lib/supabase/client", () => ({
-  createClient: () => ({ from: supabaseMocks.from }),
+  createClient: () => ({
+    from: supabaseMocks.from,
+    auth: {
+      getUser: supabaseMocks.getUser,
+      onAuthStateChange: supabaseMocks.onAuthStateChange,
+      signInWithOtp: supabaseMocks.signInWithOtp,
+    },
+  }),
+}));
+
+vi.mock("@/app/student/enroll/actions", () => ({
+  submitStudentEnrollmentAction: vi.fn().mockResolvedValue({
+    success: true,
+    applicationId: "application-id",
+    message: "Enrollment submitted.",
+    passwordSetupEmailSent: true,
+  }),
 }));
 
 const VALID = {
@@ -36,6 +57,20 @@ const VALID = {
 };
 
 describe("EnrollmentWizard", () => {
+  beforeEach(() => {
+    window.sessionStorage.clear();
+    supabaseMocks.getUser.mockResolvedValue({
+      data: {
+        user: {
+          email: VALID.email,
+          email_confirmed_at: "2026-01-01T00:00:00.000Z",
+        },
+      },
+      error: null,
+    });
+    supabaseMocks.signInWithOtp.mockResolvedValue({ error: null });
+  });
+
   const fillPersonalStep = async (user, overrides = {}) => {
     const values = { ...VALID, ...overrides };
     if (values.firstName)
@@ -61,7 +96,7 @@ describe("EnrollmentWizard", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: name === "Account" ? "Create Your SPRINT Account" : name,
+        name: name === "Account" ? "Verify Your Email" : name,
       }),
     ).toBeInTheDocument();
   const continueButton = () =>
@@ -216,21 +251,19 @@ describe("EnrollmentWizard", () => {
 
     expect(screen.getByText("STEP 03")).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Create Your SPRINT Account" }),
+      screen.getByRole("heading", { name: "Verify Your Email" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        "Your selected enrollment details are ready. Account creation will be connected to the secure SPRINT authentication flow.",
-      ),
+      screen.getByText(/verify that you can access this email address/i),
     ).toBeInTheDocument();
     expect(screen.queryByText("Scaffolded")).not.toBeInTheDocument();
     expect(
       screen.queryByText(
-        "Set up the Student Portal account you will sign in with.",
+        "Verify your email address with a secure magic link before submitting your enrollment.",
       ),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Create Your SPRINT Account" }),
+      screen.getByRole("heading", { name: "Verify Your Email" }),
     ).toHaveAttribute("id", "enrollment-step-heading");
 
     const summary = screen.getByRole("region", { name: "Enrollment Summary" });
@@ -238,17 +271,11 @@ describe("EnrollmentWizard", () => {
     expect(within(summary).getByText(VALID.email)).toBeInTheDocument();
     expect(within(summary).getByText(`+91 ${VALID.phone}`)).toBeInTheDocument();
     expect(within(summary).getByText(selectedCourse.title)).toBeInTheDocument();
-    expect(within(summary).getByText("City")).toBeInTheDocument();
-    expect(within(summary).getByText("—")).toBeInTheDocument();
 
     expect(
-      screen.getByRole("heading", { name: "Account creation" }),
+      screen.getByRole("heading", { name: "Email verified" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /secure password creation, Terms of Service and Privacy Policy consent/i,
-      ),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/is verified/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^back$/i })).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /submit enrollment/i }),
@@ -263,9 +290,10 @@ describe("EnrollmentWizard", () => {
     for (let clicks = 0; clicks < 2; clicks += 1) await clickContinue(user);
 
     stepAppears("Account");
+    expect(await screen.findByText(/is verified/i)).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /submit enrollment/i }),
-    ).toBeInTheDocument();
+    ).toBeEnabled();
 
     await user.click(
       screen.getByRole("button", { name: /submit enrollment/i }),
@@ -277,7 +305,9 @@ describe("EnrollmentWizard", () => {
     expect(screen.getByText(VALID.lastName)).toBeInTheDocument();
     expect(screen.getByText(VALID.email)).toBeInTheDocument();
     expect(screen.getByText(VALID.phone)).toBeInTheDocument();
-    expect(screen.getByText(/nothing has been submitted/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/your enrollment has been submitted/i),
+    ).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /^continue$/i }),
     ).not.toBeInTheDocument();
@@ -289,6 +319,7 @@ describe("EnrollmentWizard", () => {
 
     await fillPersonalStep(user);
     for (let clicks = 0; clicks < 2; clicks += 1) await clickContinue(user);
+    await screen.findByText(/is verified/i);
     await user.click(
       screen.getByRole("button", { name: /submit enrollment/i }),
     );
@@ -303,11 +334,11 @@ describe("EnrollmentWizard", () => {
     expect(continueButton()).toBeInTheDocument();
   });
 
-  it("keeps the preview notice on the page", () => {
+  it("explains that email verification is required before submission", () => {
     render(<EnrollmentWizard />);
 
     expect(
-      screen.getByText(/nothing is submitted to SPRINT/i),
+      screen.getByText(/your email must be verified before your enrollment is submitted/i),
     ).toBeInTheDocument();
   });
 
@@ -406,5 +437,81 @@ describe("EnrollmentWizard", () => {
     stepAppears("Education & Career Profile");
     expect(screen.getByLabelText(/course \/ degree/i)).toHaveValue("BCA");
     expect(screen.getByLabelText(/^current role/i)).toHaveValue("Student");
+  });
+
+  it("sends a magic link and preserves the enrollment draft until verification", async () => {
+    const user = userEvent.setup();
+    supabaseMocks.getUser.mockResolvedValue({
+      data: { user: null },
+      error: null,
+    });
+    render(<EnrollmentWizard />);
+
+    await fillPersonalStep(user);
+    await clickContinue(user);
+    await clickContinue(user);
+
+    await user.click(
+      await screen.findByRole("button", { name: /send verification link/i }),
+    );
+
+    expect(supabaseMocks.signInWithOtp).toHaveBeenCalledWith({
+      email: VALID.email,
+      options: {
+        data: {
+          full_name: `${VALID.firstName} ${VALID.lastName}`,
+          first_name: VALID.firstName,
+          last_name: VALID.lastName,
+          mobile_number: VALID.phone,
+        },
+        emailRedirectTo: new URL(
+          "/student/enroll?email_verified=1",
+          window.location.origin,
+        ).toString(),
+      },
+    });
+    expect(
+      await screen.findByText(/a secure link was sent/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /submit enrollment/i }),
+    ).toBeDisabled();
+    expect(window.sessionStorage.getItem("student_enrollment_draft")).toContain(
+      VALID.email,
+    );
+  });
+
+  it("explains when Supabase rejects the magic-link redirect URL", async () => {
+    const user = userEvent.setup();
+    supabaseMocks.getUser.mockResolvedValue({
+      data: { user: null },
+      error: null,
+    });
+    supabaseMocks.signInWithOtp.mockResolvedValue({
+      error: {
+        message: "Redirect URL is not allowed",
+        code: "validation_failed",
+      },
+    });
+    render(<EnrollmentWizard />);
+
+    await fillPersonalStep(user);
+    await clickContinue(user);
+    await clickContinue(user);
+    await user.click(
+      await screen.findByRole("button", { name: /send verification link/i }),
+    );
+
+    expect(
+      await screen.findByRole("alert"),
+    ).toHaveTextContent(
+      `Add this URL (or its wildcard form) under Authentication → URL Configuration → Redirect URLs`,
+    );
+    expect(
+      screen.getByRole("button", { name: /submit enrollment/i }),
+    ).toBeDisabled();
+    expect(window.sessionStorage.getItem("student_enrollment_draft")).toContain(
+      VALID.email,
+    );
   });
 });

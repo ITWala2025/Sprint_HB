@@ -6,9 +6,8 @@ import AuthButton from "@/components/student/auth/AuthButton";
 /**
  * Shown once the last step is submitted.
  *
- * The submission itself is mocked in this phase, so the panel says so instead of
- * claiming an application was sent — and it echoes back what the wizard
- * collected, which is the visible proof that every step shared one state object.
+ * Echoes the collected values after the server confirms the enrollment was
+ * submitted, which also makes the shared wizard state visible to the student.
  */
 const SUMMARY_ROWS = [
   { field: "firstName", label: "First name" },
@@ -23,6 +22,7 @@ const SUMMARY_ROWS = [
 export default function EnrollmentSuccessPanel({
   headingId,
   values,
+  passwordSetupEmailSent,
   onReviewDetails,
   className = "",
 }) {
@@ -52,7 +52,7 @@ export default function EnrollmentSuccessPanel({
         Your enrollment details are ready
       </h2>
       <p className="mt-1.5 text-sm leading-relaxed text-brand-text-secondary">
-        Your enrollment has been submitted and is now waiting for payment verification.
+        Your enrollment has been submitted and is waiting for review.
       </p>
 
       {rows.length ? (
@@ -70,9 +70,19 @@ export default function EnrollmentSuccessPanel({
         </dl>
       ) : null}
 
-      <p className="mt-4 rounded-xl bg-brand-surface px-3.5 py-3 text-[11px] font-medium leading-relaxed text-brand-text-secondary">
-        SPRINT will review your enrollment, confirm the payment status, and contact you if any details need attention.
-      </p>
+      {passwordSetupEmailSent ? (
+        <p className="mt-4 rounded-xl bg-brand-surface px-3.5 py-3 text-[11px] font-medium leading-relaxed text-brand-text-secondary">
+          We sent a password setup link to {personal.email}. Set your password, then sign in to the Student Dashboard to check your application status.
+        </p>
+      ) : (
+        <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-[11px] font-medium leading-relaxed text-amber-900">
+          Your application was saved, but we couldn&apos;t send the password setup email. You can set your password from{" "}
+          <Link className="font-bold underline" href="/student/forgot-password">
+            Forgot Password
+          </Link>
+          .
+        </p>
+      )}
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <AuthButton
@@ -85,10 +95,10 @@ export default function EnrollmentSuccessPanel({
         </AuthButton>
 
         <Link
-          href="/home"
+          href={passwordSetupEmailSent ? "/student/login" : "/home"}
           className="sprint-focus inline-flex h-12 items-center justify-center rounded-xl px-3 text-sm font-semibold text-brand-navy hover:text-brand-red"
         >
-          Back to the homepage
+          {passwordSetupEmailSent ? "Go to student sign in" : "Back to the homepage"}
         </Link>
       </div>
     </section>

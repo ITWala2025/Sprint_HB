@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CircleCheck } from "lucide-react";
 
@@ -20,9 +20,10 @@ import { compactErrors } from "./enrollment-validation";
 
 const STEP_HEADING_ID = "enrollment-step-heading";
 const SUCCESS_HEADING_ID = "enrollment-success-heading";
+const ENROLLMENT_DRAFT_KEY = "student_enrollment_draft";
 
 /**
- * Enrollment wizard shell (Phase 1 — UI + client-side state only).
+ * Enrollment wizard shell.
  *
  * One state object holds every step's answers (`{ personal, education,
  * account }`) and the steps are controlled components reading from it. That is
@@ -35,9 +36,9 @@ const SUCCESS_HEADING_ID = "enrollment-success-heading";
  * Continue bar. Each step only describes its own fields, through the contract
  * documented in `enrollment-steps.js`.
  *
- * Nothing is submitted anywhere yet: the last step switches to a success panel
- * that echoes the collected values. There is no backend, no persistence and no
- * URL sync, so a browser refresh restarts the wizard by design.
+ * A temporary session-storage draft preserves the answers across the Supabase
+ * magic-link redirect. The server independently verifies the authenticated
+ * email before it accepts the enrollment.
  */
 export default function EnrollmentWizard() {
   const [stepIndex, setStepIndex] = useState(0);
@@ -45,10 +46,40 @@ export default function EnrollmentWizard() {
   const [errors, setErrors] = useState({});
   const [isComplete, setIsComplete] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [passwordSetupEmailSent, setPasswordSetupEmailSent] = useState(false);
   const [submitError, setSubmitError] = useState("");
   // One-off message for a visible action (today: skipping an optional step).
   // Cleared by the next navigation so it never lingers on the wrong screen.
   const [statusNotice, setStatusNotice] = useState(null);
+
+  useEffect(() => {
+    let draft;
+    try {
+      const saved = window.sessionStorage.getItem(ENROLLMENT_DRAFT_KEY);
+      if (!saved) return;
+      draft = JSON.parse(saved);
+    } catch {
+      setSubmitError(
+        "Your saved enrollment details could not be restored. Please review and re-enter them.",
+      );
+      return;
+    }
+
+    if (
+      draft?.stepIndex !== ENROLLMENT_STEP_COUNT - 1 ||
+      !draft.values?.personal ||
+      !draft.values?.education
+    ) {
+      return;
+    }
+
+    setValues(draft.values);
+    setStepIndex(draft.stepIndex);
+    if (new URLSearchParams(window.location.search).has("email_verified")) {
+      setStatusNotice("Your verification link was opened. Checking your email now…");
+    }
+  }, []);
 
   const step = ENROLLMENT_STEPS[stepIndex];
   const isFirst = stepIndex === 0;
@@ -72,6 +103,9 @@ export default function EnrollmentWizard() {
       ...previous,
       [sliceId]: { ...previous[sliceId], [field]: value },
     }));
+    if (sliceId === "personal" && field === "email") {
+      setIsEmailVerified(false);
+    }
     setSubmitError("");
     // Clear this field's error as soon as the student starts fixing it.
     setErrors((previous) =>
@@ -80,6 +114,31 @@ export default function EnrollmentWizard() {
   };
 
   const handleChange = handleChangeIn(step.id);
+
+  const saveDraftBeforeMagicLink = useCallback(() => {
+    try {
+      window.sessionStorage.setItem(
+        ENROLLMENT_DRAFT_KEY,
+        JSON.stringify({ stepIndex, values }),
+      );
+    } catch {
+      throw new Error(
+        "Your enrollment details could not be saved in this browser. Keep this tab open and try again.",
+      );
+    }
+  }, [stepIndex, values]);
+
+  const clearSavedDraft = useCallback(() => {
+    try {
+      window.sessionStorage.removeItem(ENROLLMENT_DRAFT_KEY);
+    } catch {
+      setSubmitError("Your submitted enrollment draft could not be cleared from this browser.");
+    }
+  }, []);
+
+  const handleVerificationChange = useCallback((verified) => {
+    setIsEmailVerified(verified);
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -109,6 +168,8 @@ export default function EnrollmentWizard() {
           return;
         }
 
+        clearSavedDraft();
+        setPasswordSetupEmailSent(result.passwordSetupEmailSent);
         setIsComplete(true);
       } catch (error) {
         setSubmitError(
@@ -185,8 +246,8 @@ export default function EnrollmentWizard() {
             Start your enrollment
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-brand-text-secondary">
-            Three short steps — your details, education and portal account. You
-            can move back and forth at any point without losing an answer.
+            Three short steps — your details, optional education and email
+            verification. You can move back and forth without losing an answer.
           </p>
         </div>
 
@@ -226,6 +287,7 @@ export default function EnrollmentWizard() {
           <EnrollmentSuccessPanel
             headingId={SUCCESS_HEADING_ID}
             values={values}
+            passwordSetupEmailSent={passwordSetupEmailSent}
             onReviewDetails={() => goToStep(0)}
             className="mt-6"
           />
@@ -253,6 +315,8 @@ export default function EnrollmentWizard() {
                       stepNumber: stepIndex + 1,
                       headingId: STEP_HEADING_ID,
                       summaryValues: values,
+                      onBeforeMagicLink: saveDraftBeforeMagicLink,
+                      onVerificationChange: handleVerificationChange,
                     }
                   : {})}
               />
@@ -265,14 +329,15 @@ export default function EnrollmentWizard() {
                 stepNumber={stepIndex + 1}
                 totalSteps={ENROLLMENT_STEP_COUNT}
                 isSubmitting={isSubmitting}
+                isSubmitDisabled={isLast && !isEmailVerified}
               />
             </EnrollmentStepPanel>
           </form>
         )}
 
         <p className="mt-6 text-center text-[11px] font-medium leading-relaxed text-brand-text-muted md:mt-8">
-          Preview build — answers stay in this browser tab and nothing is
-          submitted to SPRINT.
+          Your email must be verified before your enrollment is submitted
+          securely to SPRINT.
         </p>
       </div>
     </div>

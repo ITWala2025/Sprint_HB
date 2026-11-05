@@ -28,6 +28,7 @@ export default function EnrollmentStepFooter({
   onSkip,
   skipLabel = "Skip for now",
   isSubmitting = false,
+  isSubmitDisabled = false,
   className = "",
 }) {
   const [isSiteFooterVisible, setIsSiteFooterVisible] = useState(false);
@@ -119,7 +120,7 @@ export default function EnrollmentStepFooter({
           className="md:w-auto md:min-w-32"
           loading={isSubmitting}
           loadingLabel={isLast ? "Submitting…" : "Please wait…"}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isSubmitDisabled}
         >
           {label}
         </AuthButton>

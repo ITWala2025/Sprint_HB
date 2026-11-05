@@ -1,4 +1,5 @@
 import AnnouncementsCard from "@/components/student/dashboard/AnnouncementsCard";
+import ApplicationStatusCard from "@/components/student/dashboard/ApplicationStatusCard";
 import LearningProgress from "@/components/student/dashboard/LearningProgress";
 import QuickActions from "@/components/student/dashboard/QuickActions";
 import UpcomingLiveClasses from "@/components/student/dashboard/UpcomingLiveClasses";
@@ -43,6 +44,7 @@ async function getStudentDashboardContext() {
     return {
       student: { id: "", fullName: "Student", firstName: "Student", initials: "S", email: "" },
       enrollment: null,
+      applications: [],
       progress: null,
       announcements: [],
     };
@@ -89,25 +91,69 @@ async function getStudentDashboardContext() {
     email: profile.email || "",
   };
 
-  const { data: studentRecord } = await supabase
+  const { data: studentRecord, error: studentRecordError } = await supabase
     .from("students")
     .select("id, registration_number")
     .eq("id", profile.id)
     .maybeSingle();
 
-  const { data: applications } = await supabase
+  if (studentRecordError) {
+    throw new Error(`Could not load student information: ${studentRecordError.message}`);
+  }
+
+  const { data: applicationRecords, error: applicationsError } = await supabase
     .from("enrollments")
-    .select("id, status, created_at, course_id, bundle_id, batch_id")
-    .eq("student_id", profile.id)
+    .select("id, status, created_at, course_id, bundle_id")
+    .eq("applicant_user_id", user.id)
     .order("created_at", { ascending: false });
 
-  const { data: enrollments } = await supabase
+  if (applicationsError) {
+    throw new Error(`Could not load course applications: ${applicationsError.message}`);
+  }
+
+  const courseIds = [...new Set((applicationRecords ?? []).flatMap((item) => item.course_id ? [item.course_id] : []))];
+  const bundleIds = [...new Set((applicationRecords ?? []).flatMap((item) => item.bundle_id ? [item.bundle_id] : []))];
+  const [coursesResult, bundlesResult] = await Promise.all([
+    courseIds.length > 0
+      ? supabase.from("courses").select("id, title").in("id", courseIds)
+      : Promise.resolve({ data: [], error: null }),
+    bundleIds.length > 0
+      ? supabase.from("course_bundles").select("id, title").in("id", bundleIds)
+      : Promise.resolve({ data: [], error: null }),
+  ]);
+
+  if (coursesResult.error || bundlesResult.error) {
+    throw new Error(
+      `Could not load application course names: ${[
+        coursesResult.error?.message,
+        bundlesResult.error?.message,
+      ].filter(Boolean).join("; ")}`,
+    );
+  }
+
+  const courseTitles = new Map((coursesResult.data ?? []).map((item) => [item.id, item.title]));
+  const bundleTitles = new Map((bundlesResult.data ?? []).map((item) => [item.id, item.title]));
+  const applications = (applicationRecords ?? []).map((application) => ({
+    id: application.id,
+    status: application.status,
+    createdAt: application.created_at,
+    courseTitle:
+      (application.course_id && courseTitles.get(application.course_id)) ||
+      (application.bundle_id && bundleTitles.get(application.bundle_id)) ||
+      "Course not selected",
+  }));
+
+  const { data: enrollments, error: enrollmentsError } = await supabase
     .from("student_course_enrollments")
     .select(
       "id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)"
     )
     .eq("student_id", profile.id)
     .order("enrolled_at", { ascending: false });
+
+  if (enrollmentsError) {
+    throw new Error(`Could not load active course enrollments: ${enrollmentsError.message}`);
+  }
 
   const activeEnrollment =
     enrollments?.find((item) => item.status === "active") ?? enrollments?.[0] ?? null;
@@ -132,8 +178,8 @@ async function getStudentDashboardContext() {
       }
     : {
         completionPercent: 0,
-        status: applications?.some((application) => application.status === "pending")
-          ? "Payment pending"
+        status: applications.some((application) => application.status === "pending")
+          ? "Application under review"
           : "No active enrollment",
         lastUpdated: null,
       };
@@ -144,13 +190,14 @@ async function getStudentDashboardContext() {
       registrationNumber: studentRecord?.registration_number ?? null,
     },
     enrollment,
+    applications,
     progress,
     announcements: [],
   };
 }
 
 export default async function StudentDashboardPage() {
-  const { student, enrollment, progress, announcements } = await getStudentDashboardContext();
+  const { student, enrollment, applications, progress, announcements } = await getStudentDashboardContext();
   const unreadCount = announcements.filter((item) => item.unread).length;
 
   return (
@@ -158,6 +205,8 @@ export default async function StudentDashboardPage() {
       <WelcomeBanner student={student}>
         <LearningProgress compact enrollment={enrollment} progress={progress} />
       </WelcomeBanner>
+
+      <ApplicationStatusCard applications={applications} />
 
       <Link
         href="#dashboard-announcements"

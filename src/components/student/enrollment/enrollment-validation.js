@@ -133,9 +133,9 @@ export function validateEducationProfile(values = {}) {
 }
 
 /**
- * The last step — Account — is scaffolded in this phase, so there is nothing to
- * validate yet. It uses this no-op so the registry keeps a uniform `validate`
- * contract and the wizard stays generic.
+ * The last step validates email verification through its Supabase session.
+ * This no-op keeps the registry contract uniform; server-side submission
+ * independently checks that the session email is verified and matches.
  */
 export const validateNoFieldsYet = () => ({});
 

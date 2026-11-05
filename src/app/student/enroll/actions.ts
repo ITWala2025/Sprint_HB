@@ -2,6 +2,8 @@
 
 import "server-only";
 
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/service";
 
 export type StudentEnrollmentInput = {
@@ -23,7 +25,12 @@ export type StudentEnrollmentInput = {
 };
 
 export type StudentEnrollmentResult =
-  | { success: true; applicationId: string; message: string }
+  | {
+      success: true;
+      applicationId: string;
+      message: string;
+      passwordSetupEmailSent: boolean;
+    }
   | { success: false; error: string };
 
 const NAME_PATTERN = /^[A-Za-z][A-Za-z\s.'-]*$/;
@@ -113,6 +120,45 @@ export async function submitStudentEnrollmentAction(
       return { success: false, error: "Please enter a valid email address." };
     }
 
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const publishableKey =
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!supabaseUrl || !publishableKey) {
+      return {
+        success: false,
+        error: "Email verification is temporarily unavailable. Please try again later.",
+      };
+    }
+
+    const cookieStore = await cookies();
+    const authClient = createServerClient(supabaseUrl, publishableKey, {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: (cookiesToSet) => {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options),
+          );
+        },
+      },
+    });
+    const { data: authData, error: authError } = await authClient.auth.getUser();
+    if (authError) {
+      return {
+        success: false,
+        error: "Your email verification could not be confirmed. Please open the latest verification link and try again.",
+      };
+    }
+    if (
+      !authData.user?.email_confirmed_at ||
+      authData.user.email?.toLowerCase() !== email
+    ) {
+      return {
+        success: false,
+        error: "Please verify the same email address you entered before submitting your enrollment.",
+      };
+    }
+
     if (!dob || !isValidDate(dob)) {
       return { success: false, error: "Please enter your date of birth." };
     }
@@ -133,30 +179,28 @@ export async function submitStudentEnrollmentAction(
       return { success: false, error: "The selected course is invalid." };
     }
 
-    if (!courseId) {
-      return { success: false, error: "Please select a course before submitting your application." };
-    }
-
     const serviceClient = createServiceClient();
     if (!serviceClient) {
       return { success: false, error: "Server-side Supabase is not configured." };
     }
 
-    const { data: course, error: courseError } = await serviceClient
-      .from("courses")
-      .select("id")
-      .eq("id", courseId)
-      .maybeSingle();
+    if (courseId) {
+      const { data: course, error: courseError } = await serviceClient
+        .from("courses")
+        .select("id")
+        .eq("id", courseId)
+        .maybeSingle();
 
-    if (courseError) {
-      return {
-        success: false,
-        error: `The selected course could not be verified: ${courseError.message}`,
-      };
-    }
+      if (courseError) {
+        return {
+          success: false,
+          error: `The selected course could not be verified: ${courseError.message}`,
+        };
+      }
 
-    if (!course) {
-      return { success: false, error: "The selected course is no longer available." };
+      if (!course) {
+        return { success: false, error: "The selected course is no longer available." };
+      }
     }
 
     const { data: existingPending, error: duplicateCheckError } = await serviceClient
@@ -181,7 +225,7 @@ export async function submitStudentEnrollmentAction(
     }
 
     const payload = {
-      course_id: courseId,
+      course_id: courseId || null,
       bundle_id: null,
       batch_id: null,
       full_name: `${firstName} ${lastName}`,
@@ -198,6 +242,7 @@ export async function submitStudentEnrollmentAction(
       source_of_info: null,
       terms_accepted: false,
       communication_consent: false,
+      applicant_user_id: authData.user.id,
       status: "pending",
       admin_notes: null,
     };
@@ -229,10 +274,35 @@ export async function submitStudentEnrollmentAction(
       };
     }
 
+    let passwordSetupEmailSent = false;
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
+    if (!siteUrl) {
+      console.error("Password setup email was not sent: NEXT_PUBLIC_SITE_URL is not configured.");
+    } else {
+      try {
+        const { error: passwordSetupError } =
+          await authClient.auth.resetPasswordForEmail(email, {
+            redirectTo: new URL("/set-password", siteUrl).toString(),
+          });
+
+        if (passwordSetupError) {
+          console.error("Password setup email could not be sent:", passwordSetupError.message);
+        } else {
+          passwordSetupEmailSent = true;
+        }
+      } catch (passwordSetupError) {
+        console.error("Password setup email could not be sent:", passwordSetupError);
+      }
+    }
+
     return {
       success: true,
       applicationId: inserted.id,
-      message: "Your enrollment has been received and is pending payment verification.",
+      passwordSetupEmailSent,
+      message: passwordSetupEmailSent
+        ? "Your enrollment has been received. Check your email to set your password and sign in to view your application status."
+        : "Your enrollment has been received, but we couldn't send the password setup email. Use Forgot Password on the student sign-in page to set your password.",
     };
   } catch (error) {
     return {

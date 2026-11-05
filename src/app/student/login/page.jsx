@@ -161,7 +161,7 @@ export default function StudentLoginPage({ isModal = true }) {
       if (profileError || !profile) {
         await supabase.auth.signOut();
         setError(
-          "We couldn't find your student profile. Please contact support."
+          "We couldn't find your Student Portal profile. If you have submitted an enrollment, use Forgot Password or contact SPRINT support."
         );
         return;
       }
@@ -254,8 +254,12 @@ export default function StudentLoginPage({ isModal = true }) {
               </h1>
 
               <p>
-                Sign in to your account and continue your learning
-                journey with SPRINT.
+                Sign in with your password to continue learning. The
+                enrollment verification link only confirms your email. If
+                you have submitted an enrollment but have not created a
+                password, use Forgot Password now. You can check your
+                application status while it is under review; course access
+                starts after approval.
               </p>
             </header>
 

@@ -32,10 +32,10 @@ describe("Enrollment step registry", () => {
     });
   });
 
-  it("marks exactly the one scaffolded step", () => {
+  it("keeps every step connected to its live behavior", () => {
     const scaffolded = ENROLLMENT_STEPS.filter((step) => step.isScaffolded).map((step) => step.id);
 
-    expect(scaffolded).toEqual(["account"]);
+    expect(scaffolded).toEqual([]);
   });
 
   it("marks only Step 2 optional and hands it the agreed skip notice", () => {

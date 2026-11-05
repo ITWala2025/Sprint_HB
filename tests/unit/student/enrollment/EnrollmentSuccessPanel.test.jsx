@@ -67,7 +67,28 @@ describe("EnrollmentSuccessPanel", () => {
   it("stays honest about the mock submission", () => {
     renderPanel();
 
-    expect(screen.getByText(/nothing has been submitted/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/your enrollment has been submitted/i),
+    ).toBeInTheDocument();
+  });
+
+  it("confirms the password setup email and links to student sign in", () => {
+    renderPanel({ passwordSetupEmailSent: true });
+
+    expect(
+      screen.getByText(/we sent a password setup link to ananya@sprint\.co\.in/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /go to student sign in/i }),
+    ).toHaveAttribute("href", "/student/login");
+  });
+
+  it("offers password recovery if the setup email could not be sent", () => {
+    renderPanel({ passwordSetupEmailSent: false });
+
+    expect(
+      screen.getByRole("link", { name: /forgot password/i }),
+    ).toHaveAttribute("href", "/student/forgot-password");
   });
 
   it("offers a way back into the wizard and back to the site", async () => {

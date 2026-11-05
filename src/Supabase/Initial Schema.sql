@@ -247,6 +247,7 @@ CREATE TABLE IF NOT EXISTS public.enrollments (
     legacy_registration_id UUID UNIQUE REFERENCES public.registrations(id) ON DELETE SET NULL,
     application_number TEXT UNIQUE,
     legacy_registration_status TEXT,
+    applicant_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
     full_name TEXT NOT NULL,
     email TEXT NOT NULL,
     phone TEXT NOT NULL,
@@ -271,8 +272,7 @@ CREATE TABLE IF NOT EXISTS public.enrollments (
     reviewed_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
     reviewed_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now()),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now()),
-    CONSTRAINT enrollments_selected_product_check CHECK (course_id IS NOT NULL OR bundle_id IS NOT NULL)
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc', now())
 );
 
 /* Table: student course participation */
@@ -658,7 +658,7 @@ CREATE POLICY "Admins have full control over registrations"
 CREATE POLICY "Applicants can view their own enrollment applications"
     ON public.enrollments FOR SELECT
     TO authenticated
-    USING (student_id = auth.uid());
+    USING (student_id = auth.uid() OR applicant_user_id = auth.uid());
 
 CREATE POLICY "Staff can view all enrollment applications"
     ON public.enrollments FOR SELECT
