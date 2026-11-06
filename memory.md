@@ -315,16 +315,13 @@ Sections 8 onward are dated implementation history. Where an older entry describ
 - The toggle reveals all four existing timeline stages together in the preserved responsive zigzag layout, changes to `Hide Program Stages`, rotates the chevron, and animates the complete panel with one grid-row transition.
 - The scroll observer now attaches only while the stage panel is expanded; stage content and copy remain unchanged.
 - Added [tests/unit/home/FeaturedProgram.test.jsx](tests/unit/home/FeaturedProgram.test.jsx) covering collapsed and expanded single-panel behavior.
-  <<<<<<< HEAD
 
 ## 18. Admin Authentication Timeout - 2026-09-23
 
 - Updated [src/app/admin/page.tsx](src/app/admin/page.tsx) to race the complete Supabase sign-in and profile-role lookup flow against an eight-second timeout.
 - The admin profile lookup uses `maybeSingle()` and requires `role === "admin"`; other roles are signed out and receive an explicit access-denied message.
 - Authentication failures are logged with `console.error`, and the submit state is reset in `finally` so timeout and error paths cannot leave the button stuck.
-- # Successful authentication redirects with `window.location.href = "/admin/dashboard"` so edge middleware receives the refreshed session cookies.
-  > > > > > > > 411e90521d47e5c5a53beb32d9a6bdcace3811b7
-  > > > > > > > ac7bac9d9e633a9f5a9d53dc31086a430f49584d
+- Successful authentication redirects with `window.location.href = "/admin/dashboard"` so edge middleware receives the refreshed session cookies.
 
 ## 19. Admin-Aware Public Shell - 2026-09-23
 
@@ -665,7 +662,17 @@ No application code was changed for this reconciliation. The local role-unassign
 - Updated [docs/md/Student_Reg_Enroll_Approval_System.md](docs/md/Student_Reg_Enroll_Approval_System.md) with the email, redirect URL, migration, and dashboard workflow. Existing Supabase deployments must run the applicant-account migration and allow both `/student/enroll` and `/set-password` redirect URLs.
 - Validation on 2026-11-05: focused student auth/enrollment/dashboard tests — 11 files / 109 tests passed; `npx tsc --noEmit`, `git diff --check`, and `npm run build` passed.
 
-## 61. Supabase Auth Email Lag Investigation, Immediate Delivery & Branded Templates — 2026-11-06
+## 61. Admin Student Operations — 2026-11-06
+
+- `/admin/students/registrations` ([page](src/app/admin/students/registrations/page.tsx), [actions](src/app/admin/students/registrations/actions.ts), [table/editor](src/app/admin/students/registrations/RegistrationsTable.tsx)) reads only `public.registrations` rows whose `course_id` and `bundle_id` are both null. It displays applicant name/email, phone, college, status, and submission time. The editor updates contact details and admin notes; delete and edit actions independently verify `student_ops` capability and operate only on course-free rows. The table currently has an edit modal, not a separate read-only details modal.
+- `/admin/students/enrollments` ([actions](src/app/admin/students/enrollments/actions.ts), [page](src/app/admin/students/enrollments/page.tsx), [table](src/app/admin/students/enrollments/EnrollmentApplicationsTable.tsx)) reads `public.enrollments`, resolves optional legacy-registration links and course/bundle titles, and displays pending applications. Verify & Approve calls `verify_and_approve_enrollment(p_enrollment_id, p_admin_user_id)` using the authenticated reviewer ID; reject remains a pending-to-rejected update. Enrollment detail views still load student progress from the legacy `public.student_course_enrollments` table.
+- `/admin/students/list` ([actions](src/app/admin/students/list/actions.ts), [table and detail modal](src/app/admin/students/list/StudentsDirectoryTable.tsx)) reads students and profiles, then resolves active `public.student_courses` course and bundle mappings into badges shown in both the directory and modal. Attendance remains an unavailable placeholder.
+- Added [src/Supabase/Student Enrollment Approval and Courses Migration.sql](src/Supabase/Student%20Enrollment%20Approval%20and%20Courses%20Migration.sql). It adds student profile fields, makes the legacy registration number nullable for intake, creates RLS-protected `public.student_courses` with a unique student/product constraint, and installs the service-role-only approval RPC. Approval resolves an existing applicant account, creates or updates the single student/profile records, generates `SPR-<year>-<auth-user-uuid>` when no registration number exists, activates/reuses the course or bundle mapping, and marks the enrollment approved. Apply this migration to existing Supabase projects before deploying; the migration does not backfill historical participation into `student_courses`.
+- The current approval action does not send an enrollment confirmation email; email delivery described in the workflow spec is not implemented by this RPC/action. Student portal progress and legacy enrollment details continue to use `student_course_enrollments`, so do not assume the new junction table is a replacement for that table.
+- Updated [docs/md/Student_Reg_Enroll_Approval_System.md](docs/md/Student_Reg_Enroll_Approval_System.md) to identify the migration prerequisite.
+- Validation on 2026-11-06: `npx tsc --noEmit`, `git diff --check`, and `npm run build` passed.
+
+## 62. Supabase Auth Email Lag Investigation, Immediate Delivery & Branded Templates — 2026-11-06
 
 - **Root Cause Investigation**: Identified that Supabase Auth emails experience lag due to GoTrue's default built-in mailer relay pool, which enforces a strict 3 emails/hour rate limit on unconfigured projects, queues outbound requests behind a global shared queue, and suffers from reputation/greylisting delays on shared developer IPs.
 - **Immediate Delivery Architecture**: Established a dual-tier instant delivery strategy:
@@ -680,7 +687,7 @@ No application code was changed for this reconciliation. The local role-unassign
   - Added unit test suites [tests/unit/email/templates.test.ts](tests/unit/email/templates.test.ts), [tests/unit/email/mailer.test.ts](tests/unit/email/mailer.test.ts), and [tests/unit/email/supabase-templates.test.ts](tests/unit/email/supabase-templates.test.ts) (11 tests passed).
 - **Validation on 2026-11-06**: `npx tsc --noEmit`, all email unit tests (11 tests), student enrollment action tests (2 tests), and student login enrollment tests (6 tests) passed.
 
-## 62. Application ID Standardization, Student Account ID Display & Student Directory Formatting — 2026-11-06
+## 63. Application ID Standardization, Student Account ID Display & Student Directory Formatting — 2026-11-06
 
 - **Application ID Format (`SPR-APP-YYMM-XXXX`)**:
   - Implemented shared utility in [src/lib/id-utils.ts](src/lib/id-utils.ts) with `formatApplicationId()`, `generateNextApplicationId()`, `isUuid()`, and `sanitizeStudentId()`.
@@ -704,4 +711,3 @@ No application code was changed for this reconciliation. The local role-unassign
 - **Validation**:
   - Unit tests in [tests/unit/id-utils.test.ts](tests/unit/id-utils.test.ts), [tests/unit/admin/StudentsDirectoryTable.test.tsx](tests/unit/admin/StudentsDirectoryTable.test.tsx), [tests/unit/admin/RegistrationDetailsModal.test.tsx](tests/unit/admin/RegistrationDetailsModal.test.tsx), [tests/unit/student/enrollment/StudentEnrollmentAction.test.ts](tests/unit/student/enrollment/StudentEnrollmentAction.test.ts), [tests/unit/student/enrollment/EnrollmentSuccessPanel.test.jsx](tests/unit/student/enrollment/EnrollmentSuccessPanel.test.jsx), [tests/unit/student/dashboard/ApplicationStatusCard.test.jsx](tests/unit/student/dashboard/ApplicationStatusCard.test.jsx), and [tests/unit/email/templates.test.ts](tests/unit/email/templates.test.ts) passed.
   - `npx tsc --noEmit` passed with 0 errors.
-

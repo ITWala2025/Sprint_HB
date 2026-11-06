@@ -4,7 +4,6 @@ import "server-only";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@supabase/ssr";
-import type { User } from "@supabase/supabase-js";
 import { assertModuleAccess } from "@/app/admin/authorization";
 import { createServiceClient } from "@/lib/supabase/service";
 import { formatApplicationId, sanitizeStudentId } from "@/lib/id-utils";
@@ -92,19 +91,6 @@ export type EnrollmentRegistrationDetails = {
     }>;
 };
 
-type RegistrationRecord = {
-    id: string;
-    student_id: string | null;
-    application_number: string | null;
-    course_id: string | null;
-    bundle_id: string | null;
-    full_name: string;
-    email: string;
-    phone: string;
-    created_at: string;
-    status: string;
-};
-
 type RegistrationStatus = "approved" | "rejected";
 
 export type VerifyRegistrationResult =
@@ -124,24 +110,42 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
     const supabase = await createAuthenticatedServerClient();
     const { data, error } = await supabase
         .from("enrollments")
-        .select("*")
+        .select("id, application_number, legacy_registration_id, full_name, email, phone, college_institution, course_id, bundle_id, status, created_at")
         .order("created_at", { ascending: false });
 
     if (error) {
         throw new Error(`Could not load enrollment applications: ${error.message}`);
     }
 
-    const registrations = (data ?? []) as RegistrationRecord[];
-    const qualifyingRegistrations = registrations;
-    const courseIds = [...new Set(qualifyingRegistrations.flatMap((registration) => registration.course_id ? [registration.course_id] : []))];
-    const bundleIds = [...new Set(qualifyingRegistrations.flatMap((registration) => registration.bundle_id ? [registration.bundle_id] : []))];
+    const enrollmentRows = data ?? [];
+    const legacyRegistrationIds = [...new Set(
+        enrollmentRows.flatMap((enrollment) => enrollment.legacy_registration_id ? [enrollment.legacy_registration_id] : []),
+    )];
+    const registrationsResult = legacyRegistrationIds.length > 0
+        ? await supabase
+            .from("registrations")
+            .select("id, application_number, full_name, email, phone, college_institution, course_id, bundle_id")
+            .in("id", legacyRegistrationIds)
+        : { data: [], error: null };
 
+    if (registrationsResult.error) {
+        throw new Error(`Could not load linked registration details: ${registrationsResult.error.message}`);
+    }
+
+    const allCourseIds = [...new Set([
+        ...enrollmentRows.flatMap((enrollment) => enrollment.course_id ? [enrollment.course_id] : []),
+        ...(registrationsResult.data ?? []).flatMap((registration) => registration.course_id ? [registration.course_id] : []),
+    ])];
+    const allBundleIds = [...new Set([
+        ...enrollmentRows.flatMap((enrollment) => enrollment.bundle_id ? [enrollment.bundle_id] : []),
+        ...(registrationsResult.data ?? []).flatMap((registration) => registration.bundle_id ? [registration.bundle_id] : []),
+    ])];
     const [coursesResult, bundlesResult] = await Promise.all([
-        courseIds.length > 0
-            ? supabase.from("courses").select("id, title").in("id", courseIds)
+        allCourseIds.length > 0
+            ? supabase.from("courses").select("id, title").in("id", allCourseIds)
             : Promise.resolve({ data: [], error: null }),
-        bundleIds.length > 0
-            ? supabase.from("course_bundles").select("id, title").in("id", bundleIds)
+        allBundleIds.length > 0
+            ? supabase.from("course_bundles").select("id, title").in("id", allBundleIds)
             : Promise.resolve({ data: [], error: null }),
     ]);
 
@@ -152,32 +156,38 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
         throw new Error(`Could not load bundle references for enrollment applications: ${bundlesResult.error.message}`);
     }
 
+    const registrationById = new Map((registrationsResult.data ?? []).map((registration) => [registration.id, registration]));
     const courseTitles = new Map((coursesResult.data ?? []).map((course) => [course.id, course.title]));
     const bundleTitles = new Map((bundlesResult.data ?? []).map((bundle) => [bundle.id, bundle.title]));
 
-    return qualifyingRegistrations.map((registration) => {
+    return enrollmentRows.map((enrollment) => {
+        const linkedRegistration = enrollment.legacy_registration_id
+            ? registrationById.get(enrollment.legacy_registration_id)
+            : null;
+        const courseId = enrollment.course_id ?? linkedRegistration?.course_id;
+        const bundleId = enrollment.bundle_id ?? linkedRegistration?.bundle_id;
         const references = [
-            registration.course_id && courseTitles.get(registration.course_id)
-                ? `Course: ${courseTitles.get(registration.course_id)}`
+            courseId && courseTitles.get(courseId)
+                ? `Course: ${courseTitles.get(courseId)}`
                 : null,
-            registration.bundle_id && bundleTitles.get(registration.bundle_id)
-                ? `Bundle: ${bundleTitles.get(registration.bundle_id)}`
+            bundleId && bundleTitles.get(bundleId)
+                ? `Bundle: ${bundleTitles.get(bundleId)}`
                 : null,
         ].filter((reference): reference is string => Boolean(reference));
 
         return {
-            id: registration.id,
+            id: enrollment.id,
             application_number: formatApplicationId(
-                registration.application_number,
-                registration.id,
-                registration.created_at,
+                (enrollment as any).application_number ?? (linkedRegistration as any)?.application_number,
+                enrollment.id,
+                enrollment.created_at,
             ),
-            full_name: registration.full_name,
-            email: registration.email,
-            phone: registration.phone,
+            full_name: enrollment.full_name || linkedRegistration?.full_name || "",
+            email: enrollment.email || linkedRegistration?.email || "",
+            phone: enrollment.phone || linkedRegistration?.phone || "",
             courseReference: references.join(" · ") || "Not specified",
-            created_at: registration.created_at,
-            status: registration.status,
+            created_at: enrollment.created_at,
+            status: enrollment.status,
         };
     });
 }
@@ -333,38 +343,6 @@ export async function getPendingRegistrationCount(): Promise<number> {
     return count;
 }
 
-async function findAuthUserByEmail(
-    supabase: ReturnType<typeof requireServiceClient>,
-    email: string,
-) {
-    for (let page = 1; ; page += 1) {
-        const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
-        if (error) {
-            throw new Error(`Could not check for an existing student account: ${error.message}`);
-        }
-
-        const users: User[] = data.users;
-        const user = users.find((candidate) => candidate.email?.toLowerCase() === email);
-        if (user) return user;
-        if (data.users.length < 1000) return null;
-    }
-}
-
-async function deactivateInvitedProfile(
-    supabase: ReturnType<typeof requireServiceClient>,
-    userId: string,
-) {
-    const { data, error } = await supabase
-        .from("profiles")
-        .update({ is_active: false })
-        .eq("id", userId)
-        .select("id")
-        .maybeSingle();
-
-    if (error) return error.message;
-    return data ? null : "The invited profile could not be found.";
-}
-
 export async function verifyRegistration(
     id: string,
     newStatus: RegistrationStatus,
@@ -416,115 +394,18 @@ export async function verifyRegistration(
         return { success: true, message: "Application rejected." };
     }
 
-    const record = registration as RegistrationRecord;
-    let userId: string | null = null;
-    let profile: {
-        id: string;
-        email: string;
-        full_name: string;
-        phone: string | null;
-        role: string;
-        role_id: string | null;
-    } | null = null;
-    let invitedUser = false;
-
-    if (newStatus === "approved") {
-        const profileQuery = record.student_id
-            ? supabase.from("profiles").select("id, email, full_name, phone, role, role_id").eq("id", record.student_id).maybeSingle()
-            : supabase.from("profiles").select("id, email, full_name, phone, role, role_id").eq("email", record.email).maybeSingle();
-        const { data: foundProfile, error: profileLookupError } = await profileQuery;
-        if (profileLookupError) {
-            return { success: false, error: `Could not verify the applicant's profile: ${profileLookupError.message}` };
-        }
-        profile = foundProfile;
-
-        if (record.student_id) {
-            userId = record.student_id;
-            if (!profile) {
-                const { data: authUserData, error: authUserError } = await supabase.auth.admin.getUserById(record.student_id);
-                if (authUserError || !authUserData.user) {
-                    return { success: false, error: `The linked applicant account could not be verified${authUserError ? `: ${authUserError.message}` : "."}` };
-                }
-            }
-        } else if (profile) {
-            userId = profile.id;
-        } else {
-            const existingAuthUser = await findAuthUserByEmail(supabase, record.email.toLowerCase());
-            if (existingAuthUser) {
-                userId = existingAuthUser.id;
-            } else {
-                const { data: inviteData, error: inviteError } = await supabase.auth.admin.inviteUserByEmail(record.email, {
-                    data: { full_name: record.full_name },
-                });
-                if (inviteError || !inviteData.user) {
-                    return { success: false, error: `Could not invite the applicant to create a student account${inviteError ? `: ${inviteError.message}` : "."}` };
-                }
-                userId = inviteData.user.id;
-                invitedUser = true;
-            }
-        }
-
-        if (!userId) {
-            return { success: false, error: "The applicant's student account could not be provisioned." };
-        }
-
-        if (invitedUser) {
-            const { error: deactivateError } = await supabase.from("profiles").upsert({
-                id: userId,
-                email: record.email,
-                full_name: record.full_name,
-                phone: record.phone,
-                role: "student",
-                role_id: null,
-                is_active: false,
-            });
-            if (deactivateError) {
-                const cleanupError = await deactivateInvitedProfile(supabase, userId);
-                return {
-                    success: false,
-                    error: [
-                        `The invitation was sent, but the new profile could not be secured pending approval: ${deactivateError.message}`,
-                        cleanupError ? `The invited profile could not be deactivated: ${cleanupError}` : null,
-                    ].filter(Boolean).join(" "),
-                };
-            }
-        }
-    }
-
-    if (!userId) {
-        return { success: false, error: "The applicant's student account could not be provisioned." };
-    }
-
-    const { data: approvalResult, error: approvalError } = await supabase.rpc("approve_enrollment_application", {
-        p_application_id: id,
-        p_user_id: userId,
-        p_reviewer_id: await getCurrentReviewerId(),
-        p_notes: null,
+    const { error: approvalError } = await supabase.rpc("verify_and_approve_enrollment", {
+        p_enrollment_id: id,
+        p_admin_user_id: await getCurrentReviewerId(),
     });
-    const approvalOutcome = Array.isArray(approvalResult) ? approvalResult[0] : approvalResult;
-    if (approvalError || !approvalOutcome || approvalOutcome.outcome !== "approved") {
-        const cleanupError = invitedUser ? await deactivateInvitedProfile(supabase, userId) : null;
-        return {
-            success: false,
-            error: [
-                approvalError
-                    ? `Could not approve the enrollment application: ${approvalError.message}`
-                    : "The enrollment application could not be approved.",
-                invitedUser ? "The student invitation was already sent." : null,
-                cleanupError ? `The invited profile could not be deactivated: ${cleanupError}` : null,
-            ].filter(Boolean).join(" "),
-        };
+    if (approvalError) {
+        return { success: false, error: `Could not approve the enrollment application: ${approvalError.message}` };
     }
 
     revalidatePath("/admin/students/enrollments");
     revalidatePath("/admin/students/list");
     revalidatePath("/student/dashboard");
-    return {
-        success: true,
-        message: invitedUser
-            ? `Application approved. A student account invitation was sent to ${record.email}.`
-            : "Application approved and student access enabled.",
-    };
+    return { success: true, message: "Enrollment approved and student course access updated." };
 }
 
 export async function approveRegistration(id: string): Promise<VerifyRegistrationResult> {
