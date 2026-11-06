@@ -133,7 +133,7 @@ export default function EnrollmentApplicationsTable({
                                                         type="button"
                                                         onClick={() => reviewRegistration(registration.id, "approved")}
                                                         disabled={isPending}
-                                                        aria-label={`Approve ${registration.full_name}`}
+                                                        aria-label={`Verify and approve ${registration.full_name}`}
                                                         className="sprint-focus inline-flex size-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50"
                                                     >
                                                         <Check className="size-4" aria-hidden="true" />

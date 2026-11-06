@@ -60,6 +60,8 @@ When a student completes the public onboarding / enrollment form (`/student/enro
 
 To support students purchasing multiple courses over time without duplicating student records, execute this SQL migration in your Supabase SQL Editor:
 
+The repository migration [Student Enrollment Approval and Courses Migration.sql](../../src/Supabase/Student%20Enrollment%20Approval%20and%20Courses%20Migration.sql) creates the junction table and the transactional `verify_and_approve_enrollment` RPC used by the admin approval action. Run it in existing Supabase projects before deploying these admin operations.
+
 ```sql
 -- ============================================================================
 -- SPRINT STUDENT COURSES JUNCTION TABLE MIGRATION

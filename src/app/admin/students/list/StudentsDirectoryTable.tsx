@@ -4,6 +4,30 @@ import { useEffect, useState } from "react";
 import { Eye, X } from "lucide-react";
 import type { StudentDirectoryEntry } from "@/app/admin/students/list/actions";
 
+function ActiveCourseBadges({ student }: { student: StudentDirectoryEntry }) {
+    if (student.activeCourses.length === 0) {
+        return <span className="text-xs text-brand-text-muted">No active courses</span>;
+    }
+
+    return (
+        <div className="flex flex-wrap gap-1.5">
+            {student.activeCourses.map((course, index) => (
+                <span
+                    key={`${course.kind}-${course.title}-${index}`}
+                    className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                        course.kind === "bundle"
+                            ? "bg-violet-50 text-violet-700"
+                            : "bg-blue-50 text-blue-700"
+                    }`}
+                >
+                    {course.title}
+                    <span className="sr-only">{course.kind === "bundle" ? " career bundle" : " course"}</span>
+                </span>
+            ))}
+        </div>
+    );
+}
+
 function Detail({ label, value }: { label: string; value: string }) {
     return (
         <div className="min-w-0">
@@ -75,6 +99,15 @@ function StudentDetailsModal({
                             </dl>
                         </section>
 
+                        <section aria-labelledby="student-courses-heading">
+                            <h3 id="student-courses-heading" className="font-display text-sm font-bold text-brand-navy">
+                                Active Courses & Career Bundles
+                            </h3>
+                            <div className="mt-3 rounded-xl border border-slate-200 p-4">
+                                <ActiveCourseBadges student={student} />
+                            </div>
+                        </section>
+
                         <section aria-labelledby="student-attendance-heading">
                             <h3 id="student-attendance-heading" className="font-display text-sm font-bold text-brand-navy">Attendance</h3>
                             <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
@@ -99,13 +132,14 @@ export default function StudentsDirectoryTable({
         <>
             <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Student directory">
                 <div className="overflow-x-auto">
-                    <table className="w-full min-w-[900px] text-left text-sm">
+                    <table className="w-full min-w-[1100px] text-left text-sm">
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-semibold uppercase tracking-wider text-slate-500">
                                 <th className="px-6 py-4">Student</th>
                                 <th className="px-6 py-4">Registration No.</th>
                                 <th className="px-6 py-4">College / Institution</th>
                                 <th className="px-6 py-4">Contact</th>
+                                <th className="px-6 py-4">Active Courses / Bundles</th>
                                 <th className="px-6 py-4">Status</th>
                                 <th className="px-6 py-4 text-right">Details / Attendance</th>
                             </tr>
@@ -121,6 +155,9 @@ export default function StudentsDirectoryTable({
                                     <td className="px-6 py-4">
                                         <p className="text-brand-text-secondary">{student.email}</p>
                                         <p className="mt-1 text-xs text-brand-text-muted">{student.phone}</p>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <ActiveCourseBadges student={student} />
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ${
@@ -145,7 +182,7 @@ export default function StudentsDirectoryTable({
                             ))}
                             {students.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-sm text-brand-text-muted">
+                                    <td colSpan={7} className="px-6 py-12 text-center text-sm text-brand-text-muted">
                                         No verified active students are available.
                                     </td>
                                 </tr>
