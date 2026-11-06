@@ -19,7 +19,7 @@ export type StudentDirectoryEntry = {
     email: string;
     phone: string;
     courseEnrolled: string;
-    activeCourses?: StudentCourseBadge[];
+    activeCourses: StudentCourseBadge[];
     status: string;
     dateOfEnrollment: string;
     college: string;

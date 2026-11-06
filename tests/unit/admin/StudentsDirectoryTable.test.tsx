@@ -13,6 +13,9 @@ describe("StudentsDirectoryTable", () => {
       email: "aarav@example.com",
       phone: "+91 9876543210",
       courseEnrolled: "Full Stack Web Development",
+      activeCourses: [
+        { kind: "course", title: "Full Stack Web Development" },
+      ],
       status: "active",
       dateOfEnrollment: "15 Oct 2026",
       college: "BIT Sindri",
@@ -25,10 +28,26 @@ describe("StudentsDirectoryTable", () => {
       email: "sneha@example.com",
       phone: "+91 9123456789",
       courseEnrolled: "Applied AI & Cloud Engineering",
+      activeCourses: [
+        { kind: "bundle", title: "Applied AI & Cloud Engineering" },
+      ],
       status: "active",
       dateOfEnrollment: "20 Oct 2026",
       college: "NIT Jamshedpur",
       registrationNumber: "SPR-2026-0002",
+    },
+    {
+      id: "77777777-eeee-ffff-0000-333333333333",
+      studentId: "SPR-2026-0003",
+      name: "Rohan Verma",
+      email: "rohan@example.com",
+      phone: "+91 9988776655",
+      courseEnrolled: "Not enrolled",
+      activeCourses: [],
+      status: "active",
+      dateOfEnrollment: "01 Nov 2026",
+      college: "IIT Dhanbad",
+      registrationNumber: "SPR-2026-0003",
     },
   ];
 
@@ -49,12 +68,17 @@ describe("StudentsDirectoryTable", () => {
     expect(screen.getByText("aarav@example.com")).toBeInTheDocument();
     expect(screen.getByText("+91 9876543210")).toBeInTheDocument();
     expect(screen.getByText("Full Stack Web Development")).toBeInTheDocument();
-    expect(screen.getAllByText("Active").length).toBe(2);
+    expect(screen.getAllByText("Active").length).toBe(3);
     expect(screen.getByText("15 Oct 2026")).toBeInTheDocument();
+    expect(screen.getByText("Not enrolled")).toBeInTheDocument();
+
+    // Verify mock strings are NOT rendered
+    expect(container.textContent).not.toContain("General Technology Track");
 
     // Verify UUIDs are NEVER rendered in the DOM
     expect(container.textContent).not.toContain("99999999-aaaa-bbbb-cccc-111111111111");
     expect(container.textContent).not.toContain("88888888-dddd-eeee-ffff-222222222222");
+    expect(container.textContent).not.toContain("77777777-eeee-ffff-0000-333333333333");
   });
 
   it("opens details modal with student information and does not show UUIDs", async () => {

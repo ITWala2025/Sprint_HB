@@ -105,7 +105,7 @@ async function getStudentDashboardContext() {
   const { data: applicationRecords, error: applicationsError } = await supabase
     .from("enrollments")
     .select("id, application_number, status, created_at, course_id, bundle_id")
-    .eq("applicant_user_id", user.id)
+    .or(`applicant_user_id.eq.${user.id},student_id.eq.${user.id}`)
     .order("created_at", { ascending: false });
 
   if (applicationsError) {
@@ -145,13 +145,25 @@ async function getStudentDashboardContext() {
       "Course not selected",
   }));
 
-  const { data: enrollments, error: enrollmentsError } = await supabase
-    .from("student_course_enrollments")
-    .select(
-      "id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)"
-    )
-    .eq("student_id", profile.id)
-    .order("enrolled_at", { ascending: false });
+  const [
+    { data: enrollments, error: enrollmentsError },
+    { data: studentCourses },
+  ] = await Promise.all([
+    supabase
+      .from("student_course_enrollments")
+      .select(
+        "id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)"
+      )
+      .eq("student_id", profile.id)
+      .order("enrolled_at", { ascending: false }),
+    supabase
+      .from("student_courses")
+      .select(
+        "id, status, enrolled_at, course_id, bundle_id, courses:course_id(title, category), course_bundles:bundle_id(title, category)"
+      )
+      .eq("student_id", profile.id)
+      .eq("status", "active"),
+  ]);
 
   if (enrollmentsError) {
     throw new Error(`Could not load active course enrollments: ${enrollmentsError.message}`);
@@ -159,6 +171,22 @@ async function getStudentDashboardContext() {
 
   const activeEnrollment =
     enrollments?.find((item) => item.status === "active") ?? enrollments?.[0] ?? null;
+
+  let fallbackEnrollmentCourse = null;
+  if (!activeEnrollment && studentCourses && studentCourses.length > 0) {
+    const sc = studentCourses[0];
+    const courseTitle = sc.courses?.title || sc.course_bundles?.title || "Enrolled Course";
+    const domain = sc.courses?.category || sc.course_bundles?.category || "";
+    fallbackEnrollmentCourse = {
+      courseTitle,
+      domain,
+      cohortName: "Enrolled Cohort",
+      cohortStart: sc.enrolled_at,
+      cohortEnd: null,
+      progressPercent: 0,
+      mode: "Hybrid",
+    };
+  }
 
   const enrollment = activeEnrollment
     ? {
@@ -170,7 +198,7 @@ async function getStudentDashboardContext() {
         progressPercent: Number(activeEnrollment.progress_percentage ?? 0),
         mode: activeEnrollment.batches?.mode ?? "",
       }
-    : null;
+    : fallbackEnrollmentCourse;
 
   const progress = enrollment
     ? {

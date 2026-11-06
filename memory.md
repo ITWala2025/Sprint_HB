@@ -711,3 +711,23 @@ No application code was changed for this reconciliation. The local role-unassign
 - **Validation**:
   - Unit tests in [tests/unit/id-utils.test.ts](tests/unit/id-utils.test.ts), [tests/unit/admin/StudentsDirectoryTable.test.tsx](tests/unit/admin/StudentsDirectoryTable.test.tsx), [tests/unit/admin/RegistrationDetailsModal.test.tsx](tests/unit/admin/RegistrationDetailsModal.test.tsx), [tests/unit/student/enrollment/StudentEnrollmentAction.test.ts](tests/unit/student/enrollment/StudentEnrollmentAction.test.ts), [tests/unit/student/enrollment/EnrollmentSuccessPanel.test.jsx](tests/unit/student/enrollment/EnrollmentSuccessPanel.test.jsx), [tests/unit/student/dashboard/ApplicationStatusCard.test.jsx](tests/unit/student/dashboard/ApplicationStatusCard.test.jsx), and [tests/unit/email/templates.test.ts](tests/unit/email/templates.test.ts) passed.
   - `npx tsc --noEmit` passed with 0 errors.
+
+## 64. Student Directory Enrolled Course Database Resolution & Mock Data Elimination — 2026-11-06
+
+- **Database-Driven Course Enrollment Mapping**:
+  - Identified that `/admin/students/list` was displaying incorrect course names ("General Technology Track" mock string or college degree) because `enrollments` were previously queried with `.in("student_id", studentIds)`, which yielded 0 rows when applications had `student_id = null` (prior to manual/automated batch approval) and fell back to degree fields.
+  - In [src/app/admin/students/list/actions.ts](src/app/admin/students/list/actions.ts), re-engineered multi-table matching across all 4 database stores:
+    1. `public.student_courses` (matching `student_id in (studentIds)`)
+    2. `public.enrollments` (matching `student_id in (studentIds)`, `applicant_user_id in (studentIds)`, or applicant email)
+    3. `public.student_course_enrollments` (matching `student_id in (studentIds)`)
+    4. `public.registrations` (matching `user_id in (studentIds)` or email)
+  - Resolved all course and bundle titles dynamically from `public.courses` and `public.course_bundles` tables.
+  - Completely eliminated all mock fallbacks (removed `"General Technology Track"` and never fall back to `student.course_degree`). If no enrollment exists in any database table, explicitly displays `"Not enrolled"`.
+  - Preserved both `courseEnrolled` (formatted comma-separated string) and `activeCourses` badges (`StudentCourseBadge[]`).
+- **Student Enrollment Intake Action Enhancements**:
+  - In [src/app/student/enroll/actions.ts](src/app/student/enroll/actions.ts), added support for resolving course selections from either UUID or slug against both `public.courses` and `public.course_bundles`, ensuring that applicant course choices are accurately captured and linked in `enrollments.course_id` or `enrollments.bundle_id`.
+- **Student Portal Dashboard Alignment**:
+  - In [src/app/student/(portal)/dashboard/page.jsx](src/app/student/(portal)/dashboard/page.jsx), unified queries for applications across `applicant_user_id` and `student_id` using `.or()`, and added fallback checking against `public.student_courses` so approved enrollments immediately reflect on the student dashboard.
+- **Validation**:
+  - `npx tsc --noEmit` passed with 0 errors.
+  - 13 test suites (45 tests) in admin, student dashboard, and email passed completely, including [tests/unit/admin/StudentsDirectoryTable.test.tsx](tests/unit/admin/StudentsDirectoryTable.test.tsx).

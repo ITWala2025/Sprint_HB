@@ -108,7 +108,6 @@ export async function submitStudentEnrollmentAction(
     const semesterYear = asText(education.semesterYear);
     const currentRole = asText(education.currentRole);
     const rawCourseId = asText(education.course);
-    const courseId = rawCourseId && isUuid(rawCourseId) ? rawCourseId : "";
 
     if (!firstName || !NAME_PATTERN.test(firstName)) {
       return { success: false, error: "Please enter a valid first name." };
@@ -177,31 +176,67 @@ export async function submitStudentEnrollmentAction(
       return { success: false, error: "Please enter a valid 10-digit mobile number." };
     }
 
-    if (rawCourseId && !isUuid(rawCourseId)) {
-      return { success: false, error: "The selected course is invalid." };
-    }
-
     const serviceClient = createServiceClient();
     if (!serviceClient) {
       return { success: false, error: "Server-side Supabase is not configured." };
     }
 
-    if (courseId) {
-      const { data: course, error: courseError } = await serviceClient
-        .from("courses")
-        .select("id")
-        .eq("id", courseId)
-        .maybeSingle();
+    let resolvedCourseId: string | null = null;
+    let resolvedBundleId: string | null = null;
 
-      if (courseError) {
-        return {
-          success: false,
-          error: `The selected course could not be verified: ${courseError.message}`,
-        };
-      }
+    if (rawCourseId) {
+      if (isUuid(rawCourseId)) {
+        const { data: course, error: courseError } = await serviceClient
+          .from("courses")
+          .select("id")
+          .eq("id", rawCourseId)
+          .maybeSingle();
 
-      if (!course) {
-        return { success: false, error: "The selected course is no longer available." };
+        if (courseError) {
+          return {
+            success: false,
+            error: `The selected course could not be verified: ${courseError.message}`,
+          };
+        }
+
+        if (course) {
+          resolvedCourseId = course.id;
+        } else {
+          const { data: bundle } = await serviceClient
+            .from("course_bundles")
+            .select("id")
+            .eq("id", rawCourseId)
+            .maybeSingle();
+
+          if (bundle) {
+            resolvedBundleId = bundle.id;
+          } else {
+            return { success: false, error: "The selected course is no longer available." };
+          }
+        }
+      } else {
+        // Resolve slug against courses and bundles
+        const { data: courseBySlug } = await serviceClient
+          .from("courses")
+          .select("id")
+          .eq("slug", rawCourseId)
+          .maybeSingle();
+
+        if (courseBySlug) {
+          resolvedCourseId = courseBySlug.id;
+        } else {
+          const { data: bundleBySlug } = await serviceClient
+            .from("course_bundles")
+            .select("id")
+            .eq("slug", rawCourseId)
+            .maybeSingle();
+
+          if (bundleBySlug) {
+            resolvedBundleId = bundleBySlug.id;
+          } else {
+            return { success: false, error: "The selected course is invalid." };
+          }
+        }
       }
     }
 
@@ -230,8 +265,8 @@ export async function submitStudentEnrollmentAction(
 
     const payload = {
       application_number: applicationNumber,
-      course_id: courseId || null,
-      bundle_id: null,
+      course_id: resolvedCourseId,
+      bundle_id: resolvedBundleId,
       batch_id: null,
       full_name: `${firstName} ${lastName}`,
       email,
@@ -305,7 +340,7 @@ export async function submitStudentEnrollmentAction(
               {
                 actionUrl: linkData.properties.action_link,
                 fullName: `${firstName} ${lastName}`.trim(),
-                courseName: courseId ? "SPRINT Applied Program" : undefined,
+                courseName: (resolvedCourseId || resolvedBundleId) ? "SPRINT Applied Program" : undefined,
                 applicationId: confirmedApplicationId,
               }
             );
