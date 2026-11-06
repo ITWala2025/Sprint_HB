@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 import Link from "next/link";
 import { ArrowUpRight, Award, Building2, CalendarDays, CheckCircle2, Clock3, GraduationCap, PhoneCall, Users } from "lucide-react";
 import { roleHasPermission, type AdminPermissionMap } from "@/app/admin/auth-types";
+import { getAdminSession } from "@/app/admin/session";
 
 const callbacks = [
     { name: "Ananya Sinha", background: "B.Tech", track: "Cloud & DevOps", date: "Today, 10:30 AM", status: "New" },
@@ -56,17 +57,8 @@ export default async function AdminDashboardPage() {
         },
     });
 
-    const { data: authData, error: authError } = await supabase.auth.getUser();
-    if (authError) throw new Error(`Workspace session verification failed: ${authError.message}`);
-    if (!authData.user) redirect("/admin");
-
-    const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("role, full_name, is_active, roles(name, permissions, is_active)")
-        .eq("id", authData.user.id)
-        .maybeSingle();
-    if (profileError) throw new Error(`Workspace profile could not be loaded: ${profileError.message}`);
-    if (!profile || profile.is_active !== true) redirect("/admin");
+    const session = await getAdminSession();
+    if (!session || !session.isActive) redirect("/admin");
 
     const dashboardQueryDefinitions = [
         { name: "enrollment_applications_status_summary", table: "public.enrollments", run: () => supabase.from("enrollments").select("status") },
@@ -110,14 +102,12 @@ export default async function AdminDashboardPage() {
         { label: "Active Enrollments", value: String(activeEnrollmentCount ?? 0), note: "Students currently active in batches", icon: CalendarDays, accent: "bg-emerald-50 text-emerald-600", moduleKeys: ["student_ops", "academic_ops", "academics"] },
     ];
 
-    const assignedRole = Array.isArray(profile.roles) ? profile.roles[0] as RoleRow | undefined : profile.roles as RoleRow | null;
-    const permissions = assignedRole?.is_active ? assignedRole.permissions : null;
-    const isSuperAdmin = profile.role === "admin" || permissions?.full_access === true;
-    const assignedRoleName = assignedRole?.is_active ? assignedRole.name : null;
-    const roleName = assignedRoleName && !/admin/i.test(assignedRoleName)
-        ? assignedRoleName
+    const permissions = session.permissions;
+    const isSuperAdmin = session.isAdmin;
+    const roleName = session.roleName && !/admin/i.test(session.roleName)
+        ? session.roleName
         : null;
-    const displayName = profile.full_name?.trim() || authData.user.email || (isSuperAdmin ? "Admin" : "Staff");
+    const displayName = session.fullName?.trim() || session.email || (isSuperAdmin ? "Admin" : "Staff");
     const canView = (moduleKeys: string | string[]) =>
         isSuperAdmin || (Array.isArray(moduleKeys) ? moduleKeys : [moduleKeys])
             .some((moduleKey) => roleHasPermission(permissions, moduleKey, "view"));
@@ -126,7 +116,7 @@ export default async function AdminDashboardPage() {
     const showCallbacks = canView(["admissions", "marketing", "support"]);
     const showSchedule = canView(["academic_ops", "academics"]);
     const greetingName = displayName.split(/\s+/)[0];
-    const workspaceHref = (href: string) => profile.role === "staff" && !isSuperAdmin
+    const workspaceHref = (href: string) => session.role === "staff" && !isSuperAdmin
         ? `/staff${href.slice("/admin".length)}`
         : href;
 

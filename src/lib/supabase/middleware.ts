@@ -1,5 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  ADMIN_SESSION_COOKIE,
+  ADMIN_SESSION_MAX_AGE_SECONDS,
+  createAdminSessionToken,
+  verifyAdminSessionToken,
+} from "@/lib/auth/admin-session";
 
 /**
  * Every portal page that requires a signed-in student. These are the URL
@@ -23,6 +29,51 @@ export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
+
+  const pathname = request.nextUrl.pathname;
+  const isLoginPage = pathname === "/admin" || pathname === "/admin/login";
+  const isPasswordResetCallback =
+    pathname === "/admin" && request.nextUrl.searchParams.get("reset") === "true";
+  const isAdminSubRoute = pathname.startsWith("/admin/") && !isLoginPage;
+  const isStaffLogin = pathname === "/staff/login";
+  const isStaffInvitation = pathname === "/staff/invitation" || pathname.startsWith("/staff/invitation/");
+  const isStaffWorkspaceRoute = pathname.startsWith("/staff/") && !isStaffLogin && !isStaffInvitation;
+
+  const isStudentLogin = pathname === "/student/login";
+  const isStudentPortalRoute = PORTAL_ROUTE_PREFIXES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+
+  // Fast Path: Check cryptographically verified admin session token (0ms network calls)
+  const existingAdminSession = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  if (existingAdminSession) {
+    const verifiedSession = await verifyAdminSessionToken(existingAdminSession);
+    if (verifiedSession && verifiedSession.isActive) {
+      const isAdmin = verifiedSession.isAdmin;
+      const isActiveStaff = verifiedSession.role === "staff" && !isAdmin;
+
+      if (isAdmin && (isLoginPage || isStaffLogin) && !isPasswordResetCallback) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/admin/dashboard";
+        return NextResponse.redirect(url);
+      }
+      if (isActiveStaff && (isLoginPage || isStaffLogin) && !isPasswordResetCallback) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/staff/dashboard";
+        return NextResponse.redirect(url);
+      }
+      if (isAdmin && isStaffWorkspaceRoute) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/admin${pathname.slice("/staff".length)}`;
+        return NextResponse.redirect(url);
+      }
+
+      // If user is accessing protected admin/staff routes and has verified session, pass through immediately!
+      if (isAdminSubRoute || isStaffWorkspaceRoute) {
+        return supabaseResponse;
+      }
+    }
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -52,28 +103,20 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const pathname = request.nextUrl.pathname;
-  const isLoginPage = pathname === "/admin" || pathname === "/admin/login";
-  const isPasswordResetCallback =
-    pathname === "/admin" && request.nextUrl.searchParams.get("reset") === "true";
-  const isAdminSubRoute = pathname.startsWith("/admin/") && !isLoginPage;
-  const isStaffLogin = pathname === "/staff/login";
-  const isStaffInvitation = pathname === "/staff/invitation" || pathname.startsWith("/staff/invitation/");
-  const isStaffWorkspaceRoute = pathname.startsWith("/staff/") && !isStaffLogin && !isStaffInvitation;
-
-  const isStudentLogin = pathname === "/student/login";
-  const isStudentPortalRoute = PORTAL_ROUTE_PREFIXES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
-  );
-
   // 1. If an unauthenticated visitor tries to reach /admin/dashboard or subroutes, bounce to /admin
   if (!user && isAdminSubRoute) {
+    if (request.cookies.has(ADMIN_SESSION_COOKIE)) {
+      supabaseResponse.cookies.delete(ADMIN_SESSION_COOKIE);
+    }
     const url = request.nextUrl.clone();
     url.pathname = "/admin";
     return NextResponse.redirect(url);
   }
 
   if (!user && isStaffWorkspaceRoute) {
+    if (request.cookies.has(ADMIN_SESSION_COOKIE)) {
+      supabaseResponse.cookies.delete(ADMIN_SESSION_COOKIE);
+    }
     const url = request.nextUrl.clone();
     url.pathname = "/staff/login";
     return NextResponse.redirect(url);
@@ -90,7 +133,7 @@ export async function updateSession(request: NextRequest) {
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role, status, is_active, roles(permissions, is_active)")
+      .select("role, status, is_active, must_change_password, full_name, email, roles(name, permissions, is_active)")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -100,6 +143,35 @@ export async function updateSession(request: NextRequest) {
     const isActiveStaff = profile?.role === "staff" && profile?.is_active === true && !isAdmin;
     const isActiveStudent =
       profile?.role === "student" && profile?.status === "active";
+
+    // Issue/refresh verified admin session cookie for fast subsequent navigations
+    if ((isAdmin || isActiveStaff) && profile?.is_active === true) {
+      try {
+        const sessionToken = await createAdminSessionToken({
+          userId: user.id,
+          email: profile.email ?? user.email ?? null,
+          fullName: profile.full_name ?? null,
+          role: profile.role,
+          roleName: assignedRole?.is_active ? assignedRole.name : profile.role,
+          isActive: profile.is_active === true,
+          isAdmin,
+          mustChangePassword: profile.must_change_password === true && !isAdmin,
+          permissions: (assignedRole?.is_active ? assignedRole.permissions : null) as any,
+        });
+
+        supabaseResponse.cookies.set(ADMIN_SESSION_COOKIE, sessionToken, {
+          path: "/",
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: ADMIN_SESSION_MAX_AGE_SECONDS,
+        });
+      } catch (err) {
+        console.warn("[SPRINT Middleware] Could not issue session cookie:", err);
+      }
+    } else if (request.cookies.has(ADMIN_SESSION_COOKIE)) {
+      supabaseResponse.cookies.delete(ADMIN_SESSION_COOKIE);
+    }
 
     // Staff and admins share the workspace; other roles cannot access it.
     if (!isAdmin && !isActiveStaff && !isPasswordResetCallback && (isLoginPage || isAdminSubRoute || isStaffWorkspaceRoute)) {

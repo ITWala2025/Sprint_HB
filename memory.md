@@ -664,3 +664,44 @@ No application code was changed for this reconciliation. The local role-unassign
 - Enrollment completion confirms password email delivery or explicitly offers Forgot Password when delivery fails. Student sign-in instructions now explain that applicants can check status while review is pending and that course access follows approval.
 - Updated [docs/md/Student_Reg_Enroll_Approval_System.md](docs/md/Student_Reg_Enroll_Approval_System.md) with the email, redirect URL, migration, and dashboard workflow. Existing Supabase deployments must run the applicant-account migration and allow both `/student/enroll` and `/set-password` redirect URLs.
 - Validation on 2026-11-05: focused student auth/enrollment/dashboard tests — 11 files / 109 tests passed; `npx tsc --noEmit`, `git diff --check`, and `npm run build` passed.
+
+## 61. Supabase Auth Email Lag Investigation, Immediate Delivery & Branded Templates — 2026-11-06
+
+- **Root Cause Investigation**: Identified that Supabase Auth emails experience lag due to GoTrue's default built-in mailer relay pool, which enforces a strict 3 emails/hour rate limit on unconfigured projects, queues outbound requests behind a global shared queue, and suffers from reputation/greylisting delays on shared developer IPs.
+- **Immediate Delivery Architecture**: Established a dual-tier instant delivery strategy:
+  1. Supabase Custom SMTP: Documented step-by-step configuration for Resend, Amazon SES, Brevo, SendGrid, and Google Workspace directly in the Supabase Dashboard (`Project Settings -> Authentication -> SMTP Settings`), bypassing the default queue and delivering emails synchronously (< 1-2s).
+  2. In-App Immediate Dispatcher: Implemented [src/lib/email/mailer.ts](src/lib/email/mailer.ts) using pooled Nodemailer connections (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`) and integrated it into [src/app/student/enroll/actions.ts](src/app/student/enroll/actions.ts) via `generateLink({ type: "recovery" })`, providing sub-second dispatch with graceful fallback to GoTrue when SMTP variables are omitted.
+- **Branded Email Templates**: Designed responsive, cross-client HTML email templates featuring SPRINT brand tokens (`brand-navy` `#011f3e`, `brand-red` `#f81529`, `#f8fafc`, and `#ffffff` surfaces):
+  - Created ready-to-paste Supabase Go-template files in [src/Supabase/email-templates/](src/Supabase/email-templates/): `magic-link.html`, `reset-password.html`, `invite-user.html`, `confirm-signup.html`, and `change-email.html`.
+  - Created programmatic TypeScript renderers in [src/lib/email/templates/](src/lib/email/templates/): `verification-email.ts`, `password-setup-email.ts`, `password-reset-email.ts`, `staff-invite-email.ts`, and `enrollment-approved-email.ts`.
+- **Documentation & Tests**:
+  - Added architectural guide [docs/architecture/SUPABASE_EMAIL_DELIVERY_AND_TEMPLATES.md](docs/architecture/SUPABASE_EMAIL_DELIVERY_AND_TEMPLATES.md) and deployment guide [src/Supabase/email-templates/README.md](src/Supabase/email-templates/README.md).
+  - Added vitest alias for `server-only` in root [vitest.config.mjs](vitest.config.mjs).
+  - Added unit test suites [tests/unit/email/templates.test.ts](tests/unit/email/templates.test.ts), [tests/unit/email/mailer.test.ts](tests/unit/email/mailer.test.ts), and [tests/unit/email/supabase-templates.test.ts](tests/unit/email/supabase-templates.test.ts) (11 tests passed).
+- **Validation on 2026-11-06**: `npx tsc --noEmit`, all email unit tests (11 tests), student enrollment action tests (2 tests), and student login enrollment tests (6 tests) passed.
+
+## 62. Application ID Standardization, Student Account ID Display & Student Directory Formatting — 2026-11-06
+
+- **Application ID Format (`SPR-APP-YYMM-XXXX`)**:
+  - Implemented shared utility in [src/lib/id-utils.ts](src/lib/id-utils.ts) with `formatApplicationId()`, `generateNextApplicationId()`, `isUuid()`, and `sanitizeStudentId()`.
+  - [src/app/student/enroll/actions.ts](src/app/student/enroll/actions.ts) now generates and stores `application_number` in `SPR-APP-YYMM-XXXX` format on insert and returns it in `result.applicationId`.
+  - Application ID is rendered in this format across UI surfaces: [EnrollmentSuccessPanel](src/components/student/enrollment/EnrollmentSuccessPanel.jsx), [ApplicationStatusCard](src/components/student/dashboard/ApplicationStatusCard.jsx), [EnrollmentApplicationsTable](src/app/admin/students/enrollments/EnrollmentApplicationsTable.tsx), [RegistrationsTable](src/app/admin/students/registrations/RegistrationsTable.tsx), and [RegistrationDetailsModal](src/app/admin/students/enrollments/RegistrationDetailsModal.tsx).
+  - Included `applicationId` in transactional email workflows: [renderPasswordSetupEmail](src/lib/email/templates/password-setup-email.ts) and [renderEnrollmentApprovedEmail](src/lib/email/templates/enrollment-approved-email.ts).
+  - Strictly ensured raw UUIDs are masked and never rendered on any UI or in email notifications.
+- **Linked Student Account ID Display**:
+  - In [src/app/admin/students/enrollments/actions.ts](src/app/admin/students/enrollments/actions.ts) and [RegistrationDetailsModal](src/app/admin/students/enrollments/RegistrationDetailsModal.tsx), resolved the applicant's linked record from `public.students` to display their institutional Student ID (e.g. `SPR-2026-XXXX` or `"Not linked"` / `"Pending ID generation"`), never the raw database UUID.
+- **Student Directory Table (`/admin/students/list`)**:
+  - Re-architected [src/app/admin/students/list/actions.ts](src/app/admin/students/list/actions.ts) and [StudentsDirectoryTable](src/app/admin/students/list/StudentsDirectoryTable.tsx) to display the requested columns:
+    1. **Student ID**: Institutional student identifier (`SPR-2026-XXXX`).
+    2. **Name**: Student full name from profile/student record.
+    3. **Contact**: Formatted email and mobile contact info.
+    4. **Course Enrolled In**: Aggregated active enrolled course/bundle titles.
+    5. **Status**: Student status badge (`active`, `completed`, etc.).
+    6. **Date of Enrollment**: Formatted date of enrollment (e.g. `15 Oct 2026`).
+  - Removed duplicate `src/app/admin/students/list/page.jsx` leaving the typed server component [src/app/admin/students/list/page.tsx](src/app/admin/students/list/page.tsx).
+- **Database Migration**:
+  - Added [src/Supabase/Application ID and Student Directory Format Migration.sql](src/Supabase/Application%20ID%20and%20Student%20Directory%20Format%20Migration.sql) with trigger `set_enrollment_application_number()` and backfill logic.
+- **Validation**:
+  - Unit tests in [tests/unit/id-utils.test.ts](tests/unit/id-utils.test.ts), [tests/unit/admin/StudentsDirectoryTable.test.tsx](tests/unit/admin/StudentsDirectoryTable.test.tsx), [tests/unit/admin/RegistrationDetailsModal.test.tsx](tests/unit/admin/RegistrationDetailsModal.test.tsx), [tests/unit/student/enrollment/StudentEnrollmentAction.test.ts](tests/unit/student/enrollment/StudentEnrollmentAction.test.ts), [tests/unit/student/enrollment/EnrollmentSuccessPanel.test.jsx](tests/unit/student/enrollment/EnrollmentSuccessPanel.test.jsx), [tests/unit/student/dashboard/ApplicationStatusCard.test.jsx](tests/unit/student/dashboard/ApplicationStatusCard.test.jsx), and [tests/unit/email/templates.test.ts](tests/unit/email/templates.test.ts) passed.
+  - `npx tsc --noEmit` passed with 0 errors.
+

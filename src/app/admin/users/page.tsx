@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createServerClient } from "@supabase/ssr";
-import { assertModuleAccess, canAccessAdminRoute, type AdminPermissionMap } from "@/app/admin/authorization";
+import { assertModuleAccess, canAccessAdminRoute, roleHasPermission, type AdminPermissionMap } from "@/app/admin/authorization";
+import { getAdminSession } from "@/app/admin/session";
 import UserDirectoryTable, { type DirectoryRole, type DirectoryUser } from "@/components/admin/users/UserDirectoryTable";
 
 export const metadata: Metadata = {
@@ -39,54 +40,20 @@ export default async function AdminUsersPage() {
         },
     });
 
-    const { data: authData, error: authError } = await supabase.auth.getUser();
-    if (authError || !authData.user) redirect("/admin");
+    const session = await getAdminSession();
+    if (!session || !session.isActive) redirect("/admin");
 
-    const { data: currentProfile, error: currentProfileError } = await supabase
-        .from("profiles")
-        .select("role, is_active, roles(name, permissions, is_active)")
-        .eq("id", authData.user.id)
-        .maybeSingle();
-
-    if (currentProfileError || !currentProfile || currentProfile.is_active !== true) {
+    if (!canAccessAdminRoute("/admin/users", session.permissions, session.role, session.roleName)) {
         return <AccessDenied />;
     }
 
-    const assignedRole = Array.isArray(currentProfile.roles)
-        ? currentProfile.roles[0]
-        : currentProfile.roles;
-    if (currentProfile.role !== "admin" && (!assignedRole?.name || assignedRole.is_active !== true)) {
-        return <AccessDenied />;
-    }
-    const permissions = (assignedRole?.permissions as AdminPermissionMap | null) ?? null;
-    const roleName = assignedRole?.name ?? null;
-    if (!canAccessAdminRoute("/admin/users", permissions, currentProfile.role)) {
-        return <AccessDenied />;
-    }
-
-    const [userManagementCreate, accessControlCreate, userManagementDelete, accessControlDelete] = await Promise.all([
-        supabase.rpc("current_user_has_permission", {
-            module_key: "user_management",
-            capability: "create",
-        }),
-        supabase.rpc("current_user_has_permission", {
-            module_key: "access_control",
-            capability: "create",
-        }),
-        supabase.rpc("current_user_has_permission", {
-            module_key: "user_management",
-            capability: "delete",
-        }),
-        supabase.rpc("current_user_has_permission", {
-            module_key: "access_control",
-            capability: "delete",
-        }),
-    ]);
-    const canCreateUsers = currentProfile.role === "admin" ||
-        userManagementCreate.data === true || accessControlCreate.data === true;
-    const canDeleteUsers = currentProfile.role === "admin" ||
-        roleName?.trim().toLowerCase() === "super admin" ||
-        userManagementDelete.data === true || accessControlDelete.data === true;
+    const canCreateUsers = session.isAdmin ||
+        roleHasPermission(session.permissions, "user_management", "create") ||
+        roleHasPermission(session.permissions, "access_control", "create");
+    const canDeleteUsers = session.isAdmin ||
+        session.roleName?.trim().toLowerCase() === "super admin" ||
+        roleHasPermission(session.permissions, "user_management", "delete") ||
+        roleHasPermission(session.permissions, "access_control", "delete");
 
     const [{ data: profiles, error: profilesError }, { data: roleRows, error: rolesError }] = await Promise.all([
         supabase

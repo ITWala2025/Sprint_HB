@@ -162,11 +162,20 @@ export default async function DetailPage({ item, searchParams }) {
   const query =
     item.kind === "bundle" || !searchParams ? {} : await searchParams;
 
-  const audienceValue =
-    typeof query.audience === "string" ? query.audience : null;
+  const rawAudience = typeof query.audience === "string"
+    ? query.audience
+    : (Array.isArray(item.audience) ? item.audience[0] : item.audience);
+
+  const normalizedAudienceValue = rawAudience === "undergraduate"
+    ? "student"
+    : rawAudience === "it_pro" || rawAudience === "it_professional"
+      ? "it-pro"
+      : rawAudience === "non_it" || rawAudience === "non_it_professional"
+        ? "non-it"
+        : rawAudience;
 
   const audienceLabel = audienceOptions.find(
-    (option) => option.value === audienceValue
+    (option) => option.value === normalizedAudienceValue
   )?.label;
 
   return (
@@ -291,6 +300,13 @@ export default async function DetailPage({ item, searchParams }) {
                 <dt>Prerequisites</dt>
                 <dd>{item.prerequisites}</dd>
               </div>
+
+              {audienceLabel ? (
+                <div>
+                  <dt>Target audience</dt>
+                  <dd>{audienceLabel}</dd>
+                </div>
+              ) : null}
 
             </dl>
 

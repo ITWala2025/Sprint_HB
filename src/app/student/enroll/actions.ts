@@ -5,6 +5,8 @@ import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/service";
+import { isSmtpConfigured, sendPasswordSetupEmail } from "@/lib/email/mailer";
+import { generateNextApplicationId } from "@/lib/id-utils";
 
 export type StudentEnrollmentInput = {
   personal?: {
@@ -26,11 +28,11 @@ export type StudentEnrollmentInput = {
 
 export type StudentEnrollmentResult =
   | {
-      success: true;
-      applicationId: string;
-      message: string;
-      passwordSetupEmailSent: boolean;
-    }
+    success: true;
+    applicationId: string;
+    message: string;
+    passwordSetupEmailSent: boolean;
+  }
   | { success: false; error: string };
 
 const NAME_PATTERN = /^[A-Za-z][A-Za-z\s.'-]*$/;
@@ -224,7 +226,10 @@ export async function submitStudentEnrollmentAction(
       };
     }
 
+    const applicationNumber = await generateNextApplicationId(serviceClient);
+
     const payload = {
+      application_number: applicationNumber,
       course_id: courseId || null,
       bundle_id: null,
       batch_id: null,
@@ -250,7 +255,7 @@ export async function submitStudentEnrollmentAction(
     const { data: inserted, error: insertError } = await serviceClient
       .from("enrollments")
       .insert(payload)
-      .select("id")
+      .select("id, application_number")
       .single();
 
     if (insertError) {
@@ -274,31 +279,71 @@ export async function submitStudentEnrollmentAction(
       };
     }
 
+    const confirmedApplicationId = inserted.application_number || applicationNumber;
+
     let passwordSetupEmailSent = false;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
     if (!siteUrl) {
       console.error("Password setup email was not sent: NEXT_PUBLIC_SITE_URL is not configured.");
     } else {
-      try {
-        const { error: passwordSetupError } =
-          await authClient.auth.resetPasswordForEmail(email, {
-            redirectTo: new URL("/set-password", siteUrl).toString(),
-          });
+      const redirectTo = new URL("/set-password", siteUrl).toString();
 
-        if (passwordSetupError) {
-          console.error("Password setup email could not be sent:", passwordSetupError.message);
-        } else {
-          passwordSetupEmailSent = true;
+      // If custom SMTP is configured, attempt immediate direct sending via Nodemailer & Supabase generateLink
+      if (isSmtpConfigured() && serviceClient?.auth?.admin?.generateLink) {
+        try {
+          const { data: linkData, error: linkError } =
+            await serviceClient.auth.admin.generateLink({
+              type: "recovery",
+              email,
+              options: { redirectTo },
+            });
+
+          if (!linkError && linkData?.properties?.action_link) {
+            const sendResult = await sendPasswordSetupEmail(
+              { email, name: `${firstName} ${lastName}`.trim() },
+              {
+                actionUrl: linkData.properties.action_link,
+                fullName: `${firstName} ${lastName}`.trim(),
+                courseName: courseId ? "SPRINT Applied Program" : undefined,
+                applicationId: confirmedApplicationId,
+              }
+            );
+
+            if (sendResult.success) {
+              passwordSetupEmailSent = true;
+            }
+          }
+        } catch (immediateSendError) {
+          console.warn(
+            "[Enrollment] Direct immediate email dispatch failed, falling back to authClient:",
+            immediateSendError,
+          );
         }
-      } catch (passwordSetupError) {
-        console.error("Password setup email could not be sent:", passwordSetupError);
+      }
+
+      // Fallback to Supabase GoTrue mailer if not sent directly
+      if (!passwordSetupEmailSent) {
+        try {
+          const { error: passwordSetupError } =
+            await authClient.auth.resetPasswordForEmail(email, {
+              redirectTo,
+            });
+
+          if (passwordSetupError) {
+            console.error("Password setup email could not be sent:", passwordSetupError.message);
+          } else {
+            passwordSetupEmailSent = true;
+          }
+        } catch (passwordSetupError) {
+          console.error("Password setup email could not be sent:", passwordSetupError);
+        }
       }
     }
 
     return {
       success: true,
-      applicationId: inserted.id,
+      applicationId: confirmedApplicationId,
       passwordSetupEmailSent,
       message: passwordSetupEmailSent
         ? "Your enrollment has been received. Check your email to set your password and sign in to view your application status."

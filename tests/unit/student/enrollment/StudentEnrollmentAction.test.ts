@@ -31,6 +31,11 @@ vi.mock("@/lib/supabase/service", () => ({
             limit: mocks.duplicateLimit,
           }),
         }),
+        like: () => ({
+          order: () => ({
+            limit: vi.fn().mockResolvedValue({ data: [], error: null }),
+          }),
+        }),
       }),
       insert: (payload: Record<string, unknown>) => {
         mocks.insertPayload = payload;
@@ -88,9 +93,11 @@ describe("submitStudentEnrollmentAction", () => {
 
     expect(result).toMatchObject({
       success: true,
-      applicationId: "application-id",
       passwordSetupEmailSent: true,
     });
+    if (result.success) {
+      expect(result.applicationId).toMatch(/^SPR-APP-\d{4}-\w{4}$/);
+    }
     expect(mocks.insertPayload).toMatchObject({
       applicant_user_id: "student-auth-id",
       status: "pending",
@@ -113,10 +120,12 @@ describe("submitStudentEnrollmentAction", () => {
 
       expect(result).toMatchObject({
         success: true,
-        applicationId: "application-id",
         passwordSetupEmailSent: false,
       });
-      expect(result.success && result.message).toMatch(/Forgot Password/);
+      if (result.success) {
+        expect(result.applicationId).toMatch(/^SPR-APP-\d{4}-\w{4}$/);
+        expect(result.message).toMatch(/Forgot Password/);
+      }
     } finally {
       errorSpy.mockRestore();
     }

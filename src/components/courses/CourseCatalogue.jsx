@@ -19,6 +19,7 @@ import RoleBasedLearningPaths from "@/components/courses/RoleBasedLearningPaths"
 import { createClient } from "@/lib/supabase/client";
 import {
   audienceOptions,
+  normalizeAudienceList,
   normalizeDatabaseCourse,
 } from "@/data/courses";
 import { rolePaths } from "@/data/learningPaths";
@@ -41,7 +42,7 @@ function toCatalogueBundle(source) {
     ...bundle,
     kind: "bundle",
     category: source.category || "Career Package",
-    audience: bundle.audience === "undergraduate" ? ["student"] : ["it-pro", "non-it"],
+    audience: normalizeAudienceList(source.audience_type || source.audience || bundle.audience || "undergraduate"),
     level: bundle.level || "Curated pathway",
     difficulty_level: bundle.level || "Curated pathway",
     delivery_method: bundle.delivery_method || "Hybrid",
@@ -65,7 +66,7 @@ function toCatalogueProgram(program) {
     program_type: "signature",
     badge_label: program.badge_label || program.badgeLabel || "Signature Program",
     tagline: program.tagline || program.headline || "",
-    audience: program.audience === "working_professional" ? ["it-pro", "non-it"] : ["student"],
+    audience: normalizeAudienceList(program.audience_type || program.audience || "student"),
     roadmap,
   };
 }

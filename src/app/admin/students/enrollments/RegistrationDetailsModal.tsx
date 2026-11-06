@@ -16,7 +16,13 @@ const statusStyles: Record<string, string> = {
 };
 
 function displayValue(value: string | null | undefined) {
-    return value?.trim() || "Not provided";
+    if (!value || !value.trim()) return "Not provided";
+    const trimmed = value.trim();
+    // Guarantee that no raw UUID is ever displayed to the user
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(trimmed)) {
+        return "Not provided";
+    }
+    return trimmed;
 }
 
 function formatDate(value: string | null | undefined) {
@@ -137,12 +143,11 @@ export default function RegistrationDetailsModal({
                             <section aria-labelledby="registration-personal-heading">
                                 <h3 id="registration-personal-heading" className="font-display text-sm font-bold text-brand-navy">Personal Information</h3>
                                 <dl className="mt-3 grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
-                                    <Detail label="Application ID" value={registration.id} />
+                                    <Detail label="Application ID" value={registration.application_id || registration.application_number} />
                                     <Detail label="Full Name" value={displayValue(registration.full_name)} />
                                     <Detail label="Email" value={displayValue(registration.email)} />
                                     <Detail label="Phone Number" value={displayValue(registration.phone)} />
-                                    <Detail label="Application Number" value={displayValue(registration.application_number)} />
-                                    <Detail label="Linked Student Account ID" value={displayValue(registration.student_id)} />
+                                    <Detail label="Linked Student Account ID" value={displayValue(registration.linked_student_id || registration.student_id)} />
                                     <Detail label="City" value={displayValue(registration.city)} />
                                     <Detail label="State" value={displayValue(registration.state)} />
                                     <Detail label="Employment Status" value={displayValue(registration.employment_status)} />

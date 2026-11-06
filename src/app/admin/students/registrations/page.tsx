@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { assertModuleAccess } from "@/app/admin/authorization";
 import RegistrationsTable, { type RegistrationListItem } from "@/app/admin/students/registrations/RegistrationsTable";
+import { formatApplicationId } from "@/lib/id-utils";
 
 async function createAuthenticatedServerClient() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -32,7 +33,7 @@ export default async function RegistrationsPage() {
     const supabase = await createAuthenticatedServerClient();
     const { data: registrations, error } = await supabase
         .from("registrations")
-        .select("id, full_name, email, created_at, status, course_id, bundle_id")
+        .select("id, registration_number, full_name, email, created_at, status, course_id, bundle_id")
         .order("created_at", { ascending: false });
 
     if (error) {
@@ -69,6 +70,7 @@ export default async function RegistrationsPage() {
 
         return {
             id: registration.id,
+            application_number: formatApplicationId(registration.registration_number, registration.id, registration.created_at),
             full_name: registration.full_name,
             email: registration.email,
             courseReference: references.join(" · ") || "Not specified",

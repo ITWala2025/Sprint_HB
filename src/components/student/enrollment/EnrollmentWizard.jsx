@@ -48,6 +48,7 @@ export default function EnrollmentWizard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [passwordSetupEmailSent, setPasswordSetupEmailSent] = useState(false);
+  const [submittedApplicationId, setSubmittedApplicationId] = useState("");
   const [submitError, setSubmitError] = useState("");
   // One-off message for a visible action (today: skipping an optional step).
   // Cleared by the next navigation so it never lingers on the wrong screen.
@@ -169,6 +170,9 @@ export default function EnrollmentWizard() {
         }
 
         clearSavedDraft();
+        if (result.applicationId) {
+          setSubmittedApplicationId(result.applicationId);
+        }
         setPasswordSetupEmailSent(result.passwordSetupEmailSent);
         setIsComplete(true);
       } catch (error) {
@@ -287,6 +291,7 @@ export default function EnrollmentWizard() {
           <EnrollmentSuccessPanel
             headingId={SUCCESS_HEADING_ID}
             values={values}
+            applicationId={submittedApplicationId}
             passwordSetupEmailSent={passwordSetupEmailSent}
             onReviewDetails={() => goToStep(0)}
             className="mt-6"

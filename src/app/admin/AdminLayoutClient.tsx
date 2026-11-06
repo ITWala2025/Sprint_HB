@@ -228,11 +228,10 @@ export default function AdminLayoutClient({
         initialProfile?.is_active &&
         (initialProfile.role === "admin" || initialProfile.role_name || initialProfile.permissions?.full_access === true),
     ));
-    const [accessError, setAccessError] = useState("");
-    const [isAccessLoading, setIsAccessLoading] = useState(!initialProfile);
-    const [verifiedPath, setVerifiedPath] = useState("");
     const adminPathname = getAdminPathname(pathname);
     const isLoginRoute = adminPathname === "/admin" || adminPathname === "/admin/login";
+    const [accessError, setAccessError] = useState("");
+    const [isAccessLoading, setIsAccessLoading] = useState(!initialProfile && !isLoginRoute);
     const isStaffWorkspace = profileRole === "staff" && !isAdmin;
     const safeStaffRoleName = roleName && !/admin/i.test(roleName) ? roleName : "Staff";
     const displayRoleName = isAdmin ? (roleName && roleName !== "admin" ? roleName : "Admin") : safeStaffRoleName;
@@ -246,65 +245,90 @@ export default function AdminLayoutClient({
             : `${currentLabel} | SPRINT Workspace`;
     }, [currentLabel, isAdmin, pathname]);
 
+    // Fast in-memory navigation logging to monitor routing latency
+    useEffect(() => {
+        if (!isLoginRoute) {
+            const hasAccess = isAuthorized && canAccessAdminRoute(adminPathname, permissionMap, profileRole, roleName);
+            console.log(
+                `[SPRINT Admin Navigation] Moved to "${adminPathname}" | Access: ${hasAccess ? "GRANTED" : "DENIED"} | Role: ${displayRoleName} (In-memory verification)`
+            );
+        }
+    }, [adminPathname, displayRoleName, isAuthorized, isLoginRoute, permissionMap, profileRole, roleName]);
+
     useEffect(() => {
         let isMounted = true;
-        async function loadAccess() {
-            if (isLoginRoute) {
-                setVerifiedPath(pathname);
-                setIsAccessLoading(false);
-                return;
-            }
 
-            setIsAccessLoading(true);
-            const { data: userData, error: authError } = await supabase.auth.getUser();
-            if (authError || !userData.user) {
+        if (initialProfile) {
+            console.log("[SPRINT Admin Layout] Initialized from SSR profile:", {
+                role: initialProfile.role,
+                roleName: initialProfile.role_name,
+                email: initialProfile.email,
+            });
+        } else if (!isLoginRoute) {
+            console.log("[SPRINT Admin Layout] No SSR profile found. Loading session on client...");
+            async function loadAccess() {
+                setIsAccessLoading(true);
+                const { data: userData, error: authError } = await supabase.auth.getUser();
+                if (authError || !userData.user) {
+                    if (!isMounted) return;
+                    setIsAuthorized(false);
+                    setIsAccessLoading(false);
+                    router.replace(isStaffWorkspace ? "/staff/login" : "/admin/login");
+                    return;
+                }
+
+                const { data: profile, error: profileError } = await supabase
+                    .from("profiles")
+                    .select("role, is_active, must_change_password, full_name, email, roles(name, permissions, is_active)")
+                    .eq("id", userData.user.id)
+                    .maybeSingle();
                 if (!isMounted) return;
-                setIsAuthorized(false);
-                setIsAccessLoading(false);
-                setVerifiedPath(pathname);
-                router.replace(isStaffWorkspace ? "/staff/login" : "/admin/login");
-                return;
-            }
+                if (profileError || !profile || profile.is_active !== true) {
+                    setAccessError(profileError?.message ?? "An active staff profile could not be verified.");
+                    setIsAuthorized(false);
+                    setIsAccessLoading(false);
+                    return;
+                }
 
-            const { data: profile, error: profileError } = await supabase
-                .from("profiles")
-                .select("role, is_active, must_change_password, full_name, email, roles(name, permissions, is_active)")
-                .eq("id", userData.user.id)
-                .maybeSingle();
-            if (!isMounted) return;
-            if (profileError || !profile || profile.is_active !== true) {
-                setAccessError(profileError?.message ?? "An active staff profile could not be verified.");
-                setIsAuthorized(false);
+                const assignedRole = Array.isArray(profile.roles) ? profile.roles[0] : profile.roles;
+                const assignedPermissions = assignedRole?.permissions as AdminPermissionMap | null;
+                const superAdmin = profile.role === "admin" || assignedPermissions?.full_access === true;
+                setIsAdmin(superAdmin);
+                setProfileRole(profile.role ?? null);
+                setMustChangePassword(profile.must_change_password === true && !superAdmin);
+                setRoleName(assignedRole?.name ?? profile.role ?? null);
+                setPermissionMap(assignedPermissions ?? null);
+                setFullName(profile.full_name ?? "");
+                setEmail(profile.email ?? userData.user.email ?? "");
+                const validAssignedRole = Boolean(assignedRole?.name && assignedRole.is_active !== false);
+                setIsAuthorized(superAdmin || validAssignedRole);
+                setAccessError(superAdmin || validAssignedRole ? "" : "This account does not have an active role assigned.");
                 setIsAccessLoading(false);
-                setVerifiedPath(pathname);
-                return;
             }
-
-            const assignedRole = Array.isArray(profile.roles) ? profile.roles[0] : profile.roles;
-            const assignedPermissions = assignedRole?.permissions as AdminPermissionMap | null;
-            const superAdmin = profile.role === "admin" || assignedPermissions?.full_access === true;
-            setIsAdmin(superAdmin);
-            setProfileRole(profile.role ?? null);
-            setMustChangePassword(profile.must_change_password === true && !superAdmin);
-            setRoleName(profile.role ?? null);
-            const validAssignedRole = Boolean(assignedRole?.name && assignedRole.is_active !== false);
-            setRoleName(assignedRole?.name ?? profile.role ?? null);
-            setPermissionMap(assignedPermissions ?? null);
-            setFullName(profile.full_name ?? "");
-            setEmail(profile.email ?? userData.user.email ?? "");
-            setIsAuthorized(superAdmin || validAssignedRole);
-            setAccessError(superAdmin || validAssignedRole ? "" : "This account does not have an active role assigned.");
-            setIsAccessLoading(false);
-            setVerifiedPath(pathname);
+            void loadAccess();
         }
-        void loadAccess();
-        return () => { isMounted = false; };
-    }, [isLoginRoute, isStaffWorkspace, pathname, router, supabase]);
+
+        // Keep auth session synced without reloading on every route change
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (event === "SIGNED_OUT" || (!session && !isLoginRoute)) {
+                console.log("[SPRINT Admin Layout] User signed out or session ended.");
+                document.cookie = "sprint_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax";
+                setIsAuthorized(false);
+                router.replace(isStaffWorkspace ? "/staff/login" : "/admin/login");
+            }
+        });
+
+        return () => {
+            isMounted = false;
+            subscription.unsubscribe();
+        };
+    }, [initialProfile, isLoginRoute, isStaffWorkspace, router, supabase]);
 
     async function handleSignOut() {
         const destination = profileRole === "staff" && !isAdmin
             ? "/staff/login"
             : "/admin";
+        document.cookie = "sprint_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax";
         await supabase.auth.signOut();
         router.replace(destination);
         router.refresh();
@@ -312,7 +336,7 @@ export default function AdminLayoutClient({
 
     if (isLoginRoute) return children;
 
-    if (isAccessLoading || verifiedPath !== pathname) {
+    if (isAccessLoading) {
         return (
             <main className="flex min-h-[50vh] w-full items-center justify-center bg-brand-off-white px-4" role="status" aria-live="polite">
                 <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

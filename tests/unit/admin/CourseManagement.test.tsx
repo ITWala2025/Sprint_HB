@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import CourseManagementPage from "@/app/admin/courses/page";
@@ -141,5 +141,55 @@ describe("CourseManagementPage", () => {
             stages: [expect.objectContaining({ title: "Applied Machine Learning & Scikit-Learn", hours: "60 Hours" })],
             certifications: ["Applied Machine Learning: Passing score on the practical assessment."],
         }));
+    });
+
+    it("allows creating and viewing courses for IT Professionals and Non-IT Professionals", async () => {
+        const user = userEvent.setup();
+        const itCourse = {
+            ...course,
+            id: "course-it",
+            slug: "devops-mastery",
+            title: "DevOps Mastery",
+            audience: "it-pro",
+            audience_type: "it-pro",
+        };
+
+        mocks.from.mockImplementation((table: string) => ({
+            select: vi.fn(() => ({
+                order: vi.fn().mockResolvedValue({
+                    data: table === "courses" ? [itCourse] : [],
+                    error: null,
+                }),
+            })),
+            update: mocks.update,
+            insert: mocks.insert,
+            delete: vi.fn(() => ({ eq: mocks.eq })),
+        }));
+
+        render(<CourseManagementPage />);
+
+        // In table view, shows "IT Professionals" badge
+        await user.click(screen.getByRole("button", { name: "Table view" }));
+        expect(await screen.findByText("IT Professionals", { selector: "span" })).toBeInTheDocument();
+
+        // View course details: Target Audience shows "IT Professionals"
+        await user.click(screen.getByRole("button", { name: `View ${itCourse.title}` }));
+        const modal = await screen.findByRole("dialog");
+        expect(within(modal).getByRole("heading", { name: itCourse.title })).toBeInTheDocument();
+        expect(within(modal).getByText("IT Professionals")).toBeInTheDocument();
+        await user.click(within(modal).getByRole("button", { name: "Close course details" }));
+
+        // Add a Non-IT Professional course
+        await user.click(screen.getByRole("button", { name: /add course/i }));
+        await user.type(screen.getByPlaceholderText("e.g. Docker & Kubernetes"), "Excel for Business Operations");
+        await user.type(screen.getByPlaceholderText("e.g. 12 weeks"), "4 weeks");
+        await user.type(screen.getByPlaceholderText("A concise overview for course cards"), "Spreadsheet mastery.");
+        await user.selectOptions(screen.getByLabelText(/audience type/i), "non-it");
+        await user.click(screen.getByRole("button", { name: "Save Course" }));
+
+        await waitFor(() => expect(mocks.insert).toHaveBeenCalled());
+        const savedPayload = mocks.insert.mock.calls.at(-1)?.[0];
+        expect(savedPayload.audience).toBe("non-it");
+        expect(savedPayload.audience_type).toBe("non-it");
     });
 });

@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight, Bell } from "lucide-react";
+import { formatApplicationId } from "@/lib/id-utils";
 
 export const metadata = {
   title: "Student Dashboard",
@@ -103,7 +104,7 @@ async function getStudentDashboardContext() {
 
   const { data: applicationRecords, error: applicationsError } = await supabase
     .from("enrollments")
-    .select("id, status, created_at, course_id, bundle_id")
+    .select("id, application_number, status, created_at, course_id, bundle_id")
     .eq("applicant_user_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -135,6 +136,7 @@ async function getStudentDashboardContext() {
   const bundleTitles = new Map((bundlesResult.data ?? []).map((item) => [item.id, item.title]));
   const applications = (applicationRecords ?? []).map((application) => ({
     id: application.id,
+    applicationId: formatApplicationId(application.application_number, application.id, application.created_at),
     status: application.status,
     createdAt: application.created_at,
     courseTitle:

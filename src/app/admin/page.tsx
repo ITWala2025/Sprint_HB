@@ -22,7 +22,11 @@ export default function AdminLoginPage() {
   const [successNotice, setSuccessNotice] = useState("");
 
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange((event) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log(`[SPRINT Admin Auth] Auth state change event: ${event}`, {
+        userId: session?.user?.id ?? null,
+        email: session?.user?.email ?? null,
+      });
       if (event === "PASSWORD_RECOVERY") {
         setShowPasswordReset(true);
       }
@@ -30,6 +34,7 @@ export default function AdminLoginPage() {
 
     const query = new URLSearchParams(window.location.search);
     if (query.get("password_reset") === "success") {
+      console.log("[SPRINT Admin Auth] Password reset confirmed by query param.");
       setSuccessNotice("Password reset successfully. Please log in with your new password.");
       query.delete("password_reset");
       const remainingQuery = query.toString();
@@ -41,12 +46,17 @@ export default function AdminLoginPage() {
     }
 
     if (query.get("reset") === "true") {
+      console.log("[SPRINT Admin Auth] Verifying password reset session via getSession()...");
       void supabase.auth.getSession().then(({ data, error: sessionError }) => {
         if (sessionError) {
+          console.error("[SPRINT Admin Auth] Session verification error on password reset:", sessionError);
           setError("We could not verify your password reset session. Please open the link from your email again.");
           return;
         }
-        if (data.session?.user) setShowPasswordReset(true);
+        if (data.session?.user) {
+          console.log("[SPRINT Admin Auth] Valid recovery session detected for user:", data.session.user.id);
+          setShowPasswordReset(true);
+        }
       });
     }
 
@@ -58,20 +68,29 @@ export default function AdminLoginPage() {
     setIsSendingReset(true);
     setResetRequestError("");
 
+    const startTime = performance.now();
+    const targetEmail = resetEmail.trim().toLowerCase();
+    console.log(`[SPRINT Admin Auth] Sending password reset request for: ${targetEmail}`);
+
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || window.location.origin;
     try {
       const { error: requestError } = await supabase.auth.resetPasswordForEmail(
-        resetEmail.trim().toLowerCase(),
+        targetEmail,
         { redirectTo: `${siteUrl}/admin?reset=true` },
       );
 
+      const duration = (performance.now() - startTime).toFixed(1);
       if (requestError) {
+        console.error(`[SPRINT Admin Auth] Password reset request failed in ${duration}ms:`, requestError);
         setResetRequestError("We couldn't send the reset request right now. Please try again.");
         return;
       }
 
+      console.log(`[SPRINT Admin Auth] Password reset email sent successfully in ${duration}ms.`);
       setResetRequestSubmitted(true);
-    } catch {
+    } catch (err) {
+      const duration = (performance.now() - startTime).toFixed(1);
+      console.error(`[SPRINT Admin Auth] Password reset error after ${duration}ms:`, err);
       setResetRequestError("We couldn't send the reset request right now. Please try again.");
     } finally {
       setIsSendingReset(false);
@@ -83,37 +102,65 @@ export default function AdminLoginPage() {
     setIsSubmitting(true);
     setError("");
 
+    const totalStart = performance.now();
+    const sanitizedEmail = adminId.trim().toLowerCase();
+    console.group(`[SPRINT Admin Auth] Login Sequence Initiated at ${new Date().toISOString()}`);
+    console.log(`[SPRINT Admin Auth] Attempting sign-in for email:`, sanitizedEmail);
+
     try {
       // 1. Authenticate with an 8-second timeout guard
+      console.log(`[SPRINT Admin Auth] [Step 1/3] Calling supabase.auth.signInWithPassword...`);
+      const step1Start = performance.now();
+
       const authPromise = supabase.auth.signInWithPassword({
-        email: adminId.trim(),
+        email: sanitizedEmail,
         password,
       });
 
       const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(
-          () => reject(new Error("Authentication request timed out. Please check your network connection.")),
+          () => reject(new Error("Authentication request timed out (8s limit). Please check your network connection.")),
           8000
         )
       );
 
       const { data, error: authError } = await Promise.race([authPromise, timeoutPromise]);
+      const step1Duration = (performance.now() - step1Start).toFixed(1);
 
       if (authError || !data?.user) {
+        console.error(`[SPRINT Admin Auth] [Step 1/3 FAILED in ${step1Duration}ms]`, authError?.message || "No user returned");
         throw new Error(authError?.message || "Invalid Admin ID or Password.");
       }
 
+      console.log(`[SPRINT Admin Auth] [Step 1/3 SUCCESS in ${step1Duration}ms] Authenticated user:`, {
+        id: data.user.id,
+        email: data.user.email,
+        lastSignIn: data.user.last_sign_in_at,
+      });
+
       // 2. Fetch role from public.profiles
+      console.log(`[SPRINT Admin Auth] [Step 2/3] Fetching profile & assigned roles from Supabase DB...`);
+      const step2Start = performance.now();
+
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("role, is_active, roles(name, is_active)")
         .eq("id", data.user.id)
         .maybeSingle();
 
+      const step2Duration = (performance.now() - step2Start).toFixed(1);
+
       if (profileError) {
+        console.error(`[SPRINT Admin Auth] [Step 2/3 FAILED in ${step2Duration}ms] Profile check failed:`, profileError);
         await supabase.auth.signOut();
         throw new Error(`Profile check failed: ${profileError.message}`);
       }
+
+      console.log(`[SPRINT Admin Auth] [Step 2/3 SUCCESS in ${step2Duration}ms] Profile record retrieved:`, profile);
+
+      // 3. Verify admin role and active status
+      console.log(`[SPRINT Admin Auth] [Step 3/3] Validating admin authorization...`);
+      const step3Start = performance.now();
 
       const assignedRole = Array.isArray(profile?.roles)
         ? profile.roles[0]
@@ -122,15 +169,34 @@ export default function AdminLoginPage() {
         profile?.is_active && assignedRole?.name && assignedRole.is_active !== false
       );
 
+      const step3Duration = (performance.now() - step3Start).toFixed(1);
+
       if (!profile || !hasAdminAccess) {
+        console.warn(`[SPRINT Admin Auth] [Step 3/3 DENIED in ${step3Duration}ms] Authorization check failed:`, {
+          hasProfile: Boolean(profile),
+          isActive: profile?.is_active,
+          profileRole: profile?.role,
+          assignedRoleName: assignedRole?.name,
+          assignedRoleActive: assignedRole?.is_active,
+        });
         await supabase.auth.signOut();
         throw new Error("Access denied: your account does not have an active admin role assigned.");
       }
 
-      // 3. Hard navigation ensures fresh Supabase SSR cookies are sent to middleware
+      console.log(`[SPRINT Admin Auth] [Step 3/3 GRANTED in ${step3Duration}ms] Admin privileges verified.`);
+
+      const totalDuration = (performance.now() - totalStart).toFixed(1);
+      console.log(
+        `[SPRINT Admin Auth] Complete login pipeline finished in ${totalDuration}ms (Step 1: ${step1Duration}ms, Step 2: ${step2Duration}ms, Step 3: ${step3Duration}ms). Redirecting to /admin/dashboard...`
+      );
+      console.groupEnd();
+
+      // 4. Hard navigation ensures fresh Supabase SSR cookies are sent to middleware
       window.location.assign("/admin/dashboard");
     } catch (err: any) {
-      console.error("[SPRINT Admin Auth]", err);
+      const totalDuration = (performance.now() - totalStart).toFixed(1);
+      console.error(`[SPRINT Admin Auth] Login pipeline failed after ${totalDuration}ms:`, err);
+      console.groupEnd();
       setError(err?.message || "Failed to authenticate.");
       setIsSubmitting(false);
     }

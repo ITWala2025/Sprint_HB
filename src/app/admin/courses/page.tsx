@@ -32,8 +32,28 @@ const difficulties = ["Beginner", "Intermediate", "Advanced"];
 const modes = ["Hybrid", "Online", "Offline"] as const;
 const audiences = [
     { value: "undergraduate", label: "Undergraduate" },
-    { value: "working_professional", label: "Working Professional" },
+    { value: "it-pro", label: "IT Professionals" },
+    { value: "non-it", label: "Non-IT Professionals" },
+    { value: "working_professional", label: "Working Professionals (IT & Non-IT)" },
 ] as const;
+
+function getAudienceLabel(value?: string | null): string {
+    if (!value) return "Undergraduate";
+    const normalized = value.toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
+    if (normalized === "it_pro" || normalized === "it_professional" || normalized === "it") {
+        return "IT Professionals";
+    }
+    if (normalized === "non_it" || normalized === "non_it_professional" || normalized === "non_it_pro") {
+        return "Non-IT Professionals";
+    }
+    if (normalized === "working_professional") {
+        return "Working Professionals (IT & Non-IT)";
+    }
+    if (normalized === "undergraduate" || normalized === "student") {
+        return "Undergraduate";
+    }
+    return audiences.find((a) => a.value === value)?.label || value;
+}
 
 const inputClass = "sprint-focus mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy placeholder:text-brand-text-muted";
 const labelClass = "block text-xs font-bold text-brand-navy";
@@ -150,7 +170,11 @@ export default function CourseManagementPage() {
             const matchesSearch = !query || `${course.title} ${course.slug}`.toLowerCase().includes(query);
             const matchesCategory = categoryFilter === "all" || course.category === categoryFilter;
             const matchesDifficulty = difficultyFilter === "all" || course.difficulty_level === difficultyFilter;
-            const matchesAudience = audienceFilter === "all" || course.audience_type === audienceFilter;
+            const matchesAudience = audienceFilter === "all"
+                || course.audience_type === audienceFilter
+                || (audienceFilter === "undergraduate" && course.audience_type === "student")
+                || (audienceFilter === "it-pro" && (course.audience_type === "it_pro" || course.audience_type === "it_professional"))
+                || (audienceFilter === "non-it" && (course.audience_type === "non_it" || course.audience_type === "non_it_professional"));
             return matchesSearch && matchesCategory && matchesDifficulty && matchesAudience;
         });
     }, [courses, search, categoryFilter, difficultyFilter, audienceFilter]);
@@ -180,7 +204,10 @@ export default function CourseManagementPage() {
         const { data, error } = await query;
         setSavingId(null);
         if (error) {
-            setNotice({ type: "error", message: `Course could not be saved: ${error.message}` });
+            const constraintHelp = error.message.includes("courses_audience")
+                ? " (If saving IT/Non-IT audiences fails, run 'src/Supabase/Course IT and Non-IT Audience Migration.sql' in Supabase to update check constraints)"
+                : "";
+            setNotice({ type: "error", message: `Course could not be saved: ${error.message}${constraintHelp}` });
             return false;
         }
         const saved = normalizeCourse(data as CourseItem);
@@ -518,6 +545,7 @@ function AdminCourseCard({ course, isBusy, canEdit, canDelete, onEdit, onToggleP
                 <span>{course.duration || "Duration not set"}</span>
                 <span>{course.delivery_method}</span>
                 <span>{course.difficulty_level}</span>
+                <span>{getAudienceLabel(course.audience_type)}</span>
             </div>
             <div className="mt-3 flex min-h-7 flex-wrap gap-1.5" aria-label={`Tools taught in ${course.title}`}>
                 {course.tools.length ? course.tools.map((tool) => <span key={tool} className="rounded-full bg-brand-blue-light px-2 py-1 text-[10px] font-semibold text-brand-blue">{tool}</span>) : <span className="text-xs text-brand-text-muted">No tools listed</span>}
@@ -535,7 +563,7 @@ function CourseRow({ course, isBusy, canEdit, canDelete, onView, onEdit, onDelet
     return <tr className="hover:bg-slate-50/70">
         <td className="max-w-[280px] px-5 py-4 sm:px-6"><p className="truncate font-semibold text-brand-navy">{course.title}</p><p className="mt-1 truncate text-xs text-brand-text-muted">/{course.slug}</p></td>
         <td className="px-4 py-4"><span className="inline-flex max-w-[210px] rounded-full bg-brand-blue-light px-2.5 py-1 text-[10px] font-semibold leading-4 text-brand-blue">{course.category}</span></td>
-        <td className="px-4 py-4"><span className="inline-flex rounded-full bg-brand-blue-light px-2.5 py-1 text-[10px] font-semibold text-brand-blue">{audiences.find((audience) => audience.value === course.audience_type)?.label ?? "Undergraduate"}</span></td>
+        <td className="px-4 py-4"><span className="inline-flex rounded-full bg-brand-blue-light px-2.5 py-1 text-[10px] font-semibold text-brand-blue">{getAudienceLabel(course.audience_type)}</span></td>
         <td className="whitespace-nowrap px-4 py-4 text-xs font-semibold text-brand-text-secondary">{course.delivery_method} <span className="px-1 text-brand-text-muted">•</span> {course.difficulty_level}</td>
         <td className="whitespace-nowrap px-4 py-4 text-xs text-brand-text-secondary"><span className="inline-flex items-center gap-1.5"><Clock className="size-3.5 text-brand-text-muted" aria-hidden="true" />{course.duration || "–"}</span></td>
         <td className="px-4 py-4"><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${course.is_published ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>{course.is_published ? "Published" : "Draft"}</span></td>
@@ -702,7 +730,7 @@ function CourseDetailsModal({ course, canEdit, onClose, onEdit }: { course: Cour
         <section role="dialog" aria-modal="true" aria-labelledby="course-details-title" className="flex max-h-[94dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl">
             <header className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7"><div><p className="text-xs font-semibold text-brand-red">{course.category}</p><h2 id="course-details-title" className="mt-1 font-display text-xl font-bold text-brand-navy">{course.title}</h2><p className="mt-1 text-xs text-brand-text-muted">/{course.slug}</p></div><button type="button" onClick={onClose} aria-label="Close course details" className={iconButtonClass}><X className="size-4" aria-hidden="true" /></button></header>
             <div className="min-h-0 flex-1 space-y-6 overflow-y-auto px-5 py-5 sm:px-7">
-                <div className="grid gap-3 sm:grid-cols-3"><DetailValue label="Difficulty Level" value={course.difficulty_level} /><DetailValue label="Delivery Method" value={course.delivery_method} /><DetailValue label="Duration" value={course.duration || "Not specified"} /><DetailValue label="Target Audience" value={audiences.find((item) => item.value === course.audience_type)?.label ?? "Undergraduate"} /><DetailValue label="Status" value={course.is_published ? "Published" : "Draft"} /></div>
+                <div className="grid gap-3 sm:grid-cols-3"><DetailValue label="Difficulty Level" value={course.difficulty_level} /><DetailValue label="Delivery Method" value={course.delivery_method} /><DetailValue label="Duration" value={course.duration || "Not specified"} /><DetailValue label="Target Audience" value={getAudienceLabel(course.audience_type)} /><DetailValue label="Status" value={course.is_published ? "Published" : "Draft"} /></div>
                 <DetailSection title="Short Description"><p className="text-sm leading-6 text-brand-text-secondary">{course.description || "No short description provided."}</p></DetailSection>
                 <DetailSection title="Detailed Description"><p className="whitespace-pre-wrap text-sm leading-6 text-brand-text-secondary">{course.long_description || "No detailed description provided."}</p></DetailSection>
                 <DetailSection title="Prerequisites"><p className="whitespace-pre-wrap text-sm leading-6 text-brand-text-secondary">{course.prerequisites || "No formal prerequisites"}</p></DetailSection>

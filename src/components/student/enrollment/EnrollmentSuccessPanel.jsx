@@ -22,6 +22,7 @@ const SUMMARY_ROWS = [
 export default function EnrollmentSuccessPanel({
   headingId,
   values,
+  applicationId,
   passwordSetupEmailSent,
   onReviewDetails,
   className = "",
@@ -54,6 +55,20 @@ export default function EnrollmentSuccessPanel({
       <p className="mt-1.5 text-sm leading-relaxed text-brand-text-secondary">
         Your enrollment has been submitted and is waiting for review.
       </p>
+
+      {applicationId ? (
+        <div className="mt-4 rounded-xl border border-brand-border bg-brand-surface p-4">
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-text-muted">
+            Application ID
+          </p>
+          <p className="mt-1 font-mono text-base font-bold text-brand-navy">
+            {applicationId}
+          </p>
+          <p className="mt-0.5 text-xs text-brand-text-secondary">
+            Save this ID for tracking your application and future correspondence.
+          </p>
+        </div>
+      ) : null}
 
       {rows.length ? (
         <dl className="mt-5 grid gap-3 rounded-xl border border-brand-border bg-brand-off-white p-4 sm:grid-cols-2">

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canAccessAdminRoute } from "../../../src/app/admin/authorization";
+import { canAccessAdminRoute } from "../../../src/app/admin/auth-types";
 
 describe("admin route authorization", () => {
     it("allows dashboard access to every authenticated role", () => {

@@ -259,4 +259,44 @@ describe("CourseCatalogue Supabase integration", () => {
         expect(groups).toEqual(["Role-Based Learning Paths", "Career Bundles", "Individual & Modular Courses"]);
         expect(root.querySelectorAll(".course-audience")).toHaveLength(1);
     });
+
+    it("filters distinct courses specifically for IT Professionals and Non-IT Professionals", async () => {
+        const user = userEvent.setup();
+        mocks.results.courses = {
+            data: [
+                {
+                    ...databaseCourse,
+                    id: "it-course",
+                    slug: "advanced-k8s",
+                    title: "Advanced Kubernetes in Production",
+                    audience: "it-pro",
+                    audience_type: "it-pro",
+                },
+                {
+                    ...databaseCourse,
+                    id: "non-it-course",
+                    slug: "excel-to-python",
+                    title: "Excel to Python Automation",
+                    audience: "non-it",
+                    audience_type: "non-it",
+                },
+            ],
+            error: null,
+        };
+
+        render(<CourseCatalogue items={catalogueItems} />);
+
+        await waitFor(() => {
+            expect(screen.queryByRole("heading", { name: "Advanced Kubernetes in Production" })).not.toBeInTheDocument();
+            expect(screen.queryByRole("heading", { name: "Excel to Python Automation" })).not.toBeInTheDocument();
+        });
+
+        await user.click(screen.getByRole("tab", { name: "IT Professionals" }));
+        expect(await screen.findByRole("heading", { name: "Advanced Kubernetes in Production" })).toBeInTheDocument();
+        expect(screen.queryByRole("heading", { name: "Excel to Python Automation" })).not.toBeInTheDocument();
+
+        await user.click(screen.getByRole("tab", { name: "Non-IT Professionals" }));
+        expect(await screen.findByRole("heading", { name: "Excel to Python Automation" })).toBeInTheDocument();
+        expect(screen.queryByRole("heading", { name: "Advanced Kubernetes in Production" })).not.toBeInTheDocument();
+    });
 });

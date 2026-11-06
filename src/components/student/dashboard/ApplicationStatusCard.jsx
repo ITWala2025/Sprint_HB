@@ -28,6 +28,11 @@ export default function ApplicationStatusCard({ applications }) {
               <p className="text-sm font-semibold text-brand-navy">
                 {application.courseTitle}
               </p>
+              {application.applicationId && (
+                <p className="mt-0.5 font-mono text-xs font-semibold text-brand-navy">
+                  Application ID: {application.applicationId}
+                </p>
+              )}
               <p className="mt-1 text-xs text-brand-text-secondary">
                 Submitted{" "}
                 {new Date(application.createdAt).toLocaleDateString()}

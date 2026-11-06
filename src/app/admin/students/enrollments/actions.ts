@@ -7,6 +7,7 @@ import { createServerClient } from "@supabase/ssr";
 import type { User } from "@supabase/supabase-js";
 import { assertModuleAccess } from "@/app/admin/authorization";
 import { createServiceClient } from "@/lib/supabase/service";
+import { formatApplicationId, sanitizeStudentId } from "@/lib/id-utils";
 
 async function createAuthenticatedServerClient() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -42,6 +43,7 @@ async function getCurrentReviewerId(): Promise<string> {
 
 export type EnrollmentRegistration = {
     id: string;
+    application_number: string;
     full_name: string;
     email: string;
     phone: string;
@@ -53,8 +55,10 @@ export type EnrollmentRegistration = {
 export type EnrollmentRegistrationDetails = {
     registration: {
         id: string;
-        application_number: string | null;
-        student_id: string | null;
+        application_id: string;
+        application_number: string;
+        student_id: string;
+        linked_student_id: string;
         full_name: string;
         email: string;
         phone: string;
@@ -163,6 +167,11 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
 
         return {
             id: registration.id,
+            application_number: formatApplicationId(
+                registration.application_number,
+                registration.id,
+                registration.created_at,
+            ),
             full_name: registration.full_name,
             email: registration.email,
             phone: registration.phone,
@@ -202,7 +211,9 @@ export async function getEnrollmentRegistrationDetails(
     }
     if (!registration) return null;
 
-    const [courseResult, bundleResult, batchResult, enrollmentsResult] = await Promise.all([
+    const linkedUserUuid = registration.student_id || registration.applicant_user_id;
+
+    const [courseResult, bundleResult, batchResult, enrollmentsResult, studentAccountResult] = await Promise.all([
         registration.course_id
             ? supabase.from("courses").select("title, category, difficulty_level, duration, delivery_method").eq("id", registration.course_id).maybeSingle()
             : Promise.resolve({ data: null, error: null }),
@@ -215,6 +226,9 @@ export async function getEnrollmentRegistrationDetails(
         registration.student_id
             ? supabase.from("student_course_enrollments").select("status, progress_percentage, certificate_issued, enrolled_at, completed_at, course_id, batch_id").eq("student_id", registration.student_id)
             : Promise.resolve({ data: [], error: null }),
+        linkedUserUuid
+            ? supabase.from("students").select("registration_number").eq("id", linkedUserUuid).maybeSingle()
+            : Promise.resolve({ data: null, error: null }),
     ]);
 
     const relatedRecordErrors = [
@@ -250,11 +264,24 @@ export async function getEnrollmentRegistrationDetails(
     const courseNames = new Map((enrollmentCoursesResult.data ?? []).map((item) => [item.id, item.title]));
     const batchNames = new Map((enrollmentBatchesResult.data ?? []).map((item) => [item.id, item.batch_name]));
 
+    const linkedStudentId = sanitizeStudentId(
+        studentAccountResult.data?.registration_number,
+        registration.student_id ? "Pending ID generation" : "Not linked",
+    );
+
+    const applicationId = formatApplicationId(
+        registration.application_number,
+        registration.id,
+        registration.created_at,
+    );
+
     return {
         registration: {
             id: registration.id,
-            application_number: registration.application_number,
-            student_id: registration.student_id,
+            application_id: applicationId,
+            application_number: applicationId,
+            student_id: linkedStudentId,
+            linked_student_id: linkedStudentId,
             full_name: registration.full_name,
             email: registration.email,
             phone: registration.phone,

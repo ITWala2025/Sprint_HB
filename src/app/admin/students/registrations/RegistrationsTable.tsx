@@ -6,6 +6,7 @@ import RegistrationDetailsModal from "@/app/admin/students/enrollments/Registrat
 
 export type RegistrationListItem = {
     id: string;
+    application_number?: string;
     full_name: string;
     email: string;
     courseReference: string;
@@ -54,7 +55,12 @@ export default function RegistrationsTable({ registrations }: { registrations: R
                                 <tr key={registration.id} className="hover:bg-slate-50">
                                     <td className="px-6 py-4">
                                         <p className="font-semibold text-brand-navy">{registration.full_name || "Unnamed applicant"}</p>
-                                        <p className="mt-1 text-xs text-brand-text-muted">{registration.email}</p>
+                                        {registration.application_number && (
+                                            <p className="font-mono text-xs font-semibold text-brand-navy/80">
+                                                {registration.application_number}
+                                            </p>
+                                        )}
+                                        <p className="mt-0.5 text-xs text-brand-text-muted">{registration.email}</p>
                                     </td>
                                     <td className="px-6 py-4 text-brand-text-secondary">{registration.courseReference || "Not specified"}</td>
                                     <td className="whitespace-nowrap px-6 py-4 text-xs text-brand-text-muted">{formatSubmittedDate(registration.created_at)}</td>

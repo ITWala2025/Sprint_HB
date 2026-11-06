@@ -10,8 +10,8 @@ export interface CourseItem {
     title: string;
     category: string;
     difficulty_level: string;
-    audience: "undergraduate" | "working_professional";
-    audience_type: "undergraduate" | "working_professional";
+    audience: CourseAudience;
+    audience_type: CourseAudience;
     delivery_method: "Hybrid" | "Online" | "Offline";
     duration: string;
     description: string;
@@ -30,7 +30,13 @@ export interface CourseItem {
     thumbnail_url: string | null;
 }
 
-export type CourseAudience = "undergraduate" | "working_professional";
+export type CourseAudience =
+    | "undergraduate"
+    | "working_professional"
+    | "it-pro"
+    | "non-it"
+    | "student"
+    | string;
 
 export interface LearningPathStage {
     number: string;
@@ -140,9 +146,17 @@ export function normalizeLearningPath(row: LearningPathSource): LearningPathItem
 }
 
 export function normalizeCourseAudience(value: unknown): CourseAudience {
-    return value === "working_professional" || value === "working professional"
-        ? "working_professional"
-        : "undergraduate";
+    const normalized = String(value || "").toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
+    if (normalized === "it_pro" || normalized === "it_professional" || normalized === "it") {
+        return "it-pro";
+    }
+    if (normalized === "non_it" || normalized === "non_it_professional" || normalized === "non_it_pro") {
+        return "non-it";
+    }
+    if (normalized === "working_professional") {
+        return "working_professional";
+    }
+    return "undergraduate";
 }
 
 export function normalizeBundle(row: Partial<BundleItem> & Record<string, unknown>): BundleItem {

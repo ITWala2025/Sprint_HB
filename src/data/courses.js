@@ -51,16 +51,37 @@ export function getCourseFallbackImage(category) {
   return visualByCategory["Programming Fundamentals"];
 }
 
+export function normalizeAudienceList(rawAudience) {
+  if (!rawAudience) return ["student"];
+  if (Array.isArray(rawAudience)) {
+    return Array.from(new Set(rawAudience.flatMap((item) => normalizeAudienceList(item))));
+  }
+  const str = String(rawAudience).trim();
+  if (str.includes(",")) {
+    return Array.from(new Set(str.split(",").flatMap((part) => normalizeAudienceList(part))));
+  }
+  const val = str.toLowerCase().replaceAll(" ", "_").replaceAll("-", "_");
+  if (val === "undergraduate" || val === "student") {
+    return ["student"];
+  }
+  if (val === "it_pro" || val === "it_professional" || val === "it") {
+    return ["it-pro"];
+  }
+  if (val === "non_it" || val === "non_it_professional" || val === "non_it_pro") {
+    return ["non-it"];
+  }
+  if (val === "working_professional") {
+    return ["it-pro", "non-it"];
+  }
+  if (val === "all") {
+    return ["student", "it-pro", "non-it"];
+  }
+  return [str === "it_pro" ? "it-pro" : str === "non_it" ? "non-it" : str];
+}
+
 export function normalizeDatabaseCourse(course) {
   const rawAudience = course.audience_type || course.audience || "undergraduate";
-  const audienceValue = String(rawAudience).toLowerCase().replaceAll(" ", "_");
-  const audience = Array.isArray(rawAudience)
-    ? rawAudience
-    : audienceValue === "undergraduate" || audienceValue === "student"
-      ? ["student"]
-      : audienceValue === "working_professional"
-        ? ["it-pro", "non-it"]
-        : [audienceValue];
+  const audience = normalizeAudienceList(rawAudience);
 
   return {
     ...course,

@@ -1,5 +1,15 @@
-export type AdminPermissionMap = Record<string, { view?: boolean }> & {
+export type PermissionCapabilityMap = {
+    view?: boolean;
+    create?: boolean;
+    edit?: boolean;
+    delete?: boolean;
+    export?: boolean;
+    [capability: string]: boolean | undefined;
+};
+
+export type AdminPermissionMap = {
     full_access?: boolean;
+    [moduleKey: string]: PermissionCapabilityMap | boolean | undefined;
 };
 
 export function roleHasPermission(
@@ -67,6 +77,6 @@ export function canAccessAdminRoute(
 
     const requiredPermissions = adminRoutePermissions[matchingRoute];
     return requiredPermissions.length === 0 || requiredPermissions.some(
-        (permission) => permissions?.[permission]?.view === true,
+        (permission) => roleHasPermission(permissions, permission, "view"),
     );
 }

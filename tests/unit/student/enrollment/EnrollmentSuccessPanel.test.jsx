@@ -104,4 +104,12 @@ describe("EnrollmentSuccessPanel", () => {
     await user.click(screen.getByRole("button", { name: /review my details/i }));
     expect(onReviewDetails).toHaveBeenCalledTimes(1);
   });
+
+  it("renders the application ID in SPR-APP-YYMM-XXXX format and does not leak UUID", () => {
+    const { container } = renderPanel({ applicationId: "SPR-APP-2611-0012" });
+
+    expect(screen.getByText("Application ID")).toBeInTheDocument();
+    expect(screen.getByText("SPR-APP-2611-0012")).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
+  });
 });
