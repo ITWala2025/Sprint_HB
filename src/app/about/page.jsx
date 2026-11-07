@@ -88,26 +88,6 @@ function SectionHeader({ heading, subtitle, center = false, id }) {
   );
 }
 
-/* Build the same faculty+academic-lead profile list used on the Home Page.
-   The academic lead ("Priya Verma") is pulled from leadership and prepended
-   with her home-page portrait so the filmstrip is identical on both pages. */
-const aboutFacultyProfiles = about.faculty.profiles.map((profile) => ({
-  ...profile,
-  image:
-    profile.image ??
-    (profile.name === "Ananya Roy" ? "/images/home/Ananya.jpeg" : undefined),
-}));
-const aboutAcademicLead = about.leadership.profiles.find(
-  (profile) => profile.name === "Priya Verma",
-);
-const aboutFacultyAndAcademicProfiles = [
-  ...aboutFacultyProfiles,
-  {
-    ...aboutAcademicLead,
-    image: "/images/home/Priya.jpeg",
-  },
-];
-
 export default function AboutPage() {
   return (
     <>
@@ -260,7 +240,7 @@ export default function AboutPage() {
         sectionClassName="sprint-section bg-brand-white"
         contentClassName="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:py-10"
         profilesContent={
-          <FacultyFilmstrip profiles={aboutFacultyAndAcademicProfiles} />
+          <FacultyFilmstrip profiles={about.faculty.profiles} />
         }
       />
 
