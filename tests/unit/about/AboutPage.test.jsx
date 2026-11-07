@@ -52,9 +52,6 @@ describe("AboutPage", () => {
     render(<AboutPage />);
 
     expect(
-      screen.queryByRole("region", { name: "Faculty filmstrip carousel" }),
-    ).not.toBeInTheDocument();
-    expect(
       screen.getByRole("heading", { name: /let's talk about your career/i }),
     ).toBeInTheDocument();
 
@@ -77,7 +74,7 @@ describe("AboutPage", () => {
     expect(heroImage.getAttribute("src")).toContain("about-hero-desktop.webp");
   });
 
-  it("lays the verified impact stats out in a horizontal band", () => {
+  it("renders the impact themes and updated placement rate", () => {
     render(<AboutPage />);
 
     const stats = document.querySelector(".sprint-hero-stats");
@@ -85,10 +82,26 @@ describe("AboutPage", () => {
     expect(stats.getAttribute("role")).toBe("list");
     expect(stats.getAttribute("aria-label")).toMatch(/verified impact at a glance/i);
     expect(stats.querySelectorAll('[role="listitem"]')).toHaveLength(4);
-
+    expect(screen.getByText("60%")).toBeInTheDocument();
     expect(
-      screen.getByText(/all figures source-verified/i),
+      screen.getByRole("heading", {
+        name: "Job-Ready Talent Is Where Economic Change Begins",
+      }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "SPRINT RISE" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "SPRINT Career Accelerator" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "View the complete SPRINT RISE program page" }),
+    ).toHaveAttribute("href", "/programs/sprint-rise");
+    expect(
+      screen.getByRole("link", {
+        name: "View the complete SPRINT Career Accelerator program page",
+      }),
+    ).toHaveAttribute("href", "/programs/career-accelerator");
   });
 
   it("redirects the Request a Callback CTA to the contact page", () => {

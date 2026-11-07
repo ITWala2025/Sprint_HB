@@ -7,8 +7,9 @@ import StoryVisionMission from "@/components/sections/StoryVisionMission";
 import FacultyExperts from "@/components/sections/FacultyExperts";
 import FacultyFilmstrip from "@/components/Home/FacultyFilmstrip";
 import ProfileCard from "@/components/cards/ProfileCard";
-import SkillCard from "@/components/cards/SkillCard";
 import WhyChooseSprint from "@/components/sections/WhyChooseSprint";
+import ImpactWeCreate from "@/components/sections/ImpactWeCreate";
+import IndustryAcademicConnection from "@/components/sections/IndustryAcademicConnection";
 
 // About Us — "/about". Spec: docs/md/About_Page.md (10 approved sections).
 // Sections 1 (Header) and 10 (Footer) render via the root layout; this page
@@ -265,49 +266,10 @@ export default function AboutPage() {
 
       <WhyChooseSprint />
 
-      {/* ============ 7. INDUSTRY / ACADEMIC CONNECTION (§3.7) ============ */}
-      <section
-        id="industry-connection"
-        className="sprint-section sprint-anchor bg-brand-surface"
-      >
-        <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:py-10">
-          <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
-            {/* Left: narrative */}
-            <div>
-              <SectionHeader
-                heading={about.industry.heading}
-                subtitle={about.industry.subtitle}
-              />
-              <div className="mt-4 space-y-3 text-base leading-relaxed text-brand-text-secondary">
-                {about.industry.paragraphs.map((paragraph) => (
-                  <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-                ))}
-              </div>
-              <p className="mt-4 rounded-2xl border-l-4 border-brand-red bg-white p-4 font-medium text-brand-text shadow-sm">
-                {about.industry.approach}
-              </p>
-              <Link
-                href={about.industry.cta.href}
-                data-track="industry_courses_link"
-                className="sprint-focus group mt-6 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border-2 border-brand-navy px-6 py-2.5 text-base font-semibold text-brand-navy transition-colors hover:bg-brand-navy hover:text-white sm:w-auto"
-              >
-                {about.industry.cta.label}
-                <ArrowRight
-                  className="size-5 transition-transform group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </Link>
-            </div>
+      <ImpactWeCreate />
 
-            {/* Right: skill cards */}
-            <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-              {about.industry.skills.map((skill) => (
-                <SkillCard key={skill.title} skill={skill} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ============ 7. INDUSTRY / ACADEMIC CONNECTION (§3.7) ============ */}
+      <IndustryAcademicConnection />
 
       {/* ============ 8. CTA — Connect With SPRINT (§3.9) ============ */}
       <section

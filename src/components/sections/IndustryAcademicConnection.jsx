@@ -65,9 +65,12 @@ export default function IndustryAcademicConnection() {
 
         <div className="grid gap-4 md:grid-cols-2">
           {featuredPrograms.map(({ number, icon: Icon, accent, iconColor, iconBackground, program }) => (
-            <article
+            <Link
+              href={`/programs/${program.slug}`}
+              aria-label={`View the complete ${program.title} program page`}
+              data-track={`about_program_${program.slug}`}
               key={program.slug}
-              className="group/card relative min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 p-5 shadow-[0_4px_14px_rgba(30,55,90,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl motion-reduce:transition-none sm:rounded-[18px] sm:p-6"
+              className="group/card relative block min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 p-5 text-inherit no-underline shadow-[0_4px_14px_rgba(30,55,90,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl motion-reduce:transition-none sm:rounded-[18px] sm:p-6"
             >
               <div
                 aria-hidden="true"
@@ -112,7 +115,7 @@ export default function IndustryAcademicConnection() {
                   </ul>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
 
