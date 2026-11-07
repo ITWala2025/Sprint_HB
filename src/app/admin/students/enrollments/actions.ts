@@ -105,40 +105,144 @@ function requireServiceClient() {
     return serviceClient;
 }
 
+function isMissingColumnError(error: { code?: string; message?: string }): boolean {
+    return error.code === "42703" ||
+        error.code === "PGRST204" ||
+        /column .* does not exist|could not find .* column/i.test(error.message ?? "");
+}
+
 export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistration[]> {
     await assertModuleAccess("student_ops");
     const supabase = await createAuthenticatedServerClient();
-    const { data, error } = await supabase
+    const enrollmentColumns = "id, full_name, email, phone, college_institution, course_id, bundle_id, status, created_at";
+    const enrollmentCoreColumns = "id, full_name, email, phone, status, created_at";
+    const enrollmentResult = await supabase
         .from("enrollments")
-        .select("id, application_number, legacy_registration_id, full_name, email, phone, college_institution, course_id, bundle_id, status, created_at")
+        .select(`${enrollmentColumns}, legacy_registration_id`)
         .order("created_at", { ascending: false });
 
-    if (error) {
-        throw new Error(`Could not load enrollment applications: ${error.message}`);
+    type EnrollmentLookupRow = {
+        id: string;
+        full_name: string | null;
+        email: string | null;
+        phone: string | null;
+        college_institution: string | null;
+        course_id: string | null;
+        bundle_id: string | null;
+        status: string;
+        created_at: string;
+        legacy_registration_id: string | null;
+    };
+
+    let enrollmentRows: EnrollmentLookupRow[];
+    if (enrollmentResult.error) {
+        if (!isMissingColumnError(enrollmentResult.error)) {
+            throw new Error(`Could not load enrollment applications: ${enrollmentResult.error.message}`);
+        }
+
+        console.warn(
+            "Enrollment applications lookup is missing an optional column; loading applications without legacy registration links:",
+            enrollmentResult.error.message,
+        );
+        const fallbackResult = await supabase
+            .from("enrollments")
+            .select(enrollmentColumns)
+            .order("created_at", { ascending: false });
+        if (fallbackResult.error) {
+            if (!isMissingColumnError(fallbackResult.error)) {
+                throw new Error(`Could not load enrollment applications: ${fallbackResult.error.message}`);
+            }
+
+            console.warn(
+                "Enrollment applications lookup is missing optional detail columns; loading core application fields:",
+                fallbackResult.error.message,
+            );
+            const coreResult = await supabase
+                .from("enrollments")
+                .select(enrollmentCoreColumns)
+                .order("created_at", { ascending: false });
+            if (coreResult.error) {
+                throw new Error(`Could not load enrollment applications: ${coreResult.error.message}`);
+            }
+            enrollmentRows = (coreResult.data ?? []).map((enrollment) => ({
+                ...enrollment,
+                college_institution: null,
+                course_id: null,
+                bundle_id: null,
+                legacy_registration_id: null,
+            }));
+        } else {
+            enrollmentRows = (fallbackResult.data ?? []).map((enrollment) => ({
+                ...enrollment,
+                legacy_registration_id: null,
+            }));
+        }
+    } else {
+        enrollmentRows = (enrollmentResult.data ?? []).map((enrollment) => ({
+            ...enrollment,
+            legacy_registration_id: enrollment.legacy_registration_id ?? null,
+        }));
     }
 
-    const enrollmentRows = data ?? [];
     const legacyRegistrationIds = [...new Set(
         enrollmentRows.flatMap((enrollment) => enrollment.legacy_registration_id ? [enrollment.legacy_registration_id] : []),
     )];
-    const registrationsResult = legacyRegistrationIds.length > 0
-        ? await supabase
+    let registrationRows: Array<{
+        id: string;
+        full_name: string | null;
+        email: string | null;
+        phone: string | null;
+        college_institution: string | null;
+        course_id: string | null;
+        bundle_id: string | null;
+    }> = [];
+    if (legacyRegistrationIds.length > 0) {
+        const registrationsResult = await supabase
             .from("registrations")
-            .select("id, application_number, full_name, email, phone, college_institution, course_id, bundle_id")
-            .in("id", legacyRegistrationIds)
-        : { data: [], error: null };
+            .select("id, full_name, email, phone, college_institution, course_id, bundle_id")
+            .in("id", legacyRegistrationIds);
 
-    if (registrationsResult.error) {
-        throw new Error(`Could not load linked registration details: ${registrationsResult.error.message}`);
+        if (registrationsResult.error) {
+            if (!isMissingColumnError(registrationsResult.error)) {
+                throw new Error(`Could not load linked registration details: ${registrationsResult.error.message}`);
+            }
+            console.warn(
+                "Linked registration lookup is missing optional detail columns; retrying with core registration fields:",
+                registrationsResult.error.message,
+            );
+
+            const fallbackResult = await supabase
+                .from("registrations")
+                .select("id, full_name, email, phone")
+                .in("id", legacyRegistrationIds);
+            if (fallbackResult.error) {
+                if (!isMissingColumnError(fallbackResult.error)) {
+                    throw new Error(`Could not load linked registration details: ${fallbackResult.error.message}`);
+                }
+                console.warn(
+                    "Linked registration lookup is missing core contact columns; enrollment applications will be shown without linked registration details:",
+                    fallbackResult.error.message,
+                );
+            } else {
+                registrationRows = (fallbackResult.data ?? []).map((registration) => ({
+                    ...registration,
+                    college_institution: null,
+                    course_id: null,
+                    bundle_id: null,
+                }));
+            }
+        } else {
+            registrationRows = registrationsResult.data ?? [];
+        }
     }
 
     const allCourseIds = [...new Set([
         ...enrollmentRows.flatMap((enrollment) => enrollment.course_id ? [enrollment.course_id] : []),
-        ...(registrationsResult.data ?? []).flatMap((registration) => registration.course_id ? [registration.course_id] : []),
+        ...registrationRows.flatMap((registration) => registration.course_id ? [registration.course_id] : []),
     ])];
     const allBundleIds = [...new Set([
         ...enrollmentRows.flatMap((enrollment) => enrollment.bundle_id ? [enrollment.bundle_id] : []),
-        ...(registrationsResult.data ?? []).flatMap((registration) => registration.bundle_id ? [registration.bundle_id] : []),
+        ...registrationRows.flatMap((registration) => registration.bundle_id ? [registration.bundle_id] : []),
     ])];
     const [coursesResult, bundlesResult] = await Promise.all([
         allCourseIds.length > 0
@@ -156,7 +260,7 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
         throw new Error(`Could not load bundle references for enrollment applications: ${bundlesResult.error.message}`);
     }
 
-    const registrationById = new Map((registrationsResult.data ?? []).map((registration) => [registration.id, registration]));
+    const registrationById = new Map(registrationRows.map((registration) => [registration.id, registration]));
     const courseTitles = new Map((coursesResult.data ?? []).map((course) => [course.id, course.title]));
     const bundleTitles = new Map((bundlesResult.data ?? []).map((bundle) => [bundle.id, bundle.title]));
 
@@ -178,8 +282,8 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
         return {
             id: enrollment.id,
             application_number: formatApplicationId(
-                (enrollment as any).application_number ?? (linkedRegistration as any)?.application_number,
-                enrollment.id,
+                undefined,
+                linkedRegistration?.id ?? enrollment.id,
                 enrollment.created_at,
             ),
             full_name: enrollment.full_name || linkedRegistration?.full_name || "",
@@ -210,14 +314,53 @@ export async function getEnrollmentRegistrationDetails(
 
     await assertModuleAccess("student_ops");
     const supabase = await createAuthenticatedServerClient();
-    const { data: registration, error: registrationError } = await supabase
+    const registrationResult = await supabase
         .from("enrollments")
-        .select("*")
+        .select("id, student_id, applicant_user_id, batch_id, course_id, bundle_id, full_name, email, phone, college_institution, course_degree, specialization_branch, year_semester, city, state, employment_status, organization_name, source_of_info, terms_accepted, communication_consent, admin_notes, created_at, updated_at, status")
         .eq("id", id)
         .maybeSingle();
 
-    if (registrationError) {
-        throw new Error(`Could not load enrollment details: ${registrationError.message}`);
+    let registration = registrationResult.data;
+    if (registrationResult.error) {
+        if (!isMissingColumnError(registrationResult.error)) {
+            throw new Error(`Could not load enrollment details: ${registrationResult.error.message}`);
+        }
+
+        console.warn(
+            "Enrollment detail lookup is missing optional columns; loading core application fields:",
+            registrationResult.error.message,
+        );
+        const fallbackResult = await supabase
+            .from("enrollments")
+            .select("id, full_name, email, phone, status, created_at")
+            .eq("id", id)
+            .maybeSingle();
+        if (fallbackResult.error) {
+            throw new Error(`Could not load enrollment details: ${fallbackResult.error.message}`);
+        }
+        registration = fallbackResult.data
+            ? {
+                ...fallbackResult.data,
+                student_id: null,
+                applicant_user_id: null,
+                batch_id: null,
+                course_id: null,
+                bundle_id: null,
+                college_institution: null,
+                course_degree: null,
+                specialization_branch: null,
+                year_semester: null,
+                city: null,
+                state: null,
+                employment_status: null,
+                organization_name: null,
+                source_of_info: null,
+                terms_accepted: false,
+                communication_consent: false,
+                admin_notes: null,
+                updated_at: fallbackResult.data.created_at,
+            }
+            : null;
     }
     if (!registration) return null;
 
@@ -280,7 +423,7 @@ export async function getEnrollmentRegistrationDetails(
     );
 
     const applicationId = formatApplicationId(
-        registration.application_number,
+        undefined,
         registration.id,
         registration.created_at,
     );
@@ -358,7 +501,7 @@ export async function verifyRegistration(
     const supabase = requireServiceClient();
     const { data: registration, error: registrationError } = await supabase
         .from("enrollments")
-        .select("*")
+        .select("id, status")
         .eq("id", id)
         .maybeSingle();
 
