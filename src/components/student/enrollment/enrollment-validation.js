@@ -17,7 +17,9 @@
 
 import {
   EMAIL_PATTERN,
+  validateConfirmPassword,
   validateEmailField as validateAuthEmailField,
+  validateNewPassword,
   validateRequiredField,
 } from "@/components/student/auth/auth-validation";
 
@@ -132,12 +134,17 @@ export function validateEducationProfile(values = {}) {
   };
 }
 
-/**
- * The last step validates email verification through its Supabase session.
- * This no-op keeps the registry contract uniform; server-side submission
- * independently checks that the session email is verified and matches.
- */
-export const validateNoFieldsYet = () => ({});
+/** Step 2 — permanent password creation after email OTP verification. */
+export function validatePasswordSetup(values = {}) {
+  const password = values.newPassword ?? "";
+  return {
+    newPassword: validateNewPassword(password),
+    confirmPassword: validateConfirmPassword(
+      password,
+      values.confirmPassword ?? "",
+    ),
+  };
+}
 
 /** Drops the "valid" entries, leaving only the fields the user must fix. */
 export const compactErrors = (errors = {}) =>

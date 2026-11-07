@@ -558,6 +558,27 @@ ALTER TABLE public.instructors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.testimonials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partners ENABLE ROW LEVEL SECURITY;
 
+/* ----------------------------------------------------------------------------
+   8. TABLE-LEVEL PERMISSIONS (GRANT)
+---------------------------------------------------------------------------- */
+
+-- Public read access for tables with public-facing policies
+GRANT SELECT ON public.batches TO anon, authenticated;
+GRANT SELECT ON public.courses TO anon, authenticated;
+GRANT SELECT ON public.course_bundles TO anon, authenticated;
+GRANT SELECT ON public.instructors TO anon, authenticated;
+GRANT SELECT ON public.partners TO anon, authenticated;
+GRANT SELECT ON public.testimonials TO anon, authenticated;
+GRANT SELECT ON public.campus_updates TO anon, authenticated;
+GRANT SELECT ON public.career_openings TO anon, authenticated;
+
+-- Authenticated read access for student-private tables
+GRANT SELECT ON public.profiles TO authenticated;
+GRANT SELECT ON public.students TO authenticated;
+GRANT SELECT ON public.enrollments TO authenticated;
+GRANT SELECT ON public.student_course_enrollments TO authenticated;
+GRANT SELECT ON public.student_courses TO authenticated;
+
 /* Policies: profiles */
 CREATE POLICY "Public can view basic instructor profiles"
     ON public.profiles FOR SELECT

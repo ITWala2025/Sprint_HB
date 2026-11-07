@@ -1,10 +1,10 @@
-import AccountStep from "./steps/AccountStep";
 import EducationStep from "./steps/EducationStep";
+import PasswordSetupStep from "./steps/PasswordSetupStep";
 import PersonalInformationStep from "./steps/PersonalInformationStep";
 import { DEFAULT_COUNTRY } from "./enrollment-locations";
 import {
   validateEducationProfile,
-  validateNoFieldsYet,
+  validatePasswordSetup,
   validatePersonalInformation,
 } from "./enrollment-validation";
 
@@ -12,8 +12,8 @@ import {
  * The enrollment wizard, described once.
  *
  * Contract every step keeps:
- * - `id` doubles as the key in the wizard's shared state (personal, education,
- *   account) *and* as the id prefix of its fields
+ * - `id` doubles as the key in the wizard's shared state (personal, password,
+ *   education) *and* as the id prefix of its fields
  *   (`${id}-${fieldName}`), which is how the wizard focuses the first invalid
  *   field after a failed submit.
  * - `initialValues` seeds that slice of state, so switching steps back and forth
@@ -21,7 +21,7 @@ import {
  * - `validate(values)` returns a `{ field: message }` map; `compactErrors` drops
  *   the valid entries.
  *
- * The last step — Account — verifies the student's email before submission.
+ * The personal step verifies the student's email before the password step.
  *
  * `isOptional` marks a step the student may skip: the wizard then renders the
  * third "Skip for now" action in the footer and shows `skipNotice` on the step
@@ -51,19 +51,31 @@ export const ENROLLMENT_STEPS = [
     isScaffolded: false,
   },
   {
+    id: "password",
+    label: "Password",
+    title: "Create Your Password",
+    description:
+      "Set a password for your new Student Portal account before continuing.",
+    Component: PasswordSetupStep,
+    initialValues: {
+      newPassword: "",
+      confirmPassword: "",
+    },
+    validate: validatePasswordSetup,
+    isScaffolded: false,
+  },
+  {
     id: "education",
     label: "Education",
     title: "Education & Career Profile",
     description:
       "Help us understand your background and career interests. You can skip this step and complete it later from your Student Dashboard.",
     Component: EducationStep,
-    // Four optional fields, named after the schema columns they map to:
-    // `students.course_degree`, `year_semester`/`current_semester`,
-    // `employment_status` and `registrations.course_id` (the course id the
-    // Course dropdown stores). The removed fields (level, institution,
-    // graduationYear, city, state) are simply no longer collected — nothing
-    // in the database is touched.
+    // Five optional fields map to college_institution, course_degree,
+    // year_semester, employment_status, and registrations.course_id (the
+    // course id the Course dropdown stores).
     initialValues: {
+      collegeInstitution: "",
       courseDegree: "",
       semesterYear: "",
       currentRole: "",
@@ -74,17 +86,6 @@ export const ENROLLMENT_STEPS = [
     isOptional: true,
     skipNotice:
       "You can complete your education & career profile later from your Student Dashboard.",
-  },
-  {
-    id: "account",
-    label: "Account",
-    title: "Account",
-    description:
-      "Verify your email address with a secure magic link before submitting your enrollment.",
-    Component: AccountStep,
-    initialValues: {},
-    validate: validateNoFieldsYet,
-    isScaffolded: false,
   },
 ];
 

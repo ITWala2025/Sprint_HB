@@ -731,3 +731,20 @@ No application code was changed for this reconciliation. The local role-unassign
 - **Validation**:
   - `npx tsc --noEmit` passed with 0 errors.
   - 13 test suites (45 tests) in admin, student dashboard, and email passed completely, including [tests/unit/admin/StudentsDirectoryTable.test.tsx](tests/unit/admin/StudentsDirectoryTable.test.tsx).
+
+## 39. Database Table-Level Permissions (GRANT) Fix — 2026-11-07
+
+- **Root cause**: `src/Supabase/Initial Schema.sql` enabled Row Level Security (RLS) on all core tables but contained **zero GRANT statements**. Without `GRANT SELECT ON public.batches TO authenticated`, PostgreSQL rejected the student dashboard query with `permission denied for table batches` before RLS policies were even evaluated. The same missing-permission issue affected `student_courses` in `src/Supabase/Student Enrollment Approval and Courses Migration.sql`.
+- **Fix**: Added a table-level permissions section to `src/Supabase/Initial Schema.sql` granting `SELECT` on `batches`, `courses`, `course_bundles`, `instructors`, `partners`, `testimonials`, `campus_updates`, `career_openings` to `anon, authenticated`, and `SELECT` on `profiles`, `students`, `enrollments`, `student_course_enrollments`, `student_courses` to `authenticated`. Also added `GRANT SELECT ON public.student_courses TO authenticated` to `src/Supabase/Student Enrollment Approval and Courses Migration.sql`.
+- **Validation**:
+  - `npx tsc --noEmit` passed with 0 errors.
+  - EnrollmentWizard tests (7/7) and StudentLoginEnrollment tests (7/7) all pass.
+
+## 39. Student Dashboard Access & Supabase RLS Fix — 2026-11-07
+
+- **Root cause**: `getStudentDashboardContext()` in `src/app/student/(portal)/dashboard/page.jsx` threw exceptions on query failures, and Supabase had no `GRANT SELECT` on `public.batches` for `authenticated`, causing `permission denied for table batches` before RLS was evaluated.
+- **Fix**:
+  - Refactored `getStudentDashboardContext()` to handle all DB query failures gracefully (log and continue with empty data) instead of throwing; enrollment is now optional for dashboard access.
+  - Created `src/Supabase/Student Dashboard Access Migration.sql` adding `GRANT SELECT` to all dashboard tables and a new RLS policy `"Students can view batches they are enrolled in"` on `public.batches`.
+  - Added empty-state UI ("Welcome to SPRINT!" with "Explore Courses" CTA) when no enrollment exists.
+- **Verification**: `npx tsc --noEmit` passes; `npm run build` succeeds; all 14 existing auth/enrollment tests pass.

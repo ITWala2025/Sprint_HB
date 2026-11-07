@@ -98,8 +98,10 @@ async function getStudentDashboardContext() {
     .eq("id", profile.id)
     .maybeSingle();
 
+  // A missing student record is not fatal — the student may not have a
+  // students table row yet. Continue with just the profile information.
   if (studentRecordError) {
-    throw new Error(`Could not load student information: ${studentRecordError.message}`);
+    console.warn("[StudentDashboard] Could not load student record:", studentRecordError.message);
   }
 
   const { data: applicationRecords, error: applicationsError } = await supabase
@@ -108,9 +110,11 @@ async function getStudentDashboardContext() {
     .or(`applicant_user_id.eq.${user.id},student_id.eq.${user.id}`)
     .order("created_at", { ascending: false });
 
+  // Application query failures are logged but do not block dashboard access.
+  let applications = [];
   if (applicationsError) {
-    throw new Error(`Could not load course applications: ${applicationsError.message}`);
-  }
+    console.warn("[StudentDashboard] Could not load course applications:", applicationsError.message);
+  } else {
 
   const courseIds = [...new Set((applicationRecords ?? []).flatMap((item) => item.course_id ? [item.course_id] : []))];
   const bundleIds = [...new Set((applicationRecords ?? []).flatMap((item) => item.bundle_id ? [item.bundle_id] : []))];
@@ -124,17 +128,15 @@ async function getStudentDashboardContext() {
   ]);
 
   if (coursesResult.error || bundlesResult.error) {
-    throw new Error(
-      `Could not load application course names: ${[
-        coursesResult.error?.message,
-        bundlesResult.error?.message,
-      ].filter(Boolean).join("; ")}`,
+    console.warn(
+      "[StudentDashboard] Could not load application course names:",
+      [coursesResult.error?.message, bundlesResult.error?.message].filter(Boolean).join("; "),
     );
   }
 
   const courseTitles = new Map((coursesResult.data ?? []).map((item) => [item.id, item.title]));
   const bundleTitles = new Map((bundlesResult.data ?? []).map((item) => [item.id, item.title]));
-  const applications = (applicationRecords ?? []).map((application) => ({
+  applications = (applicationRecords ?? []).map((application) => ({
     id: application.id,
     applicationId: formatApplicationId(application.application_number, application.id, application.created_at),
     status: application.status,
@@ -144,10 +146,14 @@ async function getStudentDashboardContext() {
       (application.bundle_id && bundleTitles.get(application.bundle_id)) ||
       "Course not selected",
   }));
+  }
+
+  let enrollments = [];
+  let studentCourses = [];
 
   const [
-    { data: enrollments, error: enrollmentsError },
-    { data: studentCourses },
+    { data: enrollmentsData, error: enrollmentsError },
+    { data: studentCoursesData, error: studentCoursesError },
   ] = await Promise.all([
     supabase
       .from("student_course_enrollments")
@@ -166,7 +172,15 @@ async function getStudentDashboardContext() {
   ]);
 
   if (enrollmentsError) {
-    throw new Error(`Could not load active course enrollments: ${enrollmentsError.message}`);
+    console.warn("[StudentDashboard] Could not load active course enrollments:", enrollmentsError.message);
+  } else {
+    enrollments = enrollmentsData ?? [];
+  }
+
+  if (studentCoursesError) {
+    console.warn("[StudentDashboard] Could not load student courses:", studentCoursesError.message);
+  } else {
+    studentCourses = studentCoursesData ?? [];
   }
 
   const activeEnrollment =
@@ -235,6 +249,32 @@ export default async function StudentDashboardPage() {
       <WelcomeBanner student={student}>
         <LearningProgress compact enrollment={enrollment} progress={progress} />
       </WelcomeBanner>
+
+      {(!enrollment || enrollment.progressPercent === 0) && applications.length === 0 ? (
+        <section
+          id="dashboard-empty-enrollment"
+          className="rounded-2xl border border-dashed border-brand-border bg-brand-off-white p-5 sm:p-6 shadow-sm"
+        >
+          <h2
+            id="dashboard-empty-enrollment-heading"
+            className="font-display text-lg font-bold text-brand-navy"
+          >
+            Welcome to SPRINT!
+          </h2>
+          <p className="mt-1 text-sm text-brand-text-secondary">
+            You have successfully registered. You haven&rsquo;t enrolled in any
+            course yet. Explore available courses to start your learning
+            journey.
+          </p>
+          <Link
+            href="/student/apply-course"
+            className="mt-4 sprint-focus inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full bg-brand-red px-6 py-2.5 text-sm font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark sm:self-start"
+          >
+            Explore Courses
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </Link>
+        </section>
+      ) : null}
 
       <ApplicationStatusCard applications={applications} />
 

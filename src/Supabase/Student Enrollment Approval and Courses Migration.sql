@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS public.student_courses (
 
 ALTER TABLE public.student_courses ENABLE ROW LEVEL SECURITY;
 
+GRANT SELECT ON public.student_courses TO authenticated;
+
 DROP POLICY IF EXISTS "Staff manage student courses" ON public.student_courses;
 CREATE POLICY "Staff manage student courses"
     ON public.student_courses FOR ALL TO authenticated

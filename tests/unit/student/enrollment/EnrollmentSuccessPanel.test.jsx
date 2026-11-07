@@ -16,7 +16,7 @@ describe("EnrollmentSuccessPanel", () => {
       phone: "9876543210",
     },
     education: {},
-    account: {},
+    password: {},
   };
 
   const renderPanel = (props = {}) =>
@@ -64,42 +64,33 @@ describe("EnrollmentSuccessPanel", () => {
     expect(screen.queryByText("Phone number")).not.toBeInTheDocument();
   });
 
-  it("stays honest about the mock submission", () => {
+  it("distinguishes a registration-only submission from a course enrollment", () => {
     renderPanel();
 
     expect(
-      screen.getByText(/your enrollment has been submitted/i),
+      screen.getByText(/your registration has been saved/i),
     ).toBeInTheDocument();
   });
 
-  it("confirms the password setup email and links to student sign in", () => {
-    renderPanel({ passwordSetupEmailSent: true });
+  it("confirms course enrollment and links to the student dashboard", () => {
+    renderPanel({ hasCourseEnrollment: true });
 
     expect(
-      screen.getByText(/we sent a password setup link to ananya@sprint\.co\.in/i),
+      screen.getByText(/registration and course enrollment have been submitted/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /go to student sign in/i }),
-    ).toHaveAttribute("href", "/student/login");
+      screen.getByRole("link", { name: /go to student dashboard/i }),
+    ).toHaveAttribute("href", "/student/dashboard");
+    expect(screen.getByText(/password is set/i)).toHaveTextContent(
+      "ananya@sprint.co.in",
+    );
+    expect(screen.getByText(/taking you to your student dashboard/i)).toBeInTheDocument();
   });
 
-  it("offers password recovery if the setup email could not be sent", () => {
-    renderPanel({ passwordSetupEmailSent: false });
-
-    expect(
-      screen.getByRole("link", { name: /forgot password/i }),
-    ).toHaveAttribute("href", "/student/forgot-password");
-  });
-
-  it("offers a way back into the wizard and back to the site", async () => {
+  it("offers a way back into the wizard", async () => {
     const user = userEvent.setup();
     const onReviewDetails = vi.fn();
     renderPanel({ onReviewDetails });
-
-    expect(screen.getByRole("link", { name: /back to the homepage/i })).toHaveAttribute(
-      "href",
-      "/home",
-    );
 
     await user.click(screen.getByRole("button", { name: /review my details/i }));
     expect(onReviewDetails).toHaveBeenCalledTimes(1);

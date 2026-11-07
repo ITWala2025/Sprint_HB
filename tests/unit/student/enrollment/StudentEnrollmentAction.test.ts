@@ -2,10 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   getUser: vi.fn(),
-  resetPasswordForEmail: vi.fn(),
-  insertPayload: null as Record<string, unknown> | null,
-  insertSingle: vi.fn(),
-  duplicateLimit: vi.fn(),
+  rpc: vi.fn(),
+  maybeSingle: vi.fn(),
+  rpcCalls: [] as Array<{ name: string; args: Record<string, unknown> }>,
 }));
 
 vi.mock("next/headers", () => ({
@@ -14,42 +13,33 @@ vi.mock("next/headers", () => ({
     set: vi.fn(),
   }),
 }));
+
 vi.mock("@supabase/ssr", () => ({
   createServerClient: () => ({
-    auth: {
-      getUser: mocks.getUser,
-      resetPasswordForEmail: mocks.resetPasswordForEmail,
-    },
+    auth: { getUser: mocks.getUser },
   }),
 }));
+
 vi.mock("@/lib/supabase/service", () => ({
   createServiceClient: () => ({
+    rpc: (name: string, args: Record<string, unknown>) => {
+      mocks.rpcCalls.push({ name, args });
+      return mocks.rpc(name, args);
+    },
     from: () => ({
       select: () => ({
         eq: () => ({
-          eq: () => ({
-            limit: mocks.duplicateLimit,
-          }),
-        }),
-        like: () => ({
-          order: () => ({
-            limit: vi.fn().mockResolvedValue({ data: [], error: null }),
-          }),
+          eq: () => ({ maybeSingle: mocks.maybeSingle }),
         }),
       }),
-      insert: (payload: Record<string, unknown>) => {
-        mocks.insertPayload = payload;
-        return {
-          select: () => ({
-            single: mocks.insertSingle,
-          }),
-        };
-      },
     }),
   }),
 }));
 
-import { submitStudentEnrollmentAction } from "@/app/student/enroll/actions";
+import {
+  checkEnrollmentEmailAction,
+  submitStudentEnrollmentAction,
+} from "@/app/student/enroll/actions";
 
 const input = {
   personal: {
@@ -64,11 +54,10 @@ const input = {
   education: {},
 };
 
-describe("submitStudentEnrollmentAction", () => {
+describe("student enrollment actions", () => {
   beforeEach(() => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://sprint.example");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "publishable-key");
-    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "http://localhost:3001");
     mocks.getUser.mockResolvedValue({
       data: {
         user: {
@@ -79,53 +68,112 @@ describe("submitStudentEnrollmentAction", () => {
       },
       error: null,
     });
-    mocks.duplicateLimit.mockResolvedValue({ data: [], error: null });
-    mocks.insertSingle.mockResolvedValue({
-      data: { id: "application-id" },
+    mocks.rpc.mockResolvedValue({
+      data: {
+        registration_id: "registration-id",
+        application_id: "SPR-APP-2611-0001",
+        enrollment_count: 0,
+      },
       error: null,
     });
-    mocks.resetPasswordForEmail.mockResolvedValue({ error: null });
-    mocks.insertPayload = null;
+    mocks.maybeSingle.mockResolvedValue({
+      data: { id: "resolved-course-id" },
+      error: null,
+    });
+    mocks.rpcCalls = [];
   });
 
-  it("links the submitted application to the verified user and sends a password setup email", async () => {
+  it("uses a server-only RPC to check whether the email is already registered", async () => {
+    mocks.rpc.mockResolvedValueOnce({ data: true, error: null });
+
+    await expect(checkEnrollmentEmailAction(input.personal.email)).resolves.toEqual({
+      success: true,
+      exists: true,
+    });
+    expect(mocks.rpcCalls[0]).toEqual({
+      name: "check_auth_email_exists",
+      args: { p_email: input.personal.email },
+    });
+  });
+
+  it("routes an empty course selection to registrations only", async () => {
     const result = await submitStudentEnrollmentAction(input);
 
     expect(result).toMatchObject({
       success: true,
-      passwordSetupEmailSent: true,
+      applicationId: "SPR-APP-2611-0001",
+      hasCourseEnrollment: false,
     });
-    if (result.success) {
-      expect(result.applicationId).toMatch(/^SPR-APP-\d{4}-\w{4}$/);
-    }
-    expect(mocks.insertPayload).toMatchObject({
-      applicant_user_id: "student-auth-id",
-      status: "pending",
-      course_id: null,
+    expect(mocks.rpcCalls).toHaveLength(1);
+    expect(mocks.rpcCalls[0].name).toBe("submit_student_intake");
+    expect(mocks.rpcCalls[0].args).toMatchObject({
+      p_user_id: "student-auth-id",
+      p_full_name: "Ananya Sharma",
+      p_email: input.personal.email,
+      p_college_institution: null,
+      p_date_of_birth: "2004-06-15",
+      p_country: "India",
+      p_products: [],
     });
-    expect(mocks.resetPasswordForEmail).toHaveBeenCalledWith(
-      input.personal.email,
-      { redirectTo: "http://localhost:3001/set-password" },
-    );
   });
 
-  it("preserves the successful enrollment when the password setup email fails", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    mocks.resetPasswordForEmail.mockResolvedValue({
-      error: { message: "SMTP unavailable" },
+  it("resolves and submits multiple courses and bundles for transactional enrollment inserts", async () => {
+    mocks.rpc.mockResolvedValue({
+      data: {
+        registration_id: "registration-id",
+        application_id: "SPR-APP-2611-0001",
+        enrollment_count: 2,
+      },
+      error: null,
     });
 
-    try {
-      const result = await submitStudentEnrollmentAction(input);
+    const result = await submitStudentEnrollmentAction({
+      ...input,
+      education: {
+        collegeInstitution: "SPRINT Test College",
+        courseIds: ["course-slug"],
+        bundleIds: ["bundle-id"],
+      },
+    });
 
-      expect(result).toMatchObject({
-        success: true,
-        passwordSetupEmailSent: false,
+    expect(result).toMatchObject({
+      success: true,
+      hasCourseEnrollment: true,
+    });
+    expect(mocks.rpcCalls[0].args.p_products).toEqual([
+      { course_id: "resolved-course-id", bundle_id: null },
+      { course_id: null, bundle_id: "resolved-course-id" },
+    ]);
+    expect(mocks.rpcCalls[0].args.p_college_institution).toBe("SPRINT Test College");
+  });
+
+  it("rejects unverified or mismatched email sessions before writing", async () => {
+    mocks.getUser.mockResolvedValue({
+      data: { user: { id: "other-user", email: "other@example.com" } },
+      error: null,
+    });
+
+    const result = await submitStudentEnrollmentAction(input);
+
+    expect(result).toMatchObject({
+      success: false,
+      error: expect.stringMatching(/verify the same email/i),
+    });
+    expect(mocks.rpcCalls).toHaveLength(0);
+  });
+
+  it("surfaces authentication email lookup errors", async () => {
+    mocks.rpc.mockResolvedValueOnce({
+      data: null,
+      error: { message: "RPC missing" },
+    });
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      await expect(checkEnrollmentEmailAction(input.personal.email)).resolves.toEqual({
+        success: false,
+        error: "We couldn't check this email. Please try again.",
       });
-      if (result.success) {
-        expect(result.applicationId).toMatch(/^SPR-APP-\d{4}-\w{4}$/);
-        expect(result.message).toMatch(/Forgot Password/);
-      }
     } finally {
       errorSpy.mockRestore();
     }

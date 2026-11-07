@@ -23,7 +23,7 @@ export default function EnrollmentSuccessPanel({
   headingId,
   values,
   applicationId,
-  passwordSetupEmailSent,
+  hasCourseEnrollment,
   onReviewDetails,
   className = "",
 }) {
@@ -53,7 +53,9 @@ export default function EnrollmentSuccessPanel({
         Your enrollment details are ready
       </h2>
       <p className="mt-1.5 text-sm leading-relaxed text-brand-text-secondary">
-        Your enrollment has been submitted and is waiting for review.
+        {hasCourseEnrollment
+          ? "Your registration and course enrollment have been submitted and are waiting for review."
+          : "Your registration has been saved. You can apply for a course later."}
       </p>
 
       {applicationId ? (
@@ -85,19 +87,10 @@ export default function EnrollmentSuccessPanel({
         </dl>
       ) : null}
 
-      {passwordSetupEmailSent ? (
-        <p className="mt-4 rounded-xl bg-brand-surface px-3.5 py-3 text-[11px] font-medium leading-relaxed text-brand-text-secondary">
-          We sent a password setup link to {personal.email}. Set your password, then sign in to the Student Dashboard to check your application status.
-        </p>
-      ) : (
-        <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-[11px] font-medium leading-relaxed text-amber-900">
-          Your application was saved, but we couldn&apos;t send the password setup email. You can set your password from{" "}
-          <Link className="font-bold underline" href="/student/forgot-password">
-            Forgot Password
-          </Link>
-          .
-        </p>
-      )}
+      <p className="mt-4 rounded-xl bg-brand-surface px-3.5 py-3 text-[11px] font-medium leading-relaxed text-brand-text-secondary">
+        Your password is set. Sign in with {personal.email} and the password
+        you created during enrollment. Taking you to your Student Dashboard…
+      </p>
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <AuthButton
@@ -110,10 +103,10 @@ export default function EnrollmentSuccessPanel({
         </AuthButton>
 
         <Link
-          href={passwordSetupEmailSent ? "/student/login" : "/home"}
+          href="/student/dashboard"
           className="sprint-focus inline-flex h-12 items-center justify-center rounded-xl px-3 text-sm font-semibold text-brand-navy hover:text-brand-red"
         >
-          {passwordSetupEmailSent ? "Go to student sign in" : "Back to the homepage"}
+          Go to Student Dashboard
         </Link>
       </div>
     </section>

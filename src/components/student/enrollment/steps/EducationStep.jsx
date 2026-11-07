@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Briefcase, CalendarDays, GraduationCap } from "lucide-react";
+import { BookOpen, Briefcase, CalendarDays, GraduationCap, University } from "lucide-react";
 
 import AuthField from "@/components/student/auth/AuthField";
 import { catalogueItems } from "@/data/courses";
@@ -14,8 +14,9 @@ import {
 /**
  * Step 2 — Education & Career Profile (optional).
  *
- * Four profile fields, nothing required: `courseDegree` and `semesterYear` are
- * free text, `currentRole` is a fixed dropdown, and `course` is a dropdown fed
+ * Five profile fields, nothing required: `collegeInstitution`, `courseDegree`
+ * and `semesterYear` are free text, `currentRole` is a fixed dropdown, and
+ * `course` is a dropdown fed
  * from the same source of truth the SPRINT Course page uses — the Supabase
  * `courses` table first, the local catalogue in `src/data/courses.js` as the
  * fallback (see `enrollment-course-options.js`). No course names are written
@@ -103,6 +104,18 @@ export default function EducationStep({ idPrefix, values = {}, errors = {}, onCh
 
       <div className="grid gap-5 sm:grid-cols-2">
         <AuthField
+          id={`${idPrefix}-collegeInstitution`}
+          name="collegeInstitution"
+          label="College / Institution"
+          value={values.collegeInstitution ?? ""}
+          onChange={onChange("collegeInstitution")}
+          error={errors.collegeInstitution}
+          placeholder="Your college or institution"
+          autoComplete="organization"
+          icon={<University aria-hidden="true" className="size-4.5" />}
+        />
+
+        <AuthField
           id={`${idPrefix}-courseDegree`}
           name="courseDegree"
           label="Course / Degree"
@@ -155,4 +168,3 @@ export default function EducationStep({ idPrefix, values = {}, errors = {}, onCh
     </div>
   );
 }
-

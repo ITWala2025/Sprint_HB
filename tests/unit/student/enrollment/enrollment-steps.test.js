@@ -8,8 +8,8 @@ import {
 } from "@/components/student/enrollment/enrollment-steps";
 
 describe("Enrollment step registry", () => {
-  it("keeps the three agreed steps in order", () => {
-    expect(ENROLLMENT_STEP_IDS).toEqual(["personal", "education", "account"]);
+  it("keeps email verification, password setup, and optional education in order", () => {
+    expect(ENROLLMENT_STEP_IDS).toEqual(["personal", "password", "education"]);
     expect(ENROLLMENT_STEP_COUNT).toBe(3);
   });
 
@@ -38,7 +38,7 @@ describe("Enrollment step registry", () => {
     expect(scaffolded).toEqual([]);
   });
 
-  it("marks only Step 2 optional and hands it the agreed skip notice", () => {
+  it("marks only the education step optional and hands it the agreed skip notice", () => {
     const optional = ENROLLMENT_STEPS.filter((step) => step.isOptional);
 
     expect(optional.map((step) => step.id)).toEqual(["education"]);
@@ -65,13 +65,17 @@ describe("Enrollment step registry", () => {
         state: "",
         phone: "",
       },
+      password: {
+        newPassword: "",
+        confirmPassword: "",
+      },
       education: {
+        collegeInstitution: "",
         courseDegree: "",
         semesterYear: "",
         currentRole: "",
         course: "",
       },
-      account: {},
     });
   });
 

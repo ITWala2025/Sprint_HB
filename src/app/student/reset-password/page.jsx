@@ -273,6 +273,16 @@ export default function ResetPasswordPage({ isModal = true }) {
         data: { session: freshSession },
       } = await supabase.auth.getSession();
 
+      const nextPath =
+        new URLSearchParams(window.location.search).get("next") ===
+        "/student/enroll"
+          ? "/student/enroll"
+          : null;
+      if (nextPath) {
+        window.location.href = nextPath;
+        return;
+      }
+
       if (freshSession?.user) {
         const { data: freshProfile } = await supabase
           .from("profiles")

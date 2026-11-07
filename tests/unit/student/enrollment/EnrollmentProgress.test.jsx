@@ -19,7 +19,7 @@ describe("EnrollmentProgress", () => {
     renderProgress({ currentIndex: 1 });
 
     const counter = screen.getByText("Step 2 of 3");
-    expect(within(counter.closest("div")).getByText("Education")).toBeInTheDocument();
+    expect(within(counter.closest("div")).getByText("Password")).toBeInTheDocument();
   });
 
   it("lists every step in order and marks the active one", () => {
@@ -29,11 +29,11 @@ describe("EnrollmentProgress", () => {
     expect(items).toHaveLength(3);
     expect(items.map((item) => item.textContent)).toEqual([
       expect.stringContaining("Personal"),
+      expect.stringContaining("Password"),
       expect.stringContaining("Education"),
-      expect.stringContaining("Account"),
     ]);
 
-    expect(screen.getByRole("button", { name: /account/i })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: /education/i })).toHaveAttribute(
       "aria-current",
       "step",
     );
@@ -53,8 +53,8 @@ describe("EnrollmentProgress", () => {
     renderProgress({ currentIndex: 2, onStepSelect });
 
     expect(screen.getByRole("button", { name: /personal/i })).toBeEnabled();
-    expect(screen.getByRole("button", { name: /education/i })).toBeEnabled();
-    expect(screen.getByRole("button", { name: /account/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /password/i })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /education/i })).toBeDisabled();
 
     await user.click(screen.getByRole("button", { name: /personal/i }));
     expect(onStepSelect).toHaveBeenCalledWith(0);

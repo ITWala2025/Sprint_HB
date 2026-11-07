@@ -17,15 +17,12 @@ export default function EnrollmentStepPanel({
   children,
   className = "",
 }) {
-  const isAccountStep = step.id === "account";
-
   return (
     <section
       aria-labelledby={headingId}
       className={`rounded-2xl border border-brand-border bg-brand-white p-5 shadow-brand-card sm:p-6 ${className}`}
     >
-      {!isAccountStep ? (
-        <header>
+      <header>
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-red">
               Step {stepNumber} of {totalSteps}
@@ -55,10 +52,9 @@ export default function EnrollmentStepPanel({
               {step.description}
             </p>
           ) : null}
-        </header>
-      ) : null}
+      </header>
 
-      <div className={isAccountStep ? "" : "mt-5"}>{children}</div>
+      <div className="mt-5">{children}</div>
     </section>
   );
 }

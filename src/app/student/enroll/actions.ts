@@ -5,8 +5,12 @@ import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/service";
-import { isSmtpConfigured, sendPasswordSetupEmail } from "@/lib/email/mailer";
-import { generateNextApplicationId } from "@/lib/id-utils";
+import { formatApplicationId, isUuid } from "@/lib/id-utils";
+
+type ProductSelection = {
+  course_id: string | null;
+  bundle_id: string | null;
+};
 
 export type StudentEnrollmentInput = {
   personal?: {
@@ -19,24 +23,32 @@ export type StudentEnrollmentInput = {
     phone?: string;
   };
   education?: {
+    collegeInstitution?: string;
     courseDegree?: string;
     semesterYear?: string;
     currentRole?: string;
     course?: string;
+    courseIds?: string[];
+    bundleIds?: string[];
   };
 };
 
 export type StudentEnrollmentResult =
   | {
-    success: true;
-    applicationId: string;
-    message: string;
-    passwordSetupEmailSent: boolean;
-  }
+      success: true;
+      applicationId: string;
+      message: string;
+      hasCourseEnrollment: boolean;
+    }
+  | { success: false; error: string };
+
+export type EnrollmentEmailCheckResult =
+  | { success: true; exists: boolean }
   | { success: false; error: string };
 
 const NAME_PATTERN = /^[A-Za-z][A-Za-z\s.'-]*$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_SELECTED_PRODUCTS = 10;
 
 function asText(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
@@ -56,7 +68,6 @@ function isValidDate(value: string): boolean {
   const year = Number(yearText);
   const month = Number(monthText);
   const day = Number(dayText);
-
   if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) return false;
   if (month < 1 || month > 12) return false;
 
@@ -65,28 +76,101 @@ function isValidDate(value: string): boolean {
 
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-  const candidate = new Date(Date.UTC(year, month - 1, day));
-  return candidate.getTime() <= today.getTime();
+  return new Date(Date.UTC(year, month - 1, day)).getTime() <= today.getTime();
 }
 
-function isUuid(value: string): boolean {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+function readSelections(values: StudentEnrollmentInput["education"]): {
+  courseIds: string[];
+  bundleIds: string[];
+} {
+  const rawCourseIds = values?.courseIds;
+  const rawBundleIds = values?.bundleIds;
+  if (
+    (rawCourseIds !== undefined && !Array.isArray(rawCourseIds)) ||
+    (rawBundleIds !== undefined && !Array.isArray(rawBundleIds)) ||
+    rawCourseIds?.some((value) => typeof value !== "string") ||
+    rawBundleIds?.some((value) => typeof value !== "string")
+  ) {
+    throw new Error("The selected course information is invalid.");
+  }
+
+  const courseIds = (rawCourseIds ?? []).map(asText).filter(Boolean);
+  const bundleIds = (rawBundleIds ?? []).map(asText).filter(Boolean);
+  if (courseIds.length === 0 && bundleIds.length === 0 && asText(values?.course)) {
+    courseIds.push(asText(values?.course));
+  }
+
+  if (courseIds.length + bundleIds.length > MAX_SELECTED_PRODUCTS) {
+    throw new Error(`Please select no more than ${MAX_SELECTED_PRODUCTS} courses or bundles.`);
+  }
+
+  const allIds = [...courseIds, ...bundleIds];
+  if (new Set(allIds).size !== allIds.length) {
+    throw new Error("The same course or bundle cannot be selected more than once.");
+  }
+
+  return { courseIds, bundleIds };
 }
 
-function isPendingEmailDuplicateInsertError(
-  error: { code?: string; message?: string; details?: string; constraint?: string } | null | undefined,
-): boolean {
-  if (!error || error.code !== "23505") return false;
+async function resolveProducts(
+  serviceClient: NonNullable<ReturnType<typeof createServiceClient>>,
+  courseIds: string[],
+  bundleIds: string[],
+): Promise<ProductSelection[]> {
+  const products: ProductSelection[] = [];
 
-  const haystack = [error.message ?? "", error.details ?? "", error.constraint ?? ""]
-    .join(" ")
-    .toLowerCase();
+  for (const [table, selections, key] of [
+    ["courses", courseIds, "course_id"],
+    ["course_bundles", bundleIds, "bundle_id"],
+  ] as const) {
+    for (const selection of selections) {
+      const field = isUuid(selection) ? "id" : "slug";
+      const { data, error } = await serviceClient
+        .from(table)
+        .select("id")
+        .eq(field, selection)
+        .eq("is_published", true)
+        .maybeSingle();
 
-  return (
-    haystack.includes("enrollments_one_pending_per_email_idx") ||
-    haystack.includes("pending_per_email") ||
-    haystack.includes("one_pending_per_email")
-  );
+      if (error) {
+        throw new Error(`The selected ${key === "course_id" ? "course" : "bundle"} could not be verified: ${error.message}`);
+      }
+      if (!data?.id) {
+        throw new Error("A selected course or bundle is no longer available.");
+      }
+
+      products.push({
+        course_id: key === "course_id" ? data.id : null,
+        bundle_id: key === "bundle_id" ? data.id : null,
+      });
+    }
+  }
+
+  return products;
+}
+
+export async function checkEnrollmentEmailAction(
+  rawEmail: string,
+): Promise<EnrollmentEmailCheckResult> {
+  const email = asText(rawEmail).toLowerCase();
+  if (!EMAIL_PATTERN.test(email)) {
+    return { success: false, error: "Please enter a valid email address." };
+  }
+
+  const serviceClient = createServiceClient();
+  if (!serviceClient) {
+    return { success: false, error: "Email verification is temporarily unavailable." };
+  }
+
+  const { data, error } = await serviceClient.rpc("check_auth_email_exists", {
+    p_email: email,
+  });
+  if (error) {
+    console.error("Enrollment email lookup failed:", error.message);
+    return { success: false, error: "We couldn't check this email. Please try again." };
+  }
+
+  return { success: true, exists: data === true };
 }
 
 export async function submitStudentEnrollmentAction(
@@ -95,41 +179,47 @@ export async function submitStudentEnrollmentAction(
   try {
     const personal = input?.personal ?? {};
     const education = input?.education ?? {};
-
     const firstName = asText(personal.firstName);
     const lastName = asText(personal.lastName);
     const email = asText(personal.email).toLowerCase();
     const dob = asText(personal.dob);
+    const country = asText(personal.country);
     const state = asText(personal.state);
     const phone = normalizePhone(asText(personal.phone));
-    const country = asText(personal.country);
-
     const courseDegree = asText(education.courseDegree);
     const semesterYear = asText(education.semesterYear);
     const currentRole = asText(education.currentRole);
-    const rawCourseId = asText(education.course);
 
     if (!firstName || !NAME_PATTERN.test(firstName)) {
       return { success: false, error: "Please enter a valid first name." };
     }
-
     if (!lastName || !NAME_PATTERN.test(lastName)) {
       return { success: false, error: "Please enter a valid last name." };
     }
-
     if (!email || !EMAIL_PATTERN.test(email)) {
       return { success: false, error: "Please enter a valid email address." };
     }
+    if (!dob || !isValidDate(dob)) {
+      return { success: false, error: "Please enter a valid date of birth." };
+    }
+    if (!country) {
+      return { success: false, error: "Please select your country." };
+    }
+    if (!state) {
+      return { success: false, error: "Please select your state." };
+    }
+    if (!phone || phone.length !== 10) {
+      return { success: false, error: "Please enter a valid 10-digit mobile number." };
+    }
 
+    const { courseIds, bundleIds } = readSelections(education);
+    const collegeInstitution = asText(education.collegeInstitution);
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const publishableKey =
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     if (!supabaseUrl || !publishableKey) {
-      return {
-        success: false,
-        error: "Email verification is temporarily unavailable. Please try again later.",
-      };
+      return { success: false, error: "Email verification is temporarily unavailable." };
     }
 
     const cookieStore = await cookies();
@@ -144,245 +234,65 @@ export async function submitStudentEnrollmentAction(
       },
     });
     const { data: authData, error: authError } = await authClient.auth.getUser();
-    if (authError) {
-      return {
-        success: false,
-        error: "Your email verification could not be confirmed. Please open the latest verification link and try again.",
-      };
-    }
     if (
+      authError ||
       !authData.user?.email_confirmed_at ||
       authData.user.email?.toLowerCase() !== email
     ) {
       return {
         success: false,
-        error: "Please verify the same email address you entered before submitting your enrollment.",
+        error: "Verify the same email address you entered before submitting your registration.",
       };
-    }
-
-    if (!dob || !isValidDate(dob)) {
-      return { success: false, error: "Please enter your date of birth." };
-    }
-
-    if (!country) {
-      return { success: false, error: "Please select your country." };
-    }
-
-    if (!state) {
-      return { success: false, error: "Please select your state." };
-    }
-
-    if (!phone || phone.length !== 10) {
-      return { success: false, error: "Please enter a valid 10-digit mobile number." };
     }
 
     const serviceClient = createServiceClient();
     if (!serviceClient) {
       return { success: false, error: "Server-side Supabase is not configured." };
     }
+    const products = await resolveProducts(serviceClient, courseIds, bundleIds);
 
-    let resolvedCourseId: string | null = null;
-    let resolvedBundleId: string | null = null;
+    const { data, error } = await serviceClient.rpc("submit_student_intake", {
+      p_user_id: authData.user.id,
+      p_full_name: `${firstName} ${lastName}`,
+      p_email: email,
+      p_phone: phone,
+      p_college_institution: collegeInstitution || null,
+      p_date_of_birth: dob,
+      p_country: country,
+      p_state: state,
+      p_course_degree: courseDegree || null,
+      p_year_semester: semesterYear || null,
+      p_employment_status: currentRole || null,
+      p_products: products,
+    });
 
-    if (rawCourseId) {
-      if (isUuid(rawCourseId)) {
-        const { data: course, error: courseError } = await serviceClient
-          .from("courses")
-          .select("id")
-          .eq("id", rawCourseId)
-          .maybeSingle();
-
-        if (courseError) {
-          return {
-            success: false,
-            error: `The selected course could not be verified: ${courseError.message}`,
-          };
-        }
-
-        if (course) {
-          resolvedCourseId = course.id;
-        } else {
-          const { data: bundle } = await serviceClient
-            .from("course_bundles")
-            .select("id")
-            .eq("id", rawCourseId)
-            .maybeSingle();
-
-          if (bundle) {
-            resolvedBundleId = bundle.id;
-          } else {
-            return { success: false, error: "The selected course is no longer available." };
-          }
-        }
-      } else {
-        // Resolve slug against courses and bundles
-        const { data: courseBySlug } = await serviceClient
-          .from("courses")
-          .select("id")
-          .eq("slug", rawCourseId)
-          .maybeSingle();
-
-        if (courseBySlug) {
-          resolvedCourseId = courseBySlug.id;
-        } else {
-          const { data: bundleBySlug } = await serviceClient
-            .from("course_bundles")
-            .select("id")
-            .eq("slug", rawCourseId)
-            .maybeSingle();
-
-          if (bundleBySlug) {
-            resolvedBundleId = bundleBySlug.id;
-          } else {
-            return { success: false, error: "The selected course is invalid." };
-          }
-        }
-      }
-    }
-
-    const { data: existingPending, error: duplicateCheckError } = await serviceClient
-      .from("enrollments")
-      .select("id")
-      .eq("email", email)
-      .eq("status", "pending")
-      .limit(1);
-
-    if (duplicateCheckError) {
-      return {
-        success: false,
-        error: `Could not verify a duplicate submission: ${duplicateCheckError.message}`,
-      };
-    }
-
-    if (existingPending && existingPending.length > 0) {
-      return {
-        success: false,
-        error: "A pending registration for this email already exists. Please review your earlier submission.",
-      };
-    }
-
-    const applicationNumber = await generateNextApplicationId(serviceClient);
-
-    const payload = {
-      application_number: applicationNumber,
-      course_id: resolvedCourseId,
-      bundle_id: resolvedBundleId,
-      batch_id: null,
-      full_name: `${firstName} ${lastName}`,
-      email,
-      phone,
-      college_institution: null,
-      course_degree: courseDegree || null,
-      specialization_branch: null,
-      year_semester: semesterYear || null,
-      city: null,
-      state: state || null,
-      employment_status: currentRole || null,
-      organization_name: null,
-      source_of_info: null,
-      terms_accepted: false,
-      communication_consent: false,
-      applicant_user_id: authData.user.id,
-      status: "pending",
-      admin_notes: null,
-    };
-
-    const { data: inserted, error: insertError } = await serviceClient
-      .from("enrollments")
-      .insert(payload)
-      .select("id, application_number")
-      .single();
-
-    if (insertError) {
-      if (isPendingEmailDuplicateInsertError(insertError)) {
+    if (error) {
+      console.error("Student intake submission failed:", error.message);
+      if (error.message.toLowerCase().includes("pending course application")) {
         return {
           success: false,
-          error: "A pending registration for this email already exists. Please review your earlier submission.",
+          error: "A pending application already exists for one of these courses. Please review your earlier submission.",
         };
       }
-
       return {
         success: false,
-        error: insertError.message ?? "The enrollment could not be saved right now.",
+        error: "Your registration could not be saved. Please try again.",
       };
     }
-
-    if (!inserted?.id) {
-      return {
-        success: false,
-        error: "The enrollment could not be saved right now.",
-      };
+    if (!data?.registration_id) {
+      return { success: false, error: "The registration could not be saved right now." };
     }
 
-    const confirmedApplicationId = inserted.application_number || applicationNumber;
-
-    let passwordSetupEmailSent = false;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-
-    if (!siteUrl) {
-      console.error("Password setup email was not sent: NEXT_PUBLIC_SITE_URL is not configured.");
-    } else {
-      const redirectTo = new URL("/set-password", siteUrl).toString();
-
-      // If custom SMTP is configured, attempt immediate direct sending via Nodemailer & Supabase generateLink
-      if (isSmtpConfigured() && serviceClient?.auth?.admin?.generateLink) {
-        try {
-          const { data: linkData, error: linkError } =
-            await serviceClient.auth.admin.generateLink({
-              type: "recovery",
-              email,
-              options: { redirectTo },
-            });
-
-          if (!linkError && linkData?.properties?.action_link) {
-            const sendResult = await sendPasswordSetupEmail(
-              { email, name: `${firstName} ${lastName}`.trim() },
-              {
-                actionUrl: linkData.properties.action_link,
-                fullName: `${firstName} ${lastName}`.trim(),
-                courseName: (resolvedCourseId || resolvedBundleId) ? "SPRINT Applied Program" : undefined,
-                applicationId: confirmedApplicationId,
-              }
-            );
-
-            if (sendResult.success) {
-              passwordSetupEmailSent = true;
-            }
-          }
-        } catch (immediateSendError) {
-          console.warn(
-            "[Enrollment] Direct immediate email dispatch failed, falling back to authClient:",
-            immediateSendError,
-          );
-        }
-      }
-
-      // Fallback to Supabase GoTrue mailer if not sent directly
-      if (!passwordSetupEmailSent) {
-        try {
-          const { error: passwordSetupError } =
-            await authClient.auth.resetPasswordForEmail(email, {
-              redirectTo,
-            });
-
-          if (passwordSetupError) {
-            console.error("Password setup email could not be sent:", passwordSetupError.message);
-          } else {
-            passwordSetupEmailSent = true;
-          }
-        } catch (passwordSetupError) {
-          console.error("Password setup email could not be sent:", passwordSetupError);
-        }
-      }
-    }
-
+    const hasCourseEnrollment = Number(data.enrollment_count) > 0;
     return {
       success: true,
-      applicationId: confirmedApplicationId,
-      passwordSetupEmailSent,
-      message: passwordSetupEmailSent
-        ? "Your enrollment has been received. Check your email to set your password and sign in to view your application status."
-        : "Your enrollment has been received, but we couldn't send the password setup email. Use Forgot Password on the student sign-in page to set your password.",
+      applicationId:
+        data.application_id ||
+        formatApplicationId(null, data.registration_id),
+      hasCourseEnrollment,
+      message: hasCourseEnrollment
+        ? "Your registration and course enrollment have been submitted for review."
+        : "Your registration has been saved. You can apply for a course later.",
     };
   } catch (error) {
     return {
@@ -390,7 +300,7 @@ export async function submitStudentEnrollmentAction(
       error:
         error instanceof Error
           ? error.message
-          : "Something went wrong while submitting your enrollment.",
+          : "Something went wrong while submitting your registration.",
     };
   }
 }

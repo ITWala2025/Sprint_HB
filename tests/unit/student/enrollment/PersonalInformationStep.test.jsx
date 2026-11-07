@@ -1,7 +1,11 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import PersonalInformationStep from "@/components/student/enrollment/steps/PersonalInformationStep";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
 
 const FIELD_IDS = [
   "personal-firstName",
@@ -34,6 +38,10 @@ describe("PersonalInformationStep", () => {
         {...props}
       />,
     );
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it("renders the seven labelled fields in the agreed order", () => {
     renderStep();
@@ -145,7 +153,7 @@ describe("PersonalInformationStep", () => {
       "personal-firstName-hint",
     );
     expect(screen.getByText(/certificate/i)).toHaveAttribute("id", "personal-firstName-hint");
-    expect(screen.getByText(/login link arrive here/i)).toHaveAttribute(
+    expect(screen.getByText(/verify this address/i)).toHaveAttribute(
       "id",
       "personal-email-hint",
     );

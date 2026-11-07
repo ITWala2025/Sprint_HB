@@ -62,14 +62,14 @@ describe("StudentLoginPage enrollment actions", () => {
     expect(screen.queryByLabelText(/mobile number/i)).not.toBeInTheDocument();
   });
 
-  it("explains that email verification does not set a password", () => {
+  it("explains that students sign in with the password created during enrollment", () => {
     render(<StudentLoginPage />);
 
     expect(
-      screen.getByText(/verification link only confirms your email/i),
-    ).toBeInTheDocument();
+      screen.getByText(/six-digit code confirms your email/i),
+    ).toHaveTextContent(/password is set before you submit your application/i);
     expect(
-      screen.getByText(/use Forgot Password now/i),
+      screen.getByText(/if you forgot your password/i),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/check your application status while it is under review/i),
@@ -77,6 +77,30 @@ describe("StudentLoginPage enrollment actions", () => {
     expect(
       screen.getByRole("link", { name: "Forgot Password?" }),
     ).toHaveAttribute("href", "/student/forgot-password");
+  });
+
+  it("accepts the enrollment email and password for an active student profile", async () => {
+    const user = userEvent.setup();
+    mocks.signInWithPassword.mockResolvedValue({
+      data: { user: { id: "student-user-id" } },
+      error: null,
+    });
+    mocks.profileResult = {
+      data: { role: "student", status: "active" },
+      error: null,
+    };
+    render(<StudentLoginPage />);
+
+    await user.type(screen.getByLabelText(/email address/i), "student@example.com");
+    await user.type(screen.getByLabelText(/^password/i), "ValidPass123!");
+    await user.click(screen.getByRole("button", { name: /sign in/i }));
+
+    expect(mocks.signInWithPassword).toHaveBeenCalledWith({
+      email: "student@example.com",
+      password: "ValidPass123!",
+    });
+    expect(await screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
   it("explains what to do when a student profile is missing", async () => {

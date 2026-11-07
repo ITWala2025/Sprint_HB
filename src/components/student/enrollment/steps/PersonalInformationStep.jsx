@@ -1,44 +1,201 @@
-import { CalendarDays, Globe, Mail, Map, Phone, User, UserRound } from "lucide-react";
+"use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  CalendarDays,
+  Globe,
+  Mail,
+  Map,
+  Phone,
+  User,
+  UserRound,
+} from "lucide-react";
+
+import AuthButton from "@/components/student/auth/AuthButton";
 import AuthField from "@/components/student/auth/AuthField";
+import { createClient } from "@/lib/supabase/client";
+import { checkEnrollmentEmailAction } from "@/app/student/enroll/actions";
 
 import { DEFAULT_COUNTRY, COUNTRY_OPTIONS, getStatesForCountry } from "../enrollment-locations";
-import { normalizeMobile } from "../enrollment-validation";
+import { normalizeMobile, EMAIL_PATTERN } from "../enrollment-validation";
 
-/**
- * Step 1 — Personal Information.
- *
- * Seven required fields in a two-column grid (single column below `md`):
- * First Name | Last Name, Email | Date of Birth, Country | State, then Phone
- * Number alone in the left column of the last row. Every field id is
- * `${idPrefix}-${fieldName}` (e.g. `personal-email`) because that is the
- * convention the wizard uses to move focus to the first invalid field after a
- * failed submit.
- *
- * Country defaults to India, so the State select starts enabled with the full
- * Indian list; picking a different country (including the empty placeholder)
- * replaces the State options and clears the previous answer, because a state
- * chosen under the old country no longer exists in the new list. The phone box
- * keeps the `+91` prefix and holds digits only — the handler normalises typed
- * or pasted input (`+91 98765 43210` → `9876543210`) and caps it at ten digits
- * so `validateMobileField` always sees the raw number.
- *
- * Fields are controlled by the wizard, so re-visiting this step always shows
- * what was typed before.
- */
-export default function PersonalInformationStep({ idPrefix, values = {}, errors = {}, onChange }) {
+export default function PersonalInformationStep({
+  idPrefix,
+  values = {},
+  errors = {},
+  onChange,
+  onBeforeAuthRedirect,
+  onVerificationChange,
+}) {
+  const router = useRouter();
   const country = values.country ?? DEFAULT_COUNTRY;
   const stateOptions = getStatesForCountry(country);
+  const email = values.email?.trim().toLowerCase() ?? "";
+  const [emailStatus, setEmailStatus] = useState("idle");
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [verificationError, setVerificationError] = useState("");
 
-  // Changing country invalidates the previous state answer, so both writes go
-  // through the wizard's shared updater in one handler.
+  useEffect(() => {
+    let active = true;
+    setOtp("");
+    setOtpSent(false);
+    setVerificationError("");
+
+    if (!EMAIL_PATTERN.test(email)) {
+      setEmailStatus("idle");
+      onVerificationChange?.(false, false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setEmailStatus("checking");
+    const timer = window.setTimeout(async () => {
+      try {
+        const supabase = createClient();
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+        if (sessionError) throw sessionError;
+
+        if (
+          session?.user?.email_confirmed_at &&
+          session.user.email?.toLowerCase() === email
+        ) {
+          if (!active) return;
+          setEmailStatus("verified");
+          onVerificationChange?.(true, false);
+          return;
+        }
+
+        const result = await checkEnrollmentEmailAction(email);
+        if (!result.success) throw new Error(result.error);
+        if (!active) return;
+
+        setEmailStatus(result.exists ? "existing" : "new");
+        onVerificationChange?.(false, false);
+      } catch (error) {
+        if (!active) return;
+        setEmailStatus("error");
+        setVerificationError(
+          error instanceof Error
+            ? error.message
+            : "We couldn't check this email. Please try again.",
+        );
+        onVerificationChange?.(false, false);
+      }
+    }, 350);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [email, onVerificationChange]);
+
   const handleCountryChange = (event) => {
     onChange("country")(event);
     onChange("state")({ target: { value: "" } });
   };
 
   const handlePhoneChange = (event) => {
-    onChange("phone")({ target: { value: normalizeMobile(event.target.value).slice(0, 10) } });
+    onChange("phone")({
+      target: { value: normalizeMobile(event.target.value).slice(0, 10) },
+    });
+  };
+
+  const handleSendOtp = async () => {
+    if (!email || isSendingOtp) return;
+    setVerificationError("");
+    setIsSendingOtp(true);
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: true,
+          data: {
+            full_name: `${values.firstName ?? ""} ${values.lastName ?? ""}`.trim(),
+            first_name: values.firstName ?? "",
+            last_name: values.lastName ?? "",
+            mobile_number: values.phone ?? "",
+          },
+        },
+      });
+
+      if (error) throw error;
+      setOtpSent(true);
+    } catch (error) {
+      setVerificationError(
+        error instanceof Error
+          ? `We couldn't send the verification code: ${error.message}`
+          : "We couldn't send the verification code. Please try again.",
+      );
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!/^\d{6}$/.test(otp) || isVerifyingOtp) return;
+    setVerificationError("");
+    setIsVerifyingOtp(true);
+
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.verifyOtp({
+        email,
+        token: otp,
+        type: "email",
+      });
+      if (error) throw error;
+      if (
+        !data.session?.user?.email_confirmed_at ||
+        data.session.user.email?.toLowerCase() !== email
+      ) {
+        throw new Error(
+          "The code did not create a verified session for the email address in this form.",
+        );
+      }
+
+      setEmailStatus("verified");
+      onVerificationChange?.(true, true);
+    } catch (error) {
+      setVerificationError(
+        error instanceof Error
+          ? `We couldn't verify that code: ${error.message}`
+          : "We couldn't verify that code. Check it and try again.",
+      );
+    } finally {
+      setIsVerifyingOtp(false);
+    }
+  };
+
+  const handleChangeEmail = () => {
+    setOtp("");
+    setOtpSent(false);
+    setVerificationError("");
+    setEmailStatus("new");
+    onVerificationChange?.(false, false);
+  };
+
+  const routeToAccount = async (path) => {
+    setVerificationError("");
+    try {
+      onBeforeAuthRedirect?.();
+      router.push(path);
+    } catch (error) {
+      setVerificationError(
+        error instanceof Error
+          ? error.message
+          : "Your enrollment details could not be saved before leaving this page.",
+      );
+    }
   };
 
   return (
@@ -47,7 +204,7 @@ export default function PersonalInformationStep({ idPrefix, values = {}, errors 
         All seven fields are required — they open your student file.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
         <AuthField
           id={`${idPrefix}-firstName`}
           name="firstName"
@@ -61,7 +218,6 @@ export default function PersonalInformationStep({ idPrefix, values = {}, errors 
           hint="Spell it exactly as it should appear on your certificate."
           required
         />
-
         <AuthField
           id={`${idPrefix}-lastName`}
           name="lastName"
@@ -74,7 +230,6 @@ export default function PersonalInformationStep({ idPrefix, values = {}, errors 
           icon={<UserRound aria-hidden="true" className="size-4.5" />}
           required
         />
-
         <AuthField
           id={`${idPrefix}-email`}
           name="email"
@@ -87,10 +242,15 @@ export default function PersonalInformationStep({ idPrefix, values = {}, errors 
           autoComplete="email"
           inputMode="email"
           icon={<Mail aria-hidden="true" className="size-4.5" />}
-          hint="Your enrollment confirmation and Student Portal login link arrive here."
+          hint="We will verify this address with a six-digit code."
           required
+          disabled={
+            emailStatus === "verified" ||
+            otpSent ||
+            isSendingOtp ||
+            isVerifyingOtp
+          }
         />
-
         <AuthField
           id={`${idPrefix}-dob`}
           name="dob"
@@ -104,7 +264,6 @@ export default function PersonalInformationStep({ idPrefix, values = {}, errors 
           showIcon={false}
           required
         />
-
         <AuthField
           id={`${idPrefix}-country`}
           name="country"
@@ -118,7 +277,6 @@ export default function PersonalInformationStep({ idPrefix, values = {}, errors 
           icon={<Globe aria-hidden="true" className="size-4.5" />}
           required
         />
-
         <AuthField
           id={`${idPrefix}-state`}
           name="state"
@@ -138,7 +296,6 @@ export default function PersonalInformationStep({ idPrefix, values = {}, errors 
           }
           required
         />
-
         <AuthField
           id={`${idPrefix}-phone`}
           name="phone"
@@ -156,6 +313,119 @@ export default function PersonalInformationStep({ idPrefix, values = {}, errors 
           required
         />
       </div>
+
+      <section
+        aria-label="Email verification"
+        className="space-y-3 rounded-xl border border-brand-border bg-brand-off-white p-4"
+      >
+        {emailStatus === "checking" ? (
+          <p role="status" className="text-sm text-brand-text-secondary">
+            Checking this email…
+          </p>
+        ) : null}
+        {emailStatus === "existing" ? (
+          <div className="space-y-3">
+            <p className="text-sm font-semibold text-brand-navy">
+              An account is already registered with this email. Sign in or
+              reset your password to continue.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <AuthButton
+                type="button"
+                onClick={() =>
+                  routeToAccount("/student/login?next=%2Fstudent%2Fdashboard")
+                }
+              >
+                Log In to Existing Account
+              </AuthButton>
+              <AuthButton
+                type="button"
+                variant="secondary"
+                onClick={() =>
+                  routeToAccount(
+                    "/student/forgot-password?next=%2Fstudent%2Fdashboard",
+                  )
+                }
+              >
+                Forgot Password?
+              </AuthButton>
+            </div>
+          </div>
+        ) : null}
+        {emailStatus === "new" && !otpSent ? (
+          <AuthButton
+            type="button"
+            loading={isSendingOtp}
+            loadingLabel="Sending code…"
+            onClick={handleSendOtp}
+          >
+            Send Verification Code
+          </AuthButton>
+        ) : null}
+        {emailStatus === "new" && otpSent ? (
+          <div className="space-y-3">
+            <p role="status" className="text-sm text-brand-text-secondary">
+              Enter the six-digit code sent to {email}.
+            </p>
+            <AuthField
+              id={`${idPrefix}-otp`}
+              name="otp"
+              label="Six-Digit Verification Code"
+              value={otp}
+              onChange={(event) =>
+                setOtp(event.target.value.replace(/\D/g, "").slice(0, 6))
+              }
+              placeholder="000000"
+              autoComplete="one-time-code"
+              inputMode="numeric"
+              maxLength={6}
+              required
+            />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <AuthButton
+                type="button"
+                loading={isVerifyingOtp}
+                loadingLabel="Verifying code…"
+                disabled={otp.length !== 6}
+                onClick={handleVerifyOtp}
+              >
+                Verify Code
+              </AuthButton>
+              <AuthButton
+                type="button"
+                variant="secondary"
+                loading={isSendingOtp}
+                loadingLabel="Sending code…"
+                onClick={handleSendOtp}
+              >
+                Resend Code
+              </AuthButton>
+            </div>
+            <AuthButton
+              type="button"
+              variant="ghost"
+              onClick={handleChangeEmail}
+            >
+              Use a different email
+            </AuthButton>
+          </div>
+        ) : null}
+        {emailStatus === "verified" ? (
+          <p role="status" className="text-sm font-semibold text-emerald-800">
+            Email verified. You can continue.
+          </p>
+        ) : null}
+        {emailStatus === "error" || verificationError ? (
+          <p role="alert" className="text-sm font-medium text-brand-red">
+            {verificationError}
+          </p>
+        ) : null}
+        {emailStatus === "new" && !verificationError ? (
+          <p className="text-xs text-brand-text-muted">
+            Verify your email before continuing to the next step.
+          </p>
+        ) : null}
+      </section>
     </div>
   );
 }

@@ -16,6 +16,13 @@ import { consumeStudentSignOutFlag } from "@/components/student/student-session"
 
 import "./login.css";
 
+function getEnrollmentReturnPath() {
+  if (typeof window === "undefined") return "/student/dashboard";
+  return new URLSearchParams(window.location.search).get("next") === "/student/enroll"
+    ? "/student/enroll"
+    : "/student/dashboard";
+}
+
 export default function StudentLoginPage({ isModal = true }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,10 +32,12 @@ export default function StudentLoginPage({ isModal = true }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [signedOutNotice, setSignedOutNotice] = useState("");
+  const [nextPath, setNextPath] = useState("/student/dashboard");
   const PageContainer = isModal ? "div" : "main";
 
   useEffect(() => {
     document.body.classList.add("student-auth-page");
+    setNextPath(getEnrollmentReturnPath());
 
     return () => {
       document.body.classList.remove("student-auth-page");
@@ -78,7 +87,7 @@ export default function StudentLoginPage({ isModal = true }) {
         }
 
         if (profile?.role === "student" && profile?.status === "active") {
-          window.location.href = "/student/dashboard";
+          window.location.href = getEnrollmentReturnPath();
           return;
         }
 
@@ -182,7 +191,7 @@ export default function StudentLoginPage({ isModal = true }) {
         return;
       }
 
-      window.location.href = "/student/dashboard";
+      window.location.href = getEnrollmentReturnPath();
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -254,12 +263,12 @@ export default function StudentLoginPage({ isModal = true }) {
               </h1>
 
               <p>
-                Sign in with your password to continue learning. The
-                enrollment verification link only confirms your email. If
-                you have submitted an enrollment but have not created a
-                password, use Forgot Password now. You can check your
-                application status while it is under review; course access
-                starts after approval.
+                Sign in with the email and password you created during
+                enrollment. The six-digit code confirms your email, and your
+                password is set before you submit your application. If you
+                forgot your password, use Forgot Password to reset it. You can
+                check your application status while it is under review; course
+                access starts after approval.
               </p>
             </header>
 
@@ -369,7 +378,13 @@ export default function StudentLoginPage({ isModal = true }) {
                   <span>Remember me</span>
                 </label>
 
-                <Link href="/student/forgot-password">
+                <Link
+                  href={
+                    nextPath === "/student/enroll"
+                      ? "/student/forgot-password?next=%2Fstudent%2Fenroll"
+                      : "/student/forgot-password"
+                  }
+                >
                   Forgot Password?
                 </Link>
               </div>

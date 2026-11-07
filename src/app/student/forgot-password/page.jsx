@@ -17,10 +17,15 @@ export default function ForgotPasswordPage({ isModal = true }) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [returnToEnrollment, setReturnToEnrollment] = useState(false);
   const PageContainer = isModal ? "div" : "main";
 
   useEffect(() => {
     document.body.classList.add("student-auth-page");
+    setReturnToEnrollment(
+      new URLSearchParams(window.location.search).get("next") ===
+        "/student/enroll",
+    );
 
     return () => {
       document.body.classList.remove("student-auth-page");
@@ -49,7 +54,11 @@ export default function ForgotPasswordPage({ isModal = true }) {
     try {
       const supabase = createClient();
 
-      const redirectTo = `${window.location.origin}/set-password`;
+      const redirectUrl = new URL("/set-password", window.location.origin);
+      if (returnToEnrollment) {
+        redirectUrl.searchParams.set("next", "/student/enroll");
+      }
+      const redirectTo = redirectUrl.toString();
 
       const { error: resetError } =
         await supabase.auth.resetPasswordForEmail(trimmedEmail, {
