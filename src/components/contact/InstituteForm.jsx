@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { submitContactEnquiry } from "@/components/contact/contactSubmission";
 
 const services = [
   "Training",
@@ -28,7 +29,7 @@ const generateMessage = (selectedServices) => {
   return `We are interested in ${serviceText} services for our institute. We would like to know more about the available programs, duration, pricing and delivery options.`;
 };
 
-export default function InstituteForm() {
+export default function InstituteForm({ audience = "institute" }) {
   const [formData, setFormData] = useState({
     instituteName: "",
     contactPerson: "",
@@ -44,6 +45,7 @@ export default function InstituteForm() {
 
   const [serviceOpen, setServiceOpen] = useState(false);
   const [messageEdited, setMessageEdited] = useState(false);
+  const [submission, setSubmission] = useState({ status: "idle", message: "" });
   const serviceDropdownRef = useRef(null);
 
   useEffect(() => {
@@ -100,10 +102,30 @@ export default function InstituteForm() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    console.log("Institute enquiry:", formData);
+    setSubmission({ status: "loading", message: "Sending your enquiry..." });
+    try {
+      const result = await submitContactEnquiry({
+        audience,
+        fullName: formData.contactPerson,
+        email: formData.email,
+        phone: formData.phone,
+        course: formData.services,
+        message: formData.message,
+        instituteName: formData.instituteName,
+        contactPerson: formData.contactPerson,
+        designation: formData.designation,
+        website: formData.website,
+        contactTime: formData.contactTime,
+        privacy: formData.privacy,
+      });
+      setSubmission({ status: "success", message: result.message });
+      setFormData((previous) => ({ ...previous, instituteName: "", contactPerson: "", designation: "", email: "", phone: "", website: "", services: [], contactTime: "", message: "", privacy: false }));
+      setMessageEdited(false);
+    } catch (error) {
+      setSubmission({ status: "error", message: error instanceof Error ? error.message : "Unable to send your enquiry." });
+    }
   };
 
   const selectedServiceText =
@@ -385,11 +407,21 @@ export default function InstituteForm() {
       </div>
 
       {/* SUBMIT */}
+      {submission.status === "loading" && (
+        <div className="contact-form__alert contact-form__alert--loading" role="status">{submission.message}</div>
+      )}
+      {submission.status === "success" && (
+        <div className="contact-form__alert contact-form__alert--success" role="status">{submission.message}</div>
+      )}
+      {submission.status === "error" && (
+        <div className="contact-form__alert contact-form__alert--error" role="alert">{submission.message}</div>
+      )}
       <button
         type="submit"
         className="institute-form__submit"
+        disabled={submission.status === "loading"}
       >
-        Submit Enquiry →
+        {submission.status === "loading" ? "Sending..." : "Submit Enquiry →"}
       </button>
     </form>
   );
