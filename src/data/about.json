@@ -110,17 +110,17 @@
   },
   "faculty": {
     "heading": "Faculty & Experts",
-    "subtitle": "Practitioners who have shipped what they teach",
+    "subtitle": "Learn from experienced industry leaders, mentors and practitioners",
     "profiles": [
       {
-        "name": "Dr. Sneha Gupta",
-        "designation": "Faculty — AI & Machine Learning",
-        "bio": "Teaches machine learning and MLOps with production deployments, turning ML theory into working, monitored systems.",
+        "name": "Satish Jha",
+        "designation": "Founder & CEO — Tech Leadership & Strategy Consulting",
+        "bio": "Technology leader with 30+ years of experience in tech leadership, strategic consulting and guiding organizations toward technology-driven growth.",
         "verified": true,
         "tags": [
-          "AI/ML",
-          "Python",
-          "MLOps"
+          "Tech Leadership",
+          "Strategy Consulting",
+          "Technology"
         ],
         "socials": [
           {
@@ -130,14 +130,65 @@
         ]
       },
       {
-        "name": "Akash Sinha",
-        "designation": "Faculty — Cloud Computing",
-        "bio": "Cloud architect who guides learners through designing, migrating and scaling applications on leading cloud platforms.",
+        "name": "Ajay Kamath",
+        "designation": "Founder & CEO — Digital Marketing & Product Excellence",
+        "bio": "Industry expert with 30+ years of experience in digital marketing, product excellence and customer experience, helping businesses build customer-focused products and strategies.",
         "verified": true,
         "tags": [
-          "AWS",
+          "Digital Marketing",
+          "Product Excellence",
+          "Customer Experience"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "name": "Mukesh Das",
+        "designation": "CEO & AI / Cloud SME",
+        "bio": "Technology executive with 30+ years of experience in AI, cloud technologies and enterprise technology consulting.",
+        "verified": true,
+        "tags": [
+          "Artificial Intelligence",
+          "Cloud Computing",
+          "Technology Consulting"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "name": "Dhanesh Kothari",
+        "designation": "Founder & CEO — Consumer Solutions",
+        "bio": "Business leader with 27+ years of experience in building sustainable consumer solutions and driving innovation through customer-focused strategies.",
+        "verified": true,
+        "tags": [
+          "Consumer Solutions",
+          "Business Strategy",
+          "Sustainability"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "name": "Reyaz Ahmad",
+        "designation": "Cloud Solutions Architect — IT Consulting & Solutions",
+        "bio": "Cloud solutions architect with 22+ years of experience in designing cloud solutions and leading IT consulting and technology implementation.",
+        "verified": true,
+        "tags": [
           "Cloud Architecture",
-          "GCP"
+          "Cloud Solutions",
+          "IT Consulting"
         ],
         "socials": [
           {
@@ -147,14 +198,14 @@
         ]
       },
       {
-        "name": "Nikhil Verma",
-        "designation": "Faculty — DevOps",
-        "bio": "Automation engineer focused on CI/CD, Kubernetes and infrastructure-as-code for fast, reliable software delivery.",
+        "name": "Prashant Srivastav",
+        "designation": "Innovation, AI & Digital Transformation",
+        "bio": "Technology professional with 25+ years of experience in innovation, artificial intelligence and driving digital transformation in large IT product organizations.",
         "verified": true,
         "tags": [
-          "CI/CD",
-          "Kubernetes",
-          "Terraform"
+          "Artificial Intelligence",
+          "Innovation",
+          "Digital Transformation"
         ],
         "socials": [
           {
@@ -164,14 +215,99 @@
         ]
       },
       {
-        "name": "Ananya Roy",
-        "designation": "Faculty — Software Engineering",
-        "bio": "Software engineer teaching DSA, system design and clean code so learners can think and build at production quality.",
+        "name": "Ajeet Dash",
+        "designation": "Enterprise Automation & AI Architect",
+        "bio": "Enterprise technology architect with 23+ years of experience in enterprise automation and AI-driven solutions for large IT products and services organizations.",
         "verified": true,
         "tags": [
-          "DSA",
-          "System Design",
-          "JavaScript"
+          "Enterprise Automation",
+          "Artificial Intelligence",
+          "Solution Architecture"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "name": "Gyan Prakash",
+        "designation": "Enterprise Software & Consumer Products",
+        "bio": "Technology professional with 17+ years of experience in enterprise software and consumer product development within large manufacturing organizations.",
+        "verified": true,
+        "tags": [
+          "Enterprise Software",
+          "Consumer Products",
+          "Software Development"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "name": "Snehav Seth",
+        "designation": "Product Lead — AI-Driven CRM",
+        "bio": "Product leader with 15+ years of experience in product development and AI-driven CRM solutions, focusing on building intelligent and customer-centric products.",
+        "verified": true,
+        "tags": [
+          "Product Management",
+          "AI-Driven CRM",
+          "Artificial Intelligence"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "name": "Manzoor Alam",
+        "designation": "Business & Economic Administration",
+        "bio": "Professional with 15+ years of experience in business and economic administration, contributing to business operations and financial-sector engagements.",
+        "verified": true,
+        "tags": [
+          "Business Administration",
+          "Economics",
+          "Business Operations"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "name": "Piyush Rana",
+        "designation": "Delivery Manager & Agile Coach",
+        "bio": "Delivery management professional with 15+ years of experience in managing technology delivery, agile methodologies and coaching teams in large IT services organizations.",
+        "verified": true,
+        "tags": [
+          "Delivery Management",
+          "Agile",
+          "Team Coaching"
+        ],
+        "socials": [
+          {
+            "label": "LinkedIn",
+            "href": "#"
+          }
+        ]
+      },
+      {
+        "name": "Alisha Rahman",
+        "designation": "Communication & Personality Development Coach",
+        "bio": "Professional corporate trainer specializing in communication and personality development, helping learners strengthen their interpersonal and professional skills.",
+        "verified": true,
+        "tags": [
+          "Communication Skills",
+          "Personality Development",
+          "Corporate Training"
         ],
         "socials": [
           {

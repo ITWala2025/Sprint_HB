@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { submitContactEnquiry } from "@/components/contact/contactSubmission";
 
 const purposeTypes = [
   "Partnership",
@@ -30,7 +31,7 @@ const generateMessage = (selectedPurposes) => {
   return `We are interested in exploring ${purposeText} opportunities with SPRINT. We would like to discuss the relevant programs, requirements, process and possible collaboration options.`;
 };
 
-export default function CompanyForm() {
+export default function CompanyForm({ audience = "company" }) {
   const [formData, setFormData] = useState({
     companyName: "",
     domain: "",
@@ -47,6 +48,7 @@ export default function CompanyForm() {
 
   const [purposeOpen, setPurposeOpen] = useState(false);
   const [messageEdited, setMessageEdited] = useState(false);
+  const [submission, setSubmission] = useState({ status: "idle", message: "" });
   const purposeDropdownRef = useRef(null);
 
   useEffect(() => {
@@ -103,10 +105,31 @@ export default function CompanyForm() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    console.log("Company / Enterprise enquiry:", formData);
+    setSubmission({ status: "loading", message: "Sending your enquiry..." });
+    try {
+      const result = await submitContactEnquiry({
+        audience,
+        fullName: formData.contactPerson,
+        email: formData.email,
+        phone: formData.phone,
+        course: formData.purposes,
+        message: formData.message,
+        companyName: formData.companyName,
+        domain: formData.domain,
+        contactPerson: formData.contactPerson,
+        role: formData.role,
+        website: formData.website,
+        availableTime: formData.availableTime,
+        privacy: formData.privacy,
+      });
+      setSubmission({ status: "success", message: result.message });
+      setFormData((previous) => ({ ...previous, companyName: "", domain: "", contactPerson: "", role: "", email: "", phone: "", website: "", availableTime: "", purposes: [], message: "", privacy: false }));
+      setMessageEdited(false);
+    } catch (error) {
+      setSubmission({ status: "error", message: error instanceof Error ? error.message : "Unable to send your enquiry." });
+    }
   };
 
   const selectedPurposeText =
@@ -405,11 +428,21 @@ export default function CompanyForm() {
       </div>
 
       {/* SUBMIT */}
+      {submission.status === "loading" && (
+        <div className="contact-form__alert contact-form__alert--loading" role="status">{submission.message}</div>
+      )}
+      {submission.status === "success" && (
+        <div className="contact-form__alert contact-form__alert--success" role="status">{submission.message}</div>
+      )}
+      {submission.status === "error" && (
+        <div className="contact-form__alert contact-form__alert--error" role="alert">{submission.message}</div>
+      )}
       <button
         type="submit"
         className="company-form__submit"
+        disabled={submission.status === "loading"}
       >
-        Submit Enquiry →
+        {submission.status === "loading" ? "Sending..." : "Submit Enquiry →"}
       </button>
     </form>
   );

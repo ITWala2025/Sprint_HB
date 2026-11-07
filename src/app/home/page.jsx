@@ -10,23 +10,6 @@ import ContactCTA from "@/components/Home/ContactCTA";
 import about from "@/data/about.json";
 // import WhyChooseSprint from "@/components/Home/WhyChooseSprint";
 
-const homeFacultyProfiles = about.faculty.profiles.map((profile) => ({
-  ...profile,
-  image:
-    profile.image ??
-    (profile.name === "Ananya Roy" ? "/images/home/Ananya.jpeg" : undefined),
-}));
-const academicLead = about.leadership.profiles.find(
-  (profile) => profile.name === "Priya Verma",
-);
-const homeFacultyAndAcademicProfiles = [
-  ...homeFacultyProfiles,
-  {
-    ...academicLead,
-    image: "/images/home/Priya.jpeg",
-  },
-];
-
 export const metadata = {
   title: "SPRINT Training Hub",
   description:
@@ -52,7 +35,7 @@ export default function HomePage() {
         accessibleBrandRed
         sectionClassName="sprint-section bg-brand-white"
         contentClassName="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:py-10"
-        profilesContent={<FacultyFilmstrip profiles={homeFacultyAndAcademicProfiles} />}
+        profilesContent={<FacultyFilmstrip profiles={about.faculty.profiles} />}
       />
        {/* <WhyChooseSprint />  */}
 

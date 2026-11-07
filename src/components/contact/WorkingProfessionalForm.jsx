@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { submitContactEnquiry } from "@/components/contact/contactSubmission";
 
 const programs = [
   "Artificial Intelligence",
@@ -32,7 +33,7 @@ const generateMessage = (selectedPrograms) => {
   } as a working professional. I would like to know about the curriculum, duration, schedule and learning options.`;
 };
 
-export default function WorkingProfessionalForm() {
+export default function WorkingProfessionalForm({ audience = "professional" }) {
   const [formData, setFormData] = useState({
     fullName: "",
     company: "",
@@ -47,6 +48,7 @@ export default function WorkingProfessionalForm() {
 
   const [programOpen, setProgramOpen] = useState(false);
   const [messageEdited, setMessageEdited] = useState(false);
+  const [submission, setSubmission] = useState({ status: "idle", message: "" });
   const programDropdownRef = useRef(null);
 
   useEffect(() => {
@@ -102,10 +104,28 @@ export default function WorkingProfessionalForm() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    console.log("Working professional enquiry:", formData);
+    setSubmission({ status: "loading", message: "Sending your enquiry..." });
+    try {
+      const result = await submitContactEnquiry({
+        audience,
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        course: formData.programs,
+        message: formData.message,
+        company: formData.company,
+        designation: formData.designation,
+        experience: formData.experience,
+        privacy: formData.privacy,
+      });
+      setSubmission({ status: "success", message: result.message });
+      setFormData((previous) => ({ ...previous, fullName: "", company: "", designation: "", experience: "", email: "", phone: "", programs: [], message: "", privacy: false }));
+      setMessageEdited(false);
+    } catch (error) {
+      setSubmission({ status: "error", message: error instanceof Error ? error.message : "Unable to send your enquiry." });
+    }
   };
 
   const selectedProgramText =
@@ -357,11 +377,21 @@ export default function WorkingProfessionalForm() {
       </div>
 
       {/* SUBMIT */}
+      {submission.status === "loading" && (
+        <div className="contact-form__alert contact-form__alert--loading" role="status">{submission.message}</div>
+      )}
+      {submission.status === "success" && (
+        <div className="contact-form__alert contact-form__alert--success" role="status">{submission.message}</div>
+      )}
+      {submission.status === "error" && (
+        <div className="contact-form__alert contact-form__alert--error" role="alert">{submission.message}</div>
+      )}
       <button
         type="submit"
         className="professional-form__submit"
+        disabled={submission.status === "loading"}
       >
-        Submit Enquiry →
+        {submission.status === "loading" ? "Sending..." : "Submit Enquiry →"}
       </button>
     </form>
   );

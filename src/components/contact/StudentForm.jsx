@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { submitContactEnquiry } from "@/components/contact/contactSubmission";
 
 const courses = [
   "Artificial Intelligence",
@@ -32,7 +33,7 @@ const generateMessage = (selectedCourses) => {
   }. I would like to know more about the course details, eligibility, fees and upcoming batches.`;
 };
 
-export default function StudentForm() {
+export default function StudentForm({ audience = "student" }) {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -44,6 +45,7 @@ export default function StudentForm() {
 
   const [courseOpen, setCourseOpen] = useState(false);
   const [messageEdited, setMessageEdited] = useState(false);
+  const [submission, setSubmission] = useState({ status: "idle", message: "" });
   const courseDropdownRef = useRef(null);
 
   useEffect(() => {
@@ -101,10 +103,37 @@ export default function StudentForm() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setSubmission({ status: "loading", message: "Sending your enquiry..." });
 
-    console.log("Student enquiry:", formData);
+    try {
+      const result = await submitContactEnquiry({
+        audience,
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        course: formData.courses,
+        message: formData.message,
+        privacy: formData.privacy,
+      });
+      setSubmission({ status: "success", message: result.message });
+      setFormData((previous) => ({
+        ...previous,
+        fullName: "",
+        email: "",
+        phone: "",
+        courses: [],
+        message: "",
+        privacy: false,
+      }));
+      setMessageEdited(false);
+    } catch (error) {
+      setSubmission({
+        status: "error",
+        message: error instanceof Error ? error.message : "Unable to send your enquiry.",
+      });
+    }
   };
 
   const selectedCourseText =
@@ -290,11 +319,27 @@ export default function StudentForm() {
       </div>
 
       {/* Submit */}
+      {submission.status === "loading" && (
+        <div className="contact-form__alert contact-form__alert--loading" role="status">
+          {submission.message}
+        </div>
+      )}
+      {submission.status === "success" && (
+        <div className="contact-form__alert contact-form__alert--success" role="status">
+          {submission.message}
+        </div>
+      )}
+      {submission.status === "error" && (
+        <div className="contact-form__alert contact-form__alert--error" role="alert">
+          {submission.message}
+        </div>
+      )}
       <button
         type="submit"
         className="student-form__submit"
+        disabled={submission.status === "loading"}
       >
-        Submit Enquiry →
+        {submission.status === "loading" ? "Sending..." : "Submit Enquiry →"}
       </button>
     </form>
   );

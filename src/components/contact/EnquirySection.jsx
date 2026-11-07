@@ -87,19 +87,19 @@ export default function EnquirySection() {
           <div className="enquiry-form">
 
             {/* STUDENT */}
-            {audience === "student" && <StudentForm />}
+            {audience === "student" && <StudentForm audience={audience} />}
 
             {/* WORKING PROFESSIONAL */}
             {audience === "professional" && (
-              <WorkingProfessionalForm />
+              <WorkingProfessionalForm audience={audience} />
             )}
 
             {/* INSTITUTE */}
-            {audience === "institute" && <InstituteForm />}
+            {audience === "institute" && <InstituteForm audience={audience} />}
             
             {/* COMPANY / ENTERPRISE */}
             {audience === "company" && (
-              <CompanyForm />
+              <CompanyForm audience={audience} />
             )}
 
           </div>
