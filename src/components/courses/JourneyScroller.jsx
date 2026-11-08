@@ -113,7 +113,7 @@ export default function JourneyScroller({
 
       <ol
         ref={trackRef}
-        className={`courses-signature-programs__milestones min-w-0 flex-1 ${listClassName}`.trim()}
+        className={`courses-signature-programs__milestones min-w-0 flex-1 items-stretch ${listClassName}`.trim()}
         aria-label={label}
         tabIndex={0}
       >

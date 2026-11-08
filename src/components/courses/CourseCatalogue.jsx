@@ -286,7 +286,7 @@ function FeaturedPrograms({ programs: signaturePrograms }) {
         {riseStages.length ? <section className="courses-signature-programs__journey" aria-labelledby="signature-programs-journey-heading">
           <h3 id="signature-programs-journey-heading" className="courses-signature-programs__journey-heading">{rise.title} Journey</h3>
           <JourneyScroller label="Program milestones">
-            {riseStages.map((stage) => <li className="courses-signature-programs__milestone" key={stage.title}>
+            {riseStages.map((stage) => <li className="courses-signature-programs__milestone h-full flex flex-col" key={stage.title}>
               <div className="courses-signature-programs__milestone-image"><Image src={stage.image} alt="" fill sizes="(max-width: 767px) 74vw, (max-width: 1023px) 168px, 190px" className="object-cover" /></div>
               <div className="courses-signature-programs__milestone-content"><h4>{stage.title}</h4><p>{stage.description}</p></div>
             </li>)}
@@ -304,8 +304,8 @@ function FeaturedPrograms({ programs: signaturePrograms }) {
         {careerStages.length ? <section className="courses-signature-programs__journey" aria-labelledby="career-accelerator-journey-heading">
           <h3 id="career-accelerator-journey-heading" className="courses-signature-programs__journey-heading">Career Accelerator Journey</h3>
           <JourneyScroller label="SPRINT Career Accelerator phases" listClassName="courses-signature-programs__milestones--three-year">
-            {careerStages.map((stage) => <li className="courses-signature-programs__milestone courses-signature-programs__milestone--three-year" key={stage.phase}>
-              <div className="courses-signature-programs__milestone-image"><Image src={stage.image} alt="" fill sizes="(max-width: 767px) 74vw, (max-width: 1023px) 168px, 220px" className="object-cover" /></div>
+            {careerStages.map((stage) => <li className="courses-signature-programs__milestone courses-signature-programs__milestone--three-year h-full flex flex-col" key={stage.phase}>
+              <div className="courses-signature-programs__milestone-image"><Image src={stage.image} alt="" fill sizes="(max-width: 767px) 74vw, (max-width: 1023px) 168px, 220px" className="object-contain" /></div>
               <div className="courses-signature-programs__milestone-content courses-signature-programs__milestone-content--stage"><span className="courses-signature-programs__stage-label">{stage.phase} — {stage.title}</span></div>
             </li>)}
           </JourneyScroller>

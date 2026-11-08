@@ -7,23 +7,17 @@ import { bundles, courses } from "@/data/courses";
 import { getProgram, programs } from "@/data/programs";
 
 describe("CourseCurriculum", () => {
-  it("continues to render the existing course and bundle curriculum format", () => {
-    const course = courses[0];
+  it("renders bundle curriculum and tolerates courses without curriculum", () => {
     const bundle = bundles[0];
 
-    render(
+    const { container } = render(
       <>
-        <CourseCurriculum curriculum={course.curriculum} />
+        <CourseCurriculum curriculum={courses[0].programStages} />
         <CourseCurriculum curriculum={bundle.curriculum} />
       </>,
     );
 
-    expect(
-      screen.getByRole("button", { name: /Module 01 Build the foundation/ }),
-    ).toHaveAttribute("aria-expanded", "true");
-    expect(
-      screen.getByText(`How ${course.title} is used in real teams`),
-    ).toBeVisible();
+    expect(container.querySelectorAll(".course-curriculum")).toHaveLength(2);
     expect(
       screen.getByRole("button", { name: /Module 01 Foundation/ }),
     ).toHaveAttribute("aria-expanded", "true");

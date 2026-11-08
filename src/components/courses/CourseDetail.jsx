@@ -3,6 +3,8 @@
 import { useId, useLayoutEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
+const EMPTY_CURRICULUM = [];
+
 function CurriculumList({
   items,
   depth = 0,
@@ -97,7 +99,12 @@ function CurriculumList({
   );
 }
 
-export default function CourseCurriculum({ curriculum = [] }) {
+export default function CourseCurriculum({
+  curriculum = EMPTY_CURRICULUM,
+}) {
+  const safeCurriculum = Array.isArray(curriculum)
+    ? curriculum
+    : EMPTY_CURRICULUM;
   const timelineRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -144,11 +151,11 @@ export default function CourseCurriculum({ curriculum = [] }) {
       .forEach((element) => observer.observe(element));
 
     return () => observer.disconnect();
-  }, [curriculum]);
+  }, [safeCurriculum]);
 
   return (
     <CurriculumList
-      items={curriculum}
+      items={safeCurriculum}
       depth={0}
       initialOpenIndex={0}
       timelineRef={timelineRef}
