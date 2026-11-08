@@ -107,8 +107,8 @@ describe("EnrollmentWizard", () => {
         options: expect.objectContaining({ shouldCreateUser: true }),
       }),
     );
-    const otp = await screen.findByLabelText(/six-digit verification code/i);
-    await user.type(otp, "123456");
+const firstOtp = await screen.findByLabelText(/digit 1/i);
+await user.type(firstOtp, "123456");
     await user.click(screen.getByRole("button", { name: /verify code/i }));
     await screen.findByText(/email verified/i);
   };
@@ -226,7 +226,7 @@ describe("EnrollmentWizard", () => {
 
     await fillPersonalStep(user);
     await user.click(await screen.findByRole("button", { name: /send verification code/i }));
-    await user.type(await screen.findByLabelText(/six-digit verification code/i), "123456");
+    await user.type(await screen.findByLabelText(/digit 1/i), "123456");
     await user.click(screen.getByRole("button", { name: /verify code/i }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(

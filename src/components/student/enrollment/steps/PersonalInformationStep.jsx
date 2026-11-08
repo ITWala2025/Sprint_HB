@@ -367,20 +367,65 @@ export default function PersonalInformationStep({
             <p role="status" className="text-sm text-brand-text-secondary">
               Enter the six-digit code sent to {email}.
             </p>
-            <AuthField
-              id={`${idPrefix}-otp`}
-              name="otp"
-              label="Six-Digit Verification Code"
-              value={otp}
-              onChange={(event) =>
-                setOtp(event.target.value.replace(/\D/g, "").slice(0, 6))
-              }
-              placeholder="000000"
-              autoComplete="one-time-code"
-              inputMode="numeric"
-              maxLength={6}
-              required
-            />
+            <div
+              className="flex items-center justify-center gap-2 sm:gap-3"
+              role="group"
+              aria-label="Six-digit verification code"
+            >
+              {Array.from({ length: 6 }).map((_, index) => (
+                <input
+                  key={index}
+                  id={`${idPrefix}-otp-${index}`}
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete={index === 0 ? "one-time-code" : "off"}
+                  maxLength={1}
+                  value={otp[index] ?? ""}
+                  onChange={(event) => {
+                    const digit = event.target.value.replace(/\D/g, "").slice(-1);
+                    const next = (otp + "      ").slice(0, 6).split("");
+                    next[index] = digit;
+                    setOtp(next.join("").replace(/\s/g, ""));
+                    if (digit && index < 5) {
+                      const nextInput = document.getElementById(
+                        `${idPrefix}-otp-${index + 1}`,
+                      );
+                      nextInput?.focus();
+                    }
+                  }}
+                  onKeyDown={(event) => {
+                    if (
+                      event.key === "Backspace" &&
+                      !(otp[index] ?? "") &&
+                      index > 0
+                    ) {
+                      const prevInput = document.getElementById(
+                        `${idPrefix}-otp-${index - 1}`,
+                      );
+                      prevInput?.focus();
+                    }
+                  }}
+                  onPaste={(event) => {
+                    const pasted = event.clipboardData
+                      .getData("text")
+                      .replace(/\D/g, "")
+                      .slice(0, 6);
+                    if (pasted) {
+                      event.preventDefault();
+                      setOtp(pasted);
+                      const targetIndex = Math.min(pasted.length, 5);
+                      const target = document.getElementById(
+                        `${idPrefix}-otp-${targetIndex}`,
+                      );
+                      target?.focus();
+                    }
+                  }}
+                  className="h-12 w-10 rounded-lg border border-brand-border bg-brand-white text-center text-lg font-semibold text-brand-navy focus:border-brand-red focus:outline-none focus:ring-2 focus:ring-brand-red/30 sm:h-14 sm:w-12"
+                  required={index === 0}
+                  aria-label={`Digit ${index + 1}`}
+                />
+              ))}
+            </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <AuthButton
                 type="button"

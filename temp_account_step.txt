@@ -1,0 +1,110 @@
+﻿import { useEffect, useState } from "react";
+import { Check, Mail } from "lucide-react";
+
+import { catalogueItems } from "@/data/courses";
+import { createClient } from "@/lib/supabase/client";
+import AuthButton from "@/components/student/auth/AuthButton";
+
+/**
+ * Step 3 â€” verify the enrollment email with a Supabase magic link.
+ */
+export default function AccountStep({
+  stepNumber = 3,
+  headingId,
+  summaryValues = {},
+  onBeforeMagicLink,
+  onVerificationChange,
+}) {
+  const personal = summaryValues.personal ?? {};
+  const education = summaryValues.education ?? {};
+  const selectedCourse = catalogueItems.find(
+    (item) =>
+      item.kind === "course" &&
+      (item.slug === education.course || item.id === education.course),
+  );
+  const [databaseCourseTitle, setDatabaseCourseTitle] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(true);
+  const [isSendingLink, setIsSendingLink] = useState(false);
+  const [linkSent, setLinkSent] = useState(false);
+  const [verificationError, setVerificationError] = useState("");
+
+  const describeLinkError = (error) => {
+    const message = String(error?.message ?? "").toLowerCase();
+    const code = String(error?.code ?? "").toLowerCase();
+
+    if (
+      message.includes("redirect") &&
+      (message.includes("not allowed") || message.includes("allow"))
+    ) {
+      return `Supabase does not allow the return address ${window.location.origin}/student/enroll. Add this URL (or its wildcard form) under Authentication â†’ URL Configuration â†’ Redirect URLs, then try again.`;
+    }
+
+    if (
+      message.includes("rate limit") ||
+      message.includes("too many requests") ||
+      code.includes("rate_limit")
+    ) {
+      return "Too many verification emails were requested. Wait a minute before trying again.";
+    }
+
+    if (
+      message.includes("error sending") ||
+      message.includes("smtp") ||
+      message.includes("email provider")
+    ) {
+      return "Supabase could not deliver the verification email. Check the project's email/SMTP settings and try again.";
+    }
+
+    return error?.message
+      ? `We couldn't send the verification link: ${error.message}`
+      : "We couldn't send the verification link. Please check your connection and try again.";
+  };
+
+  useEffect(() => {
+    if (!education.course || selectedCourse) {
+      setDatabaseCourseTitle("");
+      return undefined;
+    }
+
+    let active = true;
+    const supabase = createClient();
+    supabase
+      .from("courses")
+      .select("title")
+      .eq("id", education.course)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (active && !error) setDatabaseCourseTitle(data?.title ?? "");
+      })
+      .catch(() => {});
+
+    return () => {
+      active = false;
+    };
+  }, [education.course, selectedCourse]);
+
+  useEffect(() => {
+    let active = true;
+    const supabase = createClient();
+
+    const updateVerification = (user) => {
+      if (!active) return;
+      const verified = Boolean(
+        user?.email_confirmed_at &&
+          user.email?.toLowerCase() === personal.email?.trim().toLowerCase(),
+      );
+      setIsEmailVerified(verified);
+      onVerificationChange?.(verified);
+      setIsCheckingEmail(false);
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      updateVerification(session?.user);
+    });
+
+    supabase.auth
+      .getUser()
+      .then(({ data, error }) => {
