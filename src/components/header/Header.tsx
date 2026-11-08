@@ -14,6 +14,7 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [studentInitials, setStudentInitials] = useState<string | null>(null);
 
   useEffect(() => {
     if (
@@ -28,13 +29,16 @@ export default function Header() {
 
     async function updateAdminStatus(userId?: string) {
       if (!userId) {
-        if (isMounted) setIsAdmin(false);
+        if (isMounted) {
+          setIsAdmin(false);
+          setStudentInitials(null);
+        }
         return;
       }
 
       const { data: profile, error } = await supabase
         .from("profiles")
-        .select("role")
+        .select("role, full_name")
         .eq("id", userId)
         .maybeSingle();
 
@@ -42,7 +46,16 @@ export default function Header() {
         console.error("[SPRINT Header] Failed to resolve user role:", error);
       }
 
-      if (isMounted) setIsAdmin(profile?.role === "admin");
+      if (isMounted) {
+        setIsAdmin(profile?.role === "admin");
+        if (profile?.role === "student" && profile?.full_name) {
+          const parts = profile.full_name.trim().split(/\s+/);
+          const initials = (parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "");
+          setStudentInitials(initials.toUpperCase() || null);
+        } else {
+          setStudentInitials(null);
+        }
+      }
     }
 
     supabase.auth
@@ -78,6 +91,7 @@ export default function Header() {
           <DesktopNavigation pathname={pathname} />
           <HeaderActions
             isAdmin={isAdmin}
+            studentInitials={studentInitials}
             accessibleBrandRed={pathname === "/home"}
           />
           <MobileNavigation

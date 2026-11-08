@@ -67,7 +67,7 @@ export default function PublicSiteShell({ children, modal }) {
           }
         />
       )}
-      {!renderInterceptedFullPage && modal}
+      {!renderInterceptedFullPage && hasInterceptedModal && isStudentRoute && modal}
 
       {showPublicChrome && (
         <a

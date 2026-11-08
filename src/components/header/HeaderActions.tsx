@@ -3,9 +3,11 @@ import { ArrowRight, LayoutDashboard, UserRound } from "lucide-react";
 
 export default function HeaderActions({
   isAdmin = false,
+  studentInitials = null,
   accessibleBrandRed = false,
 }: {
   isAdmin?: boolean;
+  studentInitials?: string | null;
   accessibleBrandRed?: boolean;
 }) {
   return (
@@ -14,6 +16,14 @@ export default function HeaderActions({
         <Link href="/admin/dashboard" className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-brand-navy px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-navy-dark">
           <LayoutDashboard className="size-4.5" aria-hidden="true" />
           Go to Dashboard
+        </Link>
+      ) : studentInitials ? (
+        <Link
+          href="/student/dashboard"
+          aria-label="Student dashboard"
+          className="inline-flex size-10 items-center justify-center rounded-full bg-brand-navy text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-navy-dark"
+        >
+          {studentInitials}
         </Link>
       ) : (
         <>
