@@ -7,8 +7,6 @@
 ---
 
 ## 1. Project Overview & Mission
-
-- **Organization**: SPRINT (SPRINT Institutional Training Hub)
 - **Location**: SPRINT Centre, Hazaribagh, Jharkhand — 825301, India
 - **Core Mission**: Bridging the academic–industry gap by delivering hands-on, production-grade training in emerging technologies:
   - Artificial Intelligence & Machine Learning (AI/ML)
@@ -748,3 +746,11 @@ No application code was changed for this reconciliation. The local role-unassign
   - Created `src/Supabase/Student Dashboard Access Migration.sql` adding `GRANT SELECT` to all dashboard tables and a new RLS policy `"Students can view batches they are enrolled in"` on `public.batches`.
   - Added empty-state UI ("Welcome to SPRINT!" with "Explore Courses" CTA) when no enrollment exists.
 - **Verification**: `npx tsc --noEmit` passes; `npm run build` succeeds; all 14 existing auth/enrollment tests pass.
+
+## 39. Student Profile Section & Header Avatar � 2026-11-08
+
+- Replaced OTP single text field with 6-box OTP input in PersonalInformationStep.jsx.
+- Fixed PublicSiteShell modal rendering on non-student routes.
+- Header now shows circular avatar with student initials linking to dashboard.
+- Built student profile page fetching from Supabase profiles with personal, education, and social sections plus edit form with URL validation.
+
