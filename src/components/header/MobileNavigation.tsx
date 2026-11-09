@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Menu, UserRound, X } from "lucide-react";
+import StudentAvatarDropdown from "@/components/header/StudentAvatarDropdown";
 
 interface MobileNavigationProps {
   pathname: string;
@@ -10,6 +11,8 @@ interface MobileNavigationProps {
   setIsOpen: (value: boolean) => void;
   isAdmin?: boolean;
   accessibleBrandRed?: boolean;
+  studentInitials?: string | null;
+  studentFullName?: string | null;
 }
 
 const navigation = [
@@ -25,6 +28,8 @@ export default function MobileNavigation({
   setIsOpen,
   isAdmin = false,
   accessibleBrandRed = false,
+  studentInitials = null,
+  studentFullName = null,
 }: MobileNavigationProps) {
   useEffect(() => {
     setIsOpen(false);
@@ -52,7 +57,7 @@ export default function MobileNavigation({
   return (
     <div className="min-w-0 shrink-0 lg:hidden">
       <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-        {isAdmin ? (
+{isAdmin ? (
           <Link
             href="/admin/dashboard"
             aria-label="Admin dashboard"
@@ -61,6 +66,11 @@ export default function MobileNavigation({
           >
             Admin
           </Link>
+        ) : studentInitials ? (
+          <StudentAvatarDropdown
+            initials={studentInitials}
+            fullName={studentFullName || "Student"}
+          />
         ) : (
           <a
             href="/student/enroll"
@@ -70,7 +80,7 @@ export default function MobileNavigation({
               accessibleBrandRed ? "bg-brand-red-accessible" : "bg-brand-red"
             }`}
           >
-            <span className="floating-dots" aria-hidden="true">{Array.from({ length: 10 }).map((_, i) => <i key={i} className="dot" aria-hidden="true" style={{ animationName: "sprint-floating-dots" }} />)}</span>
+            <span className="floating-dots" aria-hidden="true">{Array.from({ length: 10 }).map((_, i) => <i key={i} className="dot" aria-hidden="true" />)}</span>
             <span className="min-[420px]:hidden">Enroll</span>
             <span className="hidden min-[420px]:inline">Enroll Now</span>
             <ArrowRight className="enroll-arrow size-4" aria-hidden="true" />
@@ -119,7 +129,20 @@ export default function MobileNavigation({
               })}
             </div>
             <div className="mt-4 border-t border-brand-border pt-4">
-              {!isAdmin ? (
+              {studentInitials ? (
+                <StudentAvatarDropdown
+                  initials={studentInitials}
+                  fullName={studentFullName || "Student"}
+                />
+              ) : isAdmin ? (
+                <Link
+                  href="/admin/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className="block rounded-lg bg-brand-navy px-4 py-3 text-center text-sm font-semibold text-white"
+                >
+                  Go to Dashboard
+                </Link>
+              ) : (
                 <Link
                   href="/student/login"
                   onClick={() => setIsOpen(false)}
@@ -127,14 +150,6 @@ export default function MobileNavigation({
                 >
                   <UserRound className="size-4" aria-hidden="true" />
                   Student Portal
-                </Link>
-              ) : (
-                <Link
-                  href="/admin/dashboard"
-                  onClick={() => setIsOpen(false)}
-                  className="block rounded-lg bg-brand-navy px-4 py-3 text-center text-sm font-semibold text-white"
-                >
-                  Go to Dashboard
                 </Link>
               )}
             </div>

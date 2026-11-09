@@ -15,6 +15,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [studentInitials, setStudentInitials] = useState<string | null>(null);
+  const [studentFullName, setStudentFullName] = useState<string | null>(null);
 
   useEffect(() => {
     if (
@@ -52,8 +53,10 @@ export default function Header() {
           const parts = profile.full_name.trim().split(/\s+/);
           const initials = (parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "");
           setStudentInitials(initials.toUpperCase() || null);
+          setStudentFullName(profile.full_name || null);
         } else {
           setStudentInitials(null);
+          setStudentFullName(null);
         }
       }
     }
@@ -92,6 +95,7 @@ export default function Header() {
           <HeaderActions
             isAdmin={isAdmin}
             studentInitials={studentInitials}
+            studentFullName={studentFullName}
             accessibleBrandRed={pathname === "/home"}
           />
           <MobileNavigation
@@ -100,6 +104,8 @@ export default function Header() {
             setIsOpen={setIsMobileMenuOpen}
             isAdmin={isAdmin}
             accessibleBrandRed={pathname === "/home"}
+            studentInitials={studentInitials}
+            studentFullName={studentFullName}
           />
         </div>
       </header>

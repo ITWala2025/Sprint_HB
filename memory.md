@@ -838,3 +838,9 @@ No application code was changed for this reconciliation. The local role-unassign
 - [src/app/admin/students/registrations/actions.ts](src/app/admin/students/registrations/actions.ts): `getStudentRegistrations()` retains its authorization check, logs and returns an empty list for query or client errors, including database permission errors, instead of throwing through the page render.
 - Validation: `npx tsc --noEmit`, focused admin session/authorization tests (2 files, 10 tests), and `git diff --check` passed.
 >>>>>>> dfc3b6b6d281844ccf6ae17dff9345e0defe3623
+
+## 41. Student Avatar Dropdown — 2026-11-09
+
+- Added StudentAvatarDropdown component with Dashboard and Sign out menu items, replacing the static circular avatar in the header.
+- Wired into desktop HeaderActions and mobile MobileNavigation, showing initials + full name from the Supabase profile.
+
