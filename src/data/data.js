@@ -11,14 +11,16 @@
 // Section 6.2 — What We Give (4 statistical/value items)
 export const stats = [
   { id: "stat-1", value: "200+", label: "Learners upskilled" },
-  { id: "stat-2", value: "30+", label: "Industry mentors & SMEs" },
-  { id: "stat-3", value: "82%", label: "Job-ready placement rate" },
-  { id: "stat-4", value: "40+", label: "Industry partners" },
+  { id: "stat-2", value: "20+", label: "Industry mentors & SMEs" },
+  { id: "stat-3", value: "60%", label: "Job-ready placement rate" },
+  { id: "stat-4", value: "9+", label: "Industry partners" },
 ];
 
 // Section 6.3 — Company and SME partners. Each entry maps to a logo in
 // public/images/home/; the two arrays render in the shared network carousel.
 
+
+// Section 6.3 — SME Leading Companies
 export const smeCompanies = [
   { id: "p1", name: "Accenture", logoUrl: "/images/home/accenture.svg" },
   { id: "p2", name: "Amazon", logoUrl: "/images/home/amazon.png" },
@@ -33,10 +35,11 @@ export const smeCompanies = [
   { id: "p18", name: "Lululemon", logoUrl: "/images/home/lululemon.webp" },
   { id: "p19", name: "HCLTech", logoUrl: "/images/home/hcl.webp" },
   { id: "p20", name: "IQVIA", logoUrl: "/images/home/iqvia.webp" },
+  { id: "p21", name: "Sitetracker", logoUrl: "/images/home/sitetracker.webp" },
+
   
 ];
 
-// Section 6.3 — SME Leading Companies
 export const partners = [
   { id: "p9", name: "Algocirrus", logoUrl: "/images/home/algocirrus.webp" },
   { id: "p10", name: "Eyogi Gurukul", logoUrl: "/images/home/eyogi-gurukul.webp" },
@@ -48,7 +51,8 @@ export const partners = [
   { id: "p15", name: "Vishal Creations", logoUrl: "/images/home/vishal-creations.webp" },
   { id: "p16", name: "Zupharm Laboratories", logoUrl: "/images/home/zupharm-laboratories.webp" },
   { id: "p22", name: "Tessellation Software", logoUrl: "/images/home/tessellation.webp" },
-  { id: "p21", name: "Sitetracker", logoUrl: "/images/home/sitetracker.webp" },
+  { id: "p23", name: "Tessellation Software", logoUrl: "/images/home/sirrexaai.png" },
+  { id: "p23", name: "Tessellation Software", logoUrl: "/images/home/punditas.png" },
 
 
 ];
