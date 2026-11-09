@@ -1,22 +1,48 @@
 const riseStages = [
-  { id: "day-one", title: "Day One" },
-  { id: "technical-sessions", title: "Technical Sessions (124 hours)" },
+  { id: "day-one", title: "Day One", topics: [] },
+  {
+    id: "technical-sessions",
+    title: "Technical Sessions (124 hours)",
+    topics: ["Cloud", "AI", "DevOps"],
+  },
   {
     id: "personality-development",
     title: "Personality Development (46 hours)",
+    topics: ["Communication", "Professional confidence"],
   },
   {
     id: "industry-ways-of-working",
     title: "Industry Ways of Working (40 hours)",
+    topics: ["Team workflows", "Industry practices"],
   },
-  { id: "internship", title: "Internship (90 hours)" },
-  { id: "industry-ready", title: "Industry-Ready" },
+  {
+    id: "internship",
+    title: "Internship (90 hours)",
+    topics: ["Applied industry experience"],
+  },
+  {
+    id: "industry-ready",
+    title: "Industry-Ready",
+    topics: ["Career preparation"],
+  },
 ];
 
 const careerAcceleratorPhases = [
-  { id: "phase-1-foundations", title: "Phase 1 — Foundations" },
-  { id: "phase-2-ignite", title: "Phase 2 — Ignite" },
-  { id: "phase-3-outperform", title: "Phase 3 — Outperform" },
+  {
+    id: "phase-1-foundations",
+    title: "Phase 1 — Foundations",
+    topics: ["Programming foundations", "Digital fluency"],
+  },
+  {
+    id: "phase-2-ignite",
+    title: "Phase 2 — Ignite",
+    topics: ["Applied technology", "Specialization projects"],
+  },
+  {
+    id: "phase-3-outperform",
+    title: "Phase 3 — Outperform",
+    topics: ["Advanced practice", "Industry capstone", "Career readiness"],
+  },
 ];
 
 export const programs = [
@@ -41,7 +67,7 @@ export const programs = [
           id: `${stage.id}-learning-board`,
           label: "Learning Board",
           title: "",
-          children: [],
+          topics: stage.topics,
         },
       ],
     })),
@@ -64,7 +90,7 @@ export const programs = [
           id: `${phase.id}-learning-board`,
           label: "Learning Board",
           title: "",
-          children: [],
+          topics: phase.topics,
         },
       ],
     })),

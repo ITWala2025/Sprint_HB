@@ -1362,6 +1362,7 @@ a {
 
   .contact-method__value {
     font-size: 0.9rem;
+    overflow-wrap: anywhere;
   }
 
   .contact-methods__hours {
@@ -1588,7 +1589,7 @@ a {
   }
 
   .enquiry-section__contact .contact-methods__list {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .enquiry-section__contact .contact-methods__intro {
@@ -7251,6 +7252,103 @@ a {
   .program-detail .program-detail__aside > div:first-child h2,
   .program-detail .program-detail__aside > div:first-child dl {
     display: block;
+  }
+}
+
+.program-detail--sprint-rise,
+.program-detail--career-accelerator {
+  padding-bottom: 3.5rem;
+}
+
+.program-detail--sprint-rise .course-breadcrumb,
+.program-detail--career-accelerator .course-breadcrumb {
+  padding-block: 0.9rem;
+}
+
+.program-detail--sprint-rise .course-detail-hero,
+.program-detail--career-accelerator .course-detail-hero {
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding-block: clamp(2rem, 4vw, 3.5rem);
+}
+
+.program-detail--sprint-rise .course-detail-hero__art,
+.program-detail--career-accelerator .course-detail-hero__art {
+  min-height: 320px;
+}
+
+.program-detail--sprint-rise .course-detail-hero__copy > p:not(.courses-eyebrow),
+.program-detail--career-accelerator .course-detail-hero__copy > p:not(.courses-eyebrow) {
+  margin-top: 1rem;
+}
+
+.program-detail--sprint-rise .course-detail-layout,
+.program-detail--career-accelerator .course-detail-layout {
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin-top: 0.5rem;
+}
+
+.program-detail--sprint-rise .course-detail-section,
+.program-detail--career-accelerator .course-detail-section {
+  padding-block: 1.8rem;
+}
+
+.program-detail--sprint-rise .course-curriculum,
+.program-detail--career-accelerator .course-curriculum {
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.program-detail--sprint-rise .course-curriculum__item,
+.program-detail--career-accelerator .course-curriculum__item {
+  padding: 0.7rem 0.9rem 0.8rem;
+}
+
+.program-detail--sprint-rise .program-detail__aside > div:first-child,
+.program-detail--career-accelerator .program-detail__aside > div:first-child {
+  padding: 1.1rem;
+}
+
+.program-detail--sprint-rise .program-detail__aside dl div,
+.program-detail--career-accelerator .program-detail__aside dl div {
+  padding-block: 0.6rem;
+}
+
+@media (max-width: 767px) {
+  .program-detail--sprint-rise,
+  .program-detail--career-accelerator {
+    padding-bottom: 6rem;
+  }
+
+  .program-detail--sprint-rise .course-detail-hero,
+  .program-detail--career-accelerator .course-detail-hero {
+    gap: 1.25rem;
+    padding-block: 1.3rem 1.8rem;
+  }
+
+  .program-detail--sprint-rise .course-detail-hero__art,
+  .program-detail--career-accelerator .course-detail-hero__art {
+    min-height: 190px;
+  }
+
+  .program-detail--sprint-rise .course-detail-layout,
+  .program-detail--career-accelerator .course-detail-layout {
+    margin-top: 0;
+  }
+
+  .program-detail--sprint-rise .course-detail-section,
+  .program-detail--career-accelerator .course-detail-section {
+    padding-block: 1.4rem;
+  }
+
+  .program-detail--sprint-rise .course-curriculum,
+  .program-detail--career-accelerator .course-curriculum {
+    gap: 0.6rem;
+    margin-top: 0.85rem;
+  }
+
+  .program-detail--sprint-rise .course-curriculum__item,
+  .program-detail--career-accelerator .course-curriculum__item {
+    padding: 0.65rem 0.8rem 0.75rem;
   }
 }
 

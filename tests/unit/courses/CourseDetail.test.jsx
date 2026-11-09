@@ -105,7 +105,7 @@ describe("CourseCurriculum", () => {
     expect(screen.getByText("Confirmed activity")).toBeVisible();
   });
 
-  it("renders confirmed program data without adding curriculum topics", () => {
+  it("renders program data with only the topics in the program seed", () => {
     const rise = getProgram("sprint-rise");
     const careerAccelerator = getProgram("career-accelerator");
 
@@ -132,8 +132,7 @@ describe("CourseCurriculum", () => {
           stage.children.length === 1 &&
           stage.children[0].label === "Learning Board" &&
           stage.children[0].title === "" &&
-          stage.children[0].children.length === 0 &&
-          !("topics" in stage.children[0]),
+          Array.isArray(stage.children[0].topics),
       ),
     ).toBe(true);
     expect(
@@ -143,10 +142,19 @@ describe("CourseCurriculum", () => {
           phase.children.length === 1 &&
           phase.children[0].label === "Learning Board" &&
           phase.children[0].title === "" &&
-          phase.children[0].children.length === 0 &&
-          !("topics" in phase.children[0]),
+          Array.isArray(phase.children[0].topics),
       ),
     ).toBe(true);
+    expect(rise.curriculum[0].children[0].topics).toEqual([]);
+    expect(rise.curriculum[1].children[0].topics).toEqual([
+      "Cloud",
+      "AI",
+      "DevOps",
+    ]);
+    expect(careerAccelerator.curriculum[0].children[0].topics).toEqual([
+      "Programming foundations",
+      "Digital fluency",
+    ]);
     expect(getProgram("sprint-3-year-program")).toBeUndefined();
 
     render(
@@ -159,6 +167,8 @@ describe("CourseCurriculum", () => {
     expect(screen.getAllByText("Program Stage")).toHaveLength(6);
     expect(screen.getAllByText("Program Phase")).toHaveLength(3);
     expect(screen.getAllByText("Learning Board")).toHaveLength(9);
+    expect(screen.getAllByText("Cloud")).toHaveLength(2);
+    expect(screen.getAllByText("Specialization projects")).toHaveLength(2);
     expect(screen.queryByText(/Year [123]/)).not.toBeInTheDocument();
     expect(
       within(
@@ -197,6 +207,9 @@ describe("CourseCurriculum", () => {
     expect(screen.queryByText("Outcomes")).not.toBeInTheDocument();
     expect(container.querySelectorAll(".course-curriculum__item")).toHaveLength(6);
     expect(
+      screen.queryByText("Learning Board topics and activities have not yet been provided."),
+    ).not.toBeInTheDocument();
+    expect(
       screen.getByRole("button", {
         name: /Program Phase Phase 1 — Foundations/,
       }),
@@ -227,6 +240,9 @@ describe("CourseCurriculum", () => {
     expect(container.querySelectorAll(".course-curriculum__item")).toHaveLength(
       program.curriculum.length * 2,
     );
+    expect(
+      screen.queryByText("Learning Board topics and activities have not yet been provided."),
+    ).not.toBeInTheDocument();
   });
 
   it("preserves shared course and bundle detail rendering", async () => {

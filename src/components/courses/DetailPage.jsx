@@ -23,7 +23,7 @@ function ProgramDetailPage({ item }) {
   const curriculumHeading = item.curriculum?.[0]?.label ?? "Program Stage";
 
   return (
-    <div className="course-detail program-detail">
+    <div className={`course-detail program-detail program-detail--${item.slug}`}>
       <nav className="course-breadcrumb" aria-label="Breadcrumb">
         <Link href="/courses">Courses</Link>
         <span aria-hidden="true">&gt;</span>
@@ -63,9 +63,6 @@ function ProgramDetailPage({ item }) {
           >
             <p className="courses-eyebrow">Curriculum</p>
             <h2 id={`${curriculumAnchor}-heading`}>{curriculumHeading}</h2>
-            <p>
-              Learning Board topics and activities have not yet been provided.
-            </p>
             <CourseCurriculum curriculum={item.curriculum} />
           </section>
         </main>
