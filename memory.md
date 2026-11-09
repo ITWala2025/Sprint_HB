@@ -595,7 +595,7 @@ Sections 8 onward are dated implementation history. Where an older entry describ
 
 ## 57. Current Codebase Reconciliation — 2026-10-28
 
-This section records the current implementation where earlier entries are incomplete or describe an older state. The repository has 433 tracked files, including 225 files under `src/` and 70 under `tests/`; this is a feature and architecture map, not a line-by-line inventory of static assets.
+This section records the current implementation where earlier entries are incomplete or describe an older state. The repository currently has 497 tracked files, including 271 files under `src/` and 79 under `tests/`; this is a feature and architecture map, not a line-by-line inventory of static assets. The workspace also contains untracked dependencies, generated build output, and Git internals, which are not project source-of-truth.
 
 ### Routes, shells, and session handling
 
@@ -760,3 +760,81 @@ No application code was changed for this reconciliation. The local role-unassign
 - The repository remains a single App Router application with public marketing pages, student-facing enrollment and portal flows, admin/staff areas, Supabase SQL migrations, and chatbot datasets/tooling. `docs/` contains product requirements, design references, architecture and chatbot documentation; `public/` contains the shipped static media and favicons.
 - [src/app/admin/students/enrollments/actions.ts](src/app/admin/students/enrollments/actions.ts): `getPendingRegistrationCount()` now logs a non-fatal warning and returns `0` for Supabase count-query errors, thrown query exceptions, or a null count, allowing missing/unmigrated `enrollments` schema to leave the admin layout available. Permission validation and authenticated client creation remain outside the query fallback.
 - Validation for the enrollment-count change: `npx tsc --noEmit` and `git diff --check` passed.
+
+## 42. Admin Sign-Out Session Cleanup — 2026-11-09
+
+- Both admin-layout sign-out buttons share `handleSignOut()` in [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx). The handler immediately clears in-memory profile, role, permission, and authorization state; calls `supabase.auth.signOut()` with error logging; clears Supabase auth-token entries from local and session storage and expires the `sprint_admin_session` cookie; then forces a full navigation to `/admin` using `window.location.assign`.
+- The Supabase auth-state listener applies the same local state and storage cleanup on `SIGNED_OUT` or an absent session before routing to the applicable login page. Storage-access failures are logged and do not prevent the final sign-out navigation.
+- Validation: `npx tsc --noEmit` and `git diff --check` passed.
+
+<<<<<<< HEAD
+## 40. Enrollment & Dashboard Performance Fixes � 2026-11-09
+
+- Parallelized 5 sequential Supabase queries in the student dashboard into a single Promise.all, cutting dashboard load latency.
+- Added client-side prefetch on sidebar links (hover/focus) so portal page-to-page navigation is instant.
+
+=======
+## 43. Admin Profile Verification Resilience — 2026-11-09
+
+- [src/app/admin/layout.tsx](src/app/admin/layout.tsx) now catches and logs failures loading the server-side admin session/profile and evaluating enrollment permissions. It passes a recoverable verification error to the client shell rather than letting an exception crash the layout.
+- [src/app/admin/session.ts](src/app/admin/session.ts) logs profile/role query errors (including Supabase error code, message, and details) before returning no verified session. The client fallback in [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx) distinguishes query/verification failures from a verified inactive profile or invalid role: transient failures show “Access Check Unavailable” with retry and sign-out actions instead of a misleading “Access Denied.”
+- Validation: `npx tsc --noEmit`, `git diff --check`, and focused admin session/authorization tests (2 files, 9 tests) passed.
+
+## 44. Admin Sign-Out Guard Against Stale Access — 2026-11-09
+
+- [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx) now centralizes clearing the in-memory permission map, profile/role identity, display fields, admin/password-change flags, authorization, and stale errors. Sign-out and `SIGNED_OUT` events also clear Supabase auth-token and admin-session keys from local/session storage, expire the admin session cookie, and hard-navigate to `/admin`.
+- The client access-loading effect now checks for an authenticated Supabase user before any profile/role verification. A missing user clears the in-memory profile state and hard-navigates to the admin login route, preventing stale staff or access-denied UI from being re-evaluated.
+- Validation: `npx tsc --noEmit`, `git diff --check`, and focused admin session/authorization tests (2 files, 9 tests) passed.
+
+## 45. Root Body Hydration Warning — 2026-11-09
+
+- Added `suppressHydrationWarning` to the root `<body>` in [src/app/layout.jsx](src/app/layout.jsx) to suppress hydration mismatch warnings on the body element.
+- Validation: `git diff --check` passed.
+
+## 46. Admin Dashboard Role Access — 2026-11-09
+
+- [src/app/admin/auth-types.ts](src/app/admin/auth-types.ts) now explicitly allows active `admin` and `staff` roles to access `/admin/dashboard` without requiring granular module permissions. Other admin routes remain permission-gated for staff; full-access permissions and the admin role retain their existing broad access.
+- [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx) recognizes an active staff profile as authorized for the shared layout so dashboard access is not blocked before route-level authorization runs.
+- Updated [tests/unit/admin/authorization.test.ts](tests/unit/admin/authorization.test.ts) to cover admin/staff dashboard access without permissions, denial for unrelated roles, and continued submodule permission enforcement.
+- Validation: `npx tsc --noEmit`, the focused authorization test file (6 tests), and `git diff --check` passed.
+
+## 47. Stop Repeated Admin Page Reloads — 2026-11-09
+
+- A prior change removed the unconditional full-page reload from the `SIGNED_IN` auth listener in [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx); that edit was subsequently reverted, so check the current listener before relying on this historical note.
+- Validation: `npx tsc --noEmit`, focused admin session/authorization tests (2 files, 10 tests), and `git diff --check` passed.
+
+## 48. Admin Session Verification Warning Handling — 2026-11-09
+
+- Confirmed the admin sign-out handler resets all in-memory profile/role/permission state before calling Supabase sign-out and hard-navigates to `/admin`; staff dashboard access and granular submodule authorization remain in place.
+- Changed server and client profile-query failures to warning logs. These failures remain recoverable verification errors rather than throwing or showing a permanent access-denied state.
+- Validation: `npx tsc --noEmit`, focused admin session/authorization tests (2 files, 10 tests), and `git diff --check` passed.
+
+## 49. Prevent False Admin Sign-Out During Session Restore — 2026-11-09
+
+- Updated the auth listener in [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx) to clear admin state and redirect only for the explicit `SIGNED_OUT` event. A null session on another auth event (such as initial browser-session restoration) no longer overwrites a valid server-verified admin profile and sends the dashboard into an access-denied loop.
+- Explicit sign-out now hard-navigates to `/admin`; the listener no longer depends on profile-derived staff state or performs a soft login redirect.
+- Validation: `npx tsc --noEmit`, focused admin session/authorization tests (2 files, 10 tests), and `git diff --check` passed.
+
+## 50. Admin Layout Effect Dependency Warning — 2026-11-09
+
+- Restored `isStaffWorkspace` and `router` to the auth effect dependency list in [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx). The effect uses both values while handling missing auth users; removing them had changed the dependency array length, triggering React's warning during Fast Refresh.
+- Validation: `npx tsc --noEmit` and `git diff --check` passed.
+
+## 51. Remove Noisy Admin Navigation Effect — 2026-11-09
+
+- Removed the diagnostic-only in-memory navigation logging effect from [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx). Its dependency list was the hook identified by the warning screenshot and served no UI or authorization behavior; deleting it removes the reported dependency-array warning source.
+- Validation: `npx tsc --noEmit` and `git diff --check` passed.
+
+## 52. Stabilize Admin Auth Effect Dependencies — 2026-11-09
+
+- Updated the auth/session effect in [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx) to depend only on the primitive `hasInitialProfile` and `isLoginRoute` flags. The browser Supabase client is now created inside the effect, and missing-user routing uses a hard `/admin` navigation, removing object/router-derived dependencies from the hook.
+- Remaining effect dependencies are fixed-length primitive lists (`currentLabel`, `isAdmin`, `pathname`; and `hasInitialProfile`, `isLoginRoute`).
+- Validation: `npx tsc --noEmit`, focused admin session/authorization tests (2 files, 10 tests), and `git diff --check` passed.
+
+## 53. Reliable Admin Sign-Out and Registration Query Fallback — 2026-11-09
+
+- Admin sign-out now removes persisted Supabase/admin session keys, resets in-memory access state, and navigates to `/admin?signout=1` even if `supabase.auth.signOut()` fails. The auth listener no longer reloads on `SIGNED_IN`, avoiding automatic re-entry during session restoration.
+- [src/lib/supabase/middleware.ts](src/lib/supabase/middleware.ts) handles the sign-out marker before its cached-session redirect path, expires the HttpOnly admin session cookie and Supabase auth cookies, then redirects to `/admin`.
+- [src/app/admin/students/registrations/actions.ts](src/app/admin/students/registrations/actions.ts): `getStudentRegistrations()` retains its authorization check, logs and returns an empty list for query or client errors, including database permission errors, instead of throwing through the page render.
+- Validation: `npx tsc --noEmit`, focused admin session/authorization tests (2 files, 10 tests), and `git diff --check` passed.
+>>>>>>> dfc3b6b6d281844ccf6ae17dff9345e0defe3623

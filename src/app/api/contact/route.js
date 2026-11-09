@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { isValidContactPhone } from "@/lib/contact-phone";
 
 export const runtime = "nodejs";
 
@@ -19,6 +20,13 @@ export async function POST(request) {
     if (!audience || !fullName || !email || !phone) {
       return NextResponse.json(
         { success: false, error: "Audience, full name, email, and phone are required." },
+        { status: 400 },
+      );
+    }
+
+    if (!isValidContactPhone(phone)) {
+      return NextResponse.json(
+        { success: false, error: "Please provide a valid phone number." },
         { status: 400 },
       );
     }

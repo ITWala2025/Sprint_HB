@@ -92,84 +92,60 @@ async function getStudentDashboardContext() {
     email: profile.email || "",
   };
 
-  const { data: studentRecord, error: studentRecordError } = await supabase
-    .from("students")
-    .select("id, registration_number")
-    .eq("id", profile.id)
-    .maybeSingle();
+  const [
+    { data: studentRecord, error: studentRecordError },
+    { data: applicationRecords, error: applicationsError },
+    { data: enrollmentsData, error: enrollmentsError },
+    { data: studentCoursesData, error: studentCoursesError },
+  ] = await Promise.all([
+    supabase.from("students").select("id, registration_number").eq("id", profile.id).maybeSingle(),
+    supabase.from("enrollments").select("id, application_number, status, created_at, course_id, bundle_id").or(`applicant_user_id.eq.${user.id},student_id.eq.${user.id}`).order("created_at", { ascending: false }),
+    supabase.from("student_course_enrollments").select("id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)").eq("student_id", profile.id).order("enrolled_at", { ascending: false }),
+    supabase.from("student_courses").select("id, status, enrolled_at, course_id, bundle_id, courses:course_id(title, category), course_bundles:bundle_id(title, category)").eq("student_id", profile.id).eq("status", "active"),
+  ]);
 
-  // A missing student record is not fatal — the student may not have a
-  // students table row yet. Continue with just the profile information.
   if (studentRecordError) {
     console.warn("[StudentDashboard] Could not load student record:", studentRecordError.message);
   }
 
-  const { data: applicationRecords, error: applicationsError } = await supabase
-    .from("enrollments")
-    .select("id, application_number, status, created_at, course_id, bundle_id")
-    .or(`applicant_user_id.eq.${user.id},student_id.eq.${user.id}`)
-    .order("created_at", { ascending: false });
-
-  // Application query failures are logged but do not block dashboard access.
   let applications = [];
   if (applicationsError) {
     console.warn("[StudentDashboard] Could not load course applications:", applicationsError.message);
   } else {
+    const courseIds = [...new Set((applicationRecords ?? []).flatMap((item) => item.course_id ? [item.course_id] : []))];
+    const bundleIds = [...new Set((applicationRecords ?? []).flatMap((item) => item.bundle_id ? [item.bundle_id] : []))];
+    const [coursesResult, bundlesResult] = await Promise.all([
+      courseIds.length > 0
+        ? supabase.from("courses").select("id, title").in("id", courseIds)
+        : Promise.resolve({ data: [], error: null }),
+      bundleIds.length > 0
+        ? supabase.from("course_bundles").select("id, title").in("id", bundleIds)
+        : Promise.resolve({ data: [], error: null }),
+    ]);
 
-  const courseIds = [...new Set((applicationRecords ?? []).flatMap((item) => item.course_id ? [item.course_id] : []))];
-  const bundleIds = [...new Set((applicationRecords ?? []).flatMap((item) => item.bundle_id ? [item.bundle_id] : []))];
-  const [coursesResult, bundlesResult] = await Promise.all([
-    courseIds.length > 0
-      ? supabase.from("courses").select("id, title").in("id", courseIds)
-      : Promise.resolve({ data: [], error: null }),
-    bundleIds.length > 0
-      ? supabase.from("course_bundles").select("id, title").in("id", bundleIds)
-      : Promise.resolve({ data: [], error: null }),
-  ]);
+    if (coursesResult.error || bundlesResult.error) {
+      console.warn(
+        "[StudentDashboard] Could not load application course names:",
+        [coursesResult.error?.message, bundlesResult.error?.message].filter(Boolean).join("; "),
+      );
+    }
 
-  if (coursesResult.error || bundlesResult.error) {
-    console.warn(
-      "[StudentDashboard] Could not load application course names:",
-      [coursesResult.error?.message, bundlesResult.error?.message].filter(Boolean).join("; "),
-    );
-  }
-
-  const courseTitles = new Map((coursesResult.data ?? []).map((item) => [item.id, item.title]));
-  const bundleTitles = new Map((bundlesResult.data ?? []).map((item) => [item.id, item.title]));
-  applications = (applicationRecords ?? []).map((application) => ({
-    id: application.id,
-    applicationId: formatApplicationId(application.application_number, application.id, application.created_at),
-    status: application.status,
-    createdAt: application.created_at,
-    courseTitle:
-      (application.course_id && courseTitles.get(application.course_id)) ||
-      (application.bundle_id && bundleTitles.get(application.bundle_id)) ||
-      "Course not selected",
-  }));
+    const courseTitles = new Map((coursesResult.data ?? []).map((item) => [item.id, item.title]));
+    const bundleTitles = new Map((bundlesResult.data ?? []).map((item) => [item.id, item.title]));
+    applications = (applicationRecords ?? []).map((application) => ({
+      id: application.id,
+      applicationId: formatApplicationId(application.application_number, application.id, application.created_at),
+      status: application.status,
+      createdAt: application.created_at,
+      courseTitle:
+        (application.course_id && courseTitles.get(application.course_id)) ||
+        (application.bundle_id && bundleTitles.get(application.bundle_id)) ||
+        "Course not selected",
+    }));
   }
 
   let enrollments = [];
   let studentCourses = [];
-
-  const [
-    { data: enrollmentsData, error: enrollmentsError },
-    { data: studentCoursesData, error: studentCoursesError },
-  ] = await Promise.all([
-    supabase
-      .from("student_course_enrollments")
-      .select(
-        "id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)"
-      )
-      .eq("student_id", profile.id)
-      .order("enrolled_at", { ascending: false }),
-    supabase
-      .from("student_courses")
-      .select(
-        "id, status, enrolled_at, course_id, bundle_id, courses:course_id(title, category), course_bundles:bundle_id(title, category)"
-      )
-      .eq("student_id", profile.id)
-      .eq("status", "active"),
-  ]);
 
   if (enrollmentsError) {
     console.warn("[StudentDashboard] Could not load active course enrollments:", enrollmentsError.message);

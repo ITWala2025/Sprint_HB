@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { submitContactEnquiry } from "@/components/contact/contactSubmission";
+import ContactPhoneField from "@/components/contact/ContactPhoneField";
 
 const programs = [
   "Artificial Intelligence",
@@ -230,18 +231,12 @@ export default function WorkingProfessionalForm({ audience = "professional" }) {
 
       {/* PHONE */}
       <div className="professional-form__field">
-        <label htmlFor="professional-phone">
-          Phone Number <span aria-hidden="true">*</span>
-        </label>
-
-        <input
+        <ContactPhoneField
           id="professional-phone"
-          name="phone"
-          type="tel"
+          label="Phone Number"
           placeholder="Enter your phone number"
           value={formData.phone}
           onChange={handleChange}
-          required
         />
       </div>
 

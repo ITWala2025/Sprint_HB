@@ -215,7 +215,7 @@ export default function AboutPage() {
       </section>
 
       {/* ============ 5. LEADERSHIP / FOUNDERS (§3.5) ============ */}
-      <section
+      {/* <section
         id="leadership"
         className="sprint-section sprint-anchor bg-brand-off-white"
       >
@@ -230,7 +230,7 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ============ 6. FACULTY / EXPERTS (§3.6) ============ */}
       {/* Reuses the exact same FacultyFilmstrip component and profile data as

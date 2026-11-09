@@ -32,6 +32,19 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const isLoginPage = pathname === "/admin" || pathname === "/admin/login";
+  if (pathname === "/admin" && request.nextUrl.searchParams.get("signout") === "1") {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete("signout");
+    const response = NextResponse.redirect(url);
+    response.cookies.delete(ADMIN_SESSION_COOKIE);
+    for (const cookie of request.cookies.getAll()) {
+      if (/^sb-.+-auth-token(?:[-.]\d+)?$/.test(cookie.name) || /^sb-.+-auth-token-code-verifier$/.test(cookie.name)) {
+        response.cookies.delete(cookie.name);
+      }
+    }
+    return response;
+  }
+
   const isPasswordResetCallback =
     pathname === "/admin" && request.nextUrl.searchParams.get("reset") === "true";
   const isAdminSubRoute = pathname.startsWith("/admin/") && !isLoginPage;

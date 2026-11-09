@@ -151,6 +151,28 @@ function canViewItem(item: NavigationItem, permissionMap: PermissionMap | null, 
     return isAdmin || moduleKeys.some((moduleKey) => roleHasPermission(permissionMap, moduleKey, "view"));
 }
 
+function clearAdminSessionStorage() {
+    if (typeof window === "undefined") return;
+
+    for (const storageName of ["localStorage", "sessionStorage"] as const) {
+        try {
+            const storage = window[storageName];
+            for (let index = storage.length - 1; index >= 0; index--) {
+                const key = storage.key(index);
+                if (key && (/^sb-.+-auth-token(?:[-.]\d+)?$/.test(key) || /^sb-.+-auth-token-code-verifier$/.test(key) || /^(?:sprint[-_]admin|admin[-_]session)/i.test(key))) {
+                    storage.removeItem(key);
+                }
+            }
+        } catch (error) {
+            console.error(`Could not clear admin ${storageName}:`, error);
+        }
+    }
+}
+
+function clearAdminSessionCookie() {
+    document.cookie = "sprint_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax";
+}
+
 function Sidebar({ pathname, onNavigate, permissionMap, brandSubtitle, displayName, email, isAdmin, isStaffWorkspace, isLoading, pendingRegistrationCount }: { pathname: string; onNavigate?: () => void; permissionMap: PermissionMap | null; brandSubtitle: string; displayName: string; email: string; isAdmin: boolean; isStaffWorkspace: boolean; isLoading: boolean; pendingRegistrationCount: number | null }) {
     const showStandardNavigation = isLoading || isAdmin;
     const canNavigateToDashboard = isAdmin || roleHasPermission(permissionMap, "dashboard", "view");
@@ -230,6 +252,7 @@ export default function AdminLayoutClient({
     ));
     const adminPathname = getAdminPathname(pathname);
     const isLoginRoute = adminPathname === "/admin" || adminPathname === "/admin/login";
+    const hasInitialProfile = initialProfile !== null;
     const [accessError, setAccessError] = useState("");
     const [isAccessLoading, setIsAccessLoading] = useState(!initialProfile && !isLoginRoute);
     const isStaffWorkspace = profileRole === "staff" && !isAdmin;
@@ -245,39 +268,27 @@ export default function AdminLayoutClient({
             : `${currentLabel} | SPRINT Workspace`;
     }, [currentLabel, isAdmin, pathname]);
 
-    // Fast in-memory navigation logging to monitor routing latency
-    useEffect(() => {
-        if (!isLoginRoute) {
-            const hasAccess = isAuthorized && canAccessAdminRoute(adminPathname, permissionMap, profileRole, roleName);
-            console.log(
-                `[SPRINT Admin Navigation] Moved to "${adminPathname}" | Access: ${hasAccess ? "GRANTED" : "DENIED"} | Role: ${displayRoleName} (In-memory verification)`
-            );
-        }
-    }, [adminPathname, displayRoleName, isAuthorized, isLoginRoute, permissionMap, profileRole, roleName]);
-
     useEffect(() => {
         let isMounted = true;
 
-        if (initialProfile) {
-            console.log("[SPRINT Admin Layout] Initialized from SSR profile:", {
-                role: initialProfile.role,
-                roleName: initialProfile.role_name,
-                email: initialProfile.email,
-            });
+        const authClient = createClient();
+
+        if (hasInitialProfile) {
+            console.log("[SPRINT Admin Layout] Initialized from SSR profile.");
         } else if (!isLoginRoute) {
             console.log("[SPRINT Admin Layout] No SSR profile found. Loading session on client...");
             async function loadAccess() {
                 setIsAccessLoading(true);
-                const { data: userData, error: authError } = await supabase.auth.getUser();
+                const { data: userData, error: authError } = await authClient.auth.getUser();
                 if (authError || !userData.user) {
                     if (!isMounted) return;
                     setIsAuthorized(false);
                     setIsAccessLoading(false);
-                    router.replace(isStaffWorkspace ? "/staff/login" : "/admin/login");
+                    window.location.assign("/admin");
                     return;
                 }
 
-                const { data: profile, error: profileError } = await supabase
+                const { data: profile, error: profileError } = await authClient
                     .from("profiles")
                     .select("role, is_active, must_change_password, full_name, email, roles(name, permissions, is_active)")
                     .eq("id", userData.user.id)
@@ -309,17 +320,21 @@ export default function AdminLayoutClient({
         }
 
         // Keep auth session synced without reloading on every route change
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            if (event === "SIGNED_IN" && !isLoginRoute) {
-                window.location.reload();
-                return;
-            }
-
-            if (event === "SIGNED_OUT" || (!session && !isLoginRoute)) {
-                console.log("[SPRINT Admin Layout] User signed out or session ended.");
-                document.cookie = "sprint_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax";
+        const { data: { subscription } } = authClient.auth.onAuthStateChange((event) => {
+            if (event === "SIGNED_OUT" && !isLoginRoute) {
+                console.log("[SPRINT Admin Layout] Explicit sign-out event received.");
+                clearAdminSessionStorage();
+                clearAdminSessionCookie();
+                setPermissionMap(null);
+                setProfileRole(null);
+                setRoleName(null);
+                setFullName("");
+                setEmail("");
+                setIsAdmin(false);
+                setMustChangePassword(false);
                 setIsAuthorized(false);
-                router.replace(isStaffWorkspace ? "/staff/login" : "/admin/login");
+                setIsAccessLoading(false);
+                window.location.assign("/admin?signout=1");
             }
         });
 
@@ -327,16 +342,39 @@ export default function AdminLayoutClient({
             isMounted = false;
             subscription.unsubscribe();
         };
-    }, [initialProfile, isLoginRoute, isStaffWorkspace, router, supabase]);
+    }, [hasInitialProfile, isLoginRoute]);
 
     const handleSignOut = async () => {
+        setPermissionMap(null);
+        setProfileRole(null);
+        setRoleName(null);
+        setFullName("");
+        setEmail("");
+        setIsAdmin(false);
+        setMustChangePassword(false);
+        setIsAuthorized(false);
+        setIsAccessLoading(true);
+        setAccessError("");
+
         try {
-            await supabase.auth.signOut();
-        } catch (err) {
-            console.error("Sign out error:", err);
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+        } catch (error) {
+            console.error("Sign out error:", error);
         } finally {
-            document.cookie = "sprint_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax";
-            window.location.href = "/admin";
+            clearAdminSessionStorage();
+            clearAdminSessionCookie();
+            setPermissionMap(null);
+            setProfileRole(null);
+            setRoleName(null);
+            setFullName("");
+            setEmail("");
+            setIsAdmin(false);
+            setMustChangePassword(false);
+            setIsAuthorized(false);
+            setIsAccessLoading(false);
+            setAccessError("");
+            window.location.assign("/admin?signout=1");
         }
     };
 

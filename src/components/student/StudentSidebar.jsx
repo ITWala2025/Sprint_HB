@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Award,
   BookOpen,
@@ -47,6 +47,8 @@ export default function StudentSidebar({
   student = null,
 }) {
   const pathname = usePathname() ?? "";
+  const router = useRouter();
+  const prefetch = (href) => router.prefetch(href);
   const isActive = (href) =>
     pathname === href || pathname.startsWith(`${href}/`);
   const profile = student ?? {
@@ -92,6 +94,8 @@ export default function StudentSidebar({
               <Link
                 href={item.href}
                 onClick={onNavigate}
+                onMouseEnter={() => prefetch(item.href)}
+                onFocus={() => prefetch(item.href)}
                 title={collapsed ? item.label : undefined}
                 aria-current={active ? "page" : undefined}
                 className={`sprint-focus group flex min-h-11 items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-colors ${

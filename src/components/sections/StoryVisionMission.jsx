@@ -126,7 +126,7 @@ export default function StoryVisionMission({ story, visionMission }) {
   };
 
   return (
-    <div className="mt-12 grid items-stretch gap-10 lg:grid-cols-2">
+    <div className="mt-12 grid grid-cols-1 items-stretch gap-10 lg:grid-cols-2">
       {/* ============ LEFT — OUR STORY (§3.3) ============ */}
       <article className="sprint-glass-card sprint-card-interactive flex flex-col p-6 sm:p-8">
         <span aria-hidden="true" className="sprint-accent left-0" />

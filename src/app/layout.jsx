@@ -61,7 +61,7 @@ export const metadata = {
 export default function RootLayout({ children, modal }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body className={`${spaceGrotesk.variable} ${inter.variable} bg-white text-brand-text antialiased`}>
+      <body className={`${spaceGrotesk.variable} ${inter.variable} bg-white text-brand-text antialiased`} suppressHydrationWarning>
         {/* Skip link — first item in tab order (GL-08, GL-09) */}
         <a
           href="#main"
