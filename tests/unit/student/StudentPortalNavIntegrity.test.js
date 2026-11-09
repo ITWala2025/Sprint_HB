@@ -95,13 +95,13 @@ describe("Student portal navigation integrity", () => {
     );
   });
 
-  it("keeps Settings embedded in the Profile page", () => {
-    const profilePage = readFileSync(
-      path.join(PORTAL_DIR, "profile", "page.jsx"),
+  it("redirects Settings to Help & Support without adding a sidebar item", () => {
+    const settingsPage = readFileSync(
+      path.join(PORTAL_DIR, "settings", "page.jsx"),
       "utf8",
     );
 
-    expect(profilePage).toContain('id="settings"');
+    expect(settingsPage).toContain('redirect("/student/help-support")');
     expect(navigation.some((item) => item.label === "Settings")).toBe(false);
   });
 

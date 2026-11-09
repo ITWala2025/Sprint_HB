@@ -71,7 +71,7 @@ export default function StudentSidebar({
             onClick={onToggleCollapse}
             aria-expanded={!collapsed}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="sprint-focus grid size-9 shrink-0 place-items-center rounded-xl border border-brand-border text-brand-text-muted transition-colors hover:border-brand-navy hover:text-brand-navy"
+            className="sprint-focus grid size-11 shrink-0 place-items-center rounded-xl border border-brand-border text-brand-text-muted transition-colors hover:border-brand-navy hover:text-brand-navy"
           >
             {collapsed ? (
               <PanelLeftOpen className="size-4.5" aria-hidden="true" />
@@ -94,7 +94,7 @@ export default function StudentSidebar({
                 onClick={onNavigate}
                 title={collapsed ? item.label : undefined}
                 aria-current={active ? "page" : undefined}
-                className={`sprint-focus group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-colors ${
+                className={`sprint-focus group flex min-h-11 items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-colors ${
                   collapsed ? "justify-center px-0" : ""
                 } ${
                   active

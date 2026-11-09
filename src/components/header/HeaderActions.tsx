@@ -21,7 +21,7 @@ export default function HeaderActions({
         <Link
           href="/student/dashboard"
           aria-label="Student dashboard"
-          className="inline-flex size-10 items-center justify-center rounded-full bg-brand-navy text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-navy-dark"
+          className="inline-flex size-11 items-center justify-center rounded-full bg-brand-navy text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-navy-dark"
         >
           {studentInitials}
         </Link>

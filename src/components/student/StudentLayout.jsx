@@ -71,7 +71,7 @@ export default function StudentLayout({ children, student = null }) {
             onClick={() => setIsDrawerOpen(true)}
             aria-expanded={isDrawerOpen}
             aria-controls="student-sidebar-drawer"
-            className="sprint-focus grid size-10 shrink-0 place-items-center rounded-xl border border-brand-border text-brand-navy transition-colors hover:bg-brand-surface"
+            className="sprint-focus grid size-11 shrink-0 place-items-center rounded-xl border border-brand-border text-brand-navy transition-colors hover:bg-brand-surface"
           >
             <Menu className="size-5" aria-hidden="true" />
             <span className="sr-only">Open student portal navigation</span>
@@ -103,7 +103,7 @@ export default function StudentLayout({ children, student = null }) {
               <button
                 type="button"
                 onClick={() => setIsDrawerOpen(false)}
-                className="sprint-focus grid size-10 place-items-center rounded-xl border border-brand-border text-brand-navy transition-colors hover:bg-brand-surface"
+                className="sprint-focus grid size-11 place-items-center rounded-xl border border-brand-border text-brand-navy transition-colors hover:bg-brand-surface"
               >
                 <X className="size-5" aria-hidden="true" />
                 <span className="sr-only">Close student portal navigation</span>
