@@ -6,6 +6,16 @@ const DEMO_CONTACT = {
 
 const createAction = (label, href) => ({ label, href });
 
+function toSuggestions(items) {
+  return items.map((item) => {
+    if (typeof item === "string") {
+      const hrefMatch = /^\/[\w-]+/.test(item);
+      return hrefMatch ? { label: item, href: item } : { label: item, query: item };
+    }
+    return item;
+  });
+}
+
 export function getDemoChatbotReply(message, pathname = "/") {
   const text = message.toLowerCase();
 
@@ -13,7 +23,7 @@ export function getDemoChatbotReply(message, pathname = "/") {
     return {
       reply:
         "Hello! I can help you explore SPRINT courses and programs, understand how to get started, or find the right page.",
-      suggestions: ["Explore courses", "Tell me about SPRINT RISE", "Contact admissions"],
+      suggestions: toSuggestions(["Explore courses", "Tell me about SPRINT RISE", "Contact admissions"]),
     };
   }
 
@@ -24,13 +34,13 @@ export function getDemoChatbotReply(message, pathname = "/") {
   ) {
     return {
       reply: text.includes("career")
-        ? "Absolutely—I’d be happy to help you explore your options. What kind of work or subjects interest you, and what experience do you already have?"
+        ? "Absolutely—I'd be happy to help you explore your options. What kind of work or subjects interest you, and what experience do you already have?"
         : "Absolutely—I can help you find a course that fits. What are you hoping to do next, and how much experience do you have in tech so far?",
-      suggestions: [
-        "I’m a student or just starting out",
-        "I’m already working in tech",
-        "I’m new to tech and exploring",
-      ],
+      suggestions: toSuggestions([
+        "I'm a student or just starting out",
+        "I'm already working in tech",
+        "I'm new to tech and exploring",
+      ]),
     };
   }
 
@@ -55,7 +65,7 @@ export function getDemoChatbotReply(message, pathname = "/") {
       reply:
         "SPRINT RISE includes a 90-hour internship stage as part of its six-month program. For current internship or career-support details, the admissions team can guide you.",
       action: createAction("Explore SPRINT RISE", "/programs/sprint-rise"),
-      suggestions: ["Contact admissions"],
+      suggestions: toSuggestions(["Contact admissions"]),
     };
   }
 
@@ -64,7 +74,7 @@ export function getDemoChatbotReply(message, pathname = "/") {
       reply:
         "SPRINT RISE is a six-month program. Individual courses vary in length; for example, Python & AI Foundations is 8 weeks and Cloud Fundamentals is 6 weeks.",
       action: createAction("See courses", "/courses"),
-      suggestions: ["Tell me about SPRINT RISE"],
+      suggestions: toSuggestions(["Tell me about SPRINT RISE"]),
     };
   }
 
@@ -80,7 +90,7 @@ export function getDemoChatbotReply(message, pathname = "/") {
       reply:
         "SPRINT offers practical learning in areas including AI/ML, cloud, DevOps, web development, data analytics, cybersecurity, and professional skills. Browse the catalogue to see course details and prerequisites.",
       action: createAction("Browse all courses", "/courses"),
-      suggestions: ["How long are the courses?", "What are the fees?"],
+      suggestions: toSuggestions(["How long are the courses?", "What are the fees?"]),
     };
   }
 
@@ -89,16 +99,16 @@ export function getDemoChatbotReply(message, pathname = "/") {
       reply:
         "SPRINT RISE is a six-month, online + in-campus program for beginner to intermediate learners. It covers areas such as Cloud, AI, and DevOps, with a 90-hour internship stage. The Career Accelerator is designed for B.Tech and MCA students and moves through Foundations, Ignite, and Outperform.",
       action: createAction("Explore SPRINT RISE", "/programs/sprint-rise"),
-      suggestions: ["Tell me about SPRINT RISE", "Who can apply?"],
+      suggestions: toSuggestions(["Tell me about SPRINT RISE", "Who can apply?"]),
     };
   }
 
   if (/\b(pages?|website|navigate|menu)\b/.test(text)) {
     return {
       reply:
-        "You can explore SPRINT’s courses and programs, learn about the institute, or contact the team from the pages below. Tell me what you’re looking for and I’ll point you in the right direction.",
+        "You can explore SPRINT's courses and programs, learn about the institute, or contact the team from the pages below. Tell me what you're looking for and I'll point you in the right direction.",
       action: createAction("Explore courses", "/courses"),
-      suggestions: ["Programs page", "About SPRINT", "Contact page"],
+      suggestions: toSuggestions(["Programs page", "About SPRINT", "Contact page"]),
     };
   }
 
@@ -107,13 +117,13 @@ export function getDemoChatbotReply(message, pathname = "/") {
       reply:
         "SPRINT is a training hub in Hazaribagh, Jharkhand, focused on hands-on, production-level learning in emerging technologies such as AI/ML, Cloud, and DevOps.",
       action: createAction("About SPRINT", "/about"),
-      suggestions: ["Explore courses", "Explore programs"],
+      suggestions: toSuggestions(["Explore courses", "Explore programs"]),
     };
   }
 
-  const currentPage = pathname !== "/" ? ` You’re currently browsing ${pathname}.` : "";
+  const currentPage = pathname !== "/" ? ` You're currently browsing ${pathname}.` : "";
   return {
     reply: `Of course—I can help. What are you hoping to learn or work toward? A little about your interests or experience will help me point you to relevant SPRINT options.${currentPage}`,
-    suggestions: ["Explore courses", "Tell me about SPRINT RISE", "Contact admissions"],
+    suggestions: toSuggestions(["Explore courses", "Tell me about SPRINT RISE", "Contact admissions"]),
   };
 }

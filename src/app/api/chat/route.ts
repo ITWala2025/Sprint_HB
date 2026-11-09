@@ -68,6 +68,7 @@ export async function POST(request: Request) {
     actionLink: result.action?.href,
     actionLabel: result.action?.label,
     suggestions: result.suggestions,
+    similarQuestions: result.similarQuestions,
   });
 }
 

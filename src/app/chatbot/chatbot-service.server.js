@@ -166,12 +166,53 @@ function findVerifiedDatasetAnswer(message) {
   return findDatasetMatch(message, VERIFIED_QA_RECORDS);
 }
 
-function getUnverifiedQaReply() {
+function toSuggestions(items) {
+  return items.map((item) => {
+    if (typeof item === "string") {
+      const hrefMatch = /^\/[\w-]+/.test(item);
+      return hrefMatch ? { label: item, href: item } : { label: item, query: item };
+    }
+    return item;
+  });
+}
+
+function findSimilarQuestions(message, records, limit = 3) {
+  const normalizedMessage = normalizeQuestion(message || "");
+  const messageTerms = getQuestionTerms(message || "");
+  if (!messageTerms.size) return [];
+
+  const scored = records
+    .map((record) => {
+      const questions = [
+        record.question,
+        ...(Array.isArray(record.alternative_questions) ? record.alternative_questions : []),
+      ].filter((q) => typeof q === "string" && q.trim());
+
+      let best = 0;
+      for (const question of questions) {
+        const questionTerms = getQuestionTerms(question);
+        const shared = [...messageTerms].filter((t) => questionTerms.has(t)).length;
+        const coverage = shared / messageTerms.size;
+        if (coverage > best) best = coverage;
+      }
+      return { record, score: best };
+    })
+    .filter((item) => item.score >= 0.4)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((item) => item.record.question);
+
+  return scored;
+}
+
+function getUnverifiedQaReply(message) {
+  const similar = findSimilarQuestions(message, VERIFIED_QA_RECORDS, 3);
   return {
     reply:
       "I don’t have verified details about that yet. Please contact the SPRINT admissions team for current information.",
     action: { label: "Contact admissions", href: "/contact" },
-    suggestions: ["Contact admissions", "Explore courses"],
+    similarQuestions: similar,
+    suggestions: toSuggestions(["Contact admissions", "Explore courses"]),
   };
 }
 
@@ -547,7 +588,7 @@ function getDirectChatbotReply(message) {
       return {
         reply: overview.answer,
         action: { label: "About SPRINT", href: "/about" },
-        suggestions: ["Explore courses", "Explore programs"],
+suggestions: toSuggestions(["Explore courses", "Explore programs"]),
       };
     }
   }
@@ -589,26 +630,34 @@ export function buildChatbotPrompt({ message, history = [], pathname = "/" }) {
   ].join("\n");
 }
 
+function normalizeSuggestions(result) {
+  if (!result) return result;
+  if (Array.isArray(result.suggestions)) {
+    result.suggestions = toSuggestions(result.suggestions);
+  }
+  return result;
+}
+
 export async function getLocalChatbotReply({
   message,
   history = [],
   pathname = "/",
 }) {
   const directReply = getDirectChatbotReply(message);
-  if (directReply) return directReply;
+  if (directReply) return normalizeSuggestions(directReply);
 
   if (
     !findVerifiedDatasetAnswer(message) &&
     findDatasetMatch(message, UNVERIFIED_QA_RECORDS)
   ) {
-    return getUnverifiedQaReply();
+    return normalizeSuggestions(getUnverifiedQaReply());
   }
 
   const configuredUrl = process.env.OLLAMA_URL || process.env.NEXT_PUBLIC_OLLAMA_URL;
   const model = process.env.OLLAMA_MODEL || "llama3.2:3b";
 
   if (!configuredUrl) {
-    return getFallbackChatbotReply(message, pathname);
+    return normalizeSuggestions(getFallbackChatbotReply(message, pathname));
   }
 
   const baseUrl = configuredUrl.replace(/\/$/, "");
@@ -643,17 +692,17 @@ export async function getLocalChatbotReply({
       throw new Error("Ollama returned an empty response.");
     }
 
-    return {
+    return normalizeSuggestions({
       reply,
       action: null,
       suggestions: ["Explore courses", "Tell me about SPRINT RISE", "Contact admissions"],
-    };
+    });
   } catch (error) {
     console.warn(
       "Falling back to the local Q&A dataset or demo response because the Ollama request failed:",
       error,
     );
-    return getFallbackChatbotReply(message, pathname);
+    return normalizeSuggestions(getFallbackChatbotReply(message, pathname));
   } finally {
     clearTimeout(timeoutId);
   }

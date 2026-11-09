@@ -844,3 +844,13 @@ No application code was changed for this reconciliation. The local role-unassign
 - Added StudentAvatarDropdown component with Dashboard and Sign out menu items, replacing the static circular avatar in the header.
 - Wired into desktop HeaderActions and mobile MobileNavigation, showing initials + full name from the Supabase profile.
 
+
+## 42. Chatbot Fixes — 2026-11-09
+
+- Fixed bug: all reply objects returned suggestions as plain strings, but the frontend expected objects with label/query/href. Added a 	oSuggestions helper and wrapped every suggestion array in the service and demo core.
+- Added indSimilarQuestions to surface related verified Q&A when a query has no verified answer, surfaced via a new similarQuestions field on the assistant response.
+- Added 
+ormalizeSuggestions as a final safety net in getLocalChatbotReply so all code paths return the correct shape.
+- Updated the chat API route and frontend AiAssistant to pass through and render similarQuestions as clickable chips.
+- Updated affected unit tests to match the new object shape. All 60 chatbot tests pass.
+

@@ -31,6 +31,7 @@ type ChatMessage = {
   actionLink?: string;
   actionLabel?: string;
   suggestions?: Suggestion[];
+  similarQuestions?: string[];
 };
 
 const STARTER_SUGGESTIONS: Suggestion[] = [
@@ -271,6 +272,7 @@ export default function AiAssistant() {
         reply?: string;
         actionLink?: string;
         actionLabel?: string;
+        similarQuestions?: string[];
       } = await response.json();
       if (typeof result.reply !== "string" || !result.reply.trim()) {
         throw new Error("The chat service returned an invalid response.");
@@ -287,6 +289,7 @@ export default function AiAssistant() {
           actionLink: result.actionLink,
           actionLabel: result.actionLabel,
           suggestions: getContextualSuggestions(message, reply),
+          similarQuestions: result.similarQuestions,
         },
       ]);
     } catch (error) {
@@ -477,6 +480,26 @@ export default function AiAssistant() {
                             href={message.actionLink}
                             label={message.actionLabel}
                           />
+                        )}
+                        {message.similarQuestions && message.similarQuestions.length > 0 && (
+                          <div className="mt-3">
+                            <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wide text-[#64748b]">
+                              Similar questions
+                            </p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {message.similarQuestions.map((q) => (
+                                <button
+                                  key={q}
+                                  type="button"
+                                  disabled={isLoading}
+                                  onClick={() => handleSend(q)}
+                                  className="rounded-full border border-[#e2e8f0] bg-[#f1f5f9] px-2.5 py-1 text-[11px] font-medium text-[#011f3e] transition-colors hover:border-[#f81529] hover:bg-[#fff0f2] hover:text-[#d9142a] disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                  {q}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
                         )}
                         {message.suggestions && (
                           <div className="mt-3 flex flex-wrap gap-1.5">

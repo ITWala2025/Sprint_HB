@@ -31,14 +31,14 @@ describe("chatbot service", () => {
     const result = getDemoChatbotReply("Can you help?", "/about");
 
     expect(result.reply).toContain("/about");
-    expect(result.suggestions).toContain("Explore courses");
+    expect(result.suggestions).toContainEqual({ label: "Explore courses", query: "Explore courses" });
   });
 
   it("helps visitors navigate site pages with relevant prompts", () => {
     const result = getDemoChatbotReply("What pages are on the website?");
 
     expect(result.action.href).toBe("/courses");
-    expect(result.suggestions).toContain("Programs page");
+    expect(result.suggestions).toContainEqual({ label: "Programs page", query: "Programs page" });
   });
 
   it("asks a friendly follow-up before recommending a course or career direction", () => {
@@ -431,7 +431,7 @@ describe("chatbot service", () => {
     expect(result.reply).not.toContain("Information Required");
     expect(result.reply).toMatch(/not published in the verified course catalogue/i);
     expect(result.action).toEqual({ label: "Contact SPRINT", href: "/contact" });
-    expect(result.suggestions).toContain("Explore courses");
+    expect(result.suggestions).toContainEqual({ label: "Explore courses", query: "Explore courses" });
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
