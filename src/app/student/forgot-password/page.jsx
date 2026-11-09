@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { resolveStudentLoginNextPath } from "@/lib/student-login-redirect";
 
 import "./forgot-password.css";
 
@@ -17,15 +18,13 @@ export default function ForgotPasswordPage({ isModal = true }) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [returnToEnrollment, setReturnToEnrollment] = useState(false);
+  const [returnPath, setReturnPath] = useState(null);
   const PageContainer = isModal ? "div" : "main";
 
   useEffect(() => {
     document.body.classList.add("student-auth-page");
-    setReturnToEnrollment(
-      new URLSearchParams(window.location.search).get("next") ===
-        "/student/enroll",
-    );
+    const nextPath = resolveStudentLoginNextPath(window.location.search);
+    setReturnPath(nextPath === "/student/dashboard" ? null : nextPath);
 
     return () => {
       document.body.classList.remove("student-auth-page");
@@ -55,8 +54,8 @@ export default function ForgotPasswordPage({ isModal = true }) {
       const supabase = createClient();
 
       const redirectUrl = new URL("/set-password", window.location.origin);
-      if (returnToEnrollment) {
-        redirectUrl.searchParams.set("next", "/student/enroll");
+      if (returnPath) {
+        redirectUrl.searchParams.set("next", returnPath);
       }
       const redirectTo = redirectUrl.toString();
 

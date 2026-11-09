@@ -10,7 +10,15 @@
 
 Provide one intake experience that verifies the applicant's email with a six-digit one-time password (OTP), captures required personal details, and optionally captures education details and a course or bundle selection.
 
-Every successful submission creates a row in `public.registrations`. A row in `public.enrollments` is created only when the applicant selects a course or bundle. Course payment remains pending offline verification until staff review it.
+Every submission through the registration wizard creates a row in `public.registrations`. A row in `public.enrollments` is also created when the applicant selects a course or bundle. The existing intake schema contains a legacy payment-status field, but payment is not part of direct enrollment or its approval decision.
+
+## Direct course applications for existing students
+
+An authenticated, active student may apply from an individual published course page without reopening the registration wizard. The server action verifies the authenticated student profile and the published course, then inserts one `pending` row in `public.enrollments`. Unauthenticated users are sent to Student Login and returned to that course after signing in.
+
+The application appears in Admin Panel → Student Operations → Enrollment Applications and Student Portal → My Courses. The student portal reads enrollment status and active access records from Supabase, scoped to the signed-in student's identity. Admin approval calls the two-argument `verify_and_approve_enrollment(p_enrollment_id, p_admin_user_id)` RPC through the server-only service-role client. That RPC updates the existing enrollment and creates or reactivates the corresponding `public.student_courses` row. Rejection updates the existing enrollment without creating access. No payment check is part of this flow.
+
+The server checks for an existing pending or approved application before inserting. The approval migration adds database uniqueness protection for concurrent submissions; review [Enrollment Approval Preflight.sql](../../src/Supabase/Enrollment%20Approval%20Preflight.sql), then apply [Enrollment Applicant Account Link Migration.sql](../../src/Supabase/Enrollment%20Applicant%20Account%20Link%20Migration.sql) and [Student Enrollment Approval and Courses Migration.sql](../../src/Supabase/Student%20Enrollment%20Approval%20and%20Courses%20Migration.sql), in that order. Neither migration is run automatically by the application.
 
 ## 2. Authentication and Routing
 

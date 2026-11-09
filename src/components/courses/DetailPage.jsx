@@ -9,6 +9,7 @@ import {
   Route,
 } from "lucide-react";
 import CourseCurriculum from "./CourseDetail";
+import CourseApplicationForm from "./CourseApplicationForm";
 import { audienceOptions } from "@/data/courses";
 
 function ProgramDetailPage({ item }) {
@@ -139,7 +140,9 @@ function FlagshipDetailPage({ item }) {
             {item.trainingMode ? <div><dt>Training mode</dt><dd>{item.trainingMode}</dd></div> : null}
             {item.eligibility ? <div><dt>Eligibility</dt><dd>{item.eligibility}</dd></div> : null}
             {item.audienceLabel ? <div><dt>Target audience</dt><dd>{item.audienceLabel}</dd></div> : null}
-          </dl><Link href="/register">Register interest <ArrowRight size={16} /></Link></div>
+          </dl>
+          <Link href="/register">Register interest <ArrowRight size={16} /></Link>
+          </div>
         </aside>
       </div>
     </div>
@@ -222,14 +225,14 @@ export default async function DetailPage({ item, searchParams }) {
             ) : null}
           </div>
 
-          <Link
-            className="course-detail-hero__cta"
-            href="/register"
-          >
-            Sign up for this{" "}
-            {item.kind === "bundle" ? "package" : "course"}
-            <ArrowRight size={18} />
-          </Link>
+          {item.kind === "bundle" ? (
+            <Link className="course-detail-hero__cta" href="/register">
+              Sign up for this bundle
+              <ArrowRight size={18} aria-hidden="true" />
+            </Link>
+          ) : (
+            <CourseApplicationForm slug={item.slug} />
+          )}
         </div>
 
         <div className="course-detail-hero__art">
@@ -307,9 +310,17 @@ export default async function DetailPage({ item, searchParams }) {
 
             </dl>
 
-            <Link href="/register">
-              Sign up <ArrowRight size={16} />
-            </Link>
+            {item.kind === "bundle" ? (
+              <Link className="course-detail-hero__cta" href="/register">
+                Sign up
+              </Link>
+            ) : (
+              <CourseApplicationForm
+                slug={item.slug}
+                buttonLabel="Sign up"
+                className="course-detail-hero__cta"
+              />
+            )}
           </div>
 
           <div className="course-detail-aside__next">

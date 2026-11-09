@@ -13,14 +13,13 @@ import {
 
 import { createClient } from "@/lib/supabase/client";
 import { consumeStudentSignOutFlag } from "@/components/student/student-session";
+import { resolveStudentLoginNextPath } from "@/lib/student-login-redirect";
 
 import "./login.css";
 
 function getEnrollmentReturnPath() {
   if (typeof window === "undefined") return "/student/dashboard";
-  return new URLSearchParams(window.location.search).get("next") === "/student/enroll"
-    ? "/student/enroll"
-    : "/student/dashboard";
+  return resolveStudentLoginNextPath(window.location.search);
 }
 
 export default function StudentLoginPage({ isModal = true }) {
@@ -380,9 +379,9 @@ export default function StudentLoginPage({ isModal = true }) {
 
                 <Link
                   href={
-                    nextPath === "/student/enroll"
-                      ? "/student/forgot-password?next=%2Fstudent%2Fenroll"
-                      : "/student/forgot-password"
+                    nextPath === "/student/dashboard"
+                      ? "/student/forgot-password"
+                      : `/student/forgot-password?${new URLSearchParams({ next: nextPath })}`
                   }
                 >
                   Forgot Password?

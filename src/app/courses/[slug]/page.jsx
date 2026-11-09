@@ -15,7 +15,7 @@ async function findCourse(slug) {
   if (supabase) {
     const { data } = await supabase
       .from("courses")
-      .select("slug,title,category,description,difficulty_level,duration,delivery_method,pathway,prerequisites,tools,outcomes,target_roles,target_role,thumbnail_url,audience,audience_type,badge_label,certificate_included,is_published")
+      .select("id,slug,title,category,description,difficulty_level,duration,delivery_method,pathway,prerequisites,tools,outcomes,target_roles,target_role,thumbnail_url,audience,audience_type,badge_label,certificate_included,is_published")
       .eq("slug", slug)
       .maybeSingle();
     if (data) {
@@ -23,6 +23,7 @@ async function findCourse(slug) {
       const audience = data.audience_type || data.audience || "undergraduate";
       return {
         kind: "course",
+        id: data.id,
         slug: data.slug,
         title: data.title,
         category: data.category,
