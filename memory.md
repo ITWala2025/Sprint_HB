@@ -747,14 +747,14 @@ No application code was changed for this reconciliation. The local role-unassign
   - Added empty-state UI ("Welcome to SPRINT!" with "Explore Courses" CTA) when no enrollment exists.
 - **Verification**: `npx tsc --noEmit` passes; `npm run build` succeeds; all 14 existing auth/enrollment tests pass.
 
-## 39. Student Profile Section & Header Avatar � 2026-11-08
+## 40. Student Profile Section & Header Avatar � 2026-11-08
 
 - Replaced OTP single text field with 6-box OTP input in PersonalInformationStep.jsx.
 - Fixed PublicSiteShell modal rendering on non-student routes.
 - Header now shows circular avatar with student initials linking to dashboard.
 - Built student profile page fetching from Supabase profiles with personal, education, and social sections plus edit form with URL validation.
 
-## 40. Repository File Inventory & Admin Enrollment Count Fallback — 2026-11-07
+## 41. Repository File Inventory & Admin Enrollment Count Fallback — 2026-11-07
 
 - Catalogued the complete tracked repository inventory: 496 files across the Next.js app, tests, documentation, chatbot data, public assets, scripts, and configuration. The main implementation areas are `src/app` (95 files), `src/components` (113), `src/Supabase` (28), and `tests` (79, including 71 under `tests/unit`).
 - The repository remains a single App Router application with public marketing pages, student-facing enrollment and portal flows, admin/staff areas, Supabase SQL migrations, and chatbot datasets/tooling. `docs/` contains product requirements, design references, architecture and chatbot documentation; `public/` contains the shipped static media and favicons.
