@@ -766,3 +766,9 @@ No application code was changed for this reconciliation. The local role-unassign
 - Both admin-layout sign-out buttons share `handleSignOut()` in [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx). The handler immediately clears in-memory profile, role, permission, and authorization state; calls `supabase.auth.signOut()` with error logging; clears Supabase auth-token entries from local and session storage and expires the `sprint_admin_session` cookie; then forces a full navigation to `/admin` using `window.location.assign`.
 - The Supabase auth-state listener applies the same local state and storage cleanup on `SIGNED_OUT` or an absent session before routing to the applicable login page. Storage-access failures are logged and do not prevent the final sign-out navigation.
 - Validation: `npx tsc --noEmit` and `git diff --check` passed.
+
+## 40. Enrollment & Dashboard Performance Fixes — 2026-11-09
+
+- Parallelized 5 sequential Supabase queries in the student dashboard into a single Promise.all, cutting dashboard load latency.
+- Added client-side prefetch on sidebar links (hover/focus) so portal page-to-page navigation is instant.
+
