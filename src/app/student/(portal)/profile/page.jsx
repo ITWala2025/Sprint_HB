@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import StudentCard from "@/components/student/StudentCard";
 import AuthButton from "@/components/student/auth/AuthButton";
@@ -12,6 +12,9 @@ export default function StudentProfilePage() {
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const [saveSuccess, setSaveSuccess] = useState("");
+  const savingRef = useRef(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -30,6 +33,8 @@ export default function StudentProfilePage() {
   }, []);
 
   const save = async () => {
+    if (savingRef.current) return;
+
     const urlFields = ["github", "linkedin", "leetcode"];
     for (const f of urlFields) {
       const v = form[f];
@@ -38,13 +43,35 @@ export default function StudentProfilePage() {
         return;
       }
     }
+
+    savingRef.current = true;
     setSaving(true);
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    await supabase.from("profiles").update(form).eq("id", user.id);
-    setProfile(form);
-    setEditing(false);
-    setSaving(false);
+    setSaveError("");
+    setSaveSuccess("");
+
+    try {
+      const supabase = createClient();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error("Profile could not be saved.");
+
+      const { error } = await supabase
+        .from("profiles")
+        .update(form)
+        .eq("id", user.id);
+      if (error) throw error;
+
+      setProfile(form);
+      setEditing(false);
+      setSaveSuccess("Your changes were saved.");
+    } catch {
+      setSaveError("Could not save your changes. Please try again.");
+    } finally {
+      savingRef.current = false;
+      setSaving(false);
+    }
   };
 
   if (loading) return <p className="text-sm text-brand-text-secondary">Loading profile…</p>;
@@ -76,9 +103,25 @@ export default function StudentProfilePage() {
           <AuthField id="github" label="GitHub URL" value={form.github ?? ""} onChange={(e) => setForm({ ...form, github: e.target.value })} />
           <AuthField id="linkedin" label="LinkedIn URL" value={form.linkedin ?? ""} onChange={(e) => setForm({ ...form, linkedin: e.target.value })} />
           <AuthField id="leetcode" label="LeetCode URL" value={form.leetcode ?? ""} onChange={(e) => setForm({ ...form, leetcode: e.target.value })} />
+          {saveError ? (
+            <p role="alert" className="text-sm font-medium text-brand-red">
+              {saveError}
+            </p>
+          ) : null}
           <div className="flex gap-3">
             <AuthButton loading={saving} loadingLabel="Saving…" onClick={save}>Save</AuthButton>
-            <AuthButton variant="secondary" onClick={() => setEditing(false)}>Cancel</AuthButton>
+            <AuthButton
+              type="button"
+              variant="secondary"
+              disabled={saving}
+              onClick={() => {
+                setForm(profile);
+                setSaveError("");
+                setEditing(false);
+              }}
+            >
+              Cancel
+            </AuthButton>
           </div>
         </div>
       </StudentCard>
@@ -100,10 +143,24 @@ export default function StudentProfilePage() {
 
   return (
     <div className="flex flex-col gap-5">
+      {saveSuccess ? (
+        <p role="status" className="text-sm font-medium text-brand-success">
+          {saveSuccess}
+        </p>
+      ) : null}
       {renderSection("Personal Details", personal)}
       {renderSection("Education Details", education)}
       {renderSection("Social Accounts", social)}
-      <AuthButton onClick={() => setEditing(true)}>Edit Profile</AuthButton>
+      <AuthButton
+        onClick={() => {
+          setForm(profile);
+          setSaveError("");
+          setSaveSuccess("");
+          setEditing(true);
+        }}
+      >
+        Edit Profile
+      </AuthButton>
     </div>
   );
 }

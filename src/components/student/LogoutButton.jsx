@@ -61,7 +61,7 @@ export default function LogoutButton({ collapsed = false, className = "" }) {
         onClick={handleSignOut}
         disabled={isSigningOut}
         aria-busy={isSigningOut ? "true" : undefined}
-        className={`sprint-focus group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-brand-text-secondary transition-colors hover:bg-brand-red-light hover:text-brand-red disabled:cursor-not-allowed disabled:opacity-70 ${
+        className={`sprint-focus group flex min-h-11 w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-brand-text-secondary transition-colors hover:bg-brand-red-light hover:text-brand-red disabled:cursor-not-allowed disabled:opacity-70 ${
           collapsed ? "justify-center px-0" : ""
         }`}
       >

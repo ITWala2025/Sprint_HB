@@ -95,13 +95,13 @@ describe("Student portal navigation integrity", () => {
     );
   });
 
-  it("keeps Settings embedded in the Profile page", () => {
-    const profilePage = readFileSync(
-      path.join(PORTAL_DIR, "profile", "page.jsx"),
+  it("redirects Settings to Help & Support without adding a sidebar item", () => {
+    const settingsPage = readFileSync(
+      path.join(PORTAL_DIR, "settings", "page.jsx"),
       "utf8",
     );
 
-    expect(profilePage).toContain('id="settings"');
+    expect(settingsPage).toContain('redirect("/student/help-support")');
     expect(navigation.some((item) => item.label === "Settings")).toBe(false);
   });
 
@@ -127,6 +127,14 @@ describe("Student portal navigation integrity", () => {
 
   it("maps every student page route and keeps full-page routes out of modals", () => {
     const modalRouteSource = readFileSync(STUDENT_MODAL_ROUTE_FILE, "utf8");
+    const catchAllPage = readFileSync(
+      path.join(STUDENT_DIR, "[...segments]", "page.jsx"),
+      "utf8",
+    );
+    const studentNotFoundPage = readFileSync(
+      path.join(STUDENT_DIR, "not-found.jsx"),
+      "utf8",
+    );
     const configuredRoutes = new Set(
       [...modalRouteSource.matchAll(/^\s{2}"?([a-z0-9-]+)"?: \{/gm)].map(
         (match) => match[1],
@@ -137,7 +145,11 @@ describe("Student portal navigation integrity", () => {
     const directRoutes = readdirSync(STUDENT_DIR, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
-      .filter((name) => existsSync(path.join(STUDENT_DIR, name, "page.jsx")));
+      .filter(
+        (name) =>
+          name !== "[...segments]" &&
+          existsSync(path.join(STUDENT_DIR, name, "page.jsx")),
+      );
     const allRoutes = [...routeFolders(), ...directRoutes];
 
     allRoutes.forEach((route) => {
@@ -147,6 +159,9 @@ describe("Student portal navigation integrity", () => {
     });
     expect(dashboardRoute?.[1]).toContain("fullPage: true");
     expect(enrollmentRoute?.[1]).toContain("fullPage: true");
+    expect(catchAllPage).toContain("notFound()");
+    expect(studentNotFoundPage).toContain("This page isn&apos;t available yet");
+    expect(studentNotFoundPage).toContain("Go to student dashboard");
   });
 
   it("leaves no portal link pointing at a removed section", () => {

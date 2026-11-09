@@ -21,10 +21,20 @@ export default function HeaderActions({
           Go to Dashboard
         </Link>
       ) : studentInitials ? (
+<<<<<<< HEAD
         <StudentAvatarDropdown
           initials={studentInitials}
           fullName={studentFullName || "Student"}
         />
+=======
+        <Link
+          href="/student/dashboard"
+          aria-label="Student dashboard"
+          className="inline-flex size-11 items-center justify-center rounded-full bg-brand-navy text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-navy-dark"
+        >
+          {studentInitials}
+        </Link>
+>>>>>>> dd10251e57d9cd5ad5391ba4ea8ed321bebced5e
       ) : (
         <>
           <Link href="/student/login" className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border border-brand-border bg-white px-5 py-3 text-sm font-semibold text-brand-navy shadow-sm transition-colors hover:bg-brand-off-white">
