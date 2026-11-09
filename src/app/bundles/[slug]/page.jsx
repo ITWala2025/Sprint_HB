@@ -17,6 +17,7 @@ function toFlagshipItem(bundle) {
   const normalized = normalizeBundle(bundle);
   return {
     kind: "flagship",
+    id: bundle.id,
     slug: normalized.slug,
     title: normalized.title,
     badgeLabel: normalized.badge_label || bundle.category || "Flagship Program",

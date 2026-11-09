@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
+import { resolveStudentLoginNextPath } from "@/lib/student-login-redirect";
 
 import "./reset-password.css";
 
@@ -273,11 +274,11 @@ export default function ResetPasswordPage({ isModal = true }) {
         data: { session: freshSession },
       } = await supabase.auth.getSession();
 
-      const nextPath =
-        new URLSearchParams(window.location.search).get("next") ===
-        "/student/enroll"
-          ? "/student/enroll"
-          : null;
+      const requestedNext = new URLSearchParams(window.location.search).get("next");
+      const safeNext = requestedNext
+        ? resolveStudentLoginNextPath(window.location.search)
+        : null;
+      const nextPath = safeNext === "/student/dashboard" ? null : safeNext;
       if (nextPath) {
         window.location.href = nextPath;
         return;

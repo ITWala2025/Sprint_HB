@@ -32,6 +32,11 @@ export default function BundleDetailPage({ item, includedCourses }) {
           {/* <p className="courses-eyebrow">CAREER BUNDLE</p> */}
           <h1>{item.title}</h1>
           <p>{item.description}</p>
+          <div className="mt-5">
+            <Link href="/register" className="course-detail-hero__cta">
+              Sign up for this bundle
+            </Link>
+          </div>
           <div className="course-detail-hero__facts">
             <span>{item.duration}</span>
             <span>{item.level}</span>

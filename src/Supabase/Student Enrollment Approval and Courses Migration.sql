@@ -1,4 +1,84 @@
 -- Course and career-bundle mappings used by the student directory and approval flow.
+ALTER TABLE public.enrollments
+    ADD COLUMN IF NOT EXISTS applicant_user_id UUID
+    REFERENCES auth.users(id) ON DELETE SET NULL;
+
+CREATE INDEX IF NOT EXISTS enrollments_applicant_user_id_idx
+    ON public.enrollments(applicant_user_id);
+
+DO $$
+BEGIN
+    IF EXISTS (
+        WITH resolved_enrollments AS (
+            SELECT
+                enrollment.status,
+                enrollment.course_id,
+                COALESCE(
+                    enrollment.applicant_user_id,
+                    enrollment.student_id,
+                    verified_account.id
+                ) AS student_identity
+            FROM public.enrollments AS enrollment
+            LEFT JOIN LATERAL (
+                SELECT account.id
+                FROM auth.users AS account
+                WHERE lower(account.email) = lower(enrollment.email)
+                  AND account.email_confirmed_at IS NOT NULL
+                LIMIT 1
+            ) AS verified_account ON TRUE
+        )
+        SELECT 1
+        FROM resolved_enrollments
+        WHERE status IN ('pending', 'approved')
+          AND course_id IS NOT NULL
+          AND student_identity IS NOT NULL
+        GROUP BY student_identity, course_id
+        HAVING COUNT(*) > 1
+    ) THEN
+        RAISE EXCEPTION
+            'Duplicate pending or approved student/course applications exist; resolve them before applying course enrollment indexes.';
+    END IF;
+
+    IF EXISTS (
+        WITH resolved_enrollments AS (
+            SELECT
+                enrollment.status,
+                enrollment.bundle_id,
+                COALESCE(
+                    enrollment.applicant_user_id,
+                    enrollment.student_id,
+                    verified_account.id
+                ) AS student_identity
+            FROM public.enrollments AS enrollment
+            LEFT JOIN LATERAL (
+                SELECT account.id
+                FROM auth.users AS account
+                WHERE lower(account.email) = lower(enrollment.email)
+                  AND account.email_confirmed_at IS NOT NULL
+                LIMIT 1
+            ) AS verified_account ON TRUE
+        )
+        SELECT 1
+        FROM resolved_enrollments
+        WHERE status IN ('pending', 'approved')
+          AND bundle_id IS NOT NULL
+          AND student_identity IS NOT NULL
+        GROUP BY student_identity, bundle_id
+        HAVING COUNT(*) > 1
+    ) THEN
+        RAISE EXCEPTION
+            'Duplicate pending or approved student/bundle applications exist; resolve them before applying course enrollment indexes.';
+    END IF;
+END;
+$$;
+
+UPDATE public.enrollments AS enrollment
+SET applicant_user_id = auth_user.id
+FROM auth.users AS auth_user
+WHERE enrollment.applicant_user_id IS NULL
+  AND lower(enrollment.email) = lower(auth_user.email)
+  AND auth_user.email_confirmed_at IS NOT NULL;
+
 ALTER TABLE public.profiles
     ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE;
 
@@ -39,6 +119,8 @@ DROP POLICY IF EXISTS "Student operations can view student courses" ON public.st
 CREATE POLICY "Student operations can view student courses"
     ON public.student_courses FOR SELECT TO authenticated
     USING (public.current_user_has_permission('student_ops', 'view'));
+
+DROP FUNCTION IF EXISTS public.verify_and_approve_enrollment(UUID, UUID, TEXT);
 
 CREATE OR REPLACE FUNCTION public.verify_and_approve_enrollment(
     p_enrollment_id UUID,
@@ -244,5 +326,15 @@ REVOKE ALL ON FUNCTION public.verify_and_approve_enrollment(UUID, UUID) FROM PUB
 REVOKE ALL ON FUNCTION public.verify_and_approve_enrollment(UUID, UUID) FROM anon;
 REVOKE ALL ON FUNCTION public.verify_and_approve_enrollment(UUID, UUID) FROM authenticated;
 GRANT EXECUTE ON FUNCTION public.verify_and_approve_enrollment(UUID, UUID) TO service_role;
+
+DROP INDEX IF EXISTS public.enrollments_one_pending_per_email_idx;
+
+CREATE UNIQUE INDEX IF NOT EXISTS enrollments_one_active_application_per_student_course_idx
+    ON public.enrollments(COALESCE(applicant_user_id, student_id), course_id)
+    WHERE status IN ('pending', 'approved') AND course_id IS NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS enrollments_one_active_application_per_student_bundle_idx
+    ON public.enrollments(COALESCE(applicant_user_id, student_id), bundle_id)
+    WHERE status IN ('pending', 'approved') AND bundle_id IS NOT NULL;
 
 NOTIFY pgrst, 'reload schema';

@@ -48,16 +48,26 @@ export default function EnrollmentApplicationsTable({
     function reviewRegistration(id: string, newStatus: "approved" | "rejected") {
         setFeedback(null);
         startTransition(async () => {
-            const result = newStatus === "approved"
-                ? await approveRegistration(id)
-                : await rejectRegistration(id);
-            if ("error" in result) {
-                setFeedback({ type: "error", message: result.error });
-                return;
-            }
+            try {
+                const result = newStatus === "approved"
+                    ? await approveRegistration(id)
+                    : await rejectRegistration(id);
+                if ("error" in result) {
+                    setFeedback({ type: "error", message: result.error });
+                    return;
+                }
 
-            setFeedback({ type: "success", message: result.message });
-            router.refresh();
+                setFeedback({ type: "success", message: result.message });
+                router.refresh();
+            } catch (error) {
+                console.error("[EnrollmentApplications] Could not update application:", error);
+                setFeedback({
+                    type: "error",
+                    message: error instanceof Error
+                        ? error.message
+                        : "The enrollment application could not be updated. Please try again.",
+                });
+            }
         });
     }
 

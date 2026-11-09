@@ -113,8 +113,8 @@ function isMissingColumnError(error: { code?: string; message?: string }): boole
 
 export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistration[]> {
     await assertModuleAccess("student_ops");
-    const supabase = await createAuthenticatedServerClient();
-    const enrollmentColumns = "id, full_name, email, phone, college_institution, course_id, bundle_id, status, created_at";
+    const supabase = requireServiceClient();
+    const enrollmentColumns = "id, application_number, full_name, email, phone, college_institution, course_id, bundle_id, status, created_at";
     const enrollmentCoreColumns = "id, full_name, email, phone, status, created_at";
     const enrollmentResult = await supabase
         .from("enrollments")
@@ -123,6 +123,7 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
 
     type EnrollmentLookupRow = {
         id: string;
+        application_number: string | null;
         full_name: string | null;
         email: string | null;
         phone: string | null;
@@ -166,6 +167,7 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
             }
             enrollmentRows = (coreResult.data ?? []).map((enrollment) => ({
                 ...enrollment,
+                application_number: null,
                 college_institution: null,
                 course_id: null,
                 bundle_id: null,
@@ -282,7 +284,7 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
         return {
             id: enrollment.id,
             application_number: formatApplicationId(
-                undefined,
+                enrollment.application_number,
                 linkedRegistration?.id ?? enrollment.id,
                 enrollment.created_at,
             ),
@@ -316,7 +318,7 @@ export async function getEnrollmentRegistrationDetails(
     const supabase = await createAuthenticatedServerClient();
     const registrationResult = await supabase
         .from("enrollments")
-        .select("id, student_id, applicant_user_id, batch_id, course_id, bundle_id, full_name, email, phone, college_institution, course_degree, specialization_branch, year_semester, city, state, employment_status, organization_name, source_of_info, terms_accepted, communication_consent, admin_notes, created_at, updated_at, status")
+        .select("id, application_number, student_id, applicant_user_id, batch_id, course_id, bundle_id, full_name, email, phone, college_institution, course_degree, specialization_branch, year_semester, city, state, employment_status, organization_name, source_of_info, terms_accepted, communication_consent, admin_notes, created_at, updated_at, status")
         .eq("id", id)
         .maybeSingle();
 
@@ -341,6 +343,7 @@ export async function getEnrollmentRegistrationDetails(
         registration = fallbackResult.data
             ? {
                 ...fallbackResult.data,
+                application_number: null,
                 student_id: null,
                 applicant_user_id: null,
                 batch_id: null,
@@ -419,11 +422,13 @@ export async function getEnrollmentRegistrationDetails(
 
     const linkedStudentId = sanitizeStudentId(
         studentAccountResult.data?.registration_number,
-        registration.student_id ? "Pending ID generation" : "Not linked",
+        registration.student_id || registration.applicant_user_id
+            ? "Pending ID generation"
+            : "Not linked",
     );
 
     const applicationId = formatApplicationId(
-        undefined,
+        registration.application_number,
         registration.id,
         registration.created_at,
     );
@@ -541,6 +546,7 @@ export async function verifyRegistration(
         revalidatePath("/admin/students/enrollments");
         revalidatePath("/admin/students/list");
         revalidatePath("/student/dashboard");
+        revalidatePath("/student/my-course");
         return { success: true, message: "Application rejected." };
     }
 
@@ -555,6 +561,7 @@ export async function verifyRegistration(
     revalidatePath("/admin/students/enrollments");
     revalidatePath("/admin/students/list");
     revalidatePath("/student/dashboard");
+    revalidatePath("/student/my-course");
     return { success: true, message: "Enrollment approved and student course access updated." };
 }
 
