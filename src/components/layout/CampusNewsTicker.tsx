@@ -1,12 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Bell, Clock3, Lightbulb, Megaphone, Wrench } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 /**
  * A single announcement in the ticker.
- *
- * This local array is intentionally easy to replace with a CMS, API route,
- * or database query later. The component only needs the same three fields.
  */
 type CampusUpdate = {
 	id: string;
@@ -14,7 +13,7 @@ type CampusUpdate = {
 	message: string;
 };
 
-const campusUpdates: CampusUpdate[] = [
+const fallbackUpdates: CampusUpdate[] = [
 	{
 		id: "cohort-enrollment",
 		category: "ANNOUNCEMENT",
@@ -56,6 +55,18 @@ const categoryStyles = {
 	},
 } as const;
 
+function getCategory(type: string): CampusUpdate["category"] {
+	switch (type) {
+		case "MAINTENANCE":
+		case "DEADLINE":
+		case "TIP/ALERT":
+			return type;
+		case "ANNOUNCEMENT":
+		default:
+			return "ANNOUNCEMENT";
+	}
+}
+
 function UpdateItem({ update }: { update: CampusUpdate }) {
 	const { icon: Icon, className } = categoryStyles[update.category];
 
@@ -77,10 +88,16 @@ function UpdateItem({ update }: { update: CampusUpdate }) {
 	);
 }
 
-function UpdateSet({ hidden = false }: { hidden?: boolean }) {
+function UpdateSet({
+	updates,
+	hidden = false,
+}: {
+	updates: CampusUpdate[];
+	hidden?: boolean;
+}) {
 	return (
 		<div className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
-			{campusUpdates.map((update) => (
+			{updates.map((update) => (
 				<UpdateItem key={update.id} update={update} />
 			))}
 		</div>
@@ -88,11 +105,61 @@ function UpdateSet({ hidden = false }: { hidden?: boolean }) {
 }
 
 export default function CampusNewsTicker() {
-  return (
-    <section
-      className="relative z-10 overflow-hidden border-b border-brand-navy-light bg-[linear-gradient(90deg,#163f68_0%,var(--color-brand-navy-dark)_50%,#163f68_100%)] shadow-[0_8px_20px_-18px_rgba(1,31,62,0.8)]"
-      aria-label="SPRINT campus news and updates"
-    >
+	const [updates, setUpdates] = useState(fallbackUpdates);
+
+	useEffect(() => {
+		let isMounted = true;
+
+		async function fetchAnnouncements() {
+			try {
+				const supabase = createClient();
+				const { data, error } = await supabase
+					.from("announcements")
+					.select("id, type, message")
+					.eq("is_active", true)
+					.order("priority", { ascending: false });
+
+				if (error) {
+					console.error(
+						"[SPRINT CampusNewsTicker] Failed to fetch announcements:",
+						error,
+					);
+					if (isMounted) setUpdates(fallbackUpdates);
+					return;
+				}
+
+				if (isMounted) {
+					setUpdates(
+						data?.length
+							? data.map(({ id, type, message }) => ({
+									id,
+									category: getCategory(type),
+									message,
+								}))
+							: fallbackUpdates,
+					);
+				}
+			} catch (error) {
+				console.error(
+					"[SPRINT CampusNewsTicker] Failed to fetch announcements:",
+					error,
+				);
+				if (isMounted) setUpdates(fallbackUpdates);
+			}
+		}
+
+		void fetchAnnouncements();
+
+		return () => {
+			isMounted = false;
+		};
+	}, []);
+
+	return (
+		<section
+			className="relative z-10 overflow-hidden border-b border-brand-navy-light bg-[linear-gradient(90deg,#163f68_0%,var(--color-brand-navy-dark)_50%,#163f68_100%)] shadow-[0_8px_20px_-18px_rgba(1,31,62,0.8)]"
+			aria-label="SPRINT campus news and updates"
+		>
 			<div className="mx-auto flex min-h-12 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
 				<div className="hidden shrink-0 items-center gap-2 border-r border-white/10 pr-5 sm:flex">
 					<span className="grid size-8 place-items-center rounded-full bg-brand-blue/15 text-brand-blue-light ring-1 ring-brand-blue/30">
@@ -110,8 +177,8 @@ export default function CampusNewsTicker() {
 
 				<div className="marquee-track min-w-0 flex-1 overflow-hidden py-1">
 					<div className="flex w-max animate-marquee">
-						<UpdateSet />
-						<UpdateSet hidden />
+						<UpdateSet updates={updates} />
+						<UpdateSet updates={updates} hidden />
 					</div>
 				</div>
 			</div>
