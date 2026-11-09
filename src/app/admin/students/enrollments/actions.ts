@@ -472,18 +472,25 @@ export async function getEnrollmentRegistrationDetails(
 export async function getPendingRegistrationCount(): Promise<number> {
     await assertModuleAccess("student_ops");
     const supabase = await createAuthenticatedServerClient();
-    const { count, error } = await supabase
-        .from("enrollments")
-        .select("id", { count: "exact", head: true })
-        .eq("status", "pending");
+    try {
+        const { count, error } = await supabase
+            .from("enrollments")
+            .select("id", { count: "exact", head: true })
+            .eq("status", "pending");
 
-    if (error) {
-        throw new Error(`Could not load the pending enrollment count: ${error.message}`);
+        if (error) {
+            console.warn("[SPRINT Admin Enrollments] Could not load the pending enrollment count; using 0:", error);
+            return 0;
+        }
+        if (count === null) {
+            console.warn("[SPRINT Admin Enrollments] Supabase returned no pending enrollment count; using 0.");
+            return 0;
+        }
+        return count;
+    } catch (error) {
+        console.warn("[SPRINT Admin Enrollments] Failed to load the pending enrollment count; using 0:", error);
+        return 0;
     }
-    if (count === null) {
-        throw new Error("Supabase did not return the pending enrollment count.");
-    }
-    return count;
 }
 
 export async function verifyRegistration(

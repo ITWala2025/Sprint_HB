@@ -595,7 +595,7 @@ Sections 8 onward are dated implementation history. Where an older entry describ
 
 ## 57. Current Codebase Reconciliation — 2026-10-28
 
-This section records the current implementation where earlier entries are incomplete or describe an older state. The repository has 433 tracked files, including 225 files under `src/` and 70 under `tests/`; this is a feature and architecture map, not a line-by-line inventory of static assets.
+This section records the current implementation where earlier entries are incomplete or describe an older state. The repository currently has 497 tracked files, including 271 files under `src/` and 79 under `tests/`; this is a feature and architecture map, not a line-by-line inventory of static assets. The workspace also contains untracked dependencies, generated build output, and Git internals, which are not project source-of-truth.
 
 ### Routes, shells, and session handling
 
@@ -747,10 +747,22 @@ No application code was changed for this reconciliation. The local role-unassign
   - Added empty-state UI ("Welcome to SPRINT!" with "Explore Courses" CTA) when no enrollment exists.
 - **Verification**: `npx tsc --noEmit` passes; `npm run build` succeeds; all 14 existing auth/enrollment tests pass.
 
-## 39. Student Profile Section & Header Avatar � 2026-11-08
+## 40. Student Profile Section & Header Avatar � 2026-11-08
 
 - Replaced OTP single text field with 6-box OTP input in PersonalInformationStep.jsx.
 - Fixed PublicSiteShell modal rendering on non-student routes.
 - Header now shows circular avatar with student initials linking to dashboard.
 - Built student profile page fetching from Supabase profiles with personal, education, and social sections plus edit form with URL validation.
 
+## 41. Repository File Inventory & Admin Enrollment Count Fallback — 2026-11-07
+
+- Catalogued the complete tracked repository inventory: 496 files across the Next.js app, tests, documentation, chatbot data, public assets, scripts, and configuration. The main implementation areas are `src/app` (95 files), `src/components` (113), `src/Supabase` (28), and `tests` (79, including 71 under `tests/unit`).
+- The repository remains a single App Router application with public marketing pages, student-facing enrollment and portal flows, admin/staff areas, Supabase SQL migrations, and chatbot datasets/tooling. `docs/` contains product requirements, design references, architecture and chatbot documentation; `public/` contains the shipped static media and favicons.
+- [src/app/admin/students/enrollments/actions.ts](src/app/admin/students/enrollments/actions.ts): `getPendingRegistrationCount()` now logs a non-fatal warning and returns `0` for Supabase count-query errors, thrown query exceptions, or a null count, allowing missing/unmigrated `enrollments` schema to leave the admin layout available. Permission validation and authenticated client creation remain outside the query fallback.
+- Validation for the enrollment-count change: `npx tsc --noEmit` and `git diff --check` passed.
+
+## 42. Admin Sign-Out Session Cleanup — 2026-11-09
+
+- Both admin-layout sign-out buttons share `handleSignOut()` in [src/app/admin/AdminLayoutClient.tsx](src/app/admin/AdminLayoutClient.tsx). The handler immediately clears in-memory profile, role, permission, and authorization state; calls `supabase.auth.signOut()` with error logging; clears Supabase auth-token entries from local and session storage and expires the `sprint_admin_session` cookie; then forces a full navigation to `/admin` using `window.location.assign`.
+- The Supabase auth-state listener applies the same local state and storage cleanup on `SIGNED_OUT` or an absent session before routing to the applicable login page. Storage-access failures are logged and do not prevent the final sign-out navigation.
+- Validation: `npx tsc --noEmit` and `git diff --check` passed.

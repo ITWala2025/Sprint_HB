@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { submitContactEnquiry } from "@/components/contact/contactSubmission";
+import ContactPhoneField from "@/components/contact/ContactPhoneField";
 
 const purposeTypes = [
   "Partnership",
@@ -231,19 +232,12 @@ export default function CompanyForm({ audience = "company" }) {
 
       {/* PHONE */}
       <div className="company-form__field">
-        <label htmlFor="company-phone">
-          Official Phone Number{" "}
-          <span aria-hidden="true">*</span>
-        </label>
-
-        <input
+        <ContactPhoneField
           id="company-phone"
-          name="phone"
-          type="tel"
+          label="Official Phone Number"
           placeholder="Enter official phone number"
           value={formData.phone}
           onChange={handleChange}
-          required
         />
       </div>
 

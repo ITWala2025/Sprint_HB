@@ -4,6 +4,8 @@ import AdminLayoutClient from "@/app/admin/AdminLayoutClient";
 import { getPendingRegistrationCount } from "@/app/admin/students/enrollments/actions";
 import { getAdminSession } from "@/app/admin/session";
 
+export const dynamic = "force-dynamic";
+
 type InitialProfile = {
     role: string | null;
     is_active: boolean;
