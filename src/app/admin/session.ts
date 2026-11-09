@@ -66,7 +66,16 @@ export const getAdminSession = cache(async (): Promise<AdminSessionPayload | nul
         .eq("id", authData.user.id)
         .maybeSingle();
 
-    if (profileError || !profile || profile.is_active !== true) {
+    if (profileError) {
+        console.warn("[SPRINT Admin Session] Failed to load profile and assigned role:", {
+            code: profileError.code,
+            message: profileError.message,
+            details: profileError.details,
+        });
+        return null;
+    }
+
+    if (!profile || profile.is_active !== true) {
         return null;
     }
 
@@ -97,4 +106,3 @@ export const getAdminSession = cache(async (): Promise<AdminSessionPayload | nul
 
     return sessionPayload;
 });
-
