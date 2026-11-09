@@ -310,6 +310,11 @@ export default function AdminLayoutClient({
 
         // Keep auth session synced without reloading on every route change
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (event === "SIGNED_IN" && !isLoginRoute) {
+                window.location.reload();
+                return;
+            }
+
             if (event === "SIGNED_OUT" || (!session && !isLoginRoute)) {
                 console.log("[SPRINT Admin Layout] User signed out or session ended.");
                 document.cookie = "sprint_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax";
@@ -324,15 +329,16 @@ export default function AdminLayoutClient({
         };
     }, [initialProfile, isLoginRoute, isStaffWorkspace, router, supabase]);
 
-    async function handleSignOut() {
-        const destination = profileRole === "staff" && !isAdmin
-            ? "/staff/login"
-            : "/admin";
-        document.cookie = "sprint_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax";
-        await supabase.auth.signOut();
-        router.replace(destination);
-        router.refresh();
-    }
+    const handleSignOut = async () => {
+        try {
+            await supabase.auth.signOut();
+        } catch (err) {
+            console.error("Sign out error:", err);
+        } finally {
+            document.cookie = "sprint_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax";
+            window.location.href = "/admin";
+        }
+    };
 
     if (isLoginRoute) return children;
 
