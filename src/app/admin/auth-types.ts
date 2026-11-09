@@ -62,10 +62,8 @@ export function canAccessAdminRoute(
     profileRole: string | null,
     _roleName?: string | null,
 ): boolean {
-    if (
-        profileRole?.toLowerCase() === "admin" ||
-        permissions?.full_access === true
-    ) {
+    const normalizedRole = profileRole?.toLowerCase();
+    if (normalizedRole === "admin" || permissions?.full_access === true) {
         return true;
     }
 
@@ -74,9 +72,10 @@ export function canAccessAdminRoute(
         .find((route) => pathname === route || pathname.startsWith(`${route}/`));
 
     if (!matchingRoute) return false;
+    if (matchingRoute === "/admin/dashboard") return normalizedRole === "staff";
 
     const requiredPermissions = adminRoutePermissions[matchingRoute];
-    return requiredPermissions.length === 0 || requiredPermissions.some(
+    return requiredPermissions.some(
         (permission) => roleHasPermission(permissions, permission, "view"),
     );
 }

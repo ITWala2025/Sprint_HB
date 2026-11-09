@@ -70,28 +70,38 @@ function requireServiceClient() {
 
 export async function getStudentRegistrations(): Promise<RegistrationListItem[]> {
     await assertModuleAccess("student_ops");
-    const supabase = await createAuthenticatedServerClient();
-    const { data, error } = await supabase
-        .from("registrations")
-        .select("id, registration_number, full_name, email, phone, college_institution, admin_notes, created_at, status")
-        .is("course_id", null)
-        .is("bundle_id", null)
-        .order("created_at", { ascending: false });
+    try {
+        const supabase = await createAuthenticatedServerClient();
+        const { data, error } = await supabase
+            .from("registrations")
+            .select("id, registration_number, full_name, email, phone, college_institution, admin_notes, created_at, status")
+            .is("course_id", null)
+            .is("bundle_id", null)
+            .order("created_at", { ascending: false });
 
-    if (error) {
-        throw new Error(`Could not load student registrations: ${error.message}`);
+        if (error) {
+            console.warn("[SPRINT Admin Registrations] Could not load student registrations:", {
+                code: error.code,
+                message: error.message,
+                details: error.details,
+            });
+            return [];
+        }
+        return (data ?? []).map((row: any) => ({
+            id: row.id,
+            application_number: formatApplicationId(row.registration_number, row.id, row.created_at),
+            full_name: row.full_name,
+            email: row.email,
+            phone: row.phone,
+            college_institution: row.college_institution,
+            admin_notes: row.admin_notes,
+            created_at: row.created_at,
+            status: row.status,
+        }));
+    } catch (error) {
+        console.warn("[SPRINT Admin Registrations] Could not load student registrations:", error);
+        return [];
     }
-    return (data ?? []).map((row: any) => ({
-        id: row.id,
-        application_number: formatApplicationId(row.registration_number, row.id, row.created_at),
-        full_name: row.full_name,
-        email: row.email,
-        phone: row.phone,
-        college_institution: row.college_institution,
-        admin_notes: row.admin_notes,
-        created_at: row.created_at,
-        status: row.status,
-    }));
 }
 
 export async function updateRegistration(

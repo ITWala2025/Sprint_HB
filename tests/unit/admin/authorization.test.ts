@@ -2,8 +2,13 @@ import { describe, expect, it } from "vitest";
 import { canAccessAdminRoute } from "../../../src/app/admin/auth-types";
 
 describe("admin route authorization", () => {
-    it("allows dashboard access to every authenticated role", () => {
+    it("allows dashboard access to admin and staff without granular permissions", () => {
+        expect(canAccessAdminRoute("/admin/dashboard", null, "admin")).toBe(true);
         expect(canAccessAdminRoute("/admin/dashboard", {}, "staff", "Admissions Officer")).toBe(true);
+    });
+
+    it("does not grant dashboard access to unrelated roles", () => {
+        expect(canAccessAdminRoute("/admin/dashboard", {}, "student")).toBe(false);
     });
 
     it("matches nested routes to their most specific permission", () => {
