@@ -53,7 +53,12 @@ const firstLocalCourse = catalogueItems.find((item) => item.kind === "course");
  * wizard and only recorded, because this step no longer writes into another
  * step's state.
  */
-const renderStep = ({ values: initialValues = {}, errors = {} } = {}) => {
+const renderStep = ({
+  values: initialValues = {},
+  errors = {},
+  courseSlug = "",
+  isEnrollmentStateReady = true,
+} = {}) => {
   const writes = [];
 
   function Harness() {
@@ -75,6 +80,8 @@ const renderStep = ({ values: initialValues = {}, errors = {} } = {}) => {
         errors={errors}
         onChange={onChange}
         onChangeIn={onChangeIn}
+        courseSlug={courseSlug}
+        isEnrollmentStateReady={isEnrollmentStateReady}
       />
     );
   }
@@ -85,6 +92,7 @@ const renderStep = ({ values: initialValues = {}, errors = {} } = {}) => {
 
 describe("EducationStep", () => {
   beforeEach(() => {
+    window.sessionStorage.clear();
     // Default: the table answers but is empty, so the step falls back to the
     // local catalogue — the same behaviour as the Course page.
     mocks.order.mockResolvedValue({ data: [], error: null });
@@ -182,6 +190,78 @@ describe("EducationStep", () => {
     expect(writes.at(-1)).toEqual(["education", "course", "course-id-1"]);
   });
 
+  it("preselects a database-only course by trimmed, case-insensitive slug", async () => {
+    mocks.order.mockResolvedValue({
+      data: [
+        {
+          id: "db-only-course-id",
+          slug: "database-only-course",
+          title: "Database Only Course",
+          is_published: true,
+        },
+      ],
+      error: null,
+    });
+
+    renderStep({ courseSlug: "  DATABASE-ONLY-COURSE " });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^course$/i)).toHaveValue("db-only-course-id");
+    });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("preselects a published database course by exact UUID", async () => {
+    mocks.order.mockResolvedValue({
+      data: [
+        {
+          id: "course-id-1",
+          slug: "machine-learning-foundations",
+          title: "Machine Learning Foundations",
+          is_published: true,
+        },
+      ],
+      error: null,
+    });
+
+    renderStep({ courseSlug: "course-id-1" });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^course$/i)).toHaveValue("course-id-1");
+    });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("leaves an unknown database course slug empty without an error", async () => {
+    mocks.order.mockResolvedValue({
+      data: [
+        {
+          id: "draft-course-id",
+          slug: "draft-course",
+          title: "Draft Course",
+          is_published: true,
+        },
+        {
+          id: "db-only-course-id",
+          slug: "database-only-course",
+          title: "Database Only Course",
+          is_published: true,
+        },
+      ],
+      error: null,
+    });
+
+    renderStep({
+      courseSlug: "not-a-published-course",
+      values: { course: "draft-course-id" },
+    });
+
+    const courseSelect = await screen.findByLabelText(/^course$/i);
+    await waitFor(() => expect(courseSelect).toBeEnabled());
+    expect(courseSelect).toHaveValue("");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
   it("falls back to the local catalogue when the API fails, exactly like the Course page", async () => {
     mocks.order.mockResolvedValue({ data: null, error: new Error("network down") });
     renderStep();
@@ -191,6 +271,15 @@ describe("EducationStep", () => {
 
     expect(within(courseSelect).getByText(firstLocalCourse.title)).toBeInTheDocument();
     expect(document.getElementById("education-course-hint")).toBeNull();
+  });
+
+  it("still preselects a matching local course in fallback mode", async () => {
+    mocks.order.mockResolvedValue({ data: [], error: null });
+    renderStep({ courseSlug: firstLocalCourse.slug });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^course$/i)).toHaveValue(firstLocalCourse.slug);
+    });
   });
 
   it("reports every unavailable state with the agreed copy", () => {

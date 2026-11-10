@@ -29,14 +29,22 @@ export const COURSE_FIELD_MESSAGES = {
 export function toCourseOptions(rows = []) {
   return rows
     .filter((row) => row?.id && row?.title)
-    .map((row) => ({ value: row.id, label: row.title }));
+    .map((row) => ({ value: row.id, label: row.title, slug: row.slug }));
 }
 
 /** Local catalogue courses → options (static items carry a slug, not a UUID). */
 export function toLocalCourseOptions(items = []) {
   return items
     .filter((item) => item?.kind === "course" && item?.title)
-    .map((item) => ({ value: item.slug ?? item.id, label: item.title }));
+    .map((item) => ({
+      value: item.slug ?? item.id,
+      label: item.title,
+      slug: item.slug,
+    }));
+}
+
+export function findCourseOptionBySlug(options = [], slug) {
+  return options.find((option) => option.slug === slug);
 }
 
 /**

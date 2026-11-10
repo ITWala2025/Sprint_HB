@@ -1,59 +1,27 @@
-"use client";
-
-import { useActionState } from "react";
-import { useEffect } from "react";
-import { useFormStatus } from "react-dom";
-import { applyForCourseAction } from "@/app/courses/actions";
+import Link from "next/link";
 
 type CourseApplicationFormProps = {
   slug: string;
+  audience?: string;
   buttonLabel?: string;
   className?: string;
 };
 
-function SubmitButton({
-  buttonLabel,
-  className,
-}: {
-  buttonLabel: string;
-  className?: string;
-}) {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      className={className ?? "course-detail-hero__cta"}
-      disabled={pending}
-      aria-disabled={pending}
-    >
-      {pending ? "Submitting..." : buttonLabel}
-    </button>
-  );
-}
-
 export default function CourseApplicationForm({
   slug,
-  buttonLabel = "Sign up for this course",
+  audience,
+  buttonLabel = "Enroll for this course",
   className,
 }: CourseApplicationFormProps) {
-  const [state, formAction] = useActionState(applyForCourseAction, {});
-
-  useEffect(() => {
-    if (state.redirectTo) {
-      window.location.assign(state.redirectTo);
-    }
-  }, [state.redirectTo]);
+  const searchParams = new URLSearchParams({ course: slug });
+  if (audience) searchParams.set("audience", audience);
 
   return (
-    <form action={formAction}>
-      <input type="hidden" name="slug" value={slug} />
-      <SubmitButton buttonLabel={buttonLabel} className={className} />
-      {state.error ? (
-        <p className="mt-2 text-sm text-brand-red" role="alert" aria-live="polite">
-          {state.error}
-        </p>
-      ) : null}
-    </form>
+    <Link
+      href={`/student/enroll?${searchParams.toString()}`}
+      className={className ?? "course-detail-hero__cta"}
+    >
+      {buttonLabel}
+    </Link>
   );
 }
