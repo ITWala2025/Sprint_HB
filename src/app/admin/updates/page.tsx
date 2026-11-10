@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import {
     ExternalLink, Megaphone, Pencil, Plus, RefreshCw, Trash2, X,
 } from "lucide-react";
@@ -45,15 +45,42 @@ const typeStyles: Record<AnnouncementType, string> = {
     MAINTENANCE: "border-amber-400/25 bg-amber-400/10 text-amber-200",
 };
 
-function getPreviewHref(value: string): string | null {
+function isValidLinkUrl(value: string): boolean {
     const url = value.trim();
-    if (url.startsWith("/") && !url.startsWith("//")) return url;
+    if (!url || url.startsWith("/")) return true;
+    if (!/^https?:\/\//i.test(url)) return false;
 
     try {
         const parsed = new URL(url);
-        return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.href : null;
+        return parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch {
+        return false;
+    }
+}
+
+function getPreviewHref(value: string): string | null {
+    const url = value.trim();
+    if (!isValidLinkUrl(url) || !url) return null;
+    if (url.startsWith("/")) return url;
+
+    try {
+        return new URL(url).href;
     } catch {
         return null;
+    }
+}
+
+function isImageLink(value: string): boolean {
+    const url = value.trim();
+    if (!url) return false;
+    if (url.startsWith("/images/")) return true;
+
+    try {
+        const pathname = new URL(url, "https://sprint.invalid").pathname;
+        return pathname.includes("/storage/v1/object/public/announcement-assets/")
+            || /\.(?:png|jpe?g|webp|svg)$/i.test(pathname);
+    } catch {
+        return false;
     }
 }
 
@@ -78,6 +105,10 @@ export default function AnnouncementManagementPage() {
     const [notice, setNotice] = useState<Notice | null>(null);
     const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null | undefined>(undefined);
     const [form, setForm] = useState<AnnouncementForm>(emptyForm);
+    const [linkUrlError, setLinkUrlError] = useState("");
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [uploadError, setUploadError] = useState("");
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const loadAnnouncements = useCallback(async () => {
         setIsLoading(true);
@@ -108,6 +139,9 @@ export default function AnnouncementManagementPage() {
 
     function openForm(announcement: Announcement | null) {
         setNotice(null);
+        setLinkUrlError("");
+        setUploadError("");
+        setUploadingImage(false);
         setEditingAnnouncement(announcement);
         setForm(announcement ? {
             type: announcement.type,
@@ -119,12 +153,52 @@ export default function AnnouncementManagementPage() {
     }
 
     function closeForm() {
-        if (isSaving) return;
+        if (isSaving || uploadingImage) return;
         setEditingAnnouncement(undefined);
+    }
+
+    async function handlePosterUpload(event: ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (!file) return;
+
+        if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+            setUploadError("Choose a PNG, JPEG, or WebP image.");
+            return;
+        }
+
+        const sanitizedFileName = file.name
+            .normalize("NFKD")
+            .replace(/[^a-zA-Z0-9._-]+/g, "-")
+            .replace(/^-+|-+$/g, "") || "poster";
+        const filePath = `posters/${Date.now()}-${sanitizedFileName}`;
+
+        setUploadingImage(true);
+        setUploadError("");
+        try {
+            const { error } = await supabase.storage
+                .from("announcement-assets")
+                .upload(filePath, file, { contentType: file.type, upsert: false });
+
+            if (error) {
+                setUploadError(`Poster could not be uploaded: ${error.message}`);
+                return;
+            }
+
+            const { data } = supabase.storage.from("announcement-assets").getPublicUrl(filePath);
+            setForm((current) => ({ ...current, link_url: data.publicUrl }));
+            setLinkUrlError("");
+        } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            setUploadError(`Poster could not be uploaded: ${message}`);
+        } finally {
+            setUploadingImage(false);
+        }
     }
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        if (uploadingImage) return;
         if (editingAnnouncement ? !canEdit : !canCreate) {
             setNotice({ type: "error", message: "You do not have permission to save announcements." });
             return;
@@ -139,7 +213,12 @@ export default function AnnouncementManagementPage() {
             setNotice({ type: "error", message: "Priority must be a whole number." });
             return;
         }
+        if (!isValidLinkUrl(form.link_url)) {
+            setLinkUrlError("Please enter a valid URL (starting with http:// or https://) or a relative path (starting with /)");
+            return;
+        }
 
+        setLinkUrlError("");
         setIsSaving(true);
         setNotice(null);
         const payload = {
@@ -236,6 +315,7 @@ export default function AnnouncementManagementPage() {
     }
 
     const activeCount = announcements.filter((announcement) => announcement.is_active).length;
+    const formImagePreview = isImageLink(form.link_url) ? getPreviewHref(form.link_url) : null;
 
     return (
         <main className="mx-auto max-w-[1500px] space-y-6 text-white">
@@ -351,8 +431,8 @@ export default function AnnouncementManagementPage() {
                                                 previewHref ? (
                                                     <a
                                                         href={previewHref}
-                                                        target={previewHref.startsWith("/") ? undefined : "_blank"}
-                                                        rel={previewHref.startsWith("/") ? undefined : "noreferrer"}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
                                                         className="inline-flex max-w-48 items-center gap-1.5 truncate text-xs text-sky-300 underline-offset-4 hover:underline"
                                                         title={announcement.link_url}
                                                     >
@@ -430,7 +510,7 @@ export default function AnnouncementManagementPage() {
                                 </h2>
                                 <p className="mt-1 text-sm text-slate-400">Set the message and how it appears on the website.</p>
                             </div>
-                            <button type="button" onClick={closeForm} disabled={isSaving} aria-label="Close dialog" className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white disabled:opacity-50">
+                            <button type="button" onClick={closeForm} disabled={isSaving || uploadingImage} aria-label="Close dialog" className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white disabled:opacity-50">
                                 <X className="size-5" aria-hidden="true" />
                             </button>
                         </div>
@@ -456,16 +536,75 @@ export default function AnnouncementManagementPage() {
                                     className="mt-2 w-full resize-y rounded-lg border border-[#334155] bg-[#111e33] px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-[#ef3e43]"
                                 />
                             </label>
-                            <label className="block text-sm font-medium text-slate-200">
-                                Link URL <span className="font-normal text-slate-500">(optional)</span>
+                            <div>
+                                <label htmlFor="announcement-link-url" className="block text-sm font-medium text-slate-200">
+                                    Link URL <span className="font-normal text-slate-500">(optional)</span>
+                                </label>
                                 <input
-                                    type="url"
+                                    id="announcement-link-url"
+                                    type="text"
                                     value={form.link_url}
-                                    onChange={(event) => setForm((current) => ({ ...current, link_url: event.target.value }))}
-                                    placeholder="https://example.com"
+                                    onChange={(event) => {
+                                        const value = event.target.value;
+                                        setForm((current) => ({ ...current, link_url: value }));
+                                        setLinkUrlError(value.trim() && !isValidLinkUrl(value)
+                                            ? "Please enter a valid URL (starting with http:// or https://) or a relative path (starting with /)"
+                                            : "");
+                                    }}
+                                    placeholder="https://example.com or /images/hiring_interns/poster.png"
+                                    aria-invalid={Boolean(linkUrlError)}
+                                    aria-describedby={linkUrlError ? "announcement-link-url-error" : undefined}
                                     className="mt-2 w-full rounded-lg border border-[#334155] bg-[#111e33] px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-[#ef3e43]"
                                 />
-                            </label>
+                                {linkUrlError && (
+                                    <span id="announcement-link-url-error" className="mt-1.5 block text-xs text-red-300" role="alert">
+                                        {linkUrlError}
+                                    </span>
+                                )}
+                                <div className="mt-3 flex flex-wrap items-center gap-3">
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/webp"
+                                        onChange={(event) => void handlePosterUpload(event)}
+                                        className="sr-only"
+                                        tabIndex={-1}
+                                        aria-label="Upload poster or image"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        disabled={uploadingImage || isSaving}
+                                        className="inline-flex items-center gap-2 rounded-lg border border-[#334155] px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-slate-500 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        {uploadingImage ? "Uploading image…" : "Upload Poster / Image"}
+                                    </button>
+                                    <span className="text-xs text-slate-500">PNG, JPEG, or WebP</span>
+                                </div>
+                                {uploadError && (
+                                    <p className="mt-2 text-xs text-red-300" role="alert">{uploadError}</p>
+                                )}
+                                {formImagePreview && (
+                                    <div className="mt-3 flex items-center gap-3">
+                                        <img
+                                            src={formImagePreview}
+                                            alt="Announcement image preview"
+                                            className="size-16 rounded-lg border border-[#334155] object-cover"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setForm((current) => ({ ...current, link_url: "" }));
+                                                setLinkUrlError("");
+                                            }}
+                                            disabled={uploadingImage || isSaving}
+                                            className="text-xs font-semibold text-red-300 underline-offset-4 hover:underline disabled:opacity-50"
+                                        >
+                                            Clear
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                             <div className="grid gap-5 sm:grid-cols-2 sm:items-end">
                                 <label className="block text-sm font-medium text-slate-200">
                                     Priority
@@ -489,11 +628,11 @@ export default function AnnouncementManagementPage() {
                                 </label>
                             </div>
                             <div className="flex justify-end gap-3 border-t border-[#1e293b] pt-5">
-                                <button type="button" onClick={closeForm} disabled={isSaving} className="rounded-lg border border-[#334155] px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/5 disabled:opacity-50">
+                                <button type="button" onClick={closeForm} disabled={isSaving || uploadingImage} className="rounded-lg border border-[#334155] px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/5 disabled:opacity-50">
                                     Cancel
                                 </button>
-                                <button type="submit" disabled={isSaving} className="inline-flex items-center gap-2 rounded-lg bg-[#ef3e43] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#ff5055] disabled:cursor-not-allowed disabled:opacity-60">
-                                    {isSaving ? "Saving…" : editingAnnouncement ? "Save changes" : "Create announcement"}
+                                <button type="submit" disabled={isSaving || uploadingImage} className="inline-flex items-center gap-2 rounded-lg bg-[#ef3e43] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#ff5055] disabled:cursor-not-allowed disabled:opacity-60">
+                                    {uploadingImage ? "Uploading image…" : isSaving ? "Saving…" : editingAnnouncement ? "Save changes" : "Create announcement"}
                                 </button>
                             </div>
                         </form>
