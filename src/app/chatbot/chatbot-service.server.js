@@ -646,8 +646,17 @@ export async function getLocalChatbotReply({
   const directReply = getDirectChatbotReply(message);
   if (directReply) return normalizeSuggestions(directReply);
 
+  const verifiedDatasetAnswer = findVerifiedDatasetAnswer(message);
+  if (verifiedDatasetAnswer?.answer_mode === "direct") {
+    return normalizeSuggestions({
+      reply: verifiedDatasetAnswer.answer.trim(),
+      action: { label: "Contact SPRINT", href: "/contact" },
+      suggestions: ["Contact SPRINT"],
+    });
+  }
+
   if (
-    !findVerifiedDatasetAnswer(message) &&
+    !verifiedDatasetAnswer &&
     findDatasetMatch(message, UNVERIFIED_QA_RECORDS)
   ) {
     return normalizeSuggestions(getUnverifiedQaReply());

@@ -31104,5 +31104,30 @@
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl"
     ]
+  },
+  {
+    "id": "SPRINT-ACC-001",
+    "category": "admissions_and_facilities",
+    "question": "Does SPRINT provide hostel accommodation?",
+    "answer": "No. SPRINT does not provide accommodation.",
+    "alternative_questions": [
+      "Is hostel accommodation available?",
+      "Does SPRINT provide any accommodation?",
+      "Does SPRINT have hostel facilities?",
+      "Is accommodation available for students?",
+      "Can SPRINT arrange a place to stay?"
+    ],
+    "source_files": [
+      "Owner-confirmed clarification"
+    ],
+    "source_location": "User-provided correction, 2026-11-10",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-10",
+    "answer_mode": "direct",
+    "record_type": "source_faq",
+    "source_datasets": [
+      "Owner-confirmed clarification"
+    ]
   }
 ]

@@ -4,6 +4,7 @@ const path = require("node:path");
 const dataDirectory = path.resolve(__dirname, "../../data/chatbot");
 const topicFiles = [
   "about_sprint_QA_dataset.json",
+  "accommodation_QA_dataset.json",
   "admission_QA_dataset.json",
   "career_QA_dataset.json",
   "courses_QA_dataset.json",

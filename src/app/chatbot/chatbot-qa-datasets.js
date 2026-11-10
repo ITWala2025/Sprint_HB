@@ -1,4 +1,5 @@
 import aboutSprintQa from "../../../data/chatbot/about_sprint_QA_dataset.json";
+import accommodationQa from "../../../data/chatbot/accommodation_QA_dataset.json";
 import admissionQa from "../../../data/chatbot/admission_QA_dataset.json";
 import careerQa from "../../../data/chatbot/career_QA_dataset.json";
 import coursesQa from "../../../data/chatbot/courses_QA_dataset.json";
@@ -13,6 +14,7 @@ import supportQa from "../../../data/chatbot/support_QA_dataset.json";
 
 const topicDatasets = [
   aboutSprintQa,
+  accommodationQa,
   admissionQa,
   careerQa,
   coursesQa,

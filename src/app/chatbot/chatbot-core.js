@@ -1,3 +1,5 @@
+import accommodationQa from "../../../data/chatbot/accommodation_QA_dataset.json";
+
 const DEMO_CONTACT = {
   phone: "+91 85212 83184/85",
   email: "info@sprint.naturalelements.co.in",
@@ -18,6 +20,14 @@ function toSuggestions(items) {
 
 export function getDemoChatbotReply(message, pathname = "/") {
   const text = message.toLowerCase();
+
+  if (/\b(hostel|accommodation|housing|lodging)\b/.test(text)) {
+    return {
+      reply: accommodationQa[0].answer,
+      action: createAction("Contact SPRINT", "/contact"),
+      suggestions: toSuggestions(["Contact SPRINT"]),
+    };
+  }
 
   if (/\b(hi|hello|hey|good morning|good afternoon)\b/.test(text)) {
     return {

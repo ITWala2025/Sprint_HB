@@ -34,6 +34,14 @@ describe("chatbot service", () => {
     expect(result.suggestions).toContainEqual({ label: "Explore courses", query: "Explore courses" });
   });
 
+  it("answers accommodation questions consistently in demo mode", () => {
+    const result = getDemoChatbotReply("Is hostel accommodation available?");
+
+    expect(result.reply).toBe("No. SPRINT does not provide accommodation.");
+    expect(result.action).toEqual({ label: "Contact SPRINT", href: "/contact" });
+    expect(result.reply).not.toMatch(/course|program/i);
+  });
+
   it("helps visitors navigate site pages with relevant prompts", () => {
     const result = getDemoChatbotReply("What pages are on the website?");
 
@@ -169,6 +177,24 @@ describe("chatbot service", () => {
     const result = await getLocalChatbotReply({ message: "What is SPRINT?" });
 
     expect(result.reply).toContain("job-ready training platform in Hazaribagh");
+  });
+
+  it("answers verified accommodation FAQs without asking the local model", async () => {
+    vi.stubEnv("OLLAMA_URL", "http://ollama.example.test");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await getLocalChatbotReply({
+      message: "Is hostel accommodation available?",
+      pathname: "/contact",
+    });
+
+    expect(result.reply).toBe("No. SPRINT does not provide accommodation.");
+    expect(result.action).toEqual({ label: "Contact SPRINT", href: "/contact" });
+    expect(result.suggestions).toEqual([
+      { label: "Contact SPRINT", query: "Contact SPRINT" },
+    ]);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("does not repeat the conflicting office schedule from the master FAQ", async () => {

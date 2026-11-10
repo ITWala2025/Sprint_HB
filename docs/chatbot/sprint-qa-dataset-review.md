@@ -20,7 +20,8 @@ The chatbot's editable Q&A source is split into topic files in `data/chatbot/`. 
 Each record retains its detailed `category` value, question alternatives, answer, and verification metadata. Use the topic filename for broad organization and the record's `category` for finer-grained topics.
 The `_master_order` property is internal ordering metadata; keep it unchanged when editing existing records. New records can omit it and will be appended to the aggregate.
 
-- The topic files contain 1,099 unique FAQs and 9,027 alternative questions: 9 FAQs marked `verified` and 1,090 marked `needs_review`.
+- The topic files contain 1,100 unique FAQs and 9,032 alternative questions: 10 FAQs marked `verified` and 1,090 marked `needs_review`.
+- `accommodation_QA_dataset.json` contains the owner-confirmed policy that SPRINT does not provide accommodation. Keep verified FAQ replies deterministic so the local model cannot replace this fact with an unrelated response.
 - Generated query variants are stored as alternative questions on their parent FAQs.
 - Edit the relevant topic file, then run `npm run chatbot:qa:build` to regenerate the aggregate master. The script validates required fields and unique record IDs and preserves existing master ordering.
 - The five-row evaluation set is not merged into chatbot knowledge.
