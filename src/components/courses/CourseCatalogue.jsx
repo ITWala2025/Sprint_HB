@@ -456,24 +456,29 @@ export default function CourseCatalogue({ items }) {
   return (
     <div className="courses-page min-w-0">
       <section
-        className="courses-hero relative min-h-0 overflow-hidden bg-[#061a40] pb-6 md:!min-h-[480px] md:pb-0 lg:!min-h-[540px]"
+        className="courses-hero relative !min-h-[560px] overflow-hidden bg-[#061a40] pb-6 md:!min-h-[480px] md:pb-0 lg:!min-h-[540px]"
         role="region"
         aria-label="Courses featured content"
       >
         <div
-          className="pointer-events-none absolute inset-0 z-0 hidden md:block"
+          className="pointer-events-none absolute inset-0 z-0 md:hidden"
           aria-hidden="true"
         >
           <Image
             src="/images/courses/courses-hero.jpeg"
             alt=""
             fill
+            priority
             sizes="100vw"
-            className="pointer-events-none scale-125 object-cover object-center opacity-90 blur-3xl"
+            className="!object-cover !object-[70%_center]"
           />
         </div>
         <div
-          className="pointer-events-none absolute inset-0 z-[1] hidden bg-[#061a40]/35 md:block"
+          className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(6,26,64,0.35),transparent_100%),linear-gradient(180deg,rgba(6,26,64,0.92)_0%,rgba(6,26,64,0.68)_55%,rgba(6,26,64,0.48)_100%)] md:hidden"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-r from-[#0b1f4d]/90 via-[#0b1f4d]/60 to-transparent md:block"
           aria-hidden="true"
         />
 
@@ -517,20 +522,6 @@ export default function CourseCatalogue({ items }) {
                 </div>
               ) : null}
             </div>
-          </div>
-
-          <div
-            className="relative z-10 -mt-4 aspect-[16/9] w-full md:hidden"
-            aria-hidden="true"
-          >
-            <Image
-              src="/images/courses/courses-hero.jpeg"
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="!object-contain !object-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_25%)]"
-            />
           </div>
         </div>
         <div
