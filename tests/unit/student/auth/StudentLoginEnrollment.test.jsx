@@ -38,7 +38,7 @@ describe("StudentLoginPage enrollment actions", () => {
     mocks.profileResult = { data: null, error: null };
   });
 
-  it("navigates directly to enrollment instead of opening its intercepted modal", () => {
+  it("links to enrollment as a regular student route", () => {
     render(<StudentLoginPage />);
 
     const enrollLinks = screen.getAllByRole("link", { name: /enroll now/i });
@@ -53,10 +53,7 @@ describe("StudentLoginPage enrollment actions", () => {
     const { container } = render(<StudentLoginPage />);
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(container.querySelector("main")).not.toBeInTheDocument();
-    expect(
-      container.querySelector(".student-login-page--modal"),
-    ).toBeInTheDocument();
+    expect(container.querySelector("main.student-login-page")).toBeInTheDocument();
     expect(screen.queryByLabelText(/first name/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/last name/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/mobile number/i)).not.toBeInTheDocument();
@@ -128,20 +125,18 @@ describe("StudentLoginPage enrollment actions", () => {
     expect(mocks.signOut).toHaveBeenCalled();
   });
 
-  it("opens password recovery through the intercepted student route", () => {
-    render(<StudentLoginPage isModal />);
+  it("links to password recovery as a regular student route", () => {
+    render(<StudentLoginPage />);
 
     expect(
       screen.getByRole("link", { name: "Forgot Password?" }),
     ).toHaveAttribute("href", "/student/forgot-password");
   });
 
-  it("renders password recovery in the route-modal layout", () => {
-    const { container } = render(<StudentForgotPasswordPage isModal />);
+  it("renders password recovery as regular page content", () => {
+    const { container } = render(<StudentForgotPasswordPage />);
 
-    expect(container.querySelector("main")).not.toBeInTheDocument();
-    expect(
-      container.querySelector(".student-forgot-page--modal"),
-    ).toBeInTheDocument();
+    expect(container.querySelector("main.student-forgot-page")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });

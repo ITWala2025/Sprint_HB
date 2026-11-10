@@ -854,3 +854,9 @@ ormalizeSuggestions as a final safety net in getLocalChatbotReply so all code pa
 - Updated the chat API route and frontend AiAssistant to pass through and render similarQuestions as clickable chips.
 - Updated affected unit tests to match the new object shape. All 60 chatbot tests pass.
 
+## 65. Student Routes Render as Regular Pages - 2026-11-10
+
+- Removed the student `@modal` intercepted route and route-modal shell. Student URLs now load as regular pages on direct navigation and refresh; the existing portal route-group layout retains its authenticated student sidebar.
+- Login, forgot-password, check-email, reset-password, and `/set-password` render as regular page content. The responsive portal navigation drawer remains available on portal pages.
+- Removed modal-only student components/styles and updated navigation and auth tests to assert direct-page behavior.
+- Validation: production build passed; focused route/layout/auth tests passed (31 tests). The full student test group has 10 failures in `StudentDashboard.test.jsx` and `StudentPlaceholderRoutes.test.jsx`, unrelated to route-modal removal.

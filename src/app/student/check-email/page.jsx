@@ -17,7 +17,7 @@ import "./check-email.css";
 
 const RESEND_COOLDOWN = 30;
 
-export default function CheckEmailPage({ isModal = true }) {
+export default function CheckEmailPage() {
   const [email, setEmail] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(0);
 
@@ -138,7 +138,7 @@ export default function CheckEmailPage({ isModal = true }) {
 
   return (
     <main
-      className={`student-check-email-page ${isModal ? "student-check-email-page--modal" : ""}`}
+      className="student-check-email-page"
     >
       <section
         className="student-check-email-card"

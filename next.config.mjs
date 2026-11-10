@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   devIndicators: false,
   experimental: {
-    turbopackPluginRuntimeStrategy: "workerThreads",
+    turbopackPluginRuntimeStrategy: "childProcesses",
   },
   images: {
     remotePatterns: [

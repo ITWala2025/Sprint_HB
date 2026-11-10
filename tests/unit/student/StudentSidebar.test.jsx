@@ -10,6 +10,7 @@ const mockPathname = vi.fn(() => "/student/dashboard");
 
 vi.mock("next/navigation", () => ({
   usePathname: () => mockPathname(),
+  useRouter: () => ({ prefetch: vi.fn() }),
 }));
 
 vi.mock("next/link", () => ({
@@ -146,7 +147,7 @@ describe("StudentSidebar", () => {
   });
 
   it("shows the signed-in student identity block", () => {
-    render(<StudentSidebar />);
+    render(<StudentSidebar student={mockStudent} />);
 
     expect(screen.getByText(mockStudent.fullName)).toBeInTheDocument();
     expect(screen.getByText(mockStudent.id)).toBeInTheDocument();

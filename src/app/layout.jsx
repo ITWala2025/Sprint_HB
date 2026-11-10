@@ -58,7 +58,7 @@ export const metadata = {
  * Root layout (App Router). Public chrome is isolated in PublicSiteShell so
  * the admin console can render with its dedicated layout only.
  */
-export default function RootLayout({ children, modal }) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body className={`${spaceGrotesk.variable} ${inter.variable} bg-white text-brand-text antialiased`} suppressHydrationWarning>
@@ -69,7 +69,7 @@ export default function RootLayout({ children, modal }) {
         >
           Skip to main content
         </a>
-        <PublicSiteShell modal={modal}>{children}</PublicSiteShell>
+        <PublicSiteShell>{children}</PublicSiteShell>
       </body>
     </html>
   );

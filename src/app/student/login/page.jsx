@@ -22,7 +22,7 @@ function getEnrollmentReturnPath() {
   return resolveStudentLoginNextPath(window.location.search);
 }
 
-export default function StudentLoginPage({ isModal = true }) {
+export default function StudentLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
@@ -32,7 +32,6 @@ export default function StudentLoginPage({ isModal = true }) {
   const [loading, setLoading] = useState(false);
   const [signedOutNotice, setSignedOutNotice] = useState("");
   const [nextPath, setNextPath] = useState("/student/dashboard");
-  const PageContainer = isModal ? "div" : "main";
 
   useEffect(() => {
     document.body.classList.add("student-auth-page");
@@ -56,7 +55,7 @@ export default function StudentLoginPage({ isModal = true }) {
 
   /*
    * Seamless portal entry: when an already-signed-in student opens the Sign In
-   * page (including from the header modal) they are sent straight to the
+   * page from the header they are sent straight to the
    * dashboard. Any other session is cleared so the form stays usable.
    * The middleware performs this redirect server-side; this is the client-side
    * fallback for transitions that never hit the network.
@@ -199,9 +198,7 @@ export default function StudentLoginPage({ isModal = true }) {
   };
 
   return (
-    <PageContainer
-      className={`student-login-page ${isModal ? "student-login-page--modal" : ""}`}
-    >
+    <main className="student-login-page">
       <section
         className="student-login-card"
         aria-label="SPRINT Student Portal Login"
@@ -469,6 +466,6 @@ export default function StudentLoginPage({ isModal = true }) {
         </section>
       </section>
 
-    </PageContainer>
+    </main>
   );
 }

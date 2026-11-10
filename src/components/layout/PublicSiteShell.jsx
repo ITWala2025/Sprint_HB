@@ -1,15 +1,14 @@
 "use client";
 
-import { usePathname, useSelectedLayoutSegments } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Header from "@/components/header/Header";
 import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";
 import Footer from "@/components/footer/Footer";
 import AiAssistant from "@/components/ai/AiAssistant";
-import { StudentRouteModalProvider } from "@/components/student/StudentRouteModalContext";
 
 /**
- * Routes with focused full-screen layouts. Student routes use the public site
- * as the modal backdrop whether they are intercepted or loaded directly.
+ * Routes with focused layouts. Student routes retain the public site chrome
+ * while their pages render inside the student portal or auth flow.
  */
 const FOCUSED_ROUTES = [
   "/login",
@@ -28,37 +27,21 @@ const matchesRoute = (pathname, routes) =>
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
-export default function PublicSiteShell({ children, modal }) {
+export default function PublicSiteShell({ children }) {
   const pathname = usePathname();
-  const modalSegments = useSelectedLayoutSegments("modal");
 
   const isAdminRoute = pathname.startsWith("/admin");
   const isStudentRoute = pathname.startsWith("/student/");
-  const isStudentFullPageRoute = [
-    "/student/dashboard",
-    "/student/enroll",
-  ].includes(pathname);
   const isFocusedRoute = matchesRoute(pathname, FOCUSED_ROUTES);
-  const hasInterceptedModal = modalSegments.some(
-    (segment) => segment !== "__DEFAULT__",
-  );
-  const renderInterceptedFullPage =
-    isStudentFullPageRoute && hasInterceptedModal;
-  const showPublicChrome =
-    hasInterceptedModal ||
-    (!isAdminRoute && (!isFocusedRoute || isStudentRoute));
+  const showPublicChrome = !isAdminRoute && (!isFocusedRoute || isStudentRoute);
 
   return (
-    <StudentRouteModalProvider
-      pathname={pathname}
-      isInterceptedModal={hasInterceptedModal}
-    >
     <>
       {showPublicChrome && <Header />}
 
       {showPublicChrome && <ConditionalCampusNewsTicker />}
       <main id="main">
-        {renderInterceptedFullPage ? modal : children}
+        {children}
       </main>
       {showPublicChrome && (
         <Footer
@@ -67,8 +50,6 @@ export default function PublicSiteShell({ children, modal }) {
           }
         />
       )}
-      {!renderInterceptedFullPage && hasInterceptedModal && isStudentRoute && modal}
-
       {showPublicChrome && (
         <a
           href="https://wa.me/918521283184?text=Hello%20SPRINT%2C%20I%20would%20like%20to%20know%20more%20about%20your%20programs."
@@ -87,6 +68,5 @@ export default function PublicSiteShell({ children, modal }) {
       )}
       {showPublicChrome && <AiAssistant />}
     </>
-    </StudentRouteModalProvider>
   );
 }

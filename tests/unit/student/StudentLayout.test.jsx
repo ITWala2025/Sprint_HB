@@ -8,6 +8,7 @@ const mockPathname = vi.fn(() => "/student/dashboard");
 
 vi.mock("next/navigation", () => ({
   usePathname: () => mockPathname(),
+  useRouter: () => ({ prefetch: vi.fn() }),
 }));
 
 vi.mock("next/link", () => ({
@@ -37,6 +38,7 @@ describe("StudentLayout", () => {
     );
 
     expect(screen.getByText("Dashboard content")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(
       screen.getByRole("navigation", { name: /student portal navigation/i }),
     ).toBeInTheDocument();

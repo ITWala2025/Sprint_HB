@@ -582,83 +582,6 @@
   text-align: center;
 }
 
-/* =========================================================
-   HEADER PORTAL MODAL
-========================================================= */
-
-.student-portal-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
-  padding: 16px;
-
-  background: rgba(1, 31, 62, 0.64);
-  backdrop-filter: blur(5px);
-}
-
-.student-portal-modal-dialog {
-  position: relative;
-  width: min(1240px, 100%);
-  height: min(700px, calc(100dvh - 32px));
-  overflow: hidden;
-  border-radius: 24px;
-  background: #ffffff;
-  box-shadow: 0 24px 70px rgba(1, 31, 62, 0.24);
-}
-
-.student-portal-modal-close {
-  position: absolute;
-  top: 12px;
-  z-index: 2;
-  width: 42px;
-  height: 42px;
-  right: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(1, 31, 62, 0.12);
-  border-radius: 12px;
-  background: #ffffff;
-  color: #011f3e;
-  cursor: pointer;
-  box-shadow: 0 3px 12px rgba(1, 31, 62, 0.12);
-}
-
-.student-portal-modal-close:hover {
-  background: #f2f5f8;
-}
-
-.student-portal-route-launcher {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 40;
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 15px;
-  border: 1px solid rgba(1, 31, 62, 0.12);
-  border-radius: 999px;
-  background: #ffffff;
-  color: #011f3e;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(1, 31, 62, 0.12);
-}
-
-.student-portal-route-launcher:hover {
-  background: #f2f5f8;
-}
-
 .student-login-page--modal {
   min-height: 0;
   height: 100%;
@@ -868,12 +791,6 @@
     margin-left: auto;
   }
 
-  .student-portal-modal-dialog {
-    width: min(480px, 100%);
-    height: min(620px, calc(100dvh - 24px));
-    border-radius: 20px;
-  }
-
   .student-login-page--modal {
     min-height: 100%;
   }
@@ -915,28 +832,9 @@
     font-size: 13px;
   }
 
-  .student-portal-modal-close {
-    top: 10px;
-    right: 10px;
-  }
-
-  .student-portal-route-launcher {
-    top: 10px;
-    right: 10px;
-    min-height: 40px;
-  }
-
 }
 
 @media (max-height: 560px) {
-  .student-portal-modal-backdrop {
-    padding: 8px;
-  }
-
-  .student-portal-modal-dialog {
-    height: calc(100dvh - 16px);
-  }
-
   .student-login-page--modal .student-login-form-wrapper {
     padding-top: 32px;
     padding-bottom: 12px;

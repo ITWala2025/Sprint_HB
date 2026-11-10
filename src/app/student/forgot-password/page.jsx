@@ -14,12 +14,11 @@ import { resolveStudentLoginNextPath } from "@/lib/student-login-redirect";
 
 import "./forgot-password.css";
 
-export default function ForgotPasswordPage({ isModal = true }) {
+export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [returnPath, setReturnPath] = useState(null);
-  const PageContainer = isModal ? "div" : "main";
 
   useEffect(() => {
     document.body.classList.add("student-auth-page");
@@ -107,9 +106,7 @@ export default function ForgotPasswordPage({ isModal = true }) {
   };
 
   return (
-    <PageContainer
-      className={`student-forgot-page ${isModal ? "student-forgot-page--modal" : ""}`}
-    >
+    <main className="student-forgot-page">
       <section
         className="student-forgot-card"
         aria-label="SPRINT Password Recovery"
@@ -208,7 +205,7 @@ export default function ForgotPasswordPage({ isModal = true }) {
                     }}
                     placeholder="Enter your registered email"
                     autoComplete="email"
-                    autoFocus={!isModal}
+                    autoFocus
                     disabled={loading}
                   />
                 </div>
@@ -264,6 +261,6 @@ export default function ForgotPasswordPage({ isModal = true }) {
           </div>
         </section>
       </section>
-    </PageContainer>
+    </main>
   );
 }

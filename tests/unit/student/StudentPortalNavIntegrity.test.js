@@ -21,15 +21,6 @@ const ROOT = path.resolve(
   "..",
 );
 const PORTAL_DIR = path.join(ROOT, "src", "app", "student", "(portal)");
-const STUDENT_MODAL_ROUTE_FILE = path.join(
-  ROOT,
-  "src",
-  "app",
-  "@modal",
-  "(.)student",
-  "[...segments]",
-  "page.jsx",
-);
 /**
  * The auth screens (login, forgot-password, check-email, reset-password,
  * password-reset-success) are full-screen routes that sit outside the (portal)
@@ -125,8 +116,12 @@ describe("Student portal navigation integrity", () => {
     });
   });
 
-  it("maps every student page route and keeps full-page routes out of modals", () => {
-    const modalRouteSource = readFileSync(STUDENT_MODAL_ROUTE_FILE, "utf8");
+  it("serves student pages directly without a modal route slot", () => {
+    const appDir = path.join(ROOT, "src", "app");
+    const studentLayout = readFileSync(
+      path.join(STUDENT_DIR, "layout.jsx"),
+      "utf8",
+    );
     const catchAllPage = readFileSync(
       path.join(STUDENT_DIR, "[...segments]", "page.jsx"),
       "utf8",
@@ -135,13 +130,6 @@ describe("Student portal navigation integrity", () => {
       path.join(STUDENT_DIR, "not-found.jsx"),
       "utf8",
     );
-    const configuredRoutes = new Set(
-      [...modalRouteSource.matchAll(/^\s{2}"?([a-z0-9-]+)"?: \{/gm)].map(
-        (match) => match[1],
-      ),
-    );
-    const dashboardRoute = modalRouteSource.match(/dashboard:\s*\{([^}]*)\}/);
-    const enrollmentRoute = modalRouteSource.match(/enroll:\s*\{([^}]*)\}/);
     const directRoutes = readdirSync(STUDENT_DIR, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
@@ -153,12 +141,10 @@ describe("Student portal navigation integrity", () => {
     const allRoutes = [...routeFolders(), ...directRoutes];
 
     allRoutes.forEach((route) => {
-      expect(configuredRoutes, `modal route /student/${route}`).toContain(
-        route,
-      );
+      expect(hasPage(`/student/${route}`), `page /student/${route}`).toBe(true);
     });
-    expect(dashboardRoute?.[1]).toContain("fullPage: true");
-    expect(enrollmentRoute?.[1]).toContain("fullPage: true");
+    expect(existsSync(path.join(appDir, "@modal"))).toBe(false);
+    expect(studentLayout).toContain("return children;");
     expect(catchAllPage).toContain("notFound()");
     expect(studentNotFoundPage).toContain("This page isn&apos;t available yet");
     expect(studentNotFoundPage).toContain("Go to student dashboard");

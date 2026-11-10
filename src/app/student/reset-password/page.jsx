@@ -45,7 +45,7 @@ const PASSWORD_RULES = [
   },
 ];
 
-export default function ResetPasswordPage({ isModal = true }) {
+export default function ResetPasswordPage() {
   const [supabase] = useState(() => createClient());
 
   const [newPassword, setNewPassword] = useState("");
@@ -317,7 +317,7 @@ export default function ResetPasswordPage({ isModal = true }) {
 
   return (
     <main
-      className={`student-reset-page ${isModal ? "student-reset-page--modal" : ""}`}
+      className="student-reset-page"
     >
       <section
         className="student-reset-card"
