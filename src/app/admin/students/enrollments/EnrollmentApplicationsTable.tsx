@@ -61,6 +61,15 @@ export default function EnrollmentApplicationsTable({
                 router.refresh();
             } catch (error) {
                 console.error("[EnrollmentApplications] Could not update application:", error);
+                if (error instanceof Error && /Server Action .* was not found on the server/i.test(error.message)) {
+                    setFeedback({
+                        type: "error",
+                        message: "Application state updated or server refreshed. Please reload the page.",
+                    });
+                    router.refresh();
+                    return;
+                }
+
                 setFeedback({
                     type: "error",
                     message: error instanceof Error

@@ -501,6 +501,7 @@ export async function getPendingRegistrationCount(): Promise<number> {
 export async function verifyRegistration(
     id: string,
     newStatus: RegistrationStatus,
+    adminNotes: string | null = null,
 ): Promise<VerifyRegistrationResult> {
     if (typeof id !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
         return { success: false, error: "Select a valid enrollment application." };
@@ -550,12 +551,28 @@ export async function verifyRegistration(
         return { success: true, message: "Application rejected." };
     }
 
-    const { error: approvalError } = await supabase.rpc("verify_and_approve_enrollment", {
-        p_enrollment_id: id,
-        p_admin_user_id: await getCurrentReviewerId(),
-    });
-    if (approvalError) {
-        return { success: false, error: `Could not approve the enrollment application: ${approvalError.message}` };
+    const adminUserId = await getCurrentReviewerId();
+    try {
+        const { error: rpcError } = await supabase.rpc("verify_and_approve_enrollment", {
+            p_enrollment_id: id,
+            p_admin_user_id: adminUserId,
+            p_notes: adminNotes ?? null,
+        });
+        if (rpcError) {
+            console.error("Supabase RPC verification failure:", {
+                message: rpcError.message,
+                details: rpcError.details,
+                hint: rpcError.hint,
+                code: rpcError.code,
+            });
+            return {
+                success: false,
+                error: `Approval failed [${rpcError.code || "SQL"}]: ${rpcError.message} (${rpcError.details || "Check constraints/columns"})`,
+            };
+        }
+    } catch (error) {
+        console.error("[SPRINT Admin Enrollments] Enrollment approval RPC threw an error:", error);
+        return { success: false, error: "Could not approve the enrollment application. Please try again." };
     }
 
     revalidatePath("/admin/students/enrollments");
@@ -565,8 +582,8 @@ export async function verifyRegistration(
     return { success: true, message: "Enrollment approved and student course access updated." };
 }
 
-export async function approveRegistration(id: string): Promise<VerifyRegistrationResult> {
-    return verifyRegistration(id, "approved");
+export async function approveRegistration(id: string, adminNotes?: string | null): Promise<VerifyRegistrationResult> {
+    return verifyRegistration(id, "approved", adminNotes);
 }
 
 export async function rejectRegistration(id: string): Promise<VerifyRegistrationResult> {
