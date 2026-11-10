@@ -59,18 +59,13 @@ describe("StudentLoginPage enrollment actions", () => {
     expect(screen.queryByLabelText(/mobile number/i)).not.toBeInTheDocument();
   });
 
-  it("explains that students sign in with the password created during enrollment", () => {
+  it("shows a motivational quote and links to password recovery", () => {
     render(<StudentLoginPage />);
 
     expect(
-      screen.getByText(/six-digit code confirms your email/i),
-    ).toHaveTextContent(/password is set before you submit your application/i);
-    expect(
-      screen.getByText(/if you forgot your password/i),
+      screen.getByText(/your dedication today is the foundation/i),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(/check your application status while it is under review/i),
-    ).toBeInTheDocument();
+    expect(screen.queryByText(/six-digit code confirms your email/i)).toBeNull();
     expect(
       screen.getByRole("link", { name: "Forgot Password?" }),
     ).toHaveAttribute("href", "/student/forgot-password");

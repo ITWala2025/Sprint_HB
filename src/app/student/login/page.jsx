@@ -259,12 +259,10 @@ export default function StudentLoginPage() {
               </h1>
 
               <p>
-                Sign in with the email and password you created during
-                enrollment. The six-digit code confirms your email, and your
-                password is set before you submit your application. If you
-                forgot your password, use Forgot Password to reset it. You can
-                check your application status while it is under review; course
-                access starts after approval.
+                <q>
+                  Your dedication today is the foundation of your success
+                  tomorrow.
+                </q>
               </p>
             </header>
 
