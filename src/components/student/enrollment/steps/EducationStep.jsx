@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BookOpen, Briefcase, CalendarDays, GraduationCap, University } from "lucide-react";
 
 import AuthField from "@/components/student/auth/AuthField";
@@ -10,32 +10,6 @@ import {
   COURSE_STATUS,
   resolveCourseOptions,
 } from "../enrollment-course-options";
-
-const APPLIED_COURSE_QUERIES_KEY = "student_enrollment_applied_course_queries";
-
-function getAppliedCourseQueries() {
-  try {
-    const saved = window.sessionStorage.getItem(APPLIED_COURSE_QUERIES_KEY);
-    const queries = saved ? JSON.parse(saved) : [];
-    return Array.isArray(queries)
-      ? queries.filter((query) => typeof query === "string")
-      : [];
-  } catch {
-    return [];
-  }
-}
-
-function recordAppliedCourseQuery(query) {
-  try {
-    const appliedQueries = getAppliedCourseQueries();
-    window.sessionStorage.setItem(
-      APPLIED_COURSE_QUERIES_KEY,
-      JSON.stringify([...new Set([...appliedQueries, query])]),
-    );
-  } catch {
-    // The existing wizard reports session-storage failures while saving its draft.
-  }
-}
 
 /**
  * Step 2 — Education & Career Profile (optional).
@@ -69,14 +43,7 @@ export const CURRENT_ROLE_OPTIONS = [
   { value: "Working Professional", label: "Working Professional" },
 ];
 
-export default function EducationStep({
-  idPrefix,
-  values = {},
-  errors = {},
-  onChange,
-  courseSlug = "",
-  isEnrollmentStateReady = true,
-}) {
+export default function EducationStep({ idPrefix, values = {}, errors = {}, onChange }) {
   // Same client the Course page uses — one Supabase project, one `courses` table.
   const supabase = useMemo(() => createClient(), []);
   // `loading` only exists before the first fetch settles; afterwards the state
@@ -85,7 +52,6 @@ export default function EducationStep({
     status: COURSE_STATUS.LOADING,
     options: [],
   });
-  const processedCourseQueries = useRef(new Set());
 
   useEffect(() => {
     let active = true;
@@ -115,43 +81,6 @@ export default function EducationStep({
       active = false;
     };
   }, [supabase]);
-
-  useEffect(() => {
-    if (
-      courseField.status !== COURSE_STATUS.READY ||
-      !isEnrollmentStateReady
-    ) {
-      return;
-    }
-
-    const query = typeof courseSlug === "string" ? courseSlug : "";
-    const normalizedSlug = query.trim().toLowerCase();
-    if (!normalizedSlug) return;
-
-    const slugQuery = `slug:${normalizedSlug}`;
-    const exactIdQuery = `id:${query}`;
-    const previouslyProcessed = getAppliedCourseQueries();
-    if (
-      processedCourseQueries.current.has(slugQuery) ||
-      previouslyProcessed.includes(slugQuery) ||
-      processedCourseQueries.current.has(exactIdQuery) ||
-      previouslyProcessed.includes(exactIdQuery)
-    ) {
-      return;
-    }
-
-    const slugOption = courseField.options.find(
-      (option) => option.slug?.trim().toLowerCase() === normalizedSlug,
-    );
-    const option =
-      slugOption ??
-      courseField.options.find((candidate) => candidate.value === query);
-    const appliedQuery = option && !slugOption ? exactIdQuery : slugQuery;
-
-    processedCourseQueries.current.add(appliedQuery);
-    recordAppliedCourseQuery(appliedQuery);
-    onChange("course")({ target: { value: option?.value ?? "" } });
-  }, [courseField, courseSlug, isEnrollmentStateReady, onChange, values.course]);
 
   const courseStatusMessage = COURSE_FIELD_MESSAGES[courseField.status];
   // Keep the control a <select> in every state (an empty options array would

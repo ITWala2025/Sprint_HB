@@ -161,9 +161,6 @@ export default async function DetailPage({ item, searchParams }) {
 
   const query =
     item.kind === "bundle" || !searchParams ? {} : await searchParams;
-  const audienceParam = Array.isArray(query.audience)
-    ? query.audience[0]
-    : query.audience;
 
   const rawAudience = typeof query.audience === "string"
     ? query.audience
@@ -234,7 +231,7 @@ export default async function DetailPage({ item, searchParams }) {
               <ArrowRight size={18} aria-hidden="true" />
             </Link>
           ) : (
-            <CourseApplicationForm slug={item.slug} audience={audienceParam} />
+            <CourseApplicationForm slug={item.slug} />
           )}
         </div>
 
@@ -320,8 +317,7 @@ export default async function DetailPage({ item, searchParams }) {
             ) : (
               <CourseApplicationForm
                 slug={item.slug}
-                audience={audienceParam}
-                buttonLabel="Enroll for this course"
+                buttonLabel="Sign up"
                 className="course-detail-hero__cta"
               />
             )}

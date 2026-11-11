@@ -245,6 +245,7 @@ export default function PersonalInformationStep({
           hint="We will verify this address with a six-digit code."
           required
           disabled={
+            emailStatus === "verified" ||
             otpSent ||
             isSendingOtp ||
             isVerifyingOtp

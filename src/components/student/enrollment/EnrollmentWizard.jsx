@@ -18,20 +18,11 @@ import {
   ENROLLMENT_STEPS,
   createEmptyEnrollment,
 } from "./enrollment-steps";
-import { compactErrors, normalizeMobile } from "./enrollment-validation";
+import { compactErrors } from "./enrollment-validation";
 
 const STEP_HEADING_ID = "enrollment-step-heading";
 const SUCCESS_HEADING_ID = "enrollment-success-heading";
 const ENROLLMENT_DRAFT_KEY = "student_enrollment_draft";
-
-function fillMissingValues(currentValues, profileValues, preserveDraft) {
-  return Object.fromEntries(
-    Object.entries(profileValues).map(([field, value]) => [
-      field,
-      preserveDraft ? currentValues[field] : value || currentValues[field],
-    ]),
-  );
-}
 
 /**
  * Enrollment wizard shell.
@@ -47,10 +38,10 @@ function fillMissingValues(currentValues, profileValues, preserveDraft) {
  * Continue bar. Each step only describes its own fields, through the contract
  * documented in `enrollment-steps.js`.
  *
- * A temporary session-storage draft preserves answers across refreshes and
- * while an existing applicant visits the login or password-recovery page.
+ * A temporary session-storage draft preserves the answers while an existing
+ * applicant visits the login or password-recovery page.
  */
-export default function EnrollmentWizard({ courseSlug = "" }) {
+export default function EnrollmentWizard() {
   const router = useRouter();
   const [stepIndex, setStepIndex] = useState(0);
   const [values, setValues] = useState(createEmptyEnrollment);
@@ -66,133 +57,34 @@ export default function EnrollmentWizard({ courseSlug = "" }) {
   // One-off message for a visible action (today: skipping an optional step).
   // Cleared by the next navigation so it never lingers on the wrong screen.
   const [statusNotice, setStatusNotice] = useState(null);
-  const [isDraftLoaded, setIsDraftLoaded] = useState(false);
 
   useEffect(() => {
-    let active = true;
-
-    const initializeEnrollment = async () => {
-      let hasSavedDraft = false;
-      try {
-        const saved = window.sessionStorage.getItem(ENROLLMENT_DRAFT_KEY);
-        if (saved) {
-          const draft = JSON.parse(saved);
-          if (draft.values?.personal && draft.values?.education) {
-            const empty = createEmptyEnrollment();
-            setValues({
-              ...empty,
-              ...draft.values,
-              personal: { ...empty.personal, ...draft.values.personal },
-              education: { ...empty.education, ...draft.values.education },
-              password: { ...empty.password },
-            });
-            setStatusNotice("Your saved enrollment details have been restored.");
-            hasSavedDraft = true;
-          }
-        }
-      } catch {
-        setSubmitError(
-          "Your saved enrollment details could not be restored. Please review and re-enter them.",
-        );
-      }
-
-      try {
-        const supabase = createClient();
-        const {
-          data: { session },
-          error: sessionError,
-        } = await supabase.auth.getSession();
-        if (sessionError) throw sessionError;
-        if (!session?.user) return;
-
-        const { data: profile, error: profileError } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", session.user.id)
-          .maybeSingle();
-        if (profileError) throw profileError;
-        if (!profile || !active) return;
-
-        const fullName = String(profile.full_name ?? "").trim();
-        const nameParts = fullName.split(/\s+/).filter(Boolean);
-        const dateOfBirth =
-          profile.date_of_birth ?? profile.dob ?? profile.birth_date ?? "";
-        const personalProfile = {
-          firstName: profile.first_name || nameParts[0] || "",
-          lastName: profile.last_name || nameParts.slice(1).join(" "),
-          email: profile.email || session.user.email || "",
-          dob: typeof dateOfBirth === "string" ? dateOfBirth.slice(0, 10) : "",
-          country: profile.country || "",
-          state: profile.state || "",
-          phone: normalizeMobile(
-            String(profile.phone || profile.mobile_number || session.user.phone || ""),
-          ).slice(0, 10),
-        };
-        const educationProfile = {
-          collegeInstitution:
-            profile.college_institution || profile.college || "",
-          courseDegree: profile.course_degree || profile.degree || "",
-          semesterYear: profile.year_semester || profile.semester || "",
-          currentRole: profile.current_role || profile.employment_status || "",
-        };
-
-        setValues((previous) => ({
-          ...previous,
-          personal: {
-            ...previous.personal,
-            ...fillMissingValues(
-              previous.personal,
-              personalProfile,
-              hasSavedDraft,
-            ),
-          },
-          education: {
-            ...previous.education,
-            ...fillMissingValues(
-              previous.education,
-              educationProfile,
-              hasSavedDraft,
-            ),
-          },
-        }));
-      } catch (error) {
-        if (active) {
-          setSubmitError(
-            error instanceof Error
-              ? `We couldn't load your saved profile: ${error.message}`
-              : "We couldn't load your saved profile. Please try again.",
-          );
-        }
-      } finally {
-        if (active) setIsDraftLoaded(true);
-      }
-    };
-
-    void initializeEnrollment();
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isDraftLoaded) return;
-
+    let draft;
     try {
-      window.sessionStorage.setItem(
-        ENROLLMENT_DRAFT_KEY,
-        JSON.stringify({
-          values: {
-            personal: values.personal,
-            education: values.education,
-          },
-        }),
-      );
+      const saved = window.sessionStorage.getItem(ENROLLMENT_DRAFT_KEY);
+      if (!saved) return;
+      draft = JSON.parse(saved);
     } catch {
       setSubmitError(
-        "Your enrollment details could not be saved in this browser. Please keep this page open.",
+        "Your saved enrollment details could not be restored. Please review and re-enter them.",
       );
+      return;
     }
-  }, [isDraftLoaded, values.education, values.personal]);
+
+    if (!draft.values?.personal || !draft.values?.education) {
+      return;
+    }
+
+    const empty = createEmptyEnrollment();
+    setValues({
+      ...empty,
+      ...draft.values,
+      personal: { ...empty.personal, ...draft.values.personal },
+      education: { ...empty.education, ...draft.values.education },
+      password: { ...empty.password },
+    });
+    setStatusNotice("Your saved enrollment details have been restored.");
+  }, []);
 
   const step = ENROLLMENT_STEPS[stepIndex];
   const isFirst = stepIndex === 0;
@@ -436,9 +328,8 @@ export default function EnrollmentWizard({ courseSlug = "" }) {
             Start your enrollment
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-brand-text-secondary">
-            Share your details, verify your email if needed, then add optional
-            education and course details. You can move back and forth without
-            losing an answer.
+            Verify your email, create your account, then add optional education
+            and course details. You can move back and forth without losing an answer.
           </p>
         </div>
 
@@ -502,9 +393,6 @@ export default function EnrollmentWizard({ courseSlug = "" }) {
                 errors={errors}
                 onChange={handleChange}
                 onChangeIn={handleChangeIn}
-                {...(step.id === "education"
-                  ? { courseSlug, isEnrollmentStateReady: isDraftLoaded }
-                  : {})}
                 {...(step.id === "personal"
                   ? {
                       onBeforeAuthRedirect: saveDraftBeforeAuthRedirect,

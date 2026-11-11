@@ -8,13 +8,6 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function StudentEnrollPage({ searchParams }) {
-  const query = searchParams ? await searchParams : {};
-  const courseSlug = Array.isArray(query.course) ? query.course[0] : query.course;
-
-  return (
-    <EnrollmentWizard
-      courseSlug={typeof courseSlug === "string" ? courseSlug : ""}
-    />
-  );
+export default function StudentEnrollPage() {
+  return <EnrollmentWizard />;
 }
