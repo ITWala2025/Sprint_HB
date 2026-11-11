@@ -3,6 +3,7 @@ import "@/css/header.css";
 import "@/css/footer.css";
 import { Space_Grotesk, Inter } from "next/font/google";
 import PublicSiteShell from "@/components/layout/PublicSiteShell";
+import CampusNewsTicker from "@/components/layout/CampusNewsTicker";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -69,7 +70,7 @@ export default function RootLayout({ children }) {
         >
           Skip to main content
         </a>
-        <PublicSiteShell>{children}</PublicSiteShell>
+        <PublicSiteShell ticker={<CampusNewsTicker />}>{children}</PublicSiteShell>
       </body>
     </html>
   );

@@ -768,7 +768,7 @@ No application code was changed for this reconciliation. The local role-unassign
 - Validation: `npx tsc --noEmit` and `git diff --check` passed.
 
 <<<<<<< HEAD
-## 40. Enrollment & Dashboard Performance Fixes — 2026-11-09
+## 40. Enrollment & Dashboard Performance Fixes ï¿½ 2026-11-09
 
 - Parallelized 5 sequential Supabase queries in the student dashboard into a single Promise.all, cutting dashboard load latency.
 - Added client-side prefetch on sidebar links (hover/focus) so portal page-to-page navigation is instant.
@@ -839,13 +839,13 @@ No application code was changed for this reconciliation. The local role-unassign
 - Validation: `npx tsc --noEmit`, focused admin session/authorization tests (2 files, 10 tests), and `git diff --check` passed.
 >>>>>>> dfc3b6b6d281844ccf6ae17dff9345e0defe3623
 
-## 41. Student Avatar Dropdown — 2026-11-09
+## 41. Student Avatar Dropdown ï¿½ 2026-11-09
 
 - Added StudentAvatarDropdown component with Dashboard and Sign out menu items, replacing the static circular avatar in the header.
 - Wired into desktop HeaderActions and mobile MobileNavigation, showing initials + full name from the Supabase profile.
 
 
-## 42. Chatbot Fixes — 2026-11-09
+## 42. Chatbot Fixes ï¿½ 2026-11-09
 
 - Fixed bug: all reply objects returned suggestions as plain strings, but the frontend expected objects with label/query/href. Added a 	oSuggestions helper and wrapped every suggestion array in the service and demo core.
 - Added indSimilarQuestions to surface related verified Q&A when a query has no verified answer, surfaced via a new similarQuestions field on the assistant response.
@@ -860,3 +860,12 @@ ormalizeSuggestions as a final safety net in getLocalChatbotReply so all code pa
 - Login, forgot-password, check-email, reset-password, and `/set-password` render as regular page content. The responsive portal navigation drawer remains available on portal pages.
 - Removed modal-only student components/styles and updated navigation and auth tests to assert direct-page behavior.
 - Validation: production build passed; focused route/layout/auth tests passed (31 tests). The full student test group has 10 failures in `StudentDashboard.test.jsx` and `StudentPlaceholderRoutes.test.jsx`, unrelated to route-modal removal.
+
+## 66. Egress Optimization, Caching & CMS Server Actions â€” 2026-11-11
+
+- **Supabase Egress & Ticker Caching:** Refactored `src/components/layout/CampusNewsTicker.tsx` to run its Supabase query as a Server Component wrapped in Next.js `unstable_cache` (`revalidate: 3600`, `tags: ['announcements']`). This prevents the global ticker from executing a database read on every public page load, offloading the data to Vercel's edge network.
+- **Schema Alignment:** Corrected the ticker's query to target the `announcements` table and use the exact schema (`link_url`, `is_active`) instead of mismatched admin UI labels. Updated the client counterpart (`CampusNewsTickerClient.tsx`) to map `item.link_url`.
+- **Image Optimization:** Added the Supabase project domain (`dwulwgsulbqjxvtozkqw.supabase.co`) to `images.remotePatterns` in `next.config.mjs`. Updated heavy announcement posters to use `next/image` with proper `sizes` attributes so Vercel compresses and caches the media.
+- **Route-Level Caching:** Added route segment config (`export const revalidate = 3600;`) to `src/app/courses/page.jsx` to cache the courses catalogue.
+- **CMS Server Actions & Instant Invalidation:** Refactored the announcements CMS (`src/app/admin/updates/page.tsx`) to remove client-side mutations. Created secure Server Actions in `src/app/admin/updates/actions.ts` for create, update, delete, and poster upload operations. 
+- **Cache Busting:** Implemented `revalidateTag("announcements", { expire: 0 })` inside the new CMS Server Actions to instantly invalidate the public ticker cache whenever an announcement is modified, eliminating the 1-hour propagation delay.

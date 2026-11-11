@@ -14,6 +14,13 @@ const nextConfig = {
         pathname: "/storage/v1/object/public/**",
         search: "",
       },
+      {
+        protocol: "https",
+        hostname: "dwulwgsulbqjxvtozkqw.supabase.co",
+        port: "",
+        pathname: "/storage/v1/object/public/**",
+        search: "",
+      },
     ],
     formats: ["image/avif", "image/webp"],
   },

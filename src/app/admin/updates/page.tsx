@@ -1,11 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition, type ChangeEvent, type FormEvent } from "react";
 import {
     ExternalLink, Megaphone, Pencil, Plus, RefreshCw, Trash2, X,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAdminPermissions } from "@/app/admin/permissions-context";
+import {
+    createAnnouncement,
+    deleteAnnouncement as deleteAnnouncementAction,
+    updateAnnouncement,
+    uploadAnnouncementPoster,
+} from "./actions";
 
 const announcementTypes = ["ANNOUNCEMENT", "UPDATES", "HIRING", "MAINTENANCE"] as const;
 type AnnouncementType = typeof announcementTypes[number];
@@ -101,7 +107,8 @@ export default function AnnouncementManagementPage() {
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [savingId, setSavingId] = useState<string | null>(null);
-    const [isSaving, setIsSaving] = useState(false);
+    const [isPending, startTransition] = useTransition();
+    const isSaving = isPending;
     const [notice, setNotice] = useState<Notice | null>(null);
     const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null | undefined>(undefined);
     const [form, setForm] = useState<AnnouncementForm>(emptyForm);
@@ -167,33 +174,27 @@ export default function AnnouncementManagementPage() {
             return;
         }
 
-        const sanitizedFileName = file.name
-            .normalize("NFKD")
-            .replace(/[^a-zA-Z0-9._-]+/g, "-")
-            .replace(/^-+|-+$/g, "") || "poster";
-        const filePath = `posters/${Date.now()}-${sanitizedFileName}`;
-
         setUploadingImage(true);
         setUploadError("");
-        try {
-            const { error } = await supabase.storage
-                .from("announcement-assets")
-                .upload(filePath, file, { contentType: file.type, upsert: false });
+        const uploadData = new FormData();
+        uploadData.set("file", file);
+        startTransition(async () => {
+            try {
+                const result = await uploadAnnouncementPoster(uploadData);
+                if ("error" in result || !result.publicUrl) {
+                    setUploadError("error" in result ? result.error : "Poster upload did not return a URL.");
+                    return;
+                }
 
-            if (error) {
-                setUploadError(`Poster could not be uploaded: ${error.message}`);
-                return;
+                setForm((current) => ({ ...current, link_url: result.publicUrl }));
+                setLinkUrlError("");
+            } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                setUploadError(`Poster could not be uploaded: ${message}`);
+            } finally {
+                setUploadingImage(false);
             }
-
-            const { data } = supabase.storage.from("announcement-assets").getPublicUrl(filePath);
-            setForm((current) => ({ ...current, link_url: data.publicUrl }));
-            setLinkUrlError("");
-        } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            setUploadError(`Poster could not be uploaded: ${message}`);
-        } finally {
-            setUploadingImage(false);
-        }
+        });
     }
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -219,7 +220,6 @@ export default function AnnouncementManagementPage() {
         }
 
         setLinkUrlError("");
-        setIsSaving(true);
         setNotice(null);
         const payload = {
             type: form.type,
@@ -229,28 +229,24 @@ export default function AnnouncementManagementPage() {
             is_active: form.is_active,
         };
 
-        try {
-            const { error } = editingAnnouncement
-                ? await supabase.from("announcements").update(payload).eq("id", editingAnnouncement.id)
-                : await supabase.from("announcements").insert(payload);
+        startTransition(async () => {
+            try {
+                const result = editingAnnouncement
+                    ? await updateAnnouncement(editingAnnouncement.id, payload)
+                    : await createAnnouncement(payload);
+                if ("error" in result) {
+                    setNotice({ type: "error", message: result.error });
+                    return;
+                }
 
-            if (error) {
-                setNotice({ type: "error", message: `Announcement could not be saved: ${error.message}` });
-                return;
+                setEditingAnnouncement(undefined);
+                setNotice({ type: "success", message: result.message });
+                await loadAnnouncements();
+            } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                setNotice({ type: "error", message: `Announcement could not be saved: ${message}` });
             }
-
-            setEditingAnnouncement(undefined);
-            setNotice({
-                type: "success",
-                message: `Announcement ${editingAnnouncement ? "updated" : "created"} successfully.`,
-            });
-            await loadAnnouncements();
-        } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            setNotice({ type: "error", message: `Announcement could not be saved: ${message}` });
-        } finally {
-            setIsSaving(false);
-        }
+        });
     }
 
     async function toggleActive(announcement: Announcement) {
@@ -262,26 +258,30 @@ export default function AnnouncementManagementPage() {
         const nextIsActive = !announcement.is_active;
         setSavingId(announcement.id);
         setNotice(null);
-        try {
-            const { error } = await supabase
-                .from("announcements")
-                .update({ is_active: nextIsActive })
-                .eq("id", announcement.id);
+        startTransition(async () => {
+            try {
+                const result = await updateAnnouncement(announcement.id, {
+                    type: announcement.type,
+                    message: announcement.message,
+                    link_url: announcement.link_url,
+                    priority: announcement.priority,
+                    is_active: nextIsActive,
+                });
+                if ("error" in result) {
+                    setNotice({ type: "error", message: result.error });
+                    return;
+                }
 
-            if (error) {
-                setNotice({ type: "error", message: `Status could not be changed: ${error.message}` });
-                return;
+                setAnnouncements((current) => current.map((item) =>
+                    item.id === announcement.id ? { ...item, is_active: nextIsActive } : item,
+                ));
+            } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                setNotice({ type: "error", message: `Status could not be changed: ${message}` });
+            } finally {
+                setSavingId(null);
             }
-
-            setAnnouncements((current) => current.map((item) =>
-                item.id === announcement.id ? { ...item, is_active: nextIsActive } : item,
-            ));
-        } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            setNotice({ type: "error", message: `Status could not be changed: ${message}` });
-        } finally {
-            setSavingId(null);
-        }
+        });
     }
 
     async function deleteAnnouncement(announcement: Announcement) {
@@ -293,25 +293,23 @@ export default function AnnouncementManagementPage() {
 
         setSavingId(announcement.id);
         setNotice(null);
-        try {
-            const { error } = await supabase
-                .from("announcements")
-                .delete()
-                .eq("id", announcement.id);
+        startTransition(async () => {
+            try {
+                const result = await deleteAnnouncementAction(announcement.id);
+                if ("error" in result) {
+                    setNotice({ type: "error", message: result.error });
+                    return;
+                }
 
-            if (error) {
-                setNotice({ type: "error", message: `Announcement could not be deleted: ${error.message}` });
-                return;
+                setAnnouncements((current) => current.filter((item) => item.id !== announcement.id));
+                setNotice({ type: "success", message: result.message });
+            } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                setNotice({ type: "error", message: `Announcement could not be deleted: ${message}` });
+            } finally {
+                setSavingId(null);
             }
-
-            setAnnouncements((current) => current.filter((item) => item.id !== announcement.id));
-            setNotice({ type: "success", message: "Announcement deleted." });
-        } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            setNotice({ type: "error", message: `Announcement could not be deleted: ${message}` });
-        } finally {
-            setSavingId(null);
-        }
+        });
     }
 
     const activeCount = announcements.filter((announcement) => announcement.is_active).length;

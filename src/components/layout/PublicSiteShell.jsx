@@ -27,7 +27,7 @@ const matchesRoute = (pathname, routes) =>
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
-export default function PublicSiteShell({ children }) {
+export default function PublicSiteShell({ children, ticker }) {
   const pathname = usePathname();
 
   const isAdminRoute = pathname.startsWith("/admin");
@@ -39,7 +39,9 @@ export default function PublicSiteShell({ children }) {
     <>
       {showPublicChrome && <Header />}
 
-      {showPublicChrome && <ConditionalCampusNewsTicker />}
+      {showPublicChrome && (
+        <ConditionalCampusNewsTicker>{ticker}</ConditionalCampusNewsTicker>
+      )}
       <main id="main">
         {children}
       </main>
