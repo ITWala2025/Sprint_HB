@@ -34,7 +34,7 @@ export default function BundleDetailPage({ item, includedCourses }) {
           <p>{item.description}</p>
           <div className="mt-5">
             <Link href="/register" className="course-detail-hero__cta">
-              Sign up for this bundle
+              Enroll for this bundle
             </Link>
           </div>
           <div className="course-detail-hero__facts">

@@ -227,7 +227,7 @@ export default async function DetailPage({ item, searchParams }) {
 
           {item.kind === "bundle" ? (
             <Link className="course-detail-hero__cta" href="/register">
-              Sign up for this bundle
+              Enroll for this bundle
               <ArrowRight size={18} aria-hidden="true" />
             </Link>
           ) : (
@@ -317,7 +317,7 @@ export default async function DetailPage({ item, searchParams }) {
             ) : (
               <CourseApplicationForm
                 slug={item.slug}
-                buttonLabel="Sign up"
+                buttonLabel="Enroll"
                 className="course-detail-hero__cta"
               />
             )}

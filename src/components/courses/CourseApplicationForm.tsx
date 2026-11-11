@@ -34,7 +34,7 @@ function SubmitButton({
 
 export default function CourseApplicationForm({
   slug,
-  buttonLabel = "Sign up for this course",
+  buttonLabel = "Enroll for this course",
   className,
 }: CourseApplicationFormProps) {
   const [state, formAction] = useActionState(applyForCourseAction, {});
