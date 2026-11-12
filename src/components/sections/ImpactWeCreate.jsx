@@ -59,7 +59,7 @@ export default function ImpactWeCreate() {
             <span className="relative z-0 inline-block">
               <span
                 aria-hidden="true"
-                className="absolute -inset-x-1 bottom-[5%] -z-10 h-[60%] -rotate-2 rounded-[45%_20%_40%_20%] bg-gradient-to-r from-teal-200 to-cyan-100"
+                className="absolute inset-x-0 bottom-[5%] -z-10 h-[60%] rotate-0 rounded-[45%_20%_40%_20%] bg-gradient-to-r from-teal-200 to-cyan-100 sm:-rotate-2"
               />
               Economic Change Begins
             </span>

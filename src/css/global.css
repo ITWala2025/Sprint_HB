@@ -310,7 +310,7 @@ a {
   flex-direction: column;
   justify-content: center;
   min-height: min(700px, calc(100vh - 5rem));
-  padding: 2rem 0 2.5rem;
+  padding-block: 2rem 2.5rem;
 }
 
 .sprint-hero-breadcrumb {
@@ -580,7 +580,7 @@ a {
 @media (max-width: 767px) {
   .sprint-hero-content {
     min-height: auto;
-    padding: 1.5rem 0 1.5rem;
+    padding-block: 1.5rem;
   }
 
   .sprint-hero-image {
@@ -632,6 +632,7 @@ a {
 @media (min-width: 1024px) {
   .sprint-hero-content {
     padding-block: 2.5rem;
+    padding-inline: 0;
   }
 }
 
