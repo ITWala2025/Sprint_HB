@@ -51,7 +51,7 @@ export const partners = [
   { id: "p15", name: "Vishal Creations", logoUrl: "/images/home/vishal-creations.webp" },
   { id: "p16", name: "Zupharm Laboratories", logoUrl: "/images/home/zupharm-laboratories.webp" },
   { id: "p22", name: "Tessellation Software", logoUrl: "/images/home/tessellation.webp" },
-  { id: "p23", name: "Tessellation Software", logoUrl: "/images/home/sirrexaai1.png" },
+  { id: "p23", name: "Tessellation Software", logoUrl: "/images/home/sirrexaai.png" },
   { id: "p23", name: "Tessellation Software", logoUrl: "/images/home/punditas.png" },
 
 
