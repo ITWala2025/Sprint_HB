@@ -5,75 +5,32 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { videoTestimonials } from "@/data/data";
 
 
-function VideoTestimonial({ testimonial, onVideoPlay, onVideoPause, registerVideo }) {
-
-  const videoRef = useRef(null);
-
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const [hasStarted, setHasStarted] = useState(false);
-
-  const setVideoRef = useCallback((node) => {
-
-    videoRef.current = node;
-
-    registerVideo(testimonial.id, node);
-
-  }, [registerVideo, testimonial.id]);
-
-  const toggleVideo = async () => {
-
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    try {
-
-      if (video.paused) await video.play();
-
-      else video.pause();
-
-    } catch (error) {
-
-      console.error("Video playback failed:", error);
-
-    }
-
-  };
+function VideoTestimonial({ testimonial, isActive, onVideoPlay }) {
 
   return (
 
     <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-[#011f3e] shadow-sm">
 
-      <video
-
-        ref={setVideoRef}
-
-        src={testimonial.videoUrl}
-
-        onDragStart={(event) => event.preventDefault()}
-
-        playsInline preload="metadata" controls={hasStarted}
-
-
-
-        onPlay={(event) => { setIsPlaying(true); setHasStarted(true); onVideoPlay(event); }}
-
-        onPause={(event) => { setIsPlaying(false); onVideoPause(event); }}
-
-        onEnded={(event) => { setIsPlaying(false); setHasStarted(false); onVideoPause(event); }}
-
-        className={`absolute inset-0 h-full w-full select-none bg-[#011f3e] ${hasStarted ? "object-contain" : "object-cover"}`}
-
-      />
-
-      {!hasStarted && (
-
+      {isActive ? (
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${testimonial.youtubeVideoId}?autoplay=1`}
+          title={`${testimonial.name}'s testimonial`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          className="absolute inset-0 h-full w-full border-0"
+        />
+      ) : (
         <>
+          <img
+            src={`https://img.youtube.com/vi/${testimonial.youtubeVideoId}/hqdefault.jpg`}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
 
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
-          <button type="button" onClick={toggleVideo} aria-label={`Play ${testimonial.name}'s testimonial`}
+          <button type="button" onClick={() => onVideoPlay(testimonial.id)} aria-label={`Play ${testimonial.name}'s testimonial`}
 
             className="sprint-focus absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/50 bg-white/20 text-white shadow-lg backdrop-blur-md transition-transform hover:scale-110 hover:bg-brand-red">
 
@@ -90,19 +47,6 @@ function VideoTestimonial({ testimonial, onVideoPlay, onVideoPause, registerVide
           </div>
 
         </>
-
-      )}
-
-      {hasStarted && !isPlaying && (
-
-        <button type="button" onClick={toggleVideo} aria-label={`Resume ${testimonial.name}'s testimonial`}
-
-          className="sprint-focus absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm">
-
-          <Play size={20} fill="currentColor" className="ml-0.5" />
-
-        </button>
-
       )}
 
     </div>
@@ -117,8 +61,6 @@ export default function VideoTestimonials() {
 
   const activeVideoRef = useRef(null);
 
-  const videoRefs = useRef(new Map());
-
   const reducedMotionRef = useRef(false);
 
   const lastInteractionRef = useRef(0);
@@ -129,43 +71,19 @@ export default function VideoTestimonials() {
 
   const [isDragging, setIsDragging] = useState(false);
 
+  const [activeVideoId, setActiveVideoId] = useState(null);
+
   const [navigation, setNavigation] = useState({ page: 0, pages: 1, canPrevious: false, canNext: false });
 
 
 
-  const registerVideo = useCallback((id, node) => {
+  const handleVideoPlay = useCallback((id) => {
 
-    if (node) videoRefs.current.set(id, node);
-
-    else videoRefs.current.delete(id);
-
-  }, []);
-
-  const handleVideoPlay = useCallback((event) => {
-
-    const currentVideo = event.currentTarget;
-
-    if (activeVideoRef.current && activeVideoRef.current !== currentVideo) activeVideoRef.current.pause();
-
-    activeVideoRef.current = currentVideo;
-
+    activeVideoRef.current = id;
+    setActiveVideoId(id);
     pauseRef.current.videoPlaying = true;
 
     lastInteractionRef.current = Date.now();
-
-  }, []);
-
-  const handleVideoPause = useCallback((event) => {
-
-    if (activeVideoRef.current === event.currentTarget) {
-
-      activeVideoRef.current = null;
-
-      pauseRef.current.videoPlaying = false;
-
-      lastInteractionRef.current = Date.now();
-
-    }
 
   }, []);
 
@@ -227,17 +145,24 @@ export default function VideoTestimonials() {
 
   const pauseOutOfViewVideo = useCallback(() => {
 
-    const video = activeVideoRef.current;
+    const activeId = activeVideoRef.current;
 
     const track = trackRef.current;
 
-    if (!video || !track) return;
+    if (!activeId || !track) return;
 
-    const cardRect = video.closest("article")?.getBoundingClientRect();
+    const card = Array.from(track.children).find(
+      (item) => item.dataset.testimonialId === activeId
+    );
+    const cardRect = card?.getBoundingClientRect();
 
     const trackRect = track.getBoundingClientRect();
 
-    if (cardRect && (cardRect.right <= trackRect.left || cardRect.left >= trackRect.right)) video.pause();
+    if (cardRect && (cardRect.right <= trackRect.left || cardRect.left >= trackRect.right)) {
+      activeVideoRef.current = null;
+      setActiveVideoId(null);
+      pauseRef.current.videoPlaying = false;
+    }
 
   }, []);
 
@@ -419,10 +344,6 @@ export default function VideoTestimonials() {
 
   }, [navigation.pages, getMetrics, goToPage]);
 
-  useEffect(() => () => { videoRefs.current.forEach((video) => video.pause()); videoRefs.current.clear(); }, []);
-
-
-
   const arrowClassName = "sprint-focus flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-navy shadow-sm transition-colors hover:border-brand-navy hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-35";
 
   if (!videoTestimonials.length) return null;
@@ -449,9 +370,9 @@ export default function VideoTestimonials() {
         className={`sprint-focus flex min-w-0 snap-x snap-mandatory items-start gap-8 overflow-x-auto overscroll-x-contain rounded-2xl pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-10 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
       >
         {videoTestimonials.map((testimonial, index) => (
-          <article key={testimonial.id} aria-label={`Video testimonial ${index + 1} of ${videoTestimonials.length}`}
+          <article key={testimonial.id} data-testimonial-id={testimonial.id} aria-label={`Video testimonial ${index + 1} of ${videoTestimonials.length}`}
             className="w-full shrink-0 snap-start select-none overflow-hidden rounded-2xl md:w-[calc((100%_-_32px)/2)] lg:w-[calc((100%_-_64px)/3)]">
-            <VideoTestimonial testimonial={testimonial} registerVideo={registerVideo} onVideoPlay={handleVideoPlay} onVideoPause={handleVideoPause} />
+            <VideoTestimonial testimonial={testimonial} isActive={activeVideoId === testimonial.id} onVideoPlay={handleVideoPlay} />
           </article>
         ))}
       </div>

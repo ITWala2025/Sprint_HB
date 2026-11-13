@@ -27,7 +27,7 @@ const features = [
     icon: GraduationCap,
     accent: "teal",
     image:
-    "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/about-images/what-makes-us-unique/corporate-trainer.png",
+      "https://previewengine-accl.zohoexternal.in/image/WD/ss8l5f44af1a36c2b4ad68edda798fd4b7762?version=1.0&width=2046&height=1536",
     alt: "Professionals collaborating in a workplace",
   },
   {
@@ -42,7 +42,7 @@ const features = [
     icon: Handshake,
     accent: "blue",
     image:
-      "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/about-images/what-makes-us-unique/Strong-Industry-Connect.png",
+      "https://previewengine-accl.zohoexternal.in/image/WD/ss8l56d7ba88c5ce5443498ff4f987f09ed92?version=1.0&width=2046&height=1536",
     alt: "Professionals attending a collaborative business meeting",
   },
   {
@@ -57,7 +57,7 @@ const features = [
     icon: CodeXml,
     accent: "amber",
     image:
-      "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/about-images/what-makes-us-unique/360-Development.png",
+      "https://previewengine-accl.zohoexternal.in/image/WD/ss8l5dde00ea568fb4534adb1fcb5ad041ce0?version=1.0&width=2046&height=1536",
     alt: "Laptop and programming workspace",
   },
   {
@@ -72,7 +72,7 @@ const features = [
     icon: Award,
     accent: "violet",
     image:
-      "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/about-images/what-makes-us-unique/Real-Internship.png",
+      "https://previewengine-accl.zohoexternal.in/image/WD/ss8l575fe89ba81664e398d380b7ee5a722af?version=1.0&width=2046&height=1536",
     alt: "Professional reviewing documents at a desk",
   },
 ];

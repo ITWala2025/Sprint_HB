@@ -131,7 +131,7 @@ export const featuredCourse = {
 };
 
 /** @typedef {{ id: string, type: "text", name: string, role: string, quote: string, photoUrl: string }} TextTestimonial */
-/** @typedef {{ id: string, type: "video", name: string, role: string, videoUrl: string }} VideoTestimonial */
+/** @typedef {{ id: string, type: "video", name: string, role: string, youtubeVideoId: string }} VideoTestimonial */
 /** @typedef {TextTestimonial | VideoTestimonial} Testimonial */
 
 // Section 6.7 — Student testimonials.
@@ -142,28 +142,28 @@ export const videoTestimonials = [
     id: "v4",
     name: "Farhat Afreen",
     role: "BTech Grad | ITWala",
-    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/Farhat_Afreen%20testimonial.mp4",
+    youtubeVideoId: "-KpL5HY2lkI",
   },
     
   {
     id: "v1",
     name: "Mayank Aman",
     role: "BTech Grad | TCS",
-    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/myank_aman_testimonial.mp4",
+    youtubeVideoId: "OiVbLbu5R2E",
   },
 
   {
     id: "v2",
     name: "Sarvesh Chandra",
     role: "BTech Graduate",
-    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/sarvesh_testimonial.mp4",
+    youtubeVideoId: "_LQzOGZ7JYc",
   },
 
   {
     id: "v3",
     name: "Raman Munda",
     role: "CS Student",
-    videoUrl: "https://vrapmahhtmhflaqbubux.supabase.co/storage/v1/object/public/home-image/Raman_munda%20testimonial.mp4",
+    youtubeVideoId: "UfRKLp1Tpt0",
   },
 ];
 
