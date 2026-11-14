@@ -484,7 +484,7 @@ export default function CourseCatalogue({ items }) {
 
         <div className="relative z-20 mx-auto w-full max-w-[1200px] px-4 sm:px-6 md:flex md:min-h-[480px] md:items-center lg:min-h-[540px]">
           <div className="courses-hero__inner relative !z-20 !m-0 !w-full !max-w-xl !px-0 !py-6 md:!w-[46%] md:!px-0 md:!py-8 lg:!py-10">
-            <h1 className="!text-3xl !leading-tight md:whitespace-nowrap lg:!text-4xl xl:!text-[2.6rem]">
+            <h1 className="sprint-hero-title md:whitespace-nowrap">
               <span>Tailored pathways</span>
               <span>for every career stage</span>
             </h1>

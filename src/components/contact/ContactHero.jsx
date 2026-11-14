@@ -53,7 +53,7 @@ export default function ContactHero() {
         </nav>
 
         <div className="contact-hero__copy">
-          <h1 id="contact-hero-title">
+          <h1 id="contact-hero-title" className="sprint-hero-title">
             Let&apos;s Build Your <span>Future</span> Together
           </h1>
 
