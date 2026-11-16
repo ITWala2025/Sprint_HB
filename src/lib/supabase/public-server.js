@@ -7,6 +7,11 @@ export function createPublicServerClient() {
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+  console.log("[supabase] public server config", {
+    urlConfigured: Boolean(supabaseUrl),
+    keyConfigured: Boolean(publishableKey),
+  });
+
   if (!supabaseUrl || !publishableKey) return null;
 
   return createClient(supabaseUrl, publishableKey, {
