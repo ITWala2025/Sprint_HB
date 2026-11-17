@@ -19,7 +19,6 @@ export const stats = [
 // Section 6.3 — Company and SME partners. Each entry maps to a logo in
 // public/images/home/; the two arrays render in the shared network carousel.
 
-
 // Section 6.3 — SME Leading Companies
 export const smeCompanies = [
   { id: "p1", name: "Accenture", logoUrl: "/images/home/accenture.svg" },
@@ -36,27 +35,50 @@ export const smeCompanies = [
   { id: "p19", name: "HCLTech", logoUrl: "/images/home/hcl.webp" },
   { id: "p20", name: "IQVIA", logoUrl: "/images/home/iqvia.webp" },
   { id: "p21", name: "Sitetracker", logoUrl: "/images/home/sitetracker.webp" },
-
-  
 ];
 
 export const partners = [
   { id: "p9", name: "Algocirrus", logoUrl: "/images/home/algocirrus.webp" },
-  { id: "p10", name: "Eyogi Gurukul", logoUrl: "/images/home/eyogi-gurukul.webp" },
+  {
+    id: "p10",
+    name: "Eyogi Gurukul",
+    logoUrl: "/images/home/eyogi-gurukul.webp",
+  },
   { id: "p12", name: "IT-Wala", logoUrl: "/images/home/it-wala.webp" },
 
-  { id: "p11", name: "Global Medtech Solutions", logoUrl: "/images/home/global-medtech-solutions.webp" },
+  {
+    id: "p11",
+    name: "Global Medtech Solutions",
+    logoUrl: "/images/home/global-medtech-solutions.webp",
+  },
   { id: "p13", name: "Kdadks", logoUrl: "/images/home/kdadks.webp" },
   { id: "p14", name: "Swavlamban", logoUrl: "/images/home/swavlamban.png" },
-  { id: "p15", name: "Vishal Creations", logoUrl: "/images/home/vishal-creations.webp" },
-  { id: "p16", name: "Zupharm Laboratories", logoUrl: "/images/home/zupharm-laboratories.webp" },
-  { id: "p22", name: "Tessellation Software", logoUrl: "/images/home/tessellation.webp" },
-  { id: "p23", name: "Tessellation Software", logoUrl: "/images/home/sirrexaai.png" },
-  { id: "p23", name: "Tessellation Software", logoUrl: "/images/home/punditas.png" },
-
-
+  {
+    id: "p15",
+    name: "Vishal Creations",
+    logoUrl: "/images/home/vishal-creations.webp",
+  },
+  {
+    id: "p16",
+    name: "Zupharm Laboratories",
+    logoUrl: "/images/home/zupharm-laboratories.webp",
+  },
+  {
+    id: "p22",
+    name: "Tessellation Software",
+    logoUrl: "/images/home/tessellation.webp",
+  },
+  {
+    id: "p23",
+    name: "Tessellation Software",
+    logoUrl: "/images/home/sirrexaai.png",
+  },
+  {
+    id: "p23",
+    name: "Tessellation Software",
+    logoUrl: "/images/home/punditas.png",
+  },
 ];
-
 
 // Section 6.4 — Featured Course / Program
 export const featuredProgramStages = [
@@ -142,28 +164,28 @@ export const videoTestimonials = [
     id: "v4",
     name: "Farhat Afreen",
     role: "BTech Grad | ITWala",
-    youtubeVideoId: "-KpL5HY2lkI",
+    youtubeVideoId: "J_wZKqwU-qE",
   },
-    
+
   {
     id: "v1",
     name: "Mayank Aman",
     role: "BTech Grad | TCS",
-    youtubeVideoId: "OiVbLbu5R2E",
+    youtubeVideoId: "LpNxTqIeeQw",
   },
 
   {
     id: "v2",
     name: "Sarvesh Chandra",
     role: "BTech Graduate",
-    youtubeVideoId: "_LQzOGZ7JYc",
+    youtubeVideoId: "F6c2FhZhLiw",
   },
 
   {
     id: "v3",
     name: "Raman Munda",
     role: "CS Student",
-    youtubeVideoId: "UfRKLp1Tpt0",
+    youtubeVideoId: "E4cluoF1JTk",
   },
 ];
 
@@ -190,32 +212,33 @@ export const textTestimonials = [
     role: "BTech Grad | Intern - UPTITUDE",
     photoUrl: "",
     quote:
-  "The structured courses and supportive trainers made programming easier to understand and improved my coding confidence."
+      "The structured courses and supportive trainers made programming easier to understand and improved my coding confidence.",
   },
   {
-  id: "t4",
-  name: "Arzoo Mehndi",
-  role: "BTech Graduate",
-  photoUrl: "",
-  quote:
-    "SPRINT helped me improve my technical knowledge through practical assignments, experienced mentors, and a professional learning environment focused on growth."},
-{
-  id: "t5",
-  name: "Tanisha Pandit",
-  role: "IT Grad | Intern - ITWala",
-  photoUrl: "",
-  quote:
-"The trainers are helpful, and the structured sessions made programming easier to understand."
-},{
-  id: "t6",
-  name: "Bunty Kumar",
-  role: "MCA Graduate",
-  photoUrl: "",
-  quote:
-    "The trainers are helpful, and the structured sessions made programming easier to understand.",
-},
+    id: "t4",
+    name: "Arzoo Mehndi",
+    role: "BTech Graduate",
+    photoUrl: "",
+    quote:
+      "SPRINT helped me improve my technical knowledge through practical assignments, experienced mentors, and a professional learning environment focused on growth.",
+  },
+  {
+    id: "t5",
+    name: "Tanisha Pandit",
+    role: "IT Grad | Intern - ITWala",
+    photoUrl: "",
+    quote:
+      "The trainers are helpful, and the structured sessions made programming easier to understand.",
+  },
+  {
+    id: "t6",
+    name: "Bunty Kumar",
+    role: "MCA Graduate",
+    photoUrl: "",
+    quote:
+      "The trainers are helpful, and the structured sessions made programming easier to understand.",
+  },
 ];
-
 
 // Section 6.8 — FAQs
 export const faqs = [
