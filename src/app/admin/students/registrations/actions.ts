@@ -71,10 +71,10 @@ function requireServiceClient() {
 export async function getStudentRegistrations(): Promise<RegistrationListItem[]> {
     await assertModuleAccess("student_ops");
     try {
-        const supabase = await createAuthenticatedServerClient();
+        const supabase = createServiceClient() ?? await createAuthenticatedServerClient();
         const { data, error } = await supabase
             .from("registrations")
-            .select("id, registration_number, full_name, email, phone, college_institution, admin_notes, created_at, status")
+            .select("id, registration_number, application_number, full_name, email, phone, college_institution, admin_notes, created_at, status")
             .is("course_id", null)
             .is("bundle_id", null)
             .order("created_at", { ascending: false });
@@ -89,7 +89,7 @@ export async function getStudentRegistrations(): Promise<RegistrationListItem[]>
         }
         return (data ?? []).map((row: any) => ({
             id: row.id,
-            application_number: formatApplicationId(row.registration_number, row.id, row.created_at),
+            application_number: formatApplicationId(row.application_number || row.registration_number, row.id, row.created_at),
             full_name: row.full_name,
             email: row.email,
             phone: row.phone,

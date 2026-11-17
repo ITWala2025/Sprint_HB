@@ -109,12 +109,33 @@ function CourseArt({ category }) {
   return <svg aria-hidden="true" viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full"><rect width="800" height="240" fill="#142a45" /><path d="M40 178C178 40 278 226 408 84s243-4 352-68" fill="none" stroke="#38bdf8" strokeWidth="20" opacity=".76" /><path d="M32 222C188 78 292 247 433 127S682 71 797 29" fill="none" stroke="#fb7185" strokeWidth="8" opacity=".92" /><circle cx="646" cy="179" r="27" fill="#fda4af" opacity=".85" /><circle cx="151" cy="58" r="13" fill="#c4b5fd" /></svg>;
 }
 
+function CourseThumbnail({ src, alt, category }) {
+  const [hasError, setHasError] = useState(false);
+  const cleanSrc = typeof src === "string" ? src.trim() : null;
+
+  if (!cleanSrc || hasError) {
+    return <CourseArt category={category} />;
+  }
+
+  return (
+    <Image
+      src={cleanSrc}
+      alt={alt || "Course thumbnail"}
+      fill
+      sizes="(min-width: 1024px) 26vw, (min-width: 640px) 45vw, 100vw"
+      className="object-cover"
+      unoptimized={cleanSrc.startsWith("http") ? true : undefined}
+      onError={() => setHasError(true)}
+    />
+  );
+}
+
 function CourseTile({ item, audience }) {
   const level = item.difficulty_level || item.difficulty || item.level || "Beginner";
   return (
     <article className="course-tile min-w-0">
-      <div className="course-tile__art">
-        {item.image?.startsWith("/") ? <Image src={item.image} alt="" fill sizes="(min-width: 1024px) 26vw, (min-width: 640px) 45vw, 100vw" className="object-cover" /> : item.image ? <div aria-hidden="true" className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(0deg, rgba(1,31,62,.18), rgba(1,31,62,.04)), url("${item.image}")` }} /> : <CourseArt category={item.category} />}
+      <div className="course-tile__art relative overflow-hidden">
+        <CourseThumbnail src={item.image || item.thumbnail_url} alt={item.title} category={item.category} />
 
         {item.kind !== "bundle" ? (
           <span className="course-tile__type">Course</span>
@@ -324,16 +345,26 @@ function FeaturedPrograms({ programs: signaturePrograms }) {
   );
 }
 
-export default function CourseCatalogue({ items }) {
+export default function CourseCatalogue({ items, initialLearningPaths }) {
   const supabase = useMemo(() => createClient(), []);
   const [catalogueItems, setCatalogueItems] = useState(items);
-  const [learningPaths, setLearningPaths] = useState(staticLearningPaths);
+  const [learningPaths, setLearningPaths] = useState(initialLearningPaths || staticLearningPaths);
   const [signaturePrograms, setSignaturePrograms] = useState(programs.map(toCatalogueProgram));
   const [audience, setAudience] = useState("student");
   const [query, setQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    setCatalogueItems(items);
+  }, [items]);
+
+  useEffect(() => {
+    if (initialLearningPaths) {
+      setLearningPaths(initialLearningPaths);
+    }
+  }, [initialLearningPaths]);
 
   const filterCategories = useMemo(
     () => [...new Set(catalogueItems.filter((item) => item.kind === "course").map((item) => item.category).filter(Boolean))].sort(),
@@ -360,7 +391,7 @@ export default function CourseCatalogue({ items }) {
         ? items.filter((item) => item.kind === "course")
         : courseResult.data.map(normalizeDatabaseCourse);
       const resolvedPaths = learningPathResult.error || !learningPathResult.data?.length
-        ? staticLearningPaths
+        ? (initialLearningPaths || staticLearningPaths)
         : learningPathResult.data.map(normalizeLearningPath);
       const resolvedProgramsAndBundles = bundleResult.error || !bundleResult.data?.length
         ? [...items.filter((item) => item.kind === "bundle"), ...programs.map(toCatalogueProgram)]

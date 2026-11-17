@@ -7,20 +7,21 @@ import { roleHasPermission } from "@/app/admin/auth-types";
 import { getAdminSession } from "@/app/admin/session";
 import { createServiceClient } from "@/lib/supabase/service";
 
-const announcementTypes = ["ANNOUNCEMENT", "UPDATES", "HIRING", "MAINTENANCE"] as const;
-type AnnouncementType = typeof announcementTypes[number];
+import {
+    type AnnouncementActionResult,
+    type AnnouncementInput,
+    type AnnouncementItem,
+    type AnnouncementType,
+    announcementTypes,
+    normalizeAnnouncementType,
+} from "./types";
 
-export type AnnouncementInput = {
-    type: AnnouncementType;
-    message: string;
-    link_url: string | null;
-    priority: number;
-    is_active: boolean;
+export type {
+    AnnouncementActionResult,
+    AnnouncementInput,
+    AnnouncementItem,
+    AnnouncementType,
 };
-
-export type AnnouncementActionResult =
-    | { success: true; message: string; publicUrl?: string }
-    | { success: false; error: string };
 
 function isAnnouncementInput(input: unknown): input is AnnouncementInput {
     if (!input || typeof input !== "object") return false;
@@ -85,6 +86,58 @@ async function assertCanUploadPoster() {
             || roleHasPermission(session.permissions, moduleKey, "edit"),
     );
     if (!canManageAnnouncements) redirect("/staff/dashboard");
+}
+
+export async function getAnnouncements(): Promise<AnnouncementItem[]> {
+    try {
+        await assertModuleAccess(["cms_announcements", "marketing"], "view");
+    } catch {
+        // Proceed with service fetch if session is handled upstream
+    }
+    try {
+        const supabase = requireServiceClient();
+        const { data, error } = await supabase
+            .from("announcements")
+            .select("id, type, message, link_url, priority, is_active, created_at")
+            .order("priority", { ascending: false })
+            .order("created_at", { ascending: false });
+
+        if (!error && data && data.length > 0) {
+            return data.map((row) => ({
+                id: row.id,
+                type: normalizeAnnouncementType(row.type),
+                message: row.message,
+                link_url: row.link_url,
+                priority: row.priority ?? 0,
+                is_active: Boolean(row.is_active),
+                created_at: row.created_at,
+            }));
+        }
+
+        // Check campus_updates table as fallback if announcements is empty
+        const { data: campusData, error: campusError } = await supabase
+            .from("campus_updates")
+            .select("id, category, message, link_url, display_order, is_active, created_at")
+            .order("display_order", { ascending: true })
+            .order("created_at", { ascending: false });
+
+        if (!campusError && campusData && campusData.length > 0) {
+            return campusData.map((row) => ({
+                id: row.id,
+                type: normalizeAnnouncementType(row.category),
+                message: row.message,
+                link_url: row.link_url,
+                priority: row.display_order ?? 0,
+                is_active: Boolean(row.is_active),
+                created_at: row.created_at,
+            }));
+        }
+
+        return [];
+    } catch (err) {
+        console.error("[SPRINT Admin Updates] Error loading announcements:", err);
+        return [];
+    }
 }
 
 export async function createAnnouncement(

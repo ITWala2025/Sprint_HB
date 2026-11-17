@@ -46,10 +46,11 @@ function ProgramDetailPage({ item }) {
 
         <div className="course-detail-hero__art">
           <Image
-            src={item.image || "/images/courses/abstract-code.svg"}
+            src={typeof item.image === "string" ? item.image.trim() : "/images/courses/abstract-code.svg"}
             alt=""
             fill
             priority
+            unoptimized={typeof item.image === "string" && item.image.trim().startsWith("http") ? true : undefined}
             className="object-cover"
           />
         </div>
@@ -116,7 +117,14 @@ function FlagshipDetailPage({ item }) {
           </Link>
         </div>
         <div className="course-detail-hero__art">
-          <Image src={item.image || "/images/courses/abstract-code.svg"} alt="" fill priority className="object-cover" />
+          <Image
+            src={typeof item.image === "string" ? item.image.trim() : "/images/courses/abstract-code.svg"}
+            alt=""
+            fill
+            priority
+            unoptimized={typeof item.image === "string" && item.image.trim().startsWith("http") ? true : undefined}
+            className="object-cover"
+          />
         </div>
       </section>
 
@@ -237,10 +245,11 @@ export default async function DetailPage({ item, searchParams }) {
 
         <div className="course-detail-hero__art">
           <Image
-            src={item.image || "/images/courses/abstract-code.svg"}
+            src={typeof item.image === "string" ? item.image.trim() : "/images/courses/abstract-code.svg"}
             alt=""
             fill
             priority
+            unoptimized={typeof item.image === "string" && item.image.trim().startsWith("http") ? true : undefined}
             className="object-cover"
           />
         </div>

@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, Loader2, Save, Shield, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { saveRoleAction } from "@/app/admin/roles/actions";
 import { capabilityNames, colors, countPermissions, emptyPermissions, moduleCategories, PermissionMap, Role } from "./types";
 
 type RoleModalProps = { role: Role | null; onClose: () => void; onSaved: (role: Role) => void };
@@ -47,10 +48,25 @@ export default function RoleModal({ role, onClose, onSaved }: RoleModalProps) {
         event.preventDefault();
         setIsSaving(true); setError("");
         const payload = { name: name.trim(), slug: slug.trim(), description: description.trim(), color, permissions, is_active: role?.is_active ?? true, is_system: role?.is_system ?? false };
-        const query = role ? supabase.from("roles").update(payload).eq("id", role.id).select().single() : supabase.from("roles").insert(payload).select().single();
-        const { data, error: saveError } = await query;
-        if (saveError || !data) { setError(saveError?.message ?? "Unable to save this role."); setIsSaving(false); return; }
-        onSaved({ ...role, ...data, assigned_count: role?.assigned_count ?? 0 } as Role);
+        try {
+            const result = await saveRoleAction(payload, role?.id);
+            if (result.success && result.data) {
+                onSaved({ ...role, ...result.data, assigned_count: role?.assigned_count ?? 0 } as Role);
+                return;
+            }
+            // Fallback to client query if server action had an error
+            const query = role ? supabase.from("roles").update(payload).eq("id", role.id).select().single() : supabase.from("roles").insert(payload).select().single();
+            const { data, error: saveError } = await query;
+            if (saveError || !data) {
+                setError(saveError?.message ?? result.error ?? "Unable to save this role.");
+                setIsSaving(false);
+                return;
+            }
+            onSaved({ ...role, ...data, assigned_count: role?.assigned_count ?? 0 } as Role);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unable to save this role.");
+            setIsSaving(false);
+        }
     }
 
     return <div className="fixed inset-0 z-[100] flex items-end justify-center bg-brand-navy/50 p-0 backdrop-blur-sm sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="role-modal-title">

@@ -11,6 +11,20 @@ import {
     type LearningPathStage, type ProgramRoadmapStage, type SyllabusModule,
     generateSlug, normalizeBundle, normalizeLearningPath,
 } from "@/lib/course-utils";
+import {
+    deleteBundleAction,
+    deleteCourseAction,
+    deleteLearningPathAction,
+    getBundlesAction,
+    getCoursesAction,
+    getLearningPathsAction,
+    saveBundleAction,
+    saveCourseAction,
+    saveLearningPathAction,
+    toggleBundleFieldAction,
+    toggleCourseFieldAction,
+    toggleLearningPathPublishedAction,
+} from "./actions";
 
 type CoursePayload = Omit<CourseItem, "id">;
 type BundlePayload = Omit<BundleItem, "id">;
@@ -121,14 +135,32 @@ export default function CourseManagementPage() {
         let active = true;
         async function loadCourses() {
             setIsLoading(true);
-            const { data, error } = await supabase.from("courses").select("*").order("title");
-            if (!active) return;
-            if (error) {
-                setNotice({ type: "error", message: `Courses could not be loaded: ${error.message}` });
-            } else {
-                setCourses(((data ?? []) as CourseItem[]).map(normalizeCourse));
+            try {
+                const { data, error } = await supabase.from("courses").select("*").order("title");
+                if (!active) return;
+                if (!error && data && data.length > 0) {
+                    setCourses(data.map((c) => normalizeCourse(c as CourseItem)));
+                    setIsLoading(false);
+                    return;
+                }
+                const res = await getCoursesAction();
+                if (!active) return;
+                if (!res.error && res.courses.length > 0) {
+                    setCourses(res.courses.map(normalizeCourse));
+                    setIsLoading(false);
+                    return;
+                }
+                if (error && (!res.courses || res.courses.length === 0)) {
+                    setNotice({ type: "error", message: `Courses could not be loaded: ${error.message}` });
+                } else {
+                    setCourses(((data && data.length > 0 ? data : res.courses) ?? []).map((c) => normalizeCourse(c as CourseItem)));
+                }
+            } catch (err) {
+                if (!active) return;
+                setNotice({ type: "error", message: `Courses could not be loaded: ${err instanceof Error ? err.message : String(err)}` });
+            } finally {
+                if (active) setIsLoading(false);
             }
-            setIsLoading(false);
         }
         void loadCourses();
         return () => { active = false; };
@@ -139,11 +171,32 @@ export default function CourseManagementPage() {
         let active = true;
         async function loadBundles() {
             setIsLoading(true);
-            const { data, error } = await supabase.from("course_bundles").select("*").order("created_at", { ascending: false });
-            if (!active) return;
-            if (error) setNotice({ type: "error", message: `Flagship programs could not be loaded: ${error.message}` });
-            else setBundles(((data ?? []) as (Partial<BundleItem> & Record<string, unknown>)[]).map(normalizeBundle));
-            setIsLoading(false);
+            try {
+                const { data, error } = await supabase.from("course_bundles").select("*").order("created_at", { ascending: false });
+                if (!active) return;
+                if (!error && data && data.length > 0) {
+                    setBundles(data.map((b) => normalizeBundle(b as any)));
+                    setIsLoading(false);
+                    return;
+                }
+                const res = await getBundlesAction();
+                if (!active) return;
+                if (!res.error && res.bundles.length > 0) {
+                    setBundles(res.bundles);
+                    setIsLoading(false);
+                    return;
+                }
+                if (error && (!res.bundles || res.bundles.length === 0)) {
+                    setNotice({ type: "error", message: `Flagship programs could not be loaded: ${error.message}` });
+                } else {
+                    setBundles(((data && data.length > 0 ? data : res.bundles) ?? []).map((b) => normalizeBundle(b as any)));
+                }
+            } catch (err) {
+                if (!active) return;
+                setNotice({ type: "error", message: `Flagship programs could not be loaded: ${err instanceof Error ? err.message : String(err)}` });
+            } finally {
+                if (active) setIsLoading(false);
+            }
         }
         void loadBundles();
         return () => { active = false; };
@@ -154,11 +207,32 @@ export default function CourseManagementPage() {
         let active = true;
         async function fetchLearningPaths() {
             setIsLoading(true);
-            const { data, error } = await supabase.from("learning_paths").select("*").order("title");
-            if (!active) return;
-            if (error) setNotice({ type: "error", message: `Learning paths could not be loaded: ${error.message}` });
-            else setLearningPaths(((data ?? []) as (Partial<LearningPathItem> & Record<string, unknown>)[]).map(normalizeLearningPath));
-            setIsLoading(false);
+            try {
+                const { data, error } = await supabase.from("learning_paths").select("*").order("title");
+                if (!active) return;
+                if (!error && data && data.length > 0) {
+                    setLearningPaths(data.map((p) => normalizeLearningPath(p as any)));
+                    setIsLoading(false);
+                    return;
+                }
+                const res = await getLearningPathsAction();
+                if (!active) return;
+                if (!res.error && res.paths.length > 0) {
+                    setLearningPaths(res.paths);
+                    setIsLoading(false);
+                    return;
+                }
+                if (error && (!res.paths || res.paths.length === 0)) {
+                    setNotice({ type: "error", message: `Learning paths could not be loaded: ${error.message}` });
+                } else {
+                    setLearningPaths(((data && data.length > 0 ? data : res.paths) ?? []).map((p) => normalizeLearningPath(p as any)));
+                }
+            } catch (err) {
+                if (!active) return;
+                setNotice({ type: "error", message: `Learning paths could not be loaded: ${err instanceof Error ? err.message : String(err)}` });
+            } finally {
+                if (active) setIsLoading(false);
+            }
         }
         void fetchLearningPaths();
         return () => { active = false; };
@@ -191,32 +265,47 @@ export default function CourseManagementPage() {
         }
         setSavingId(id ?? "new");
         setNotice(null);
-        const audience = payload.audience_type || payload.audience || "undergraduate";
-        const normalizedPayload: CoursePayload = {
-            ...payload,
-            audience,
-            audience_type: audience,
-            difficulty_level: payload.difficulty_level || "Beginner",
-        };
-        const query = id
-            ? supabase.from("courses").update(normalizedPayload).eq("id", id).select("*").single()
-            : supabase.from("courses").insert(normalizedPayload).select("*").single();
-        const { data, error } = await query;
-        setSavingId(null);
-        if (error) {
-            const constraintHelp = error.message.includes("courses_audience")
-                ? " (If saving IT/Non-IT audiences fails, run 'src/Supabase/Course IT and Non-IT Audience Migration.sql' in Supabase to update check constraints)"
-                : "";
-            setNotice({ type: "error", message: `Course could not be saved: ${error.message}${constraintHelp}` });
+        try {
+            const audience = payload.audience_type || payload.audience || "undergraduate";
+            const normalizedPayload: CoursePayload = {
+                ...payload,
+                audience,
+                audience_type: audience,
+                difficulty_level: payload.difficulty_level || "Beginner",
+            };
+            const query = id
+                ? supabase.from("courses").update(normalizedPayload).eq("id", id).select("*").single()
+                : supabase.from("courses").insert(normalizedPayload).select("*").single();
+            const { data, error } = await query;
+            if (!error && data) {
+                setSavingId(null);
+                const saved = normalizeCourse(data as CourseItem);
+                setCourses((current) => id
+                    ? current.map((course) => course.id === id ? saved : course)
+                    : [...current, saved].sort((first, second) => first.title.localeCompare(second.title)));
+                setEditingCourse(undefined);
+                setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
+                return true;
+            }
+
+            const res = await saveCourseAction(payload, id);
+            setSavingId(null);
+            if (!res.success || !res.data) {
+                setNotice({ type: "error", message: res.error || error?.message || "Course could not be saved." });
+                return false;
+            }
+            const saved = res.data;
+            setCourses((current) => id
+                ? current.map((course) => course.id === id ? saved : course)
+                : [...current, saved].sort((first, second) => first.title.localeCompare(second.title)));
+            setEditingCourse(undefined);
+            setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
+            return true;
+        } catch (err) {
+            setSavingId(null);
+            setNotice({ type: "error", message: `Course could not be saved: ${err instanceof Error ? err.message : String(err)}` });
             return false;
         }
-        const saved = normalizeCourse(data as CourseItem);
-        setCourses((current) => id
-            ? current.map((course) => course.id === id ? saved : course)
-            : [...current, saved].sort((first, second) => first.title.localeCompare(second.title)));
-        setEditingCourse(undefined);
-        setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
-        return true;
     }
 
     async function saveBundle(payload: BundlePayload, id?: string) {
@@ -227,32 +316,50 @@ export default function CourseManagementPage() {
         }
         setSavingId(id ?? "new-bundle");
         setNotice(null);
-        const audience = payload.audience || payload.audience_type || payload.target_audience || "undergraduate";
-        const upsertPayload = {
-            ...payload,
-            audience,
-            audience_type: audience,
-            target_audience: audience,
-            program_type: payload.program_type === "signature" ? "signature" : "bundle",
-            delivery_method: payload.delivery_method || payload.training_mode || "Hybrid",
-            training_mode: payload.training_mode || payload.delivery_method || "Hybrid",
-            designed_for: payload.designed_for || payload.eligibility || "",
-            eligibility: payload.eligibility || payload.designed_for || "",
-            ...(id ? { id } : {}),
-        };
-        const { data, error } = await supabase.from("course_bundles").upsert(upsertPayload).select("*").single();
-        setSavingId(null);
-        if (error) {
-            setNotice({ type: "error", message: `Flagship program could not be saved: ${error.message}` });
+        try {
+            const audience = payload.audience || payload.audience_type || payload.target_audience || "undergraduate";
+            const upsertPayload = {
+                ...payload,
+                audience,
+                audience_type: audience,
+                target_audience: audience,
+                program_type: payload.program_type === "signature" ? "signature" : "bundle",
+                delivery_method: payload.delivery_method || payload.training_mode || "Hybrid",
+                training_mode: payload.training_mode || payload.delivery_method || "Hybrid",
+                designed_for: payload.designed_for || payload.eligibility || "",
+                eligibility: payload.eligibility || payload.designed_for || "",
+                ...(id ? { id } : {}),
+            };
+            const { data, error } = await supabase.from("course_bundles").upsert(upsertPayload).select("*").single();
+            if (!error && data) {
+                setSavingId(null);
+                const saved = normalizeBundle(data as Partial<BundleItem> & Record<string, unknown>);
+                setBundles((current) => id
+                    ? current.map((bundle) => bundle.id === id ? saved : bundle)
+                    : [saved, ...current]);
+                setEditingBundle(undefined);
+                setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
+                return true;
+            }
+
+            const res = await saveBundleAction(payload, id);
+            setSavingId(null);
+            if (!res.success || !res.data) {
+                setNotice({ type: "error", message: res.error || error?.message || "Flagship program could not be saved." });
+                return false;
+            }
+            const saved = res.data;
+            setBundles((current) => id
+                ? current.map((bundle) => bundle.id === id ? saved : bundle)
+                : [saved, ...current]);
+            setEditingBundle(undefined);
+            setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
+            return true;
+        } catch (err) {
+            setSavingId(null);
+            setNotice({ type: "error", message: `Flagship program could not be saved: ${err instanceof Error ? err.message : String(err)}` });
             return false;
         }
-        const saved = normalizeBundle(data as Partial<BundleItem> & Record<string, unknown>);
-        setBundles((current) => id
-            ? current.map((bundle) => bundle.id === id ? saved : bundle)
-            : [saved, ...current]);
-        setEditingBundle(undefined);
-        setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
-        return true;
     }
 
     async function saveLearningPath(payload: LearningPathPayload, id?: string) {
@@ -263,28 +370,47 @@ export default function CourseManagementPage() {
         }
         setSavingId(id ?? "new-learning-path");
         setNotice(null);
-        const normalizedPayload = {
-            ...payload,
-            slug: payload.slug || generateSlug(payload.title),
-            eyebrow: payload.eyebrow.trim() || "CAREER PATHWAY",
-            total_hours: payload.stages.reduce((total, stage) => total + (Number.parseInt(stage.hours, 10) || 0), 0),
-        };
-        const query = id
-            ? supabase.from("learning_paths").update(normalizedPayload).eq("id", id).select("*").single()
-            : supabase.from("learning_paths").insert(normalizedPayload).select("*").single();
-        const { data, error } = await query;
-        setSavingId(null);
-        if (error) {
-            setNotice({ type: "error", message: `Learning path could not be saved: ${error.message}` });
+        try {
+            const normalizedPayload = {
+                ...payload,
+                slug: payload.slug || generateSlug(payload.title),
+                eyebrow: payload.eyebrow.trim() || "CAREER PATHWAY",
+                target_audience: payload.target_audience || "undergraduate",
+                total_hours: payload.stages.reduce((total, stage) => total + (Number.parseInt(stage.hours, 10) || 0), 0),
+            };
+            const query = id
+                ? supabase.from("learning_paths").update(normalizedPayload).eq("id", id).select("*").single()
+                : supabase.from("learning_paths").insert(normalizedPayload).select("*").single();
+            const { data, error } = await query;
+            if (!error && data) {
+                setSavingId(null);
+                const saved = normalizeLearningPath(data as Partial<LearningPathItem> & Record<string, unknown>);
+                setLearningPaths((current) => id
+                    ? current.map((path) => path.id === id ? saved : path)
+                    : [...current, saved].sort((first, second) => first.title.localeCompare(second.title)));
+                setEditingLearningPath(undefined);
+                setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
+                return true;
+            }
+
+            const res = await saveLearningPathAction(payload, id);
+            setSavingId(null);
+            if (!res.success || !res.data) {
+                setNotice({ type: "error", message: res.error || error?.message || "Learning path could not be saved." });
+                return false;
+            }
+            const saved = res.data;
+            setLearningPaths((current) => id
+                ? current.map((path) => path.id === id ? saved : path)
+                : [...current, saved].sort((first, second) => first.title.localeCompare(second.title)));
+            setEditingLearningPath(undefined);
+            setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
+            return true;
+        } catch (err) {
+            setSavingId(null);
+            setNotice({ type: "error", message: `Learning path could not be saved: ${err instanceof Error ? err.message : String(err)}` });
             return false;
         }
-        const saved = normalizeLearningPath(data as Partial<LearningPathItem> & Record<string, unknown>);
-        setLearningPaths((current) => id
-            ? current.map((path) => path.id === id ? saved : path)
-            : [...current, saved].sort((first, second) => first.title.localeCompare(second.title)));
-        setEditingLearningPath(undefined);
-        setNotice({ type: "success", message: `${saved.title} ${id ? "updated" : "created"} successfully.` });
-        return true;
     }
 
     async function toggleLearningPathPublished(path: LearningPathItem) {
@@ -294,12 +420,16 @@ export default function CourseManagementPage() {
         }
         setSavingId(path.id);
         const isPublished = !path.is_published;
-        const { error } = await supabase.from("learning_paths").update({ is_published: isPublished }).eq("id", path.id);
-        setSavingId(null);
-        if (error) {
-            setNotice({ type: "error", message: `Learning path visibility could not be changed: ${error.message}` });
-            return;
+        const res = await toggleLearningPathPublishedAction(path.id, isPublished);
+        if (!res.success) {
+            const { error } = await supabase.from("learning_paths").update({ is_published: isPublished }).eq("id", path.id);
+            if (error) {
+                setSavingId(null);
+                setNotice({ type: "error", message: `Learning path visibility could not be changed: ${error.message}` });
+                return;
+            }
         }
+        setSavingId(null);
         setLearningPaths((current) => current.map((item) => item.id === path.id ? { ...item, is_published: isPublished } : item));
         setNotice({ type: "success", message: `${path.title} ${isPublished ? "published" : "unpublished"}.` });
     }
@@ -311,12 +441,16 @@ export default function CourseManagementPage() {
         }
         if (!window.confirm(`Delete “${path.title}”? This cannot be undone.`)) return;
         setSavingId(path.id);
-        const { error } = await supabase.from("learning_paths").delete().eq("id", path.id);
-        setSavingId(null);
-        if (error) {
-            setNotice({ type: "error", message: `Learning path could not be deleted: ${error.message}` });
-            return;
+        const res = await deleteLearningPathAction(path.id);
+        if (!res.success) {
+            const { error } = await supabase.from("learning_paths").delete().eq("id", path.id);
+            if (error) {
+                setSavingId(null);
+                setNotice({ type: "error", message: `Learning path could not be deleted: ${error.message}` });
+                return;
+            }
         }
+        setSavingId(null);
         setLearningPaths((current) => current.filter((item) => item.id !== path.id));
         setNotice({ type: "success", message: `${path.title} deleted.` });
     }
@@ -328,12 +462,16 @@ export default function CourseManagementPage() {
         }
         if (!window.confirm(`Delete “${bundle.title}”? This cannot be undone.`)) return;
         setSavingId(bundle.id);
-        const { error } = await supabase.from("course_bundles").delete().eq("id", bundle.id);
-        setSavingId(null);
-        if (error) {
-            setNotice({ type: "error", message: `Flagship program could not be deleted: ${error.message}` });
-            return;
+        const res = await deleteBundleAction(bundle.id);
+        if (!res.success) {
+            const { error } = await supabase.from("course_bundles").delete().eq("id", bundle.id);
+            if (error) {
+                setSavingId(null);
+                setNotice({ type: "error", message: `Flagship program could not be deleted: ${error.message}` });
+                return;
+            }
         }
+        setSavingId(null);
         setBundles((current) => current.filter((item) => item.id !== bundle.id));
         setNotice({ type: "success", message: `${bundle.title} deleted.` });
     }
@@ -345,12 +483,16 @@ export default function CourseManagementPage() {
         }
         setSavingId(bundle.id);
         const nextValue = !bundle[field];
-        const { error } = await supabase.from("course_bundles").update({ [field]: nextValue }).eq("id", bundle.id);
-        setSavingId(null);
-        if (error) {
-            setNotice({ type: "error", message: `Program status could not be changed: ${error.message}` });
-            return;
+        const res = await toggleBundleFieldAction(bundle.id, field, nextValue);
+        if (!res.success) {
+            const { error } = await supabase.from("course_bundles").update({ [field]: nextValue }).eq("id", bundle.id);
+            if (error) {
+                setSavingId(null);
+                setNotice({ type: "error", message: `Program status could not be changed: ${error.message}` });
+                return;
+            }
         }
+        setSavingId(null);
         setBundles((current) => current.map((item) => item.id === bundle.id ? { ...item, [field]: nextValue } : item));
     }
 
@@ -362,11 +504,15 @@ export default function CourseManagementPage() {
         setSavingId(course.id);
         const nextValue = !course.is_featured;
         const { error } = await supabase.from("courses").update({ is_featured: nextValue }).eq("id", course.id);
-        setSavingId(null);
         if (error) {
-            setNotice({ type: "error", message: `Featured status could not be changed: ${error.message}` });
-            return;
+            const res = await toggleCourseFieldAction(course.id, "is_featured", nextValue);
+            if (!res.success) {
+                setSavingId(null);
+                setNotice({ type: "error", message: `Featured status could not be changed: ${res.error || error.message}` });
+                return;
+            }
         }
+        setSavingId(null);
         setCourses((current) => current.map((item) => item.id === course.id ? { ...item, is_featured: nextValue } : item));
         setNotice({ type: "success", message: `${course.title} ${nextValue ? "featured" : "removed from featured programs"}.` });
     }
@@ -379,11 +525,15 @@ export default function CourseManagementPage() {
         setSavingId(course.id);
         const nextValue = !course.is_published;
         const { error } = await supabase.from("courses").update({ is_published: nextValue }).eq("id", course.id);
-        setSavingId(null);
         if (error) {
-            setNotice({ type: "error", message: `Visibility could not be changed: ${error.message}` });
-            return;
+            const res = await toggleCourseFieldAction(course.id, "is_published", nextValue);
+            if (!res.success) {
+                setSavingId(null);
+                setNotice({ type: "error", message: `Visibility could not be changed: ${res.error || error.message}` });
+                return;
+            }
         }
+        setSavingId(null);
         setCourses((current) => current.map((item) => item.id === course.id ? { ...item, is_published: nextValue } : item));
         setNotice({ type: "success", message: `${course.title} ${nextValue ? "published" : "unpublished"}.` });
     }
@@ -396,11 +546,15 @@ export default function CourseManagementPage() {
         if (!window.confirm(`Delete “${course.title}”? This cannot be undone.`)) return;
         setSavingId(course.id);
         const { error } = await supabase.from("courses").delete().eq("id", course.id);
-        setSavingId(null);
         if (error) {
-            setNotice({ type: "error", message: `Course could not be deleted: ${error.message}` });
-            return;
+            const res = await deleteCourseAction(course.id);
+            if (!res.success) {
+                setSavingId(null);
+                setNotice({ type: "error", message: `Course could not be deleted: ${res.error || error.message}` });
+                return;
+            }
         }
+        setSavingId(null);
         setCourses((current) => current.filter((item) => item.id !== course.id));
         setNotice({ type: "success", message: `${course.title} deleted.` });
     }

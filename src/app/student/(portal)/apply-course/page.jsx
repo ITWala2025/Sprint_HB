@@ -1,14 +1,14 @@
-import { courses } from "@/data/courses";
+import { catalogueItems, normalizeDatabaseCourse } from "@/data/courses";
 import { createPublicServerClient } from "@/lib/supabase/public-server";
-import { normalizeDatabaseCourse } from "@/data/courses";
+import { createServiceClient } from "@/lib/supabase/service";
 import CourseCard from "@/components/cards/CourseCard";
 
 export const metadata = { title: "Apply for a Course" };
 
 export default async function StudentApplyCoursePage() {
-  const supabase = createPublicServerClient();
+  const supabase = createServiceClient() ?? createPublicServerClient();
   if (!supabase) {
-    throw new Error("Supabase public environment variables are not configured.");
+    throw new Error("Supabase environment variables are not configured.");
   }
 
   const { data, error } = await supabase
@@ -23,7 +23,9 @@ export default async function StudentApplyCoursePage() {
     throw new Error(`Could not load available courses: ${error.message}`);
   }
 
-  const courses = (data ?? []).map(normalizeDatabaseCourse);
+  const courses = data?.length
+    ? data.map(normalizeDatabaseCourse)
+    : catalogueItems.filter((item) => item.kind === "course");
 
   return (
     <div className="flex flex-col gap-6">

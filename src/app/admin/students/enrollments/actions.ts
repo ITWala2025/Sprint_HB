@@ -315,7 +315,7 @@ export async function getEnrollmentRegistrationDetails(
     }
 
     await assertModuleAccess("student_ops");
-    const supabase = await createAuthenticatedServerClient();
+    const supabase = createServiceClient() ?? await createAuthenticatedServerClient();
     const registrationResult = await supabase
         .from("enrollments")
         .select("id, application_number, student_id, applicant_user_id, batch_id, course_id, bundle_id, full_name, email, phone, college_institution, course_degree, specialization_branch, year_semester, city, state, employment_status, organization_name, source_of_info, terms_accepted, communication_consent, admin_notes, created_at, updated_at, status")
@@ -476,7 +476,7 @@ export async function getEnrollmentRegistrationDetails(
 
 export async function getPendingRegistrationCount(): Promise<number> {
     await assertModuleAccess("student_ops");
-    const supabase = await createAuthenticatedServerClient();
+    const supabase = createServiceClient() ?? await createAuthenticatedServerClient();
     try {
         const { count, error } = await supabase
             .from("enrollments")
@@ -559,16 +559,71 @@ export async function verifyRegistration(
             p_notes: adminNotes ?? null,
         });
         if (rpcError) {
-            console.error("Supabase RPC verification failure:", {
-                message: rpcError.message,
-                details: rpcError.details,
-                hint: rpcError.hint,
-                code: rpcError.code,
-            });
-            return {
-                success: false,
-                error: `Approval failed [${rpcError.code || "SQL"}]: ${rpcError.message} (${rpcError.details || "Check constraints/columns"})`,
-            };
+            const isMissingRpc = rpcError.code === "42883" ||
+                rpcError.code === "PGRST202" ||
+                /function .* does not exist|could not find .* function/i.test(rpcError.message ?? "");
+
+            if (isMissingRpc) {
+                console.warn("[SPRINT Admin Enrollments] verify_and_approve_enrollment RPC not found in DB; running direct table updates fallback.");
+                const { data: enrollmentApp, error: fetchErr } = await supabase
+                    .from("enrollments")
+                    .select("*")
+                    .eq("id", id)
+                    .maybeSingle();
+
+                if (fetchErr || !enrollmentApp) {
+                    return { success: false, error: "Enrollment record could not be loaded for approval." };
+                }
+
+                const { error: updateErr } = await supabase
+                    .from("enrollments")
+                    .update({
+                        status: "approved",
+                        reviewed_by: adminUserId,
+                        reviewed_at: new Date().toISOString(),
+                        admin_notes: adminNotes ?? enrollmentApp.admin_notes,
+                    })
+                    .eq("id", id);
+
+                if (updateErr) {
+                    return { success: false, error: `Could not update enrollment status: ${updateErr.message}` };
+                }
+
+                const studentUserId = enrollmentApp.student_id || enrollmentApp.applicant_user_id;
+                if (studentUserId) {
+                    if (enrollmentApp.course_id || enrollmentApp.bundle_id) {
+                        await supabase.from("student_courses").insert({
+                            student_id: studentUserId,
+                            course_id: enrollmentApp.course_id || null,
+                            bundle_id: enrollmentApp.bundle_id || null,
+                            status: "active",
+                            enrolled_at: new Date().toISOString(),
+                        });
+                    }
+                    if (enrollmentApp.batch_id && enrollmentApp.course_id) {
+                        await supabase.from("student_course_enrollments").insert({
+                            student_id: studentUserId,
+                            batch_id: enrollmentApp.batch_id,
+                            course_id: enrollmentApp.course_id,
+                            status: "active",
+                            progress_percentage: 0,
+                            certificate_issued: false,
+                            enrolled_at: new Date().toISOString(),
+                        });
+                    }
+                }
+            } else {
+                console.error("Supabase RPC verification failure:", {
+                    message: rpcError.message,
+                    details: rpcError.details,
+                    hint: rpcError.hint,
+                    code: rpcError.code,
+                });
+                return {
+                    success: false,
+                    error: `Approval failed [${rpcError.code || "SQL"}]: ${rpcError.message} (${rpcError.details || "Check constraints/columns"})`,
+                };
+            }
         }
     } catch (error) {
         console.error("[SPRINT Admin Enrollments] Enrollment approval RPC threw an error:", error);

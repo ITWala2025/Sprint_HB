@@ -21,6 +21,7 @@ async function findCourse(slug) {
     if (data) {
       if (!data.is_published) return null;
       const audience = data.audience_type || data.audience || "undergraduate";
+      const cleanImage = typeof data.thumbnail_url === "string" ? data.thumbnail_url.trim() : null;
       return {
         kind: "course",
         id: data.id,
@@ -45,7 +46,8 @@ async function findCourse(slug) {
             description: data.description || "",
             duration: data.duration || "",
           }),
-        image: data.thumbnail_url || "/images/courses/abstract-code.svg",
+        image: cleanImage || "/images/courses/abstract-code.svg",
+        thumbnail_url: cleanImage || null,
         audience,
         certificate: Boolean(data.certificate_included),
       };

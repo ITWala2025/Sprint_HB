@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createServerClient } from "@supabase/ssr";
 import { assertModuleAccess, canAccessAdminRoute, roleHasPermission, type AdminPermissionMap } from "@/app/admin/authorization";
 import { getAdminSession } from "@/app/admin/session";
+import { createServiceClient } from "@/lib/supabase/service";
 import UserDirectoryTable, { type DirectoryRole, type DirectoryUser } from "@/components/admin/users/UserDirectoryTable";
 
 export const metadata: Metadata = {
@@ -55,13 +56,16 @@ export default async function AdminUsersPage() {
         roleHasPermission(session.permissions, "user_management", "delete") ||
         roleHasPermission(session.permissions, "access_control", "delete");
 
+    const serviceClient = createServiceClient();
+    const queryClient = serviceClient ?? supabase;
+
     const [{ data: profiles, error: profilesError }, { data: roleRows, error: rolesError }] = await Promise.all([
-        supabase
+        queryClient
             .from("profiles")
             .select("id, full_name, email, role, role_id, is_active, must_change_password, first_login, avatar_url, roles(id, name, color)")
             .neq("role", "student")
             .order("full_name"),
-        supabase
+        queryClient
             .from("roles")
             .select("id, name, slug, description, permissions, is_active, is_system, color")
             .eq("is_active", true)

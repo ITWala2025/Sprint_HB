@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { formatApplicationId } from "@/lib/id-utils";
+import { createServiceClient } from "@/lib/supabase/service";
+import { catalogueItems } from "@/data/courses";
 
 export const metadata = { title: "My Course" };
 
@@ -58,7 +60,9 @@ export default async function StudentMyCoursePage({ searchParams }) {
     redirect("/student/login");
   }
 
-  const { data: profile, error: profileError } = await supabase
+  const db = createServiceClient() ?? supabase;
+
+  const { data: profile, error: profileError } = await db
     .from("profiles")
     .select("role, status")
     .eq("id", authData.user.id)
@@ -71,15 +75,17 @@ export default async function StudentMyCoursePage({ searchParams }) {
     redirect("/student/login");
   }
 
+  const enrollmentFilter = authData.user.email
+    ? `applicant_user_id.eq.${authData.user.id},student_id.eq.${authData.user.id},email.ilike.${authData.user.email}`
+    : `applicant_user_id.eq.${authData.user.id},student_id.eq.${authData.user.id}`;
+
   const [applicationsResult, accessResult] = await Promise.all([
-    supabase
+    db
       .from("enrollments")
       .select("id, application_number, status, created_at, course_id, bundle_id")
-      .or(
-        `applicant_user_id.eq.${authData.user.id},student_id.eq.${authData.user.id}`,
-      )
+      .or(enrollmentFilter)
       .order("created_at", { ascending: false }),
-    supabase
+    db
       .from("student_courses")
       .select("id, status, enrolled_at, course_id, bundle_id")
       .eq("student_id", authData.user.id)
@@ -116,10 +122,10 @@ export default async function StudentMyCoursePage({ searchParams }) {
   ];
   const [coursesResult, bundlesResult] = await Promise.all([
     courseIds.length
-      ? supabase.from("courses").select("id, title, slug").in("id", courseIds)
+      ? db.from("courses").select("id, title, slug").in("id", courseIds)
       : Promise.resolve({ data: [], error: null }),
     bundleIds.length
-      ? supabase
+      ? db
           .from("course_bundles")
           .select("id, title, slug")
           .in("id", bundleIds)
@@ -143,9 +149,22 @@ export default async function StudentMyCoursePage({ searchParams }) {
   const bundleById = new Map(
     (bundlesResult.data ?? []).map((bundle) => [bundle.id, bundle]),
   );
-  const getProduct = (record) =>
-    (record.course_id && courseById.get(record.course_id)) ||
-    (record.bundle_id && bundleById.get(record.bundle_id));
+  const getProduct = (record) => {
+    if (record.course_id) {
+      return (
+        courseById.get(record.course_id) ||
+        catalogueItems.find((item) => item.id === record.course_id)
+      );
+    }
+    if (record.bundle_id) {
+      return (
+        bundleById.get(record.bundle_id) ||
+        catalogueItems.find((item) => item.id === record.bundle_id)
+      );
+    }
+    return null;
+  };
+
   const successNotice =
     query?.success === "course-application"
       ? query.existing === "1"

@@ -29,8 +29,9 @@ export default function CourseCard({ course }) {
     course.certificate_included === true ||
     (course.certificate_included === undefined && course.certificate === true);
   const [imageSrc, setImageSrc] = useState(() => {
-    const source = course.image;
-    if (typeof source !== "string") return fallbackImage;
+    const rawSource = course.image || course.thumbnail_url;
+    if (typeof rawSource !== "string") return fallbackImage;
+    const source = rawSource.trim();
     if (source.startsWith("/") && !source.startsWith("//")) return source;
 
     try {

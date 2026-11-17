@@ -3,6 +3,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Activity, CheckSquare, Edit3, Filter, Plus, RefreshCw, Search, Shield, SlidersHorizontal, Trash2, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import {
+    deleteRoleAction,
+    deleteStaffProfileAction,
+    getRolesAndStaffProfiles,
+    updateUserRoleAction,
+} from "./actions";
 import CreateUserModal from "@/components/admin/roles/CreateUserModal";
 import RoleModal from "@/components/admin/roles/RoleModal";
 import { countPermissions, moduleCategories, Role, StaffProfile } from "@/components/admin/roles/types";
@@ -39,14 +45,29 @@ export default function RolesPage() {
 
     const loadData = useCallback(async () => {
         setIsLoading(true); setError("");
-        const [{ data: roleData, error: roleError }, { data: profileData, error: profileError }] = await Promise.all([
-            supabase.from("roles").select("*").order("name"),
-            supabase.from("profiles").select("id, full_name, email, role_id, is_active, roles(id, name, color)").order("full_name"),
-        ]);
-        if (roleError || profileError) setError(roleError?.message ?? profileError?.message ?? "Unable to load access control data.");
-        setRoles((roleData ?? []).map((role) => ({ ...role, permissions: role.permissions ?? {}, assigned_count: (profileData ?? []).filter((profile) => profile.role_id === role.id).length })) as Role[]);
-        setUsers((profileData ?? []).map((profile) => ({ ...profile, roles: Array.isArray(profile.roles) ? profile.roles[0] ?? null : profile.roles })) as unknown as StaffProfile[]);
-        setIsLoading(false);
+        try {
+            const result = await getRolesAndStaffProfiles();
+            if (result.error) {
+                // Fallback to client supabase if server action returns an error
+                const [{ data: roleData, error: roleError }, { data: profileData, error: profileError }] = await Promise.all([
+                    supabase.from("roles").select("*").order("name"),
+                    supabase.from("profiles").select("id, full_name, email, role_id, is_active, roles(id, name, color)").neq("role", "student").order("full_name"),
+                ]);
+                if (roleError || profileError) {
+                    setError(roleError?.message ?? profileError?.message ?? result.error);
+                } else {
+                    setRoles((roleData ?? []).map((role) => ({ ...role, permissions: role.permissions ?? {}, assigned_count: (profileData ?? []).filter((profile) => profile.role_id === role.id).length })) as Role[]);
+                    setUsers((profileData ?? []).map((profile) => ({ ...profile, roles: Array.isArray(profile.roles) ? profile.roles[0] ?? null : profile.roles })) as unknown as StaffProfile[]);
+                }
+            } else {
+                setRoles(result.roles);
+                setUsers(result.users);
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unable to load access control data.");
+        } finally {
+            setIsLoading(false);
+        }
     }, [supabase]);
 
     useEffect(() => { void loadData(); }, [loadData]);
@@ -59,15 +80,22 @@ export default function RolesPage() {
 
     async function updateUserRole(userId: string, roleId: string | null) {
         const targetRoleId = roleId === "" || roleId === "unassigned" ? null : roleId;
-        const { error: updateError } = await supabase.from("profiles").update({ role_id: targetRoleId }).eq("id", userId);
-        if (updateError) { setError(updateError.message); return; }
+        const res = await updateUserRoleAction(userId, targetRoleId);
+        if (!res.success) {
+            setError(res.error ?? "Could not update user role.");
+            return;
+        }
         await loadData();
     }
 
     async function deleteUser(userId: string) {
         if (!window.confirm("Remove this staff profile?")) return;
-        const { error: deleteError } = await supabase.from("profiles").delete().eq("id", userId);
-        if (deleteError) setError(deleteError.message); else await loadData();
+        const res = await deleteStaffProfileAction(userId);
+        if (!res.success) {
+            setError(res.error ?? "Could not delete staff profile.");
+            return;
+        }
+        await loadData();
     }
 
     async function deleteRole(role: Role) {
@@ -83,20 +111,9 @@ export default function RolesPage() {
         if (!window.confirm(confirmation)) return;
 
         setError("");
-        if (assignedCount > 0) {
-            const { error: unassignError } = await supabase
-                .from("profiles")
-                .update({ role_id: null })
-                .eq("role_id", role.id);
-            if (unassignError) {
-                setError(unassignError.message);
-                return;
-            }
-        }
-
-        const { error: deleteError } = await supabase.from("roles").delete().eq("id", role.id);
-        if (deleteError) {
-            setError(deleteError.message);
+        const res = await deleteRoleAction(role.id);
+        if (!res.success) {
+            setError(res.error ?? "Could not delete role.");
             return;
         }
 

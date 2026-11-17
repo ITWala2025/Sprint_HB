@@ -8,7 +8,8 @@ import CourseCard from "../cards/CourseCard";
 
 /**
  * More Courses / Learning Paths — Section 6.5.
- * Grid: 3 columns desktop (10.1), 2 tablet (10.2), 1 mobile (10.3).
+ * Grid: 4 columns desktop (10.1) when 4 courses are displayed (or 3 columns for 3),
+ * 2 tablet (10.2), 1 mobile (10.3).
  * "View All Courses" is sticky on desktop within the section.
  */
 export default function MoreCourses() {
@@ -22,12 +23,25 @@ export default function MoreCourses() {
 
     async function loadCourses() {
       try {
-        const { data, error } = await supabase
+        let { data, error } = await supabase
           .from("courses")
           .select("*")
           .eq("is_published", true)
+          .eq("is_featured", true)
           .order("created_at", { ascending: false })
-          .limit(3);
+          .limit(4);
+
+        // Fallback to recent published courses if no courses are marked as featured
+        if (!error && (!data || data.length === 0)) {
+          const fallback = await supabase
+            .from("courses")
+            .select("*")
+            .eq("is_published", true)
+            .order("created_at", { ascending: false })
+            .limit(4);
+          data = fallback.data;
+          error = fallback.error;
+        }
 
         if (!active) return;
 
@@ -49,6 +63,11 @@ export default function MoreCourses() {
       active = false;
     };
   }, [supabase]);
+
+  const gridColsClass =
+    moreCourses.length === 4
+      ? "sm:grid-cols-2 lg:grid-cols-4"
+      : "sm:grid-cols-2 lg:grid-cols-3";
 
   return (
     <section className="sprint-section relative bg-brand-white py-6 md:py-8 lg:py-10">
@@ -74,7 +93,7 @@ export default function MoreCourses() {
         </div>
 
         <div
-          className="mt-7 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:mt-8 lg:grid-cols-3 lg:gap-6"
+          className={`mt-7 grid grid-cols-1 items-stretch gap-5 ${gridColsClass} lg:mt-8 lg:gap-6`}
           aria-busy={loading}
         >
           {loading ? (
@@ -82,7 +101,7 @@ export default function MoreCourses() {
               <p role="status" className="sr-only">
                 Loading learning paths.
               </p>
-              {Array.from({ length: 3 }, (_, index) => (
+              {Array.from({ length: 4 }, (_, index) => (
                 <div
                   key={index}
                   aria-hidden="true"

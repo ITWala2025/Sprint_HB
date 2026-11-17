@@ -28,6 +28,7 @@ const databaseCourses = [
     rating: 5,
     review_count: 0,
     audience_type: "student",
+    is_featured: true,
   },
   {
     slug: "cloud-course",
@@ -43,6 +44,7 @@ const databaseCourses = [
     rating: 4.5,
     review_count: 12,
     audience_type: "student",
+    is_featured: true,
   },
   {
     slug: "security-course",
@@ -54,6 +56,7 @@ const databaseCourses = [
     difficulty_level: "Advanced",
     delivery_method: "Offline",
     audience_type: "student",
+    is_featured: true,
   },
 ];
 
@@ -62,12 +65,12 @@ describe("MoreCourses", () => {
     vi.clearAllMocks();
     mocks.limit.mockResolvedValue({ data: databaseCourses, error: null });
     mocks.order.mockReturnValue({ limit: mocks.limit });
-    mocks.eq.mockReturnValue({ order: mocks.order });
+    mocks.eq.mockReturnValue({ eq: mocks.eq, order: mocks.order });
     mocks.select.mockReturnValue({ eq: mocks.eq });
     mocks.from.mockReturnValue({ select: mocks.select });
   });
 
-  it("loads the latest published courses and renders navigable responsive cards", async () => {
+  it("loads the featured published courses and renders navigable responsive cards", async () => {
     const { container } = render(<MoreCourses />);
 
     expect(await screen.findByRole("heading", { name: "Latest AI Course" })).toBeInTheDocument();
@@ -77,8 +80,9 @@ describe("MoreCourses", () => {
     expect(mocks.from).toHaveBeenCalledWith("courses");
     expect(mocks.select).toHaveBeenCalledWith("*");
     expect(mocks.eq).toHaveBeenCalledWith("is_published", true);
+    expect(mocks.eq).toHaveBeenCalledWith("is_featured", true);
     expect(mocks.order).toHaveBeenCalledWith("created_at", { ascending: false });
-    expect(mocks.limit).toHaveBeenCalledWith(3);
+    expect(mocks.limit).toHaveBeenCalledWith(4);
 
     const latestCard = screen.getByRole("link", {
       name: "Know more about Latest AI Course",
@@ -115,6 +119,45 @@ describe("MoreCourses", () => {
         .getAllByRole("link", { name: "View All Courses" })
         .every((link) => link.getAttribute("href") === "/courses"),
     ).toBe(true);
+  });
+
+  it("renders 4 featured courses in a 4-column responsive grid on desktop", async () => {
+    const fourCourses = [
+      ...databaseCourses,
+      {
+        slug: "docker-kubernetes",
+        title: "Docker & Kubernetes",
+        category: "DevOps & Containers",
+        description: "Production containerization.",
+        thumbnail_url: null,
+        duration: "12 weeks",
+        difficulty_level: "Intermediate",
+        delivery_method: "Hybrid",
+        certificate_included: true,
+        rating: 5,
+        review_count: 8,
+        audience_type: "student",
+        is_featured: true,
+      },
+    ];
+    mocks.limit.mockResolvedValueOnce({ data: fourCourses, error: null });
+
+    const { container } = render(<MoreCourses />);
+
+    expect(await screen.findByRole("heading", { name: "Docker & Kubernetes" })).toBeInTheDocument();
+    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(4);
+    expect(container.querySelector(".sm\\:grid-cols-2.lg\\:grid-cols-4")).toBeInTheDocument();
+  });
+
+  it("falls back to recent published courses when no courses are marked featured", async () => {
+    mocks.limit
+      .mockResolvedValueOnce({ data: [], error: null })
+      .mockResolvedValueOnce({ data: databaseCourses, error: null });
+
+    render(<MoreCourses />);
+
+    expect(await screen.findByRole("heading", { name: "Latest AI Course" })).toBeInTheDocument();
+    expect(mocks.from).toHaveBeenCalledTimes(2);
   });
 
   it("shows an empty state when no published courses are returned", async () => {

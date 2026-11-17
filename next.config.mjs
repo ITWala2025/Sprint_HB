@@ -9,6 +9,37 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "previewengine-accl.zoho.in",
+      },
+      {
+        protocol: "https",
+        hostname: "previewengine-accl.zohoexternal.in",
+      },
+      {
+        protocol: "https",
+        hostname: "**.zoho.in",
+      },
+      {
+        protocol: "https",
+        hostname: "**.zohoexternal.in",
+      },
+      {
+        protocol: "https",
+        hostname: "wbegixswinshimuziyum.supabase.co",
+        port: "",
+        pathname: "/storage/v1/object/public/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
         hostname: "vrapmahhtmhflaqbubux.supabase.co",
         port: "",
         pathname: "/storage/v1/object/public/**",

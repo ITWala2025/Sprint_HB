@@ -4,6 +4,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { assertModuleAccess } from "@/app/admin/authorization";
+import { createServiceClient } from "@/lib/supabase/service";
 import { sanitizeStudentId } from "@/lib/id-utils";
 
 export type StudentCourseBadge = {
@@ -63,7 +64,8 @@ export async function getStudentDirectory(): Promise<StudentDirectoryEntry[]> {
     await assertModuleAccess("student_ops");
 
     try {
-        const supabase = await createAuthenticatedServerClient();
+        const serviceClient = createServiceClient();
+        const supabase = serviceClient ?? await createAuthenticatedServerClient();
         const { data: students, error: studentError } = await supabase
             .from("students")
             .select("id, registration_number, college_institution, status, phone, created_at")

@@ -82,6 +82,8 @@ export function normalizeAudienceList(rawAudience) {
 export function normalizeDatabaseCourse(course) {
   const rawAudience = course.audience_type || course.audience || "undergraduate";
   const audience = normalizeAudienceList(rawAudience);
+  const rawImage = course.thumbnail_url || course.image || null;
+  const image = typeof rawImage === "string" ? rawImage.trim() : null;
 
   return {
     ...course,
@@ -95,7 +97,8 @@ export function normalizeDatabaseCourse(course) {
     description: course.description || "A practical SPRINT technology pathway.",
     tools: Array.isArray(course.tools) ? course.tools : [],
     certificate: course.certificate_included === true,
-    image: course.thumbnail_url || course.image || null,
+    image: image || null,
+    thumbnail_url: image || null,
   };
 }
 
