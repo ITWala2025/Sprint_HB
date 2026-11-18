@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 import StudentSidebar from "./StudentSidebar";
+import { useStudentData } from "./StudentDataProvider";
 
 const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 
@@ -20,11 +21,12 @@ const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
  * - <lg : the sidebar becomes a slide-down top drawer opened from a compact
  *         portal bar. No auth, no route guards — this pass is UI only.
  */
-export default function StudentLayout({ children, student = null }) {
+export default function StudentLayout({ children }) {
   const pathname = usePathname() ?? "";
   const isDashboard = pathname === "/student/dashboard";
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { student, loading } = useStudentData();
   const profile = student ?? { fullName: "Student", initials: "S" };
 
   /* Close the drawer automatically when the layout reaches the desktop rail. */
@@ -60,6 +62,14 @@ export default function StudentLayout({ children, student = null }) {
       document.body.style.overflow = overflow;
     };
   }, [isDrawerOpen]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-brand-off-white flex items-center justify-center">
+        Loading portal…
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-brand-off-white">
@@ -111,7 +121,6 @@ export default function StudentLayout({ children, student = null }) {
             </div>
             <div id="student-sidebar-drawer">
               <StudentSidebar
-                student={student}
                 variant="drawer"
                 onNavigate={() => setIsDrawerOpen(false)}
               />
@@ -128,7 +137,6 @@ export default function StudentLayout({ children, student = null }) {
           }`}
         >
           <StudentSidebar
-            student={student}
             collapsed={isCollapsed}
             onToggleCollapse={() => setIsCollapsed((value) => !value)}
           />

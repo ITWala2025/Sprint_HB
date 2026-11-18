@@ -17,6 +17,7 @@ import {
 
 import navigation from "@/config/student-navigation.json";
 import LogoutButton from "./LogoutButton";
+import { useStudentData } from "./StudentDataProvider";
 
 /* Icon registry — the nav config stays JSON-only (SSOT) while icons stay typed. */
 const ICONS = {
@@ -44,17 +45,18 @@ export default function StudentSidebar({
   onNavigate,
   variant = "sidebar",
   className = "",
-  student = null,
 }) {
   const pathname = usePathname() ?? "";
   const router = useRouter();
   const prefetch = (href) => router.prefetch(href);
   const isActive = (href) =>
     pathname === href || pathname.startsWith(`${href}/`);
+  const { student } = useStudentData();
   const profile = student ?? {
     id: "",
     fullName: "Student",
     initials: "S",
+    registrationNumber: null,
   };
 
   return (
@@ -151,7 +153,7 @@ export default function StudentSidebar({
                 {profile.fullName}
               </span>
               <span className="block truncate text-[11px] text-brand-text-muted">
-                {profile.id || "Student profile"}
+                {profile.registrationNumber || "Student profile"}
               </span>
             </span>
           ) : null}

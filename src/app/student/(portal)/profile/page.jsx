@@ -152,13 +152,14 @@ export default function StudentProfilePage() {
     ["Full Name", profile.full_name],
     ["Email", profile.email],
     ["Mobile Number", profile.phone || profile.mobile_number],
-    ["College/University", profile.college],
+    ["Date of Birth", profile.dob ? new Date(profile.dob).toLocaleDateString("en-GB") : "—"],
   ];
   if (profile.registration_number) {
     personal.unshift(["Student ID", profile.registration_number]);
   }
 
   const education = [
+    ["College/University", profile.college],
     ["Degree", profile.degree],
     ["Semester/Year", profile.semester],
   ];
@@ -172,7 +173,7 @@ export default function StudentProfilePage() {
     return (
       <StudentCard
         title="Edit Profile"
-        description="Update your education and social details."
+        description="Update your personal, education and social details."
       >
         <div className="space-y-4">
           <AuthField
@@ -192,6 +193,13 @@ export default function StudentProfilePage() {
             label="Semester/Year"
             value={form.semester ?? ""}
             onChange={(e) => setForm({ ...form, semester: e.target.value })}
+          />
+          <AuthField
+            id="dob"
+            label="Date of Birth"
+            type="date"
+            value={form.dob ?? ""}
+            onChange={(e) => setForm({ ...form, dob: e.target.value })}
           />
           <AuthField
             id="github"

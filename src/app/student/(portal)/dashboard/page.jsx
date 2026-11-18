@@ -10,6 +10,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight, Bell } from "lucide-react";
 import { formatApplicationId } from "@/lib/id-utils";
+import { createServiceClient } from "@/lib/supabase/service";
+import { unstable_cache } from "next/cache";
 
 export const metadata = {
   title: "Student Dashboard",
@@ -35,13 +37,9 @@ function getFirstName(fullName) {
   return first || "Student";
 }
 
-async function getStudentDashboardContext() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey =
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
+async function fetchDashboardData(userId) {
+  const db = createServiceClient();
+  if (!db) {
     return {
       student: { id: "", fullName: "Student", firstName: "Student", initials: "S", email: "" },
       enrollment: null,
@@ -51,37 +49,20 @@ async function getStudentDashboardContext() {
     };
   }
 
-  const cookieStore = await cookies();
-  const supabase = createServerClient(supabaseUrl, supabaseKey, {
-    cookies: {
-      getAll: () => cookieStore.getAll(),
-      setAll: (cookiesToSet) => {
-        try {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-        } catch {
-          // Server Components cannot write refreshed auth cookies.
-        }
-      },
-    },
-  });
-
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    redirect("/student/login");
-  }
-
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile } = await db
     .from("profiles")
     .select("id, full_name, email")
-    .eq("id", user.id)
+    .eq("id", userId)
     .maybeSingle();
 
-  if (profileError || !profile) {
-    redirect("/student/login");
+  if (!profile) {
+    return {
+      student: { id: "", fullName: "Student", firstName: "Student", initials: "S", email: "" },
+      enrollment: null,
+      applications: [],
+      progress: null,
+      announcements: [],
+    };
   }
 
   const student = {
@@ -98,10 +79,10 @@ async function getStudentDashboardContext() {
     { data: enrollmentsData, error: enrollmentsError },
     { data: studentCoursesData, error: studentCoursesError },
   ] = await Promise.all([
-    supabase.from("students").select("id, registration_number").eq("id", profile.id).maybeSingle(),
-    supabase.from("enrollments").select("id, application_number, status, created_at, course_id, bundle_id").or(`applicant_user_id.eq.${user.id},student_id.eq.${user.id}`).order("created_at", { ascending: false }),
-    supabase.from("student_course_enrollments").select("id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)").eq("student_id", profile.id).order("enrolled_at", { ascending: false }),
-    supabase.from("student_courses").select("id, status, enrolled_at, course_id, bundle_id, courses:course_id(title, category), course_bundles:bundle_id(title, category)").eq("student_id", profile.id).eq("status", "active"),
+    db.from("students").select("id, registration_number").eq("id", profile.id).maybeSingle(),
+    db.from("enrollments").select("id, application_number, status, created_at, course_id, bundle_id").or(`applicant_user_id.eq.${userId},student_id.eq.${userId}`).order("created_at", { ascending: false }),
+    db.from("student_course_enrollments").select("id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)").eq("student_id", profile.id).order("enrolled_at", { ascending: false }),
+    db.from("student_courses").select("id, status, enrolled_at, course_id, bundle_id, courses:course_id(title, category), course_bundles:bundle_id(title, category)").eq("student_id", profile.id).eq("status", "active"),
   ]);
 
   if (studentRecordError) {
@@ -116,10 +97,10 @@ async function getStudentDashboardContext() {
     const bundleIds = [...new Set((applicationRecords ?? []).flatMap((item) => item.bundle_id ? [item.bundle_id] : []))];
     const [coursesResult, bundlesResult] = await Promise.all([
       courseIds.length > 0
-        ? supabase.from("courses").select("id, title").in("id", courseIds)
+        ? db.from("courses").select("id, title").in("id", courseIds)
         : Promise.resolve({ data: [], error: null }),
       bundleIds.length > 0
-        ? supabase.from("course_bundles").select("id, title").in("id", bundleIds)
+        ? db.from("course_bundles").select("id, title").in("id", bundleIds)
         : Promise.resolve({ data: [], error: null }),
     ]);
 
@@ -216,8 +197,44 @@ async function getStudentDashboardContext() {
   };
 }
 
+const getCachedDashboardData = unstable_cache(
+  async (userId) => fetchDashboardData(userId),
+  ["student-dashboard"],
+  {
+    revalidate: 30,
+    tags: ["student-dashboard"],
+  }
+);
+
 export default async function StudentDashboardPage() {
-  const { student, enrollment, applications, progress, announcements } = await getStudentDashboardContext();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  const cookieStore = await cookies();
+  const supabase = createServerClient(supabaseUrl, supabaseKey, {
+    cookies: {
+      getAll: () => cookieStore.getAll(),
+      setAll: (cookiesToSet) => {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+        } catch {
+          // Server Components cannot write refreshed auth cookies.
+        }
+      },
+    },
+  });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/student/login");
+  }
+
+  const { student, enrollment, applications, progress, announcements } = await getCachedDashboardData(user.id);
   const unreadCount = announcements.filter((item) => item.unread).length;
 
   return (

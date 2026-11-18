@@ -17,6 +17,7 @@ export type StudentProfileData = {
   college?: string;
   degree?: string;
   semester?: string;
+  dob?: string;
   github?: string;
   linkedin?: string;
   leetcode?: string;
@@ -106,7 +107,7 @@ export async function getStudentProfileAction(): Promise<StudentProfileResult> {
       db
         .from("students")
         .select(
-          "id, registration_number, college_institution, course_degree, current_semester, phone",
+          "id, registration_number, college_institution, course_degree, current_semester, dob, phone",
         )
         .eq("id", userId)
         .maybeSingle(),
@@ -166,6 +167,7 @@ export async function getStudentProfileAction(): Promise<StudentProfileResult> {
         college: student?.college_institution || fallbackCollege,
         degree: student?.course_degree || fallbackDegree,
         semester: student?.current_semester || fallbackSemester,
+        dob: student?.dob || "",
         github: socials.github,
         linkedin: socials.linkedin,
         leetcode: socials.leetcode,
@@ -246,6 +248,7 @@ export async function saveStudentProfileAction(
     const collegeClean = form.college?.trim() || null;
     const degreeClean = form.degree?.trim() || null;
     const semesterClean = form.semester?.trim() || null;
+    const dobClean = form.dob?.trim() || null;
 
     if (existingStudent) {
       const { error: studentError } = await db
@@ -254,6 +257,7 @@ export async function saveStudentProfileAction(
           college_institution: collegeClean,
           course_degree: degreeClean,
           current_semester: semesterClean,
+          dob: dobClean,
           updated_at: new Date().toISOString(),
         })
         .eq("id", userId);
@@ -271,6 +275,7 @@ export async function saveStudentProfileAction(
         college_institution: collegeClean,
         course_degree: degreeClean,
         current_semester: semesterClean,
+        dob: dobClean,
         status: "active",
       });
 
