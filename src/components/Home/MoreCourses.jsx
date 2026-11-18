@@ -1,9 +1,6 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
 import { normalizeDatabaseCourse } from "@/data/courses";
-import { createClient } from "@/lib/supabase/client";
+import { createPublicServerClient } from "@/lib/supabase/public-server";
 import CourseCard from "../cards/CourseCard";
 
 /**
@@ -12,57 +9,46 @@ import CourseCard from "../cards/CourseCard";
  * 2 tablet (10.2), 1 mobile (10.3).
  * "View All Courses" is sticky on desktop within the section.
  */
-export default function MoreCourses() {
-  const supabase = useMemo(() => createClient(), []);
-  const [moreCourses, setMoreCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+export default async function MoreCourses() {
+  const supabase = createPublicServerClient();
+  let moreCourses = [];
+  let hasError = false;
 
-  useEffect(() => {
-    let active = true;
+  if (!supabase) {
+    console.error("[SPRINT Home] Supabase server client is not configured.");
+    hasError = true;
+  } else {
+    try {
+      let { data, error } = await supabase
+        .from("courses")
+        .select("*")
+        .eq("is_published", true)
+        .eq("is_featured", true)
+        .order("created_at", { ascending: false })
+        .limit(3);
 
-    async function loadCourses() {
-      try {
-        let { data, error } = await supabase
+      if (!error && (!data || data.length === 0)) {
+        const fallback = await supabase
           .from("courses")
           .select("*")
           .eq("is_published", true)
-          .eq("is_featured", true)
           .order("created_at", { ascending: false })
-          .limit(4);
-
-        // Fallback to recent published courses if no courses are marked as featured
-        if (!error && (!data || data.length === 0)) {
-          const fallback = await supabase
-            .from("courses")
-            .select("*")
-            .eq("is_published", true)
-            .order("created_at", { ascending: false })
-            .limit(4);
-          data = fallback.data;
-          error = fallback.error;
-        }
-
-        if (!active) return;
-
-        if (error) {
-          setHasError(true);
-          return;
-        }
-
-        setMoreCourses((data ?? []).map(normalizeDatabaseCourse));
-      } catch {
-        if (active) setHasError(true);
-      } finally {
-        if (active) setLoading(false);
+          .limit(3);
+        data = fallback.data;
+        error = fallback.error;
       }
-    }
 
-    void loadCourses();
-    return () => {
-      active = false;
-    };
-  }, [supabase]);
+      if (error) {
+        console.error("[SPRINT Home] Could not load published courses:", error.message);
+        hasError = true;
+      } else {
+        moreCourses = (data ?? []).map(normalizeDatabaseCourse);
+      }
+    } catch (error) {
+      console.error("[SPRINT Home] Could not load published courses:", error);
+      hasError = true;
+    }
+  }
 
   const gridColsClass =
     moreCourses.length === 4
@@ -94,22 +80,8 @@ export default function MoreCourses() {
 
         <div
           className={`mt-7 grid grid-cols-1 items-stretch gap-5 ${gridColsClass} lg:mt-8 lg:gap-6`}
-          aria-busy={loading}
         >
-          {loading ? (
-            <>
-              <p role="status" className="sr-only">
-                Loading learning paths.
-              </p>
-              {Array.from({ length: 4 }, (_, index) => (
-                <div
-                  key={index}
-                  aria-hidden="true"
-                  className="min-h-[360px] animate-pulse rounded-2xl border border-brand-border bg-brand-off-white"
-                />
-              ))}
-            </>
-          ) : hasError ? (
+          {hasError ? (
             <p role="alert" className="col-span-full py-8 text-center text-sm text-brand-text-secondary">
               Courses are temporarily unavailable. Please try again later.
             </p>
