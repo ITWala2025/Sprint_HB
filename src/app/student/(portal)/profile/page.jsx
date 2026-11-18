@@ -47,15 +47,26 @@ export default function StudentProfilePage() {
           return;
         }
 
-        const { data } = await supabase
-          .from("profiles")
-          .select("full_name, email, phone")
-          .eq("id", user.id)
-          .maybeSingle();
+        const [{ data: profileData }, { data: studentData }] = await Promise.all([
+          supabase
+            .from("profiles")
+            .select("full_name, email, phone")
+            .eq("id", user.id)
+            .maybeSingle(),
+          supabase
+            .from("students")
+            .select("registration_number")
+            .eq("id", user.id)
+            .maybeSingle(),
+        ]);
 
         if (mounted) {
-          setProfile(data);
-          setForm(data ?? {});
+          const mergedProfile = {
+            ...profileData,
+            registration_number: studentData?.registration_number || "",
+          };
+          setProfile(mergedProfile);
+          setForm(mergedProfile ?? {});
           setLoading(false);
         }
       } catch {
