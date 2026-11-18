@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const EMAIL = "info@sprint.naturalelements.co.in";
+const EMAIL = "contact@sprintai.in";
 
 /**
  * Submit Your Application — Simple mailto CTA block.

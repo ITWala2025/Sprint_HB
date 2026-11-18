@@ -22,7 +22,7 @@ describe("ContactMethods", () => {
 
     expect(
       screen.getByRole("link", { name: /send email/i }),
-    ).toHaveAttribute("href", "mailto:info@sprint.naturalelements.co.in");
+    ).toHaveAttribute("href", "mailto:contact@sprintai.in");
 
     expect(screen.getByText(/office hours/i)).toBeInTheDocument();
     expect(

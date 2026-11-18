@@ -1213,7 +1213,7 @@
     "id": "SUP-181",
     "category": "complaints_and_escalations",
     "question": "How do I make a complaint?",
-    "answer": "Email info@sprint.naturalelements.co.in with the subject 'Support Complaint' and describe the issue, relevant dates, and the outcome you are seeking.",
+    "answer": "Email contact@sprintai.in with the subject 'Support Complaint' and describe the issue, relevant dates, and the outcome you are seeking.",
     "alternative_questions": [
       "For a student, Could you answer this question: How do I make a complaint?",
       "For a student, Please help me with this SPRINT query: How do I make a complaint?",
@@ -1503,7 +1503,7 @@
     "id": "SUP-211",
     "category": "feedback_and_suggestions",
     "question": "How can I share feedback about the website?",
-    "answer": "Email info@sprint.naturalelements.co.in with the page URL, what worked well or poorly, and any suggested improvement.",
+    "answer": "Email contact@sprintai.in with the page URL, what worked well or poorly, and any suggested improvement.",
     "alternative_questions": [
       "For a student, Could you answer this question: How can I share feedback about the website?",
       "For a student, Please help me with this SPRINT query: How can I share feedback about the website?",
@@ -4657,7 +4657,7 @@
     "id": "REG-170",
     "category": "accessibility_and_usability",
     "question": "How can I request registration help?",
-    "answer": "Email info@sprint.naturalelements.co.in or call +91 8521283183 / +91 8521283184 and explain the step.",
+    "answer": "Email contact@sprintai.in or call +91 8521283183 / +91 8521283184 and explain the step.",
     "alternative_questions": [
       "For a student, Could you answer this question: How can I request registration help?",
       "For a student, Please help me with this SPRINT query: How can I request registration help?",
@@ -4686,7 +4686,7 @@
     "id": "REG-191",
     "category": "support_and_escalation",
     "question": "How do I contact SPRINT about registration?",
-    "answer": "Email info@sprint.naturalelements.co.in or call +91 8521283183 / +91 8521283184.",
+    "answer": "Email contact@sprintai.in or call +91 8521283183 / +91 8521283184.",
     "alternative_questions": [
       "For a student, Could you answer this question: How do I contact SPRINT about registration?",
       "For a student, Please help me with this SPRINT query: How do I contact SPRINT about registration?",

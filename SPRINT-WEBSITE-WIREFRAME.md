@@ -840,7 +840,7 @@ All public pages share the shell below. Individual wireframes show only page-spe
 | **Forms** | **None** |
 | **Interactive state** | `StoryVisionMission` — `index` (0/1), `touchStartX/Y` refs, `pointerRef`/`focusRef`/`visibleRef`/`pausedRef`, IntersectionObserver (`:93–100`), 4000 ms swap timer (`:103–109`) |
 | **Outbound links** | `/home` breadcrumb (`:120`), `/courses` ×2 (`:142,257`), `#our-story` (`:153`), `/contact` (`:296`), `#` ×7 socials (`ProfileCard.jsx:73`) |
-| **Dead data** | `about.json:260,266,272` — Call `tel:+919876543210`, Email `admissions@sprint.institute`, WhatsApp `919876543210`. **None match `site.config.json`** (`+918521283184`, `info@sprint.naturalelements.co.in`) |
+| **Dead data** | `about.json:260,266,272` — Call `tel:+919876543210`, Email `admissions@sprint.institute`, WhatsApp `919876543210`. **None match `site.config.json`** (`+918521283184`, `contact@sprintai.in`) |
 | **Prev / Next** | Prev: `/home`. Next: `/courses` (primary CTA), `#our-story` (in-page) |
 | **Desktop** | 2-col story/vision; 3-col leadership; 4-col faculty; skills stack 1-col in right rail |
 | **Tablet** | `md:grid-cols-2`; hero padding `md:py-11` |
@@ -1036,7 +1036,7 @@ Both routes render the **identical** `DetailPage` component.
 | **⚠ DB table `career_openings` + `job_applications` exist** (`Initial Schema.sql:320,337`) with full RLS — **never queried** |
 | **Forms** | `ApplicationForm` has **zero fields** — a single `mailto:` link (`ApplicationForm.jsx:28`). `RoleDetailModal` CTA is also `mailto:` (`:230`) |
 | **Interactive state** | `OpenPositions`: `selectedType` (`:27`), `activeRole` (`:28`). `RoleDetailModal`: `panelRef`, `closeButtonRef` (`:81–82`), Escape + Tab trap (`:95–126`), `document.body.style.overflow` lock (`:129–140`) |
-| **Outbound links** | `#open-positions`, `#application-form`, `mailto:info@sprint.naturalelements.co.in?subject=…` ×2 |
+| **Outbound links** | `#open-positions`, `#application-form`, `mailto:contact@sprintai.in?subject=…` ×2 |
 | **Prev / Next** | Prev: `/home` (footer only entry). Next: `mailto:` |
 | **Desktop** | `lg:grid-cols-3` roles; `lg:h-[760px]` collage; centred modal |
 | **Tablet** | `sm:grid-cols-2`; `sm:h-[700px]` |
@@ -1108,7 +1108,7 @@ Both routes render the **identical** `DetailPage` component.
 | **Validation** | HTML `required` + `type=email` only. `courses`/`programs`/`services`/`purposes` are marked required in the label but have **no JS enforcement** — the form submits with zero selections |
 | **Interactive state** | `EnquirySection.audience` (`:30`); each form: dropdown `open` flag, `messageEdited`, `formData`; `FAQSection`: `activeId` (`:299`), `showAll` (`:300`), `activeCategory` (`:301`) |
 | **Auto-generated message** | Selecting multiple options auto-fills the message textarea; disabled once the user edits it manually (tested in `StudentForm.test.jsx`) |
-| **Outbound links** | `tel:+918521283184`, `mailto:info@sprint.naturalelements.co.in`, Google Maps short link + embed iframe, 3 socials |
+| **Outbound links** | `tel:+918521283184`, `mailto:contact@sprintai.in`, Google Maps short link + embed iframe, 3 socials |
 | **Prev / Next** | Prev: any public page (header). Next: `/student/login` (not linked from here), `/home` (breadcrumb) |
 | **Desktop** | 2-col `0.4fr / 0.6fr`; 4-col audience segmented control; location grid `0.9fr / 1.2fr / 0.9fr` |
 | **Tablet** | ≤900px → 1-col; ≤768px → tighter paddings; ≤380px → compressed cards |

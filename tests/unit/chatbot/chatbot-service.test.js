@@ -360,7 +360,7 @@ describe("chatbot service", () => {
     const result = await getLocalChatbotReply({ message: "How can I contact SPRINT?" });
 
     expect(result.reply).toContain("+91 85212 83184/85");
-    expect(result.reply).toContain("info@sprint.naturalelements.co.in");
+    expect(result.reply).toContain("contact@sprintai.in");
     expect(result.reply).toContain("WhatsApp");
     expect(result.action.href).toBe("/contact");
   });
@@ -443,7 +443,7 @@ describe("chatbot service", () => {
     expect(prompt).toContain("Machine Learning Essentials");
     expect(prompt).toContain("Non-IT to Tech Transition");
     expect(prompt).toContain("Career Accelerator");
-    expect(prompt).toContain("info@sprint.naturalelements.co.in");
+    expect(prompt).toContain("contact@sprintai.in");
     expect(prompt).toContain("Do not invent these details");
   });
 

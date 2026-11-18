@@ -1164,7 +1164,7 @@
     "id": "SUP-003",
     "category": "general_information",
     "question": "Where can I learn about SPRINT programs?",
-    "answer": "Visit https://sprint.naturalelements.co.in/ or send your question to info@sprint.naturalelements.co.in.",
+    "answer": "Visit https://sprint.naturalelements.co.in/ or send your question to contact@sprintai.in.",
     "alternative_questions": [
       "For a student, Could you answer this question: Where can I learn about SPRINT programs?",
       "For a student, Please help me with this SPRINT query: Where can I learn about SPRINT programs?",
@@ -1367,7 +1367,7 @@
     "id": "SUP-010",
     "category": "general_information",
     "question": "Where should I send a question that is not listed here?",
-    "answer": "Email info@sprint.naturalelements.co.in or call +91 8521283183 / +91 8521283184.",
+    "answer": "Email contact@sprintai.in or call +91 8521283183 / +91 8521283184.",
     "alternative_questions": [
       "For a student, Could you answer this question: Where should I send a question that is not listed here?",
       "For a student, Please help me with this SPRINT query: Where should I send a question that is not listed here?",

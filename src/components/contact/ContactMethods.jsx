@@ -20,9 +20,9 @@ const contactMethods = [
     id: "email",
     icon: Mail,
     title: "Email Us",
-    value: "info@sprint.naturalelements.co.in",
+    value: "contact@sprintai.in",
     description: "We reply within 24 hours",
-    href: "mailto:info@sprint.naturalelements.co.in",
+    href: "mailto:contact@sprintai.in",
     action: "Send Email",
   },
 ];

@@ -17,7 +17,7 @@ const typeOptions = [
   { value: "full-time", label: "Full-time" },
 ];
 
-const EMAIL = "info@sprint.naturalelements.co.in";
+const EMAIL = "contact@sprintai.in";
 const isTestEnvironment = process.env.NODE_ENV === "test";
 
 const normalizeStringArray = (value) =>
