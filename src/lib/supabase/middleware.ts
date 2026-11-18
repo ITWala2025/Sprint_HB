@@ -6,6 +6,12 @@ import {
   createAdminSessionToken,
   verifyAdminSessionToken,
 } from "@/lib/auth/admin-session";
+import {
+  STUDENT_SESSION_COOKIE,
+  STUDENT_SESSION_MAX_AGE_SECONDS,
+  createStudentSessionToken,
+  verifyStudentSessionToken,
+} from "@/lib/auth/student-session";
 
 /**
  * Every portal page that requires a signed-in student. These are the URL
@@ -85,6 +91,16 @@ export async function updateSession(request: NextRequest) {
       if (isAdminSubRoute || isStaffWorkspaceRoute) {
         return supabaseResponse;
       }
+    }
+  }
+
+  // Fast Path: Check cryptographically verified student session token (0ms network calls)
+  const existingStudentSession = request.cookies.get(STUDENT_SESSION_COOKIE)?.value;
+  if (existingStudentSession && isStudentPortalRoute) {
+    const verifiedSession = await verifyStudentSessionToken(existingStudentSession);
+    if (verifiedSession && verifiedSession.isActive) {
+      // If user is accessing protected student portal routes and has verified session, pass through immediately!
+      return supabaseResponse;
     }
   }
 
@@ -184,6 +200,37 @@ export async function updateSession(request: NextRequest) {
       }
     } else if (request.cookies.has(ADMIN_SESSION_COOKIE)) {
       supabaseResponse.cookies.delete(ADMIN_SESSION_COOKIE);
+    }
+
+    // Issue/refresh verified student session cookie for fast subsequent navigations
+    if (isActiveStudent) {
+      const { data: studentRecord } = await supabase
+        .from("students")
+        .select("registration_number")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      try {
+        const sessionToken = await createStudentSessionToken({
+          userId: user.id,
+          email: profile.email ?? user.email ?? null,
+          fullName: profile.full_name ?? null,
+          registrationNumber: studentRecord?.registration_number ?? null,
+          isActive: true,
+        });
+
+        supabaseResponse.cookies.set(STUDENT_SESSION_COOKIE, sessionToken, {
+          path: "/",
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: STUDENT_SESSION_MAX_AGE_SECONDS,
+        });
+      } catch (err) {
+        console.warn("[SPRINT Middleware] Could not issue student session cookie:", err);
+      }
+    } else if (request.cookies.has(STUDENT_SESSION_COOKIE)) {
+      supabaseResponse.cookies.delete(STUDENT_SESSION_COOKIE);
     }
 
     // Staff and admins share the workspace; other roles cannot access it.
