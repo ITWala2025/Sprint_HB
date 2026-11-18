@@ -88,7 +88,7 @@ To access your student portal and view your courses:
 ${portalUrl}
 
 SPRINT Centre, Hazaribagh, Jharkhand - 825301, India
-Contact: +91 85212 83184/85 | info@sprint.naturalelements.co.in
+Contact: +91 85212 83184/85 | contact@sprintai.in
 `.trim();
 
   return { html, text, subject };

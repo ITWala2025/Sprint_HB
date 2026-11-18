@@ -2,7 +2,7 @@ import accommodationQa from "../../../data/chatbot/accommodation_QA_dataset.json
 
 const DEMO_CONTACT = {
   phone: "+91 85212 83184/85",
-  email: "info@sprint.naturalelements.co.in",
+  email: "contact@sprintai.in",
   address: "SPRINT Centre, Hazaribagh, Jharkhand - 825301, India",
 };
 

@@ -63,9 +63,9 @@ When Custom SMTP is enabled in Supabase, GoTrue replaces its internal queue with
 * **Option A: Hostinger Email SMTP (Existing Domain Email — No Extra Service Needed)**
   - **Host**: `smtp.hostinger.com`
   - **Port**: `465` (SSL) or `587` (TLS)
-  - **Username**: `info@sprint.naturalelements.co.in` (your Hostinger account email)
+  - **Username**: `contact@sprintai.in` (your Hostinger account email)
   - **Password**: `<YOUR_HOSTINGER_EMAIL_PASSWORD>`
-  - **Sender Email**: `info@sprint.naturalelements.co.in`
+  - **Sender Email**: `contact@sprintai.in`
   - **Sender Name**: `SPRINT Institutional Training Hub`
 
 * **Option B: Resend (Developer API / Transactional)**
@@ -112,9 +112,9 @@ For server-side workflows (student enrollment completion, staff onboarding, admi
 # SPRINT Instant Outbound Email Configuration (Hostinger SMTP Example)
 SMTP_HOST=smtp.hostinger.com
 SMTP_PORT=465
-SMTP_USER=info@sprint.naturalelements.co.in
+SMTP_USER=contact@sprintai.in
 SMTP_PASS=your_hostinger_email_password
-SMTP_FROM="SPRINT Institutional Training Hub" <info@sprint.naturalelements.co.in>
+SMTP_FROM="SPRINT Institutional Training Hub" <contact@sprintai.in>
 SMTP_SECURE=true
 ```
 

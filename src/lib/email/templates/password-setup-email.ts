@@ -82,7 +82,7 @@ ${actionUrl}
 This link is valid for ${expiresInMinutes} minutes.
 
 SPRINT Centre, Hazaribagh, Jharkhand - 825301, India
-Contact: +91 85212 83184/85 | info@sprint.naturalelements.co.in
+Contact: +91 85212 83184/85 | contact@sprintai.in
 `.trim();
 
   return { html, text, subject };

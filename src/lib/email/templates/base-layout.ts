@@ -206,7 +206,7 @@ export function renderBaseEmailLayout(options: BaseLayoutOptions): string {
                       📍 SPRINT Centre, Hazaribagh, Jharkhand — 825301, India
                     </div>
                     <div style="color: #cbd5e1; margin-bottom: 12px;">
-                      📞 <a href="tel:+918521283184" style="color: #cbd5e1; text-decoration: none;">+91 85212 83184/85</a> &nbsp;|&nbsp; ✉️ <a href="mailto:info@sprint.naturalelements.co.in" style="color: #cbd5e1; text-decoration: none;">info@sprint.naturalelements.co.in</a>
+                      📞 <a href="tel:+918521283184" style="color: #cbd5e1; text-decoration: none;">+91 85212 83184/85</a> &nbsp;|&nbsp; ✉️ <a href="mailto:contact@sprintai.in" style="color: #cbd5e1; text-decoration: none;">contact@sprintai.in</a>
                     </div>
                     <div style="padding-top: 12px; border-top: 1px solid #062c52; font-size: 11px; color: #64748b;">
                       &copy; ${currentYear} SPRINT (Natural Elements). All rights reserved. This is an automated transactional message.

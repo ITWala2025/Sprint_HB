@@ -104,6 +104,6 @@ export const hiringProcessSteps = [
 export const applicationFormConfig = {
   roles: careerRoles.map((r) => ({ value: r.id, label: r.title })),
   defaultRole: "role-1",
-  submissionEmail: "info@sprint.naturalelements.co.in",
+  submissionEmail: "contact@sprintai.in",
   subjectPrefix: "SPRINT Careers Application",
 };

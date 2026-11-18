@@ -93,7 +93,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<SendEmailRes
     const info = await transporter.sendMail({
       from: options.from || defaultFrom,
       to: options.to,
-      replyTo: options.replyTo || "info@sprint.naturalelements.co.in",
+      replyTo: options.replyTo || "contact@sprintai.in",
       subject: options.subject,
       html: options.html,
       text: options.text,

@@ -42,11 +42,11 @@ This directory contains the production-ready, responsive, brand-aligned HTML ema
 5. Enter your SMTP details (e.g., **Hostinger Email**, **Resend**, or **Amazon SES**):
 
    **Hostinger Email Configuration:**
-   - **Sender Email**: `info@sprint.naturalelements.co.in` (or your domain mailbox)
+   - **Sender Email**: `contact@sprintai.in` (or your domain mailbox)
    - **Sender Name**: `SPRINT Institutional Training Hub`
    - **Host**: `smtp.hostinger.com`
    - **Port**: `465` (SSL) or `587` (TLS)
-   - **User**: `info@sprint.naturalelements.co.in` (your full Hostinger email)
+   - **User**: `contact@sprintai.in` (your full Hostinger email)
    - **Password**: `<YOUR_HOSTINGER_EMAIL_PASSWORD>`
 
    *(Or use Resend: `smtp.resend.com` on port 587 with user `resend` and API key as password)*

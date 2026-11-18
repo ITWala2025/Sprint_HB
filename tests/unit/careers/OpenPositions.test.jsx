@@ -18,7 +18,7 @@ const openFromCardBody = async (user, role) => {
 };
 
 const expectedApplyHref = (role) =>
-  `mailto:info@sprint.naturalelements.co.in?subject=${encodeURIComponent(
+  `mailto:contact@sprintai.in?subject=${encodeURIComponent(
     `Application for ${role.title}`,
   )}`;
 

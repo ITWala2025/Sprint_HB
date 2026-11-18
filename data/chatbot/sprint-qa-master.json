@@ -8085,7 +8085,7 @@
     "id": "SUP-003",
     "category": "general_information",
     "question": "Where can I learn about SPRINT programs?",
-    "answer": "Visit https://sprint.naturalelements.co.in/ or send your question to info@sprint.naturalelements.co.in.",
+    "answer": "Visit https://sprint.naturalelements.co.in/ or send your question to contact@sprintai.in.",
     "alternative_questions": [
       "For a student, Could you answer this question: Where can I learn about SPRINT programs?",
       "For a student, Please help me with this SPRINT query: Where can I learn about SPRINT programs?",
@@ -8281,7 +8281,7 @@
     "id": "SUP-010",
     "category": "general_information",
     "question": "Where should I send a question that is not listed here?",
-    "answer": "Email info@sprint.naturalelements.co.in or call +91 8521283183 / +91 8521283184.",
+    "answer": "Email contact@sprintai.in or call +91 8521283183 / +91 8521283184.",
     "alternative_questions": [
       "For a student, Could you answer this question: Where should I send a question that is not listed here?",
       "For a student, Please help me with this SPRINT query: Where should I send a question that is not listed here?",
@@ -8309,7 +8309,7 @@
     "id": "SUP-011",
     "category": "contact_channels_and_response",
     "question": "What is SPRINT's contact email?",
-    "answer": "You can email info@sprint.naturalelements.co.in for general enquiries and support.",
+    "answer": "You can email contact@sprintai.in for general enquiries and support.",
     "alternative_questions": [
       "For a student, Could you answer this question: What is SPRINT's contact email?",
       "For a student, Please help me with this SPRINT query: What is SPRINT's contact email?",
@@ -8393,7 +8393,7 @@
     "id": "SUP-014",
     "category": "contact_channels_and_response",
     "question": "What if nobody answers my call?",
-    "answer": "Try the other listed number or email info@sprint.naturalelements.co.in with your name, contact number, and reason for calling.",
+    "answer": "Try the other listed number or email contact@sprintai.in with your name, contact number, and reason for calling.",
     "alternative_questions": [
       "For a student, Could you answer this question: What if nobody answers my call?",
       "For a student, Please help me with this SPRINT query: What if nobody answers my call?",
@@ -8421,7 +8421,7 @@
     "id": "SUP-015",
     "category": "contact_channels_and_response",
     "question": "Can I contact SPRINT by email instead of phone?",
-    "answer": "Yes. Email info@sprint.naturalelements.co.in and include enough detail for the team to understand your request.",
+    "answer": "Yes. Email contact@sprintai.in and include enough detail for the team to understand your request.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I contact SPRINT by email instead of phone?",
       "For a student, Please help me with this SPRINT query: Can I contact SPRINT by email instead of phone?",
@@ -11949,7 +11949,7 @@
     "id": "SUP-141",
     "category": "institute_partnerships",
     "question": "How can an institute partner with SPRINT?",
-    "answer": "Select the Institute enquiry path or email info@sprint.naturalelements.co.in with your institute details and collaboration objectives.",
+    "answer": "Select the Institute enquiry path or email contact@sprintai.in with your institute details and collaboration objectives.",
     "alternative_questions": [
       "For a student, Could you answer this question: How can an institute partner with SPRINT?",
       "For a student, Please help me with this SPRINT query: How can an institute partner with SPRINT?",
@@ -12229,7 +12229,7 @@
     "id": "SUP-151",
     "category": "company_and_enterprise_support",
     "question": "How can a company contact SPRINT?",
-    "answer": "Use the Company/Enterprise enquiry path or email info@sprint.naturalelements.co.in with your organisation's requirements.",
+    "answer": "Use the Company/Enterprise enquiry path or email contact@sprintai.in with your organisation's requirements.",
     "alternative_questions": [
       "For a student, Could you answer this question: How can a company contact SPRINT?",
       "For a student, Please help me with this SPRINT query: How can a company contact SPRINT?",
@@ -13069,7 +13069,7 @@
     "id": "SUP-181",
     "category": "complaints_and_escalations",
     "question": "How do I make a complaint?",
-    "answer": "Email info@sprint.naturalelements.co.in with the subject 'Support Complaint' and describe the issue, relevant dates, and the outcome you are seeking.",
+    "answer": "Email contact@sprintai.in with the subject 'Support Complaint' and describe the issue, relevant dates, and the outcome you are seeking.",
     "alternative_questions": [
       "For a student, Could you answer this question: How do I make a complaint?",
       "For a student, Please help me with this SPRINT query: How do I make a complaint?",
@@ -13860,7 +13860,7 @@
     "id": "SUP-209",
     "category": "international_and_remote_enquiries",
     "question": "What if I cannot call an Indian phone number?",
-    "answer": "Use info@sprint.naturalelements.co.in and include your country and preferred contact method.",
+    "answer": "Use contact@sprintai.in and include your country and preferred contact method.",
     "alternative_questions": [
       "For a student, Could you answer this question: What if I cannot call an Indian phone number?",
       "For a student, Please help me with this SPRINT query: What if I cannot call an Indian phone number?",
@@ -13916,7 +13916,7 @@
     "id": "SUP-211",
     "category": "feedback_and_suggestions",
     "question": "How can I share feedback about the website?",
-    "answer": "Email info@sprint.naturalelements.co.in with the page URL, what worked well or poorly, and any suggested improvement.",
+    "answer": "Email contact@sprintai.in with the page URL, what worked well or poorly, and any suggested improvement.",
     "alternative_questions": [
       "For a student, Could you answer this question: How can I share feedback about the website?",
       "For a student, Please help me with this SPRINT query: How can I share feedback about the website?",
@@ -14280,7 +14280,7 @@
     "id": "SUP-224",
     "category": "security_and_suspicious_activity",
     "question": "How can I verify that a message is genuinely from SPRINT?",
-    "answer": "Check the sender carefully and confirm through the official website, info@sprint.naturalelements.co.in, or the listed phone numbers.",
+    "answer": "Check the sender carefully and confirm through the official website, contact@sprintai.in, or the listed phone numbers.",
     "alternative_questions": [
       "For a student, Could you answer this question: How can I verify that a message is genuinely from SPRINT?",
       "For a student, Please help me with this SPRINT query: How can I verify that a message is genuinely from SPRINT?",
@@ -26999,7 +26999,7 @@
     "id": "REG-170",
     "category": "accessibility_and_usability",
     "question": "How can I request registration help?",
-    "answer": "Email info@sprint.naturalelements.co.in or call +91 8521283183 / +91 8521283184 and explain the step.",
+    "answer": "Email contact@sprintai.in or call +91 8521283183 / +91 8521283184 and explain the step.",
     "alternative_questions": [
       "For a student, Could you answer this question: How can I request registration help?",
       "For a student, Please help me with this SPRINT query: How can I request registration help?",
@@ -27587,7 +27587,7 @@
     "id": "REG-191",
     "category": "support_and_escalation",
     "question": "How do I contact SPRINT about registration?",
-    "answer": "Email info@sprint.naturalelements.co.in or call +91 8521283183 / +91 8521283184.",
+    "answer": "Email contact@sprintai.in or call +91 8521283183 / +91 8521283184.",
     "alternative_questions": [
       "For a student, Could you answer this question: How do I contact SPRINT about registration?",
       "For a student, Please help me with this SPRINT query: How do I contact SPRINT about registration?",
