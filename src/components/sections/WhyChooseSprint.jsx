@@ -15,21 +15,22 @@ import {
 } from "lucide-react";
 
 const features = [
-  {
+    {
     number: "01",
-    title: "100% Corporate Trainers",
+    title: "360° Development",
     description:
-      "Learn from industry professionals with practical corporate experience. Gain real-world insights from people who understand the workplace.",
-    link: "Learn from the best",
-    badge: "15+ Years",
-    badgeDescription: "Average experience",
-    badgeIcon: Users,
-    icon: GraduationCap,
-    accent: "teal",
+      "Develop technical skills, communication, interview confidence, and a professional profile to prepare for your career.",
+    link: "Complete Career Support",
+    badge: "Skills + Confidence",
+    badgeDescription: "Complete development",
+    badgeIcon: TrendingUp,
+    icon: CodeXml,
+    accent: "amber",
     image:
-      "https://previewengine-accl.zohoexternal.in/image/WD/ss8l5f44af1a36c2b4ad68edda798fd4b7762?version=1.0&width=2046&height=1536",
-    alt: "Professionals collaborating in a workplace",
+      "https://previewengine-accl.zohoexternal.in/image/WD/socvhb3d3f025cf4c43f9be803e3947498da6?version=1.0&width=2046&height=1536",
+    alt: "Laptop and programming workspace",
   },
+
   {
     number: "02",
     title: "Strong Industry Connect",
@@ -42,24 +43,25 @@ const features = [
     icon: Handshake,
     accent: "blue",
     image:
-      "https://previewengine-accl.zohoexternal.in/image/WD/ss8l56d7ba88c5ce5443498ff4f987f09ed92?version=1.0&width=2046&height=1536",
+      "https://previewengine-accl.zohoexternal.in/image/WD/socvh714dcea840f64076a71e98f09dc9c7ff?version=1.0&width=2046&height=1536",
     alt: "Professionals attending a collaborative business meeting",
   },
-  {
+    {
     number: "03",
-    title: "360° Development",
+    title: "100% Corporate Trainers",
     description:
-      "Develop technical skills, communication, interview confidence, and a professional profile to prepare for your career.",
-    link: "Complete Career Support",
-    badge: "Skills + Confidence",
-    badgeDescription: "Complete development",
-    badgeIcon: TrendingUp,
-    icon: CodeXml,
-    accent: "amber",
+      "Learn from industry professionals with practical corporate experience. Gain real-world insights from people who understand the workplace.",
+    link: "Learn from the best",
+    badge: "15+ Years",
+    badgeDescription: "Average experience",
+    badgeIcon: Users,
+    icon: GraduationCap,
+    accent: "teal",
     image:
-      "https://previewengine-accl.zohoexternal.in/image/WD/ss8l5dde00ea568fb4534adb1fcb5ad041ce0?version=1.0&width=2046&height=1536",
-    alt: "Laptop and programming workspace",
+      "https://previewengine-accl.zohoexternal.in/image/WD/socvhfbb8445447974b52a1d4ade53b79e764?version=1.0&width=2046&height=1536",
+    alt: "Professionals collaborating in a workplace",
   },
+
   {
     number: "04",
     title: "Real Internship",
@@ -72,7 +74,7 @@ const features = [
     icon: Award,
     accent: "violet",
     image:
-      "https://previewengine-accl.zohoexternal.in/image/WD/ss8l575fe89ba81664e398d380b7ee5a722af?version=1.0&width=2046&height=1536",
+      "https://previewengine-accl.zohoexternal.in/image/WD/socvh1543cbeb53fb4a7990396064aa4aac17?version=1.0&width=2046&height=1536",
     alt: "Professional reviewing documents at a desk",
   },
 ];
