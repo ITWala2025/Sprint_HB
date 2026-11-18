@@ -58,7 +58,7 @@ const features = [
     icon: GraduationCap,
     accent: "teal",
     image:
-      "https://previewengine-accl.zohoexternal.in/image/WD/socvhfbb8445447974b52a1d4ade53b79e764?version=1.0&width=2046&height=1536",
+      "https://previewengine-accl.zohoexternal.in/image/WD/socvh613b27b5bbbf4f4ebb9a99c97495d868?version=1.0&width=2046&height=1536",
     alt: "Professionals collaborating in a workplace",
   },
 
