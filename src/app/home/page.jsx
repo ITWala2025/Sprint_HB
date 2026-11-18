@@ -17,6 +17,8 @@ export const metadata = {
   alternates: { canonical: "/home" },
 };
 
+export const revalidate = 60;
+
 /**
  * Home Page — assembled in the exact section order from Section 4 of the
  * requirements doc:
