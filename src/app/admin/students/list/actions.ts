@@ -19,6 +19,10 @@ export type StudentDirectoryEntry = {
     name: string;
     email: string;
     phone: string;
+    profiles?: {
+        phone: string | null;
+        mobile_number: string | null;
+    } | null;
     courseEnrolled: string;
     activeCourses: StudentCourseBadge[];
     status: string;
@@ -68,7 +72,7 @@ export async function getStudentDirectory(): Promise<StudentDirectoryEntry[]> {
         const supabase = serviceClient ?? await createAuthenticatedServerClient();
         const { data: students, error: studentError } = await supabase
             .from("students")
-            .select("id, registration_number, college_institution, status, phone, created_at")
+            .select("*, profiles(phone, mobile_number, email)")
             .order("created_at", { ascending: false });
 
         if (studentError) {
@@ -85,7 +89,7 @@ export async function getStudentDirectory(): Promise<StudentDirectoryEntry[]> {
         // 1. Fetch profiles for student identities
         const { data: profilesData } = await supabase
             .from("profiles")
-            .select("id, full_name, email, phone, status, is_active")
+            .select("id, full_name, email, phone, mobile_number, status, is_active")
             .in("id", studentIds);
 
         const profileMap = new Map((profilesData ?? []).map((p) => [p.id, p]));
@@ -350,7 +354,11 @@ export async function getStudentDirectory(): Promise<StudentDirectoryEntry[]> {
                 registrationNumber: studentId,
                 name: profile?.full_name || studentId,
                 email: profile?.email || "student@sprint.institute",
-                phone: student.phone || profile?.phone || "N/A",
+                phone: student.profiles?.phone || student.profiles?.mobile_number || profile?.phone || profile?.mobile_number || student.phone || "N/A",
+                profiles: {
+                    phone: student.profiles?.phone ?? profile?.phone ?? null,
+                    mobile_number: student.profiles?.mobile_number ?? profile?.mobile_number ?? null,
+                },
                 courseEnrolled,
                 activeCourses: uniqueBadges,
                 college: student.college_institution || "SPRINT Campus Institute",

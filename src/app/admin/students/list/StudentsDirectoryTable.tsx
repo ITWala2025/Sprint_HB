@@ -147,45 +147,48 @@ export default function StudentsDirectoryTable({
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {students.map((student) => (
-                                <tr key={student.id} className="hover:bg-slate-50">
-                                    <td className="whitespace-nowrap px-6 py-4 font-mono font-bold text-brand-navy">
-                                        {student.studentId}
-                                    </td>
-                                    <td className="px-6 py-4 font-semibold text-brand-navy">
-                                        {student.name}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <p className="text-brand-text-secondary">{student.email}</p>
-                                        <p className="mt-1 text-xs text-brand-text-muted">{student.phone}</p>
-                                    </td>
-                                    <td className="px-6 py-4 font-medium text-brand-navy">
-                                        <ActiveCourseBadges student={student} />
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ${
-                                            student.status.toLowerCase() === "active"
-                                                ? "bg-emerald-50 text-emerald-700"
-                                                : "bg-slate-100 text-slate-600"
-                                        }`}>
-                                            {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
-                                        </span>
-                                    </td>
-                                    <td className="whitespace-nowrap px-6 py-4 text-xs text-brand-text-muted">
-                                        {student.dateOfEnrollment}
-                                    </td>
-                                    <td className="px-6 py-4 text-right whitespace-nowrap">
-                                        <button
-                                            type="button"
-                                            onClick={() => setSelectedStudent(student)}
-                                            aria-label={`View details for ${student.name}`}
-                                            className="sprint-focus inline-flex size-9 items-center justify-center rounded-lg border border-slate-200 text-brand-navy transition hover:border-brand-navy hover:bg-slate-100"
-                                        >
-                                            <Eye className="size-4" aria-hidden="true" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            {students.map((student) => {
+                                const phone = student.profiles?.phone || student.profiles?.mobile_number || student.phone || "N/A";
+                                return (
+                                    <tr key={student.id} className="hover:bg-slate-50">
+                                        <td className="whitespace-nowrap px-6 py-4 font-mono font-bold text-brand-navy">
+                                            {student.studentId}
+                                        </td>
+                                        <td className="px-6 py-4 font-semibold text-brand-navy">
+                                            {student.name}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <p className="text-brand-text-secondary">{student.email}</p>
+                                            <p className="mt-1 text-xs text-brand-text-muted">{phone}</p>
+                                        </td>
+                                        <td className="px-6 py-4 font-medium text-brand-navy">
+                                            <ActiveCourseBadges student={student} />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ${
+                                                student.status.toLowerCase() === "active"
+                                                    ? "bg-emerald-50 text-emerald-700"
+                                                    : "bg-slate-100 text-slate-600"
+                                            }`}>
+                                                {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
+                                            </span>
+                                        </td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-xs text-brand-text-muted">
+                                            {student.dateOfEnrollment}
+                                        </td>
+                                        <td className="px-6 py-4 text-right whitespace-nowrap">
+                                            <button
+                                                type="button"
+                                                onClick={() => setSelectedStudent(student)}
+                                                aria-label={`View details for ${student.name}`}
+                                                className="sprint-focus inline-flex size-9 items-center justify-center rounded-lg border border-slate-200 text-brand-navy transition hover:border-brand-navy hover:bg-slate-100"
+                                            >
+                                                <Eye className="size-4" aria-hidden="true" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                             {students.length === 0 && (
                                 <tr>
                                     <td colSpan={7} className="px-6 py-12 text-center text-sm text-brand-text-muted">

@@ -61,6 +61,16 @@ export type EnrollmentRegistrationDetails = {
         full_name: string;
         email: string;
         phone: string;
+        profiles: {
+            phone: string | null;
+            mobile_number: string | null;
+            full_name: string | null;
+        } | null;
+        registrations: {
+            phone: string | null;
+            college_institution: string | null;
+            course_degree: string | null;
+        } | null;
         college_institution: string | null;
         course_degree: string | null;
         specialization_branch: string | null;
@@ -114,11 +124,11 @@ function isMissingColumnError(error: { code?: string; message?: string }): boole
 export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistration[]> {
     await assertModuleAccess("student_ops");
     const supabase = requireServiceClient();
-    const enrollmentColumns = "id, application_number, full_name, email, phone, college_institution, course_id, bundle_id, status, created_at";
+    const enrollmentColumns = "id, application_number, full_name, email, phone, college_institution, course_id, bundle_id, status, created_at, profiles(phone, mobile_number, full_name), registrations(phone, college_institution, course_degree)";
     const enrollmentCoreColumns = "id, full_name, email, phone, status, created_at";
     const enrollmentResult = await supabase
         .from("enrollments")
-        .select(`${enrollmentColumns}, legacy_registration_id`)
+        .select("*, profiles(phone, mobile_number, full_name), registrations(phone, college_institution, course_degree)")
         .order("created_at", { ascending: false });
 
     type EnrollmentLookupRow = {
@@ -133,6 +143,16 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
         status: string;
         created_at: string;
         legacy_registration_id: string | null;
+        profiles: {
+            phone: string | null;
+            mobile_number: string | null;
+            full_name: string | null;
+        } | null;
+        registrations: {
+            phone: string | null;
+            college_institution: string | null;
+            course_degree: string | null;
+        } | null;
     };
 
     let enrollmentRows: EnrollmentLookupRow[];
@@ -172,17 +192,23 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
                 course_id: null,
                 bundle_id: null,
                 legacy_registration_id: null,
+                profiles: null,
+                registrations: null,
             }));
         } else {
             enrollmentRows = (fallbackResult.data ?? []).map((enrollment) => ({
                 ...enrollment,
                 legacy_registration_id: null,
+                profiles: null,
+                registrations: null,
             }));
         }
     } else {
         enrollmentRows = (enrollmentResult.data ?? []).map((enrollment) => ({
             ...enrollment,
             legacy_registration_id: enrollment.legacy_registration_id ?? null,
+            profiles: enrollment.profiles ?? null,
+            registrations: enrollment.registrations ?? null,
         }));
     }
 
@@ -288,9 +314,9 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
                 linkedRegistration?.id ?? enrollment.id,
                 enrollment.created_at,
             ),
-            full_name: enrollment.full_name || linkedRegistration?.full_name || "",
+            full_name: enrollment.full_name || enrollment.profiles?.full_name || linkedRegistration?.full_name || "",
             email: enrollment.email || linkedRegistration?.email || "",
-            phone: enrollment.phone || linkedRegistration?.phone || "",
+            phone: enrollment.phone || enrollment.profiles?.phone || enrollment.profiles?.mobile_number || linkedRegistration?.phone || enrollment.registrations?.phone || "",
             courseReference: references.join(" · ") || "Not specified",
             created_at: enrollment.created_at,
             status: enrollment.status,
@@ -318,7 +344,7 @@ export async function getEnrollmentRegistrationDetails(
     const supabase = createServiceClient() ?? await createAuthenticatedServerClient();
     const registrationResult = await supabase
         .from("enrollments")
-        .select("id, application_number, student_id, applicant_user_id, batch_id, course_id, bundle_id, full_name, email, phone, college_institution, course_degree, specialization_branch, year_semester, city, state, employment_status, organization_name, source_of_info, terms_accepted, communication_consent, admin_notes, created_at, updated_at, status")
+        .select("*, profiles(phone, mobile_number, full_name), registrations(phone, college_institution, course_degree)")
         .eq("id", id)
         .maybeSingle();
 
@@ -349,6 +375,8 @@ export async function getEnrollmentRegistrationDetails(
                 batch_id: null,
                 course_id: null,
                 bundle_id: null,
+                profiles: null,
+                registrations: null,
                 college_institution: null,
                 course_degree: null,
                 specialization_branch: null,
@@ -443,6 +471,8 @@ export async function getEnrollmentRegistrationDetails(
             full_name: registration.full_name,
             email: registration.email,
             phone: registration.phone,
+            profiles: registration.profiles ?? null,
+            registrations: registration.registrations ?? null,
             college_institution: registration.college_institution,
             course_degree: registration.course_degree,
             specialization_branch: registration.specialization_branch,
