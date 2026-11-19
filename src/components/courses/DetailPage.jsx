@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import CourseCurriculum from "./CourseDetail";
 import CourseApplicationForm from "./CourseApplicationForm";
+import EnrollActionButton from "@/components/courses/EnrollActionButton";
 import { audienceOptions } from "@/data/courses";
 
 function ProgramDetailPage({ item }) {
@@ -42,6 +43,11 @@ function ProgramDetailPage({ item }) {
             Explore curriculum
             <ArrowRight size={18} aria-hidden="true" />
           </Link>
+          <EnrollActionButton
+            slug={item.slug}
+            kind="program"
+            className="course-detail-hero__cta sprint-focus inline-flex items-center justify-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark focus-visible:outline-3 focus-visible:outline-brand-red"
+          />
         </div>
 
         <div className="course-detail-hero__art">
@@ -149,7 +155,11 @@ function FlagshipDetailPage({ item }) {
             {item.eligibility ? <div><dt>Eligibility</dt><dd>{item.eligibility}</dd></div> : null}
             {item.audienceLabel ? <div><dt>Target audience</dt><dd>{item.audienceLabel}</dd></div> : null}
           </dl>
-          <Link href="/register">Register interest <ArrowRight size={16} /></Link>
+          <EnrollActionButton
+            slug={item.slug}
+            kind="program"
+            className="course-detail-hero__cta sprint-focus inline-flex items-center justify-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark focus-visible:outline-3 focus-visible:outline-brand-red"
+          />
           </div>
         </aside>
       </div>

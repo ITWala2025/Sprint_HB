@@ -8,6 +8,8 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function StudentEnrollPage() {
-  return <EnrollmentWizard />;
+export default function StudentEnrollPage({ searchParams }) {
+  const course = typeof searchParams?.course === "string" ? searchParams.course : null;
+  const bundle = typeof searchParams?.bundle === "string" ? searchParams.bundle : null;
+  return <EnrollmentWizard initialCourse={course} initialBundle={bundle} />;
 }

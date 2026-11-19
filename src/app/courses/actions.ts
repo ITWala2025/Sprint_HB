@@ -21,6 +21,7 @@ export async function applyForCourseAction(
   formData: FormData,
 ): Promise<CourseApplicationState> {
   const rawSlug = formData.get("slug");
+  const rawKind = formData.get("kind");
   if (
     typeof rawSlug !== "string" ||
     !/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(rawSlug)
@@ -28,6 +29,15 @@ export async function applyForCourseAction(
     return { error: "Select a valid course and try again." };
   }
   const slug = rawSlug;
+  const kind = rawKind === "bundle" ? "bundle" : rawKind === "course" ? "course" : "learning_path";
+
+  /* Learning paths have no enrolments table column, so route to the wizard
+   * with pre-selection instead of attempting a database insert. */
+  if (kind === "learning_path") {
+    return {
+      redirectTo: `/student/enroll?learning_path=${encodeURIComponent(slug)}`,
+    };
+  }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const publishableKey =
@@ -72,18 +82,28 @@ export async function applyForCourseAction(
     return { error: "Course applications are temporarily unavailable." };
   }
 
-  const [profileResult, courseResult] = await Promise.all([
+  const [profileResult, courseResult, bundleResult] = await Promise.all([
     authClient
       .from("profiles")
       .select("id, full_name, email, phone, role, status")
       .eq("id", user.id)
       .maybeSingle(),
-    serviceClient
-      .from("courses")
-      .select("id")
-      .eq("slug", slug)
-      .eq("is_published", true)
-      .maybeSingle(),
+    kind === "course"
+      ? serviceClient
+          .from("courses")
+          .select("id")
+          .eq("slug", slug)
+          .eq("is_published", true)
+          .maybeSingle()
+      : Promise.resolve({ data: null, error: null }),
+    kind === "bundle"
+      ? serviceClient
+          .from("course_bundles")
+          .select("id")
+          .eq("slug", slug)
+          .eq("is_published", true)
+          .maybeSingle()
+      : Promise.resolve({ data: null, error: null }),
   ]);
   const { data: profile, error: profileError } = profileResult;
   if (profileError) {
@@ -94,19 +114,20 @@ export async function applyForCourseAction(
     return { error: "An active Student Portal account is required to apply for a course." };
   }
 
-  const { data: course, error: courseError } = courseResult;
-  if (courseError) {
-    console.error("[CourseApplication] Could not load course:", courseError.message);
+  const item = kind === "course" ? courseResult.data : bundleResult.data;
+  const itemError = kind === "course" ? courseResult.error : bundleResult.error;
+  if (itemError) {
+    console.error("[CourseApplication] Could not load course:", itemError.message);
     return { error: "We couldn't verify this course. Please try again." };
   }
-  if (!course) {
+  if (!item) {
     return { error: "This course is no longer available." };
   }
 
   const { data: existingApplication, error: existingError } = await serviceClient
     .from("enrollments")
     .select("id, status")
-    .eq("course_id", course.id)
+    .eq(kind === "course" ? "course_id" : "bundle_id", item.id)
     .in("status", ["pending", "approved"])
     .or(`applicant_user_id.eq.${user.id},student_id.eq.${user.id}`)
     .limit(1)
@@ -117,21 +138,26 @@ export async function applyForCourseAction(
   }
 
   if (!existingApplication) {
-    const { error: insertError } = await serviceClient.from("enrollments").insert({
+    const insertPayload: Record<string, unknown> = {
       applicant_user_id: user.id,
       full_name: profile.full_name || user.email || "Student",
       email: profile.email || user.email || "",
       phone: profile.phone || user.phone || "",
-      course_id: course.id,
       status: "pending",
-    });
+    };
+    if (kind === "course") {
+      insertPayload.course_id = item.id;
+    } else {
+      insertPayload.bundle_id = item.id;
+    }
+    const { error: insertError } = await serviceClient.from("enrollments").insert(insertPayload);
 
     if (insertError) {
       if (isUniqueViolation(insertError)) {
         const { data: concurrentApplication, error: lookupError } = await serviceClient
           .from("enrollments")
           .select("id")
-          .eq("course_id", course.id)
+          .eq(kind === "course" ? "course_id" : "bundle_id", item.id)
           .in("status", ["pending", "approved"])
           .or(`applicant_user_id.eq.${user.id},student_id.eq.${user.id}`)
           .limit(1)

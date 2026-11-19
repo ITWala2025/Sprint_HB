@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { rolePaths } from "@/data/learningPaths";
 import { normalizeLearningPath } from "@/lib/course-utils";
+import EnrollActionButton from "@/components/courses/EnrollActionButton";
 
 export default function RoleBasedLearningPaths({ paths = rolePaths.map(normalizeLearningPath) }) {
   return (
@@ -38,14 +39,21 @@ export default function RoleBasedLearningPaths({ paths = rolePaths.map(normalize
               {path.total_hours} total learning hours
             </p>
 
-            <Link
-              className="role-pathway__link"
-              href={`/learning-paths/${path.slug}`}
-              aria-label={`Explore the ${path.title || path.role} learning path`}
-            >
-              Explore Learning Path
-              <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            <div className="role-pathway__actions">
+              <Link
+                className="role-pathway__link"
+                href={`/learning-paths/${path.slug}`}
+                aria-label={`Explore the ${path.title || path.role} learning path`}
+              >
+                Explore Learning Path
+                <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+              <EnrollActionButton
+                slug={path.slug}
+                kind="learning_path"
+                className="role-pathway__enroll sprint-focus inline-flex items-center justify-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark focus-visible:outline-3 focus-visible:outline-brand-red"
+              />
+            </div>
           </article>
         ))}
       </div>

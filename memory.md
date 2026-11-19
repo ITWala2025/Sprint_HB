@@ -869,3 +869,27 @@ ormalizeSuggestions as a final safety net in getLocalChatbotReply so all code pa
 - **Route-Level Caching:** Added route segment config (`export const revalidate = 3600;`) to `src/app/courses/page.jsx` to cache the courses catalogue.
 - **CMS Server Actions & Instant Invalidation:** Refactored the announcements CMS (`src/app/admin/updates/page.tsx`) to remove client-side mutations. Created secure Server Actions in `src/app/admin/updates/actions.ts` for create, update, delete, and poster upload operations. 
 - **Cache Busting:** Implemented `revalidateTag("announcements", { expire: 0 })` inside the new CMS Server Actions to instantly invalidate the public ticker cache whenever an announcement is modified, eliminating the 1-hour propagation delay.
+
+## 67. Signature Program Enroll Now CTAs — 2026-11-19
+
+- **Catalogue Signature Program Cards** (`src/components/courses/CourseCatalogue.jsx`): Added "Enroll Now" `<Link>` buttons alongside existing "Explore Program →" links for all signature programs (SPRINT RISE, SPRINT Career Accelerator, and any other `kind === "signature"` programs) in the FeaturedPrograms section. Buttons route to `/student/enroll?bundle=<slug>`, styled with SPRINT brand tokens (`bg-brand-red text-white rounded-xl`, `sprint-focus` ring, `shadow-brand-cta`, `hover:bg-brand-red-dark`), arranged in a responsive inline-flex row wrapping alongside "Explore Program →".
+
+- **Signature Program / Bundle Detail Pages**:
+  - `src/components/courses/DetailPage.jsx`: `ProgramDetailPage` gained an "Enroll Now" CTA linking to `/student/enroll?bundle=<slug>` (applies to `/programs/sprint-rise` and `/programs/career-accelerator`). `FlagshipDetailPage`'s "Register interest" link was retargeted from `/register` to `/student/enroll?bundle=<slug>`.
+  - `src/components/courses/BundleDetailPage.jsx`: "Enroll for this bundle" link retargeted from `/register` to `/student/enroll?bundle=<slug>`.
+
+- **Enrollment Wizard Pre-Selection** (`src/app/student/enroll/page.jsx`, `src/components/student/enrollment/EnrollmentWizard.jsx`): The enroll page now reads `?course=<slug>` and `?bundle=<slug>` search params and passes them to `EnrollmentWizard`, which pre-populates `education.course` in shared state on mount. On submit, `readSelections()` in `src/app/student/enroll/actions.ts` pushes the pre-selected value into `courseIds` when empty, and `resolveProducts()` resolves it by UUID or slug against both `public.courses` and `public.course_bundles`, so signature program and bundle slugs submit cleanly.
+
+- **Validation**: `npx tsc --noEmit` passes with 0 errors; all 95 tests in `tests/unit/student/enrollment/` pass across 9 test files; `npm run build` succeeds for all public pages (pre-existing Supabase env var issue on `/staff/dashboard` unrelated to this change).
+
+## 68. One-Click Enrollment for All Courses and Bundles — 2026-11-19
+
+- **`applyForCourseAction` extended** (`src/app/courses/actions.ts`): Now accepts a `kind` form field (`"course"` or `"bundle"`). When `kind === "bundle"`, it queries `public.course_bundles` by slug, checks for existing bundle applications, and inserts into `public.enrollments` with `bundle_id` instead of `course_id`. Standard courses continue to work exactly as before via `course_id`. One-click enrollment logic (auth check, active student profile, duplicate application prevention, redirect to `/student/my-course`) is shared across both kinds.
+
+- **`CourseApplicationForm` updated** (`src/components/courses/CourseApplicationForm.tsx`): Accepts an optional `kind` prop (`"course"` | `"bundle"`, defaults to `"course"`) and renders a hidden `kind` input alongside the existing `slug` input.
+
+- **`BundleDetailPage` updated** (`src/components/courses/BundleDetailPage.jsx`): Replaced the `/student/enroll?bundle=<slug>` link with `CourseApplicationForm slug={item.slug} kind="bundle"`, so bundles now use the same one-click enrollment flow as standard courses — logged-in active students get immediate enrollment submission; unauthenticated users are redirected to `/student/login`.
+
+- **Consistency**: All course types (standard courses, bundles, signature programs) now share the same enrollment action. Standard courses and bundles use `CourseApplicationForm` → `applyForCourseAction` for one-click enrollment. Signature programs and flagship programs use "Enroll Now" → `/student/enroll?bundle=<slug>` → wizard pre-selection → same `applyForCourseAction` on submit.
+
+- **Validation**: `npx tsc --noEmit` passes with 0 errors; all 95 tests in `tests/unit/student/enrollment/` pass; `npm run build` succeeds.

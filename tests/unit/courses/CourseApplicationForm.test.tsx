@@ -27,7 +27,7 @@ describe("CourseApplicationForm", () => {
       "value",
       "cloud-fundamentals",
     );
-    fireEvent.click(screen.getByRole("button", { name: "Sign up for this course" }));
+    fireEvent.click(screen.getByRole("button", { name: "Enroll for this course" }));
 
     await waitFor(() => {
       expect(applyAction).toHaveBeenCalled();

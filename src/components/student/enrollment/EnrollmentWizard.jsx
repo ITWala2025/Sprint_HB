@@ -41,7 +41,7 @@ const ENROLLMENT_DRAFT_KEY = "student_enrollment_draft";
  * A temporary session-storage draft preserves the answers while an existing
  * applicant visits the login or password-recovery page.
  */
-export default function EnrollmentWizard() {
+export default function EnrollmentWizard({ initialCourse, initialBundle }) {
   const router = useRouter();
   const [stepIndex, setStepIndex] = useState(0);
   const [values, setValues] = useState(createEmptyEnrollment);
@@ -85,6 +85,21 @@ export default function EnrollmentWizard() {
     });
     setStatusNotice("Your saved enrollment details have been restored.");
   }, []);
+
+  // Pre-select a course or bundle from URL query params on first mount.
+  useEffect(() => {
+    if (initialBundle) {
+      setValues((previous) => ({
+        ...previous,
+        education: { ...previous.education, course: initialBundle },
+      }));
+    } else if (initialCourse) {
+      setValues((previous) => ({
+        ...previous,
+        education: { ...previous.education, course: initialCourse },
+      }));
+    }
+  }, [initialCourse, initialBundle]);
 
   const step = ENROLLMENT_STEPS[stepIndex];
   const isFirst = stepIndex === 0;

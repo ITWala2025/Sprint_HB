@@ -7,6 +7,7 @@ import { applyForCourseAction } from "@/app/courses/actions";
 
 type CourseApplicationFormProps = {
   slug: string;
+  kind?: "course" | "bundle";
   buttonLabel?: string;
   className?: string;
 };
@@ -34,6 +35,7 @@ function SubmitButton({
 
 export default function CourseApplicationForm({
   slug,
+  kind = "course",
   buttonLabel = "Enroll for this course",
   className,
 }: CourseApplicationFormProps) {
@@ -48,6 +50,7 @@ export default function CourseApplicationForm({
   return (
     <form action={formAction}>
       <input type="hidden" name="slug" value={slug} />
+      <input type="hidden" name="kind" value={kind} />
       <SubmitButton buttonLabel={buttonLabel} className={className} />
       {state.error ? (
         <p className="mt-2 text-sm text-brand-red" role="alert" aria-live="polite">

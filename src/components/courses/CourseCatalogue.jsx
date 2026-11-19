@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import JourneyScroller from "@/components/courses/JourneyScroller";
 import RoleBasedLearningPaths from "@/components/courses/RoleBasedLearningPaths";
+import EnrollActionButton from "@/components/courses/EnrollActionButton";
 import { createClient } from "@/lib/supabase/client";
 import {
   audienceOptions,
@@ -303,6 +304,11 @@ function FeaturedPrograms({ programs: signaturePrograms }) {
             <li><BadgeCheck size={19} aria-hidden="true" /><span>{rise.credential || "Certification"}</span></li>
           </ul>
           <Link href={`/programs/${rise.slug}`} className="courses-signature-programs__cta">Explore Program<ArrowRight size={18} aria-hidden="true" /></Link>
+          <EnrollActionButton
+            slug={rise.slug}
+            kind="program"
+            className="courses-signature-programs__enroll sprint-focus inline-flex items-center justify-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark focus-visible:outline-3 focus-visible:outline-brand-red"
+          />
         </div>
         {riseStages.length ? <section className="courses-signature-programs__journey" aria-labelledby="signature-programs-journey-heading">
           <h3 id="signature-programs-journey-heading" className="courses-signature-programs__journey-heading">{rise.title} Journey</h3>
@@ -321,6 +327,11 @@ function FeaturedPrograms({ programs: signaturePrograms }) {
           <h3>{careerAccelerator.tagline}</h3>
           <p className="courses-signature-programs__description">{careerAccelerator.description}</p>
           <Link href={`/programs/${careerAccelerator.slug}`} className="courses-signature-programs__cta">Explore Program<ArrowRight size={18} aria-hidden="true" /></Link>
+          <EnrollActionButton
+            slug={careerAccelerator.slug}
+            kind="program"
+            className="courses-signature-programs__enroll sprint-focus inline-flex items-center justify-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark focus-visible:outline-3 focus-visible:outline-brand-red"
+          />
         </div>
         {careerStages.length ? <section className="courses-signature-programs__journey" aria-labelledby="career-accelerator-journey-heading">
           <h3 id="career-accelerator-journey-heading" className="courses-signature-programs__journey-heading">Career Accelerator Journey</h3>
@@ -339,6 +350,11 @@ function FeaturedPrograms({ programs: signaturePrograms }) {
           <h3>{program.tagline}</h3>
           <p className="courses-signature-programs__description">{program.description}</p>
           <Link href={`/programs/${program.slug}`} className="courses-signature-programs__cta">Explore Program<ArrowRight size={18} aria-hidden="true" /></Link>
+          <EnrollActionButton
+            slug={program.slug}
+            kind="program"
+            className="courses-signature-programs__enroll sprint-focus inline-flex items-center justify-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark focus-visible:outline-3 focus-visible:outline-brand-red"
+          />
         </div>
       </article>)}
     </section>

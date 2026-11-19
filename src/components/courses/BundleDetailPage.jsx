@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import CourseCard from "@/components/cards/CourseCard";
+import EnrollActionButton from "@/components/courses/EnrollActionButton";
 import { audienceOptions } from "@/data/courses";
 
 function getAudienceLabels(audience) {
@@ -33,9 +34,12 @@ export default function BundleDetailPage({ item, includedCourses }) {
           <h1>{item.title}</h1>
           <p>{item.description}</p>
           <div className="mt-5">
-            <Link href="/register" className="course-detail-hero__cta">
-              Enroll for this bundle
-            </Link>
+            <EnrollActionButton
+              slug={item.slug}
+              kind="bundle"
+              buttonLabel="Enroll for this bundle"
+              className="course-detail-hero__cta sprint-focus inline-flex items-center justify-center gap-2 rounded-xl bg-brand-red px-5 py-2.5 text-sm font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark focus-visible:outline-3 focus-visible:outline-brand-red"
+            />
           </div>
           <div className="course-detail-hero__facts">
             <span>{item.duration}</span>
