@@ -19,6 +19,7 @@ import {
     updateAnnouncement,
     uploadAnnouncementPoster,
 } from "./actions";
+import { isSupportedAnnouncementUpload } from "./upload-validation";
 
 type Announcement = AnnouncementItem;
 
@@ -79,6 +80,7 @@ function isImageLink(value: string): boolean {
 
     try {
         const pathname = new URL(url, "https://sprint.invalid").pathname;
+        if (/\.pdf$/i.test(pathname)) return false;
         return pathname.includes("/storage/v1/object/public/announcement-assets/")
             || /\.(?:png|jpe?g|webp|svg)$/i.test(pathname);
     } catch {
@@ -113,7 +115,7 @@ export default function AnnouncementManagementClient({
     const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null | undefined>(undefined);
     const [form, setForm] = useState<AnnouncementForm>(emptyForm);
     const [linkUrlError, setLinkUrlError] = useState("");
-    const [uploadingImage, setUploadingImage] = useState(false);
+    const [uploadingFile, setUploadingFile] = useState(false);
     const [uploadError, setUploadError] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -167,7 +169,7 @@ export default function AnnouncementManagementClient({
         setNotice(null);
         setLinkUrlError("");
         setUploadError("");
-        setUploadingImage(false);
+        setUploadingFile(false);
         setEditingAnnouncement(announcement);
         setForm(announcement ? {
             type: normalizeAnnouncementType(announcement.type),
@@ -179,7 +181,7 @@ export default function AnnouncementManagementClient({
     }
 
     function closeForm() {
-        if (isSaving || uploadingImage) return;
+        if (isSaving || uploadingFile) return;
         setEditingAnnouncement(undefined);
     }
 
@@ -188,12 +190,12 @@ export default function AnnouncementManagementClient({
         event.target.value = "";
         if (!file) return;
 
-        if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
-            setUploadError("Choose a PNG, JPEG, or WebP image.");
+        if (!isSupportedAnnouncementUpload(file)) {
+            setUploadError("Choose a PNG, JPEG, WebP, or PDF file.");
             return;
         }
 
-        setUploadingImage(true);
+        setUploadingFile(true);
         setUploadError("");
         try {
             const formData = new FormData();
@@ -204,20 +206,20 @@ export default function AnnouncementManagementClient({
                 return;
             }
 
-            setForm((current) => ({ ...current, link_url: result.publicUrl ?? "" }));
+            setForm((current) => ({ ...current, link_url: result.publicUrl }));
             setLinkUrlError("");
-            setNotice({ type: "success", message: "Poster uploaded and link set." });
+            setNotice({ type: "success", message: "File uploaded and link set." });
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
             setUploadError(`Upload failed: ${message}`);
         } finally {
-            setUploadingImage(false);
+            setUploadingFile(false);
         }
     }
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (isSaving || uploadingImage) return;
+        if (isSaving || uploadingFile) return;
 
         if (editingAnnouncement && !canEdit) {
             setNotice({ type: "error", message: "You do not have permission to edit announcements." });
@@ -536,7 +538,7 @@ export default function AnnouncementManagementClient({
                                 </h2>
                                 <p className="mt-1 text-sm text-slate-400">Set the message and how it appears on the website.</p>
                             </div>
-                            <button type="button" onClick={closeForm} disabled={isSaving || uploadingImage} aria-label="Close dialog" className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white disabled:opacity-50">
+                            <button type="button" onClick={closeForm} disabled={isSaving || uploadingFile} aria-label="Close dialog" className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white disabled:opacity-50">
                                 <X className="size-5" aria-hidden="true" />
                             </button>
                         </div>
@@ -591,21 +593,21 @@ export default function AnnouncementManagementClient({
                                     <input
                                         ref={fileInputRef}
                                         type="file"
-                                        accept="image/png,image/jpeg,image/webp"
+                                        accept="image/png,image/jpeg,image/webp,application/pdf"
                                         onChange={(event) => void handlePosterUpload(event)}
                                         className="sr-only"
                                         tabIndex={-1}
-                                        aria-label="Upload poster or image"
+                                        aria-label="Upload poster or PDF"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => fileInputRef.current?.click()}
-                                        disabled={uploadingImage || isSaving}
+                                        disabled={uploadingFile || isSaving}
                                         className="inline-flex items-center gap-2 rounded-lg border border-[#334155] px-3 py-2 text-xs font-semibold text-slate-200 transition hover:border-slate-500 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
                                     >
-                                        {uploadingImage ? "Uploading image…" : "Upload Poster / Image"}
+                                        {uploadingFile ? "Uploading file…" : "Upload Poster / PDF"}
                                     </button>
-                                    <span className="text-xs text-slate-500">PNG, JPEG, or WebP</span>
+                                    <span className="text-xs text-slate-500">PNG, JPEG, WebP, or PDF</span>
                                 </div>
                                 {uploadError && (
                                     <p className="mt-2 text-xs text-red-300" role="alert">{uploadError}</p>
@@ -623,7 +625,7 @@ export default function AnnouncementManagementClient({
                                                 setForm((current) => ({ ...current, link_url: "" }));
                                                 setLinkUrlError("");
                                             }}
-                                            disabled={uploadingImage || isSaving}
+                                            disabled={uploadingFile || isSaving}
                                             className="text-xs font-semibold text-red-300 underline-offset-4 hover:underline disabled:opacity-50"
                                         >
                                             Clear
@@ -654,11 +656,11 @@ export default function AnnouncementManagementClient({
                                 </label>
                             </div>
                             <div className="flex justify-end gap-3 border-t border-[#1e293b] pt-5">
-                                <button type="button" onClick={closeForm} disabled={isSaving || uploadingImage} className="rounded-lg border border-[#334155] px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/5 disabled:opacity-50">
+                                <button type="button" onClick={closeForm} disabled={isSaving || uploadingFile} className="rounded-lg border border-[#334155] px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/5 disabled:opacity-50">
                                     Cancel
                                 </button>
-                                <button type="submit" disabled={isSaving || uploadingImage} className="inline-flex items-center gap-2 rounded-lg bg-[#ef3e43] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#ff5055] disabled:cursor-not-allowed disabled:opacity-60">
-                                    {uploadingImage ? "Uploading image…" : isSaving ? "Saving…" : editingAnnouncement ? "Save changes" : "Create announcement"}
+                                <button type="submit" disabled={isSaving || uploadingFile} className="inline-flex items-center gap-2 rounded-lg bg-[#ef3e43] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#ff5055] disabled:cursor-not-allowed disabled:opacity-60">
+                                    {uploadingFile ? "Uploading file…" : isSaving ? "Saving…" : editingAnnouncement ? "Save changes" : "Create announcement"}
                                 </button>
                             </div>
                         </form>
