@@ -114,6 +114,18 @@ describe("StudentsDirectoryTable", () => {
     expect(container.textContent).not.toContain("77777777-eeee-ffff-0000-333333333333");
   });
 
+  it("keeps horizontal scrolling inside the bounded table wrapper", () => {
+    const { container } = render(<StudentsDirectoryTable students={mockStudents} />);
+    const directory = screen.getByRole("region", { name: "Student directory" });
+    const scrollContainer = directory.children[0];
+    const table = screen.getByRole("table");
+
+    expect(directory).toHaveClass("w-full", "max-w-full", "min-w-0", "overflow-hidden");
+    expect(scrollContainer).toHaveClass("w-full", "max-w-full", "overflow-x-auto");
+    expect(table).toHaveClass("w-full", "min-w-max", "border-collapse");
+    expect(container.querySelectorAll(".overflow-x-auto")).toHaveLength(1);
+  });
+
   it("opens details modal with student information and does not show UUIDs", async () => {
     const user = userEvent.setup();
     const { container } = render(<StudentsDirectoryTable students={mockStudents} />);

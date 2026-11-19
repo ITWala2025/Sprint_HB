@@ -412,7 +412,7 @@ export default function AdminLayoutClient({
 
     return (
         <>
-            <div className="min-h-[calc(100vh-5rem)] bg-slate-50 lg:flex">
+            <div className="min-h-[calc(100vh-5rem)] w-full max-w-full overflow-x-clip bg-slate-50 lg:flex">
                 {/* Mobile Backdrop */}
                 <div
                     className={`fixed inset-0 z-[60] bg-brand-navy/35 transition-opacity lg:hidden ${isMobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
@@ -430,9 +430,9 @@ export default function AdminLayoutClient({
                 </div>
 
                 {/* Main Content Area */}
-                <div className="min-w-0 flex-1">
-                    <header className="sticky top-0 z-40 flex h-20 items-center justify-between gap-4 border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
-                        <div className="flex min-w-0 items-center gap-3">
+                <div className="min-w-0 max-w-full flex-1 overflow-x-clip">
+                    <header className="sticky top-0 z-40 flex h-20 min-w-0 max-w-full items-center justify-between gap-4 border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+                        <div className="flex min-w-0 max-w-full items-center gap-3">
                             <button
                                 type="button"
                                 onClick={() => setIsMobileOpen(true)}
@@ -453,7 +453,7 @@ export default function AdminLayoutClient({
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-2 sm:gap-4">
+                        <div className="flex min-w-0 max-w-full items-center gap-2 sm:gap-4">
                             <label className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-brand-text-muted md:flex">
                                 <Search className="size-4" aria-hidden="true" />
                                 <span className="sr-only">{isAdmin ? "Search admin console" : "Search workspace"}</span>
@@ -505,7 +505,7 @@ export default function AdminLayoutClient({
                         </div>
                     </header>
 
-                    <main className="min-h-[calc(100vh-10rem)] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+                    <main className="min-h-[calc(100vh-10rem)] w-full max-w-full min-w-0 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
                         <AdminPermissionsProvider permissions={permissionMap} isSuperAdmin={isAdmin}>
                             {children}
                         </AdminPermissionsProvider>

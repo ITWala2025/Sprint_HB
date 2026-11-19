@@ -10,7 +10,7 @@ function ActiveCourseBadges({ student }: { student: StudentDirectoryEntry }) {
     }
 
     return (
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex min-w-0 max-w-full flex-wrap gap-1.5">
             {student.activeCourses.map((course, index) => (
                 <span
                     key={`${course.kind}-${course.title}-${index}`}
@@ -55,7 +55,7 @@ function StudentDetailsModal({
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-brand-navy/60 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex min-w-0 max-w-full items-center justify-center bg-brand-navy/60 p-4 backdrop-blur-sm"
             onMouseDown={(event) => {
                 if (event.target === event.currentTarget) onClose();
             }}
@@ -64,9 +64,9 @@ function StudentDetailsModal({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="student-details-title"
-                className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-white/50 bg-white shadow-2xl"
+                className="flex max-h-[90vh] w-full min-w-0 max-w-3xl flex-col overflow-hidden rounded-2xl border border-white/50 bg-white shadow-2xl"
             >
-                <header className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7">
+                <header className="flex min-w-0 max-w-full items-start justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-7">
                     <div className="min-w-0">
                         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-brand-red">Student Directory</p>
                         <h2 id="student-details-title" className="mt-1 font-display text-xl font-bold text-brand-navy">
@@ -89,7 +89,7 @@ function StudentDetailsModal({
                     <div className="space-y-6">
                         <section aria-labelledby="student-contact-heading">
                             <h3 id="student-contact-heading" className="font-display text-sm font-bold text-brand-navy">Enrollment & Profile Information</h3>
-                            <dl className="mt-3 grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
+                            <dl className="mt-3 grid min-w-0 max-w-full gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
                                 <Detail label="Student ID" value={student.studentId} />
                                 <Detail label="Full Name" value={student.name} />
                                 <Detail label="Email" value={student.email} />
@@ -139,9 +139,9 @@ export default function StudentsDirectoryTable({
 
     return (
         <>
-            <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Student directory">
-                <div className="overflow-x-auto">
-                    <table className="w-full min-w-[2000px] text-left text-sm">
+            <div className="w-full max-w-full min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white" role="region" aria-label="Student directory">
+                <div className="w-full max-w-full overflow-x-auto">
+                    <table className="w-full min-w-max border-collapse text-left text-sm">
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-semibold uppercase tracking-wider text-slate-500">
                                 <th className="px-6 py-4">Student ID</th>
@@ -220,7 +220,7 @@ export default function StudentsDirectoryTable({
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </div>
             {selectedStudent && (
                 <StudentDetailsModal
                     student={selectedStudent}
