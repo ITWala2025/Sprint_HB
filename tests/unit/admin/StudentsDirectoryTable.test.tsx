@@ -78,32 +78,35 @@ describe("StudentsDirectoryTable", () => {
   it("renders all required applicant and enrollment fields", () => {
     const { container } = render(<StudentsDirectoryTable students={mockStudents} />);
 
-    // Check table headers
+    // Check compact table headers
     expect(screen.getByRole("columnheader", { name: "Student ID" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Full Name" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Email" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Phone Number" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "College / Institution" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Degree" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Specialization / Branch" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Semester / Year" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "City" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "State" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Employment Status" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Organization" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Enrolled Courses / Bundles" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Name" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Contact" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "College / Institution & Degree" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Status" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Date of Enrollment" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Details" })).toBeInTheDocument();
+    for (const removedColumn of [
+      "Specialization / Branch",
+      "Semester / Year",
+      "City",
+      "State",
+      "Employment Status",
+      "Organization",
+      "Enrolled Courses / Bundles",
+    ]) {
+      expect(screen.queryByRole("columnheader", { name: removedColumn })).not.toBeInTheDocument();
+    }
 
     // Check row data
     expect(screen.getByText("SPR-2026-0001")).toBeInTheDocument();
     expect(screen.getByText("Aarav Patel")).toBeInTheDocument();
     expect(screen.getByText("aarav@example.com")).toBeInTheDocument();
     expect(screen.getByText("+91 9876543210")).toBeInTheDocument();
-    expect(screen.getByText("Full Stack Web Development")).toBeInTheDocument();
     expect(screen.getAllByText("Active").length).toBe(3);
     expect(screen.getByText("15 Oct 2026")).toBeInTheDocument();
-    expect(screen.getByText("Not enrolled")).toBeInTheDocument();
+    expect(screen.getByText("BIT Sindri")).toBeInTheDocument();
+    expect(screen.getAllByText("B.Tech")).toHaveLength(3);
 
     // Verify mock strings are NOT rendered
     expect(container.textContent).not.toContain("General Technology Track");
@@ -122,7 +125,8 @@ describe("StudentsDirectoryTable", () => {
 
     expect(directory).toHaveClass("w-full", "max-w-full", "min-w-0", "overflow-hidden");
     expect(scrollContainer).toHaveClass("w-full", "max-w-full", "overflow-x-auto");
-    expect(table).toHaveClass("w-full", "min-w-max", "border-collapse");
+    expect(table).toHaveClass("w-full", "table-fixed", "border-collapse");
+    expect(table).not.toHaveClass("min-w-max");
     expect(container.querySelectorAll(".overflow-x-auto")).toHaveLength(1);
   });
 
@@ -137,6 +141,13 @@ describe("StudentsDirectoryTable", () => {
     expect(screen.getByText("Enrollment & Profile Information")).toBeInTheDocument();
     expect(screen.getAllByText("SPR-2026-0001").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("BIT Sindri")).toHaveLength(2);
+    expect(screen.getByText("Computer Science")).toBeInTheDocument();
+    expect(screen.getByText("Final Year")).toBeInTheDocument();
+    expect(screen.getByText("Dhanbad")).toBeInTheDocument();
+    expect(screen.getByText("Jharkhand")).toBeInTheDocument();
+    expect(screen.getByText("Student")).toBeInTheDocument();
+    expect(screen.getByText("Not provided")).toBeInTheDocument();
+    expect(screen.getAllByText("Full Stack Web Development").length).toBeGreaterThanOrEqual(1);
 
     // Verify UUID is NOT in modal content
     expect(container.textContent).not.toContain("99999999-aaaa-bbbb-cccc-111111111111");
@@ -145,5 +156,6 @@ describe("StudentsDirectoryTable", () => {
   it("renders empty state message when student list is empty", () => {
     render(<StudentsDirectoryTable students={[]} />);
     expect(screen.getByText("No verified active students are available.")).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "No verified active students are available." })).toHaveAttribute("colspan", "7");
   });
 });

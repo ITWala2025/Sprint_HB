@@ -141,52 +141,51 @@ export default function StudentsDirectoryTable({
         <>
             <div className="w-full max-w-full min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white" role="region" aria-label="Student directory">
                 <div className="w-full max-w-full overflow-x-auto">
-                    <table className="w-full min-w-max border-collapse text-left text-sm">
+                    <table className="w-full table-fixed border-collapse text-left text-sm">
+                        <colgroup>
+                            <col className="w-[14%]" />
+                            <col className="w-[12%]" />
+                            <col className="w-[23%]" />
+                            <col className="w-[18%]" />
+                            <col className="w-[11%]" />
+                            <col className="w-[13%]" />
+                            <col className="w-[9%]" />
+                        </colgroup>
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                <th className="px-6 py-4">Student ID</th>
-                                <th className="px-6 py-4">Full Name</th>
-                                <th className="px-6 py-4">Email</th>
-                                <th className="px-6 py-4">Phone Number</th>
-                                <th className="px-6 py-4">College / Institution</th>
-                                <th className="px-6 py-4">Degree</th>
-                                <th className="px-6 py-4">Specialization / Branch</th>
-                                <th className="px-6 py-4">Semester / Year</th>
-                                <th className="px-6 py-4">City</th>
-                                <th className="px-6 py-4">State</th>
-                                <th className="px-6 py-4">Employment Status</th>
-                                <th className="px-6 py-4">Organization</th>
-                                <th className="px-6 py-4">Enrolled Courses / Bundles</th>
-                                <th className="px-6 py-4">Status</th>
-                                <th className="px-6 py-4">Date of Enrollment</th>
-                                <th className="px-6 py-4 text-right">Details</th>
+                                <th className="break-words px-2 py-4">Student ID</th>
+                                <th className="break-words px-2 py-4">Name</th>
+                                <th className="break-words px-2 py-4">Contact</th>
+                                <th className="break-words px-2 py-4">College / Institution &amp; Degree</th>
+                                <th className="break-words px-2 py-4">Status</th>
+                                <th className="break-words px-2 py-4">Date of Enrollment</th>
+                                <th className="break-words px-2 py-4 text-right">Details</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {students.map((student) => {
                                 return (
                                     <tr key={student.id} className="hover:bg-slate-50">
-                                        <td className="whitespace-nowrap px-6 py-4 font-mono font-bold text-brand-navy">
-                                            {student.studentId}
+                                        <td className="break-all px-2 py-4 font-mono text-xs font-bold text-brand-navy">
+                                            {student.registrationNumber}
                                         </td>
-                                        <td className="px-6 py-4 font-semibold text-brand-navy">
+                                        <td className="break-words px-2 py-4 font-semibold text-brand-navy">
                                             {student.name}
                                         </td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.email}</td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.phone}</td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.college}</td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.degree}</td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.specialization}</td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.semester}</td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.city}</td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.state}</td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.employmentStatus}</td>
-                                        <td className="px-6 py-4 text-brand-text-secondary">{student.organization}</td>
-                                        <td className="px-6 py-4 font-medium text-brand-navy">
-                                            <ActiveCourseBadges student={student} />
+                                        <td className="break-words px-2 py-4 text-brand-text-secondary">
+                                            <div className="min-w-0 space-y-1">
+                                                <p className="break-all">{student.email}</p>
+                                                <p className="text-xs">{student.phone}</p>
+                                            </div>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ${
+                                        <td className="break-words px-2 py-4 text-brand-text-secondary">
+                                            <div className="min-w-0 space-y-1">
+                                                <p className="break-words font-medium text-brand-navy">{student.college}</p>
+                                                <p className="break-words text-xs">{student.degree}</p>
+                                            </div>
+                                        </td>
+                                        <td className="px-2 py-4">
+                                            <span className={`inline-flex rounded-full px-1.5 py-1 text-[11px] font-bold ${
                                                 student.status.toLowerCase() === "active"
                                                     ? "bg-emerald-50 text-emerald-700"
                                                     : "bg-slate-100 text-slate-600"
@@ -194,15 +193,15 @@ export default function StudentsDirectoryTable({
                                                 {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
                                             </span>
                                         </td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-xs text-brand-text-muted">
+                                        <td className="break-words px-2 py-4 text-[11px] text-brand-text-muted">
                                             {student.dateOfEnrollment}
                                         </td>
-                                        <td className="px-6 py-4 text-right whitespace-nowrap">
+                                        <td className="px-2 py-4 text-right">
                                             <button
                                                 type="button"
                                                 onClick={() => setSelectedStudent(student)}
                                                 aria-label={`View details for ${student.name}`}
-                                                className="sprint-focus inline-flex size-9 items-center justify-center rounded-lg border border-slate-200 text-brand-navy transition hover:border-brand-navy hover:bg-slate-100"
+                                                className="sprint-focus inline-flex size-8 items-center justify-center rounded-lg border border-slate-200 text-brand-navy transition hover:border-brand-navy hover:bg-slate-100"
                                             >
                                                 <Eye className="size-4" aria-hidden="true" />
                                             </button>
@@ -212,7 +211,7 @@ export default function StudentsDirectoryTable({
                             })}
                             {students.length === 0 && (
                                 <tr>
-                                    <td colSpan={16} className="px-6 py-12 text-center text-sm text-brand-text-muted">
+                                    <td colSpan={7} className="px-6 py-12 text-center text-sm text-brand-text-muted">
                                         No verified active students are available.
                                     </td>
                                 </tr>

@@ -65,9 +65,11 @@ export async function updateSession(request: NextRequest) {
 
   // Fast Path: Check cryptographically verified admin session token (0ms network calls)
   const existingAdminSession = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  let hasVerifiedAdminSession = false;
   if (existingAdminSession) {
     const verifiedSession = await verifyAdminSessionToken(existingAdminSession);
     if (verifiedSession && verifiedSession.isActive) {
+      hasVerifiedAdminSession = true;
       const isAdmin = verifiedSession.isAdmin;
       const isActiveStaff = verifiedSession.role === "staff" && !isAdmin;
 
@@ -87,8 +89,8 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url);
       }
 
-      // If user is accessing protected admin/staff routes and has verified session, pass through immediately!
-      if (isAdminSubRoute || isStaffWorkspaceRoute) {
+      // Keep the staff fast path; admin routes must still refresh Supabase auth cookies.
+      if (isStaffWorkspaceRoute) {
         return supabaseResponse;
       }
     }
@@ -134,6 +136,9 @@ export async function updateSession(request: NextRequest) {
 
   // 1. If an unauthenticated visitor tries to reach /admin/dashboard or subroutes, bounce to /admin
   if (!user && isAdminSubRoute) {
+    if (hasVerifiedAdminSession) {
+      return supabaseResponse;
+    }
     if (request.cookies.has(ADMIN_SESSION_COOKIE)) {
       supabaseResponse.cookies.delete(ADMIN_SESSION_COOKIE);
     }

@@ -1,44 +1,52 @@
 "use server";
 
 import "server-only";
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { createServerClient } from "@supabase/ssr";
 import type { User } from "@supabase/supabase-js";
-import { assertModuleAccess } from "@/app/admin/authorization";
+import { assertModuleAccess, roleHasPermission } from "@/app/admin/authorization";
 import { createServiceClient } from "@/lib/supabase/service";
+import { createClient as createSupabaseServerClient } from "@/lib/supabase/server";
 import { formatApplicationId, sanitizeStudentId } from "@/lib/id-utils";
 
-async function createAuthenticatedServerClient() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-        ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!supabaseUrl || !publishableKey) {
-        throw new Error("Supabase public environment variables are not configured.");
-    }
+type ReviewerResult =
+    | { success: true; reviewerId: string }
+    | { success: false; error: string };
 
-    const cookieStore = await cookies();
-    return createServerClient(supabaseUrl, publishableKey, {
-        cookies: {
-            getAll: () => cookieStore.getAll(),
-            setAll: (cookiesToSet) => {
-                try {
-                    cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-                } catch {
-                    // Server Components cannot write refreshed auth cookies.
-                }
-            },
-        },
-    });
-}
-
-async function getCurrentReviewerId(): Promise<string> {
-    const supabase = await createAuthenticatedServerClient();
+async function getCurrentReviewerId(): Promise<ReviewerResult> {
+    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-        throw new Error(`Could not verify the reviewing administrator${error ? `: ${error.message}` : "."}`);
+    if (!data.user) {
+        return { success: false, error: "Admin session expired. Please sign in again." };
     }
-    return data.user.id;
+    if (error) {
+        return { success: false, error: `Could not verify the administrator session: ${error.message}` };
+    }
+
+    const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role, is_active, roles(permissions, is_active)")
+        .eq("id", data.user.id)
+        .maybeSingle();
+
+    if (profileError) {
+        return { success: false, error: `Could not verify reviewer permissions: ${profileError.message}` };
+    }
+
+    const assignedRole = Array.isArray(profile?.roles) ? profile.roles[0] : profile?.roles;
+    const hasPermission = profile?.is_active === true && (
+        profile.role === "admin" ||
+        (
+            profile.role === "staff" &&
+            assignedRole?.is_active === true &&
+            roleHasPermission(assignedRole.permissions, "student_ops", "edit")
+        )
+    );
+
+    if (!hasPermission) {
+        return { success: false, error: "You do not have permission to review enrollment applications." };
+    }
+
+    return { success: true, reviewerId: data.user.id };
 }
 
 export type EnrollmentRegistration = {
@@ -549,7 +557,7 @@ export async function getEnrollmentRegistrationDetails(
 
 export async function getPendingRegistrationCount(): Promise<number> {
     await assertModuleAccess("student_ops");
-    const supabase = createServiceClient() ?? await createAuthenticatedServerClient();
+    const supabase = createServiceClient() ?? await createSupabaseServerClient();
     try {
         const { count, error } = await supabase
             .from("enrollments")
@@ -583,9 +591,15 @@ export async function verifyRegistration(
         return { success: false, error: "Select a valid review status." };
     }
 
+    const reviewerResult = await getCurrentReviewerId();
+    if ("error" in reviewerResult) {
+        return { success: false, error: reviewerResult.error };
+    }
+    const reviewerId = reviewerResult.reviewerId;
+
     await assertModuleAccess("student_ops", "edit");
-    const supabase = requireServiceClient();
-    const { data: registration, error: registrationError } = await supabase
+    const supabaseAdmin = requireServiceClient();
+    const { data: registration, error: registrationError } = await supabaseAdmin
         .from("enrollments")
         .select("id, status, applicant_user_id, email, full_name, phone")
         .eq("id", id)
@@ -602,9 +616,9 @@ export async function verifyRegistration(
     }
 
     if (newStatus === "rejected") {
-        const { data: updatedRegistration, error: updateError } = await supabase
+        const { data: updatedRegistration, error: updateError } = await supabaseAdmin
             .from("enrollments")
-            .update({ status: "rejected", reviewed_by: await getCurrentReviewerId(), reviewed_at: new Date().toISOString() })
+            .update({ status: "rejected", reviewed_by: reviewerId, reviewed_at: new Date().toISOString() })
             .eq("id", id)
             .eq("status", "pending")
             .select("id")
@@ -624,7 +638,6 @@ export async function verifyRegistration(
         return { success: true, message: "Application rejected." };
     }
 
-    const adminUserId = await getCurrentReviewerId();
     const applicantEmail = registration.email?.trim();
     if (!applicantEmail) {
         return { success: false, error: "The applicant email is missing from this enrollment." };
@@ -634,7 +647,7 @@ export async function verifyRegistration(
     try {
         if (applicantUserId) {
             const { data: authUser, error: authLookupError } =
-                await supabase.auth.admin.getUserById(applicantUserId);
+                await supabaseAdmin.auth.admin.getUserById(applicantUserId);
             if (authLookupError && authLookupError.status !== 404) {
                 return {
                     success: false,
@@ -647,7 +660,7 @@ export async function verifyRegistration(
         if (!applicantUserId) {
             const perPage = 1000;
             for (let page = 1; ; page += 1) {
-                const { data, error: usersError } = await supabase.auth.admin.listUsers({
+                const { data, error: usersError } = await supabaseAdmin.auth.admin.listUsers({
                     page,
                     perPage,
                 });
@@ -670,7 +683,7 @@ export async function verifyRegistration(
         }
 
         if (!applicantUserId) {
-            const { data, error: createUserError } = await supabase.auth.admin.createUser({
+            const { data, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
                 email: applicantEmail,
                 email_confirm: true,
                 user_metadata: {
@@ -688,7 +701,7 @@ export async function verifyRegistration(
             applicantUserId = data.user.id;
         }
 
-        const { error: applicantLinkError } = await supabase
+        const { error: applicantLinkError } = await supabaseAdmin
             .from("enrollments")
             .update({ applicant_user_id: applicantUserId })
             .eq("id", id);
@@ -699,9 +712,9 @@ export async function verifyRegistration(
             };
         }
 
-        const { error: rpcError } = await supabase.rpc("verify_and_approve_enrollment", {
+        const { error: rpcError } = await supabaseAdmin.rpc("verify_and_approve_enrollment", {
             p_enrollment_id: id,
-            p_admin_user_id: adminUserId,
+            p_admin_user_id: reviewerId,
         });
         if (rpcError) {
             console.error("Supabase RPC verification failure:", {
@@ -717,7 +730,7 @@ export async function verifyRegistration(
         }
 
         if (adminNotes !== null) {
-            const { error: notesError } = await supabase
+            const { error: notesError } = await supabaseAdmin
                 .from("enrollments")
                 .update({ admin_notes: adminNotes })
                 .eq("id", id);
