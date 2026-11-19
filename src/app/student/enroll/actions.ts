@@ -19,14 +19,18 @@ export type StudentEnrollmentInput = {
     email?: string;
     dob?: string;
     country?: string;
+    city?: string;
     state?: string;
     phone?: string;
   };
   education?: {
+    city?: string;
     collegeInstitution?: string;
     courseDegree?: string;
+    specializationBranch?: string;
     semesterYear?: string;
     currentRole?: string;
+    organization?: string;
     course?: string;
     courseIds?: string[];
     bundleIds?: string[];
@@ -184,11 +188,14 @@ export async function submitStudentEnrollmentAction(
     const email = asText(personal.email).toLowerCase();
     const dob = asText(personal.dob);
     const country = asText(personal.country);
+    const city = asText(education.city);
     const state = asText(personal.state);
     const phone = normalizePhone(asText(personal.phone));
     const courseDegree = asText(education.courseDegree);
+    const specializationBranch = asText(education.specializationBranch);
     const semesterYear = asText(education.semesterYear);
     const currentRole = asText(education.currentRole);
+    const organization = asText(education.organization);
 
     if (!firstName || !NAME_PATTERN.test(firstName)) {
       return { success: false, error: "Please enter a valid first name." };
@@ -284,6 +291,88 @@ export async function submitStudentEnrollmentAction(
     }
 
     const hasCourseEnrollment = Number(data.enrollment_count) > 0;
+    const registrationUpdate = await serviceClient
+      .from("registrations")
+      .update({
+        city: city || null,
+        specialization_branch: specializationBranch || null,
+        organization_name: organization || null,
+      })
+      .eq("id", data.registration_id)
+      .select("id")
+      .maybeSingle();
+
+    if (registrationUpdate.error || !registrationUpdate.data) {
+      console.error(
+        "Student registration details could not be saved:",
+        registrationUpdate.error?.message ?? "The registration record was not found.",
+      );
+      return {
+        success: false,
+        error: "Your registration details could not be saved. Please try again.",
+      };
+    }
+
+    if (hasCourseEnrollment) {
+      const { data: enrollmentRows, error: enrollmentReadError } = await serviceClient
+        .from("enrollments")
+        .select("id, application_number")
+        .eq("legacy_registration_id", data.registration_id);
+
+      if (enrollmentReadError) {
+        console.error("Student enrollment details could not be loaded:", enrollmentReadError.message);
+        return {
+          success: false,
+          error: "Your enrollment details could not be verified. Please try again.",
+        };
+      }
+
+      if (!enrollmentRows || enrollmentRows.length !== Number(data.enrollment_count)) {
+        console.error("Student enrollment submission did not create all selected applications.");
+        return {
+          success: false,
+          error: "All selected course applications could not be saved. Please try again.",
+        };
+      }
+
+      if (enrollmentRows.some((enrollment) =>
+        !enrollment.application_number ||
+        !/^SPR-APP-\d{4}-\d{4}$/i.test(enrollment.application_number.trim()),
+      )) {
+        console.error("Student enrollment submission created an application without a valid application number.");
+        return {
+          success: false,
+          error: "An application number could not be assigned. Please try again.",
+        };
+      }
+
+      const { error: enrollmentUpdateError } = await serviceClient
+        .from("enrollments")
+        .update({
+          applicant_user_id: authData.user.id,
+          full_name: `${firstName} ${lastName}`,
+          email,
+          phone,
+          city: city || null,
+          state,
+          college_institution: collegeInstitution || null,
+          course_degree: courseDegree || null,
+          specialization_branch: specializationBranch || null,
+          year_semester: semesterYear || null,
+          employment_status: currentRole || null,
+          organization_name: organization || null,
+        })
+        .eq("legacy_registration_id", data.registration_id);
+
+      if (enrollmentUpdateError) {
+        console.error("Student enrollment details could not be saved:", enrollmentUpdateError.message);
+        return {
+          success: false,
+          error: "Your enrollment details could not be saved. Please try again.",
+        };
+      }
+    }
+
     return {
       success: true,
       applicationId:

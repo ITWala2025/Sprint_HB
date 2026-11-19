@@ -1,5 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Briefcase, CalendarDays, GraduationCap, University } from "lucide-react";
+import {
+  BookOpen,
+  Briefcase,
+  Building2,
+  CalendarDays,
+  GitBranch,
+  GraduationCap,
+  MapPin,
+  University,
+} from "lucide-react";
 
 import AuthField from "@/components/student/auth/AuthField";
 import { catalogueItems } from "@/data/courses";
@@ -14,8 +23,9 @@ import {
 /**
  * Step 2 — Education & Career Profile (optional).
  *
- * Five profile fields, nothing required: `collegeInstitution`, `courseDegree`
- * and `semesterYear` are free text, `currentRole` is a fixed dropdown, and
+ * Optional profile fields: `collegeInstitution`, `courseDegree`,
+ * `specializationBranch`, `semesterYear`, `city`, and `organization` are free
+ * text, `currentRole` is a fixed dropdown, and
  * `course` is a dropdown fed
  * from the same source of truth the SPRINT Course page uses — the Supabase
  * `courses` table first, the local catalogue in `src/data/courses.js` as the
@@ -104,6 +114,18 @@ export default function EducationStep({ idPrefix, values = {}, errors = {}, onCh
 
       <div className="grid gap-5 sm:grid-cols-2">
         <AuthField
+          id={`${idPrefix}-city`}
+          name="city"
+          label="City"
+          value={values.city ?? ""}
+          onChange={onChange("city")}
+          error={errors.city}
+          placeholder="Your city"
+          autoComplete="address-level2"
+          icon={<MapPin aria-hidden="true" className="size-4.5" />}
+        />
+
+        <AuthField
           id={`${idPrefix}-collegeInstitution`}
           name="collegeInstitution"
           label="College / Institution"
@@ -128,6 +150,17 @@ export default function EducationStep({ idPrefix, values = {}, errors = {}, onCh
         />
 
         <AuthField
+          id={`${idPrefix}-specializationBranch`}
+          name="specializationBranch"
+          label="Specialization / Branch"
+          value={values.specializationBranch ?? ""}
+          onChange={onChange("specializationBranch")}
+          error={errors.specializationBranch}
+          placeholder="e.g. Computer Science"
+          icon={<GitBranch aria-hidden="true" className="size-4.5" />}
+        />
+
+        <AuthField
           id={`${idPrefix}-semesterYear`}
           name="semesterYear"
           label="Semester / Year"
@@ -148,6 +181,18 @@ export default function EducationStep({ idPrefix, values = {}, errors = {}, onCh
           placeholder="Select your current role"
           options={CURRENT_ROLE_OPTIONS}
           icon={<Briefcase aria-hidden="true" className="size-4.5" />}
+        />
+
+        <AuthField
+          id={`${idPrefix}-organization`}
+          name="organization"
+          label="Organization"
+          value={values.organization ?? ""}
+          onChange={onChange("organization")}
+          error={errors.organization}
+          placeholder="Your employer or organization"
+          autoComplete="organization"
+          icon={<Building2 aria-hidden="true" className="size-4.5" />}
         />
 
         <AuthField
