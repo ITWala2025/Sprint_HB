@@ -6,15 +6,22 @@ import { revalidatePath } from "next/cache";
 import { createServerClient } from "@supabase/ssr";
 import { assertModuleAccess } from "@/app/admin/authorization";
 import { createServiceClient } from "@/lib/supabase/service";
-import { formatApplicationId } from "@/lib/id-utils";
 
 export type RegistrationListItem = {
     id: string;
-    application_number?: string;
+    application_number: string | null;
+    registration_number: string | null;
     full_name: string;
     email: string;
     phone: string;
     college_institution: string | null;
+    course_degree: string | null;
+    specialization_branch: string | null;
+    year_semester: string | null;
+    city: string | null;
+    state: string | null;
+    employment_status: string | null;
+    organization_name: string | null;
     admin_notes: string | null;
     created_at: string;
     status: string;
@@ -74,7 +81,7 @@ export async function getStudentRegistrations(): Promise<RegistrationListItem[]>
         const supabase = createServiceClient() ?? await createAuthenticatedServerClient();
         const { data, error } = await supabase
             .from("registrations")
-            .select("id, registration_number, application_number, full_name, email, phone, college_institution, admin_notes, created_at, status")
+            .select("id, registration_number, application_number, full_name, email, phone, college_institution, course_degree, specialization_branch, year_semester, city, state, employment_status, organization_name, admin_notes, created_at, status")
             .is("course_id", null)
             .is("bundle_id", null)
             .order("created_at", { ascending: false });
@@ -89,11 +96,19 @@ export async function getStudentRegistrations(): Promise<RegistrationListItem[]>
         }
         return (data ?? []).map((row: any) => ({
             id: row.id,
-            application_number: formatApplicationId(row.application_number || row.registration_number, row.id, row.created_at),
+            application_number: row.application_number,
+            registration_number: row.registration_number,
             full_name: row.full_name,
             email: row.email,
             phone: row.phone,
             college_institution: row.college_institution,
+            course_degree: row.course_degree,
+            specialization_branch: row.specialization_branch,
+            year_semester: row.year_semester,
+            city: row.city,
+            state: row.state,
+            employment_status: row.employment_status,
+            organization_name: row.organization_name,
             admin_notes: row.admin_notes,
             created_at: row.created_at,
             status: row.status,

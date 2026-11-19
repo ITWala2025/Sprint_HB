@@ -91,13 +91,20 @@ function StudentDetailsModal({
                             <h3 id="student-contact-heading" className="font-display text-sm font-bold text-brand-navy">Enrollment & Profile Information</h3>
                             <dl className="mt-3 grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
                                 <Detail label="Student ID" value={student.studentId} />
-                                <Detail label="Name" value={student.name} />
+                                <Detail label="Full Name" value={student.name} />
                                 <Detail label="Email" value={student.email} />
-                                <Detail label="Phone" value={student.phone} />
-                                <Detail label="Course Enrolled In" value={student.courseEnrolled} />
+                                <Detail label="Phone Number" value={student.phone} />
+                                <Detail label="College / Institution" value={student.college} />
+                                <Detail label="Degree" value={student.degree} />
+                                <Detail label="Specialization / Branch" value={student.specialization} />
+                                <Detail label="Semester / Year" value={student.semester} />
+                                <Detail label="City" value={student.city} />
+                                <Detail label="State" value={student.state} />
+                                <Detail label="Employment Status" value={student.employmentStatus} />
+                                <Detail label="Organization" value={student.organization} />
+                                <Detail label="Enrolled Courses / Bundles" value={student.courseEnrolled} />
                                 <Detail label="Status" value={student.status} />
                                 <Detail label="Date of Enrollment" value={student.dateOfEnrollment} />
-                                <Detail label="College / Institution" value={student.college} />
                             </dl>
                         </section>
 
@@ -134,13 +141,22 @@ export default function StudentsDirectoryTable({
         <>
             <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Student directory">
                 <div className="overflow-x-auto">
-                    <table className="w-full min-w-[950px] text-left text-sm">
+                    <table className="w-full min-w-[2000px] text-left text-sm">
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-semibold uppercase tracking-wider text-slate-500">
                                 <th className="px-6 py-4">Student ID</th>
-                                <th className="px-6 py-4">Name</th>
-                                <th className="px-6 py-4">Contact</th>
-                                <th className="px-6 py-4">Course Enrolled In</th>
+                                <th className="px-6 py-4">Full Name</th>
+                                <th className="px-6 py-4">Email</th>
+                                <th className="px-6 py-4">Phone Number</th>
+                                <th className="px-6 py-4">College / Institution</th>
+                                <th className="px-6 py-4">Degree</th>
+                                <th className="px-6 py-4">Specialization / Branch</th>
+                                <th className="px-6 py-4">Semester / Year</th>
+                                <th className="px-6 py-4">City</th>
+                                <th className="px-6 py-4">State</th>
+                                <th className="px-6 py-4">Employment Status</th>
+                                <th className="px-6 py-4">Organization</th>
+                                <th className="px-6 py-4">Enrolled Courses / Bundles</th>
                                 <th className="px-6 py-4">Status</th>
                                 <th className="px-6 py-4">Date of Enrollment</th>
                                 <th className="px-6 py-4 text-right">Details</th>
@@ -148,7 +164,6 @@ export default function StudentsDirectoryTable({
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {students.map((student) => {
-                                const phone = student.profiles?.phone || student.profiles?.mobile_number || student.phone || "N/A";
                                 return (
                                     <tr key={student.id} className="hover:bg-slate-50">
                                         <td className="whitespace-nowrap px-6 py-4 font-mono font-bold text-brand-navy">
@@ -157,10 +172,16 @@ export default function StudentsDirectoryTable({
                                         <td className="px-6 py-4 font-semibold text-brand-navy">
                                             {student.name}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <p className="text-brand-text-secondary">{student.email}</p>
-                                            <p className="mt-1 text-xs text-brand-text-muted">{phone}</p>
-                                        </td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.email}</td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.phone}</td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.college}</td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.degree}</td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.specialization}</td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.semester}</td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.city}</td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.state}</td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.employmentStatus}</td>
+                                        <td className="px-6 py-4 text-brand-text-secondary">{student.organization}</td>
                                         <td className="px-6 py-4 font-medium text-brand-navy">
                                             <ActiveCourseBadges student={student} />
                                         </td>
@@ -191,7 +212,7 @@ export default function StudentsDirectoryTable({
                             })}
                             {students.length === 0 && (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-12 text-center text-sm text-brand-text-muted">
+                                    <td colSpan={16} className="px-6 py-12 text-center text-sm text-brand-text-muted">
                                         No verified active students are available.
                                     </td>
                                 </tr>

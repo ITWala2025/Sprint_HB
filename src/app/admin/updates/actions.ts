@@ -15,6 +15,7 @@ import {
     announcementTypes,
     normalizeAnnouncementType,
 } from "./types";
+import { isSupportedAnnouncementUpload } from "./upload-validation";
 
 export type {
     AnnouncementActionResult,
@@ -224,10 +225,10 @@ export async function uploadAnnouncementPoster(
 
     const file = formData.get("file");
     if (!(file instanceof File) || file.size === 0) {
-        return { success: false, error: "Choose an image to upload." };
+        return { success: false, error: "Choose a file to upload." };
     }
-    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
-        return { success: false, error: "Choose a PNG, JPEG, or WebP image." };
+    if (!isSupportedAnnouncementUpload(file)) {
+        return { success: false, error: "Choose a PNG, JPEG, WebP, or PDF file." };
     }
 
     const safeName = file.name
@@ -240,8 +241,8 @@ export async function uploadAnnouncementPoster(
         .from("announcement-assets")
         .upload(filePath, file, { contentType: file.type, upsert: false });
 
-    if (error) return { success: false, error: `Poster could not be uploaded: ${error.message}` };
+    if (error) return { success: false, error: `File could not be uploaded: ${error.message}` };
 
     const { data } = supabase.storage.from("announcement-assets").getPublicUrl(filePath);
-    return { success: true, message: "Poster uploaded.", publicUrl: data.publicUrl };
+    return { success: true, message: "File uploaded.", publicUrl: data.publicUrl };
 }

@@ -16,6 +16,22 @@ export type CampusUpdate = {
 	link_url?: string | null;
 };
 
+type ModalPreview =
+	| {
+			src: string;
+			type: "image";
+	  }
+	| {
+			src: string;
+			type: "pdf" | "workdrive" | "google-drive" | "google-doc" | "youtube" | "office";
+			allowFullScreen?: boolean;
+	  };
+
+type ModalMedia = ModalPreview & {
+	originalUrl: string;
+	title: string;
+};
+
 const fallbackUpdates: CampusUpdate[] = [
 	{
 		id: "cohort-enrollment",
@@ -78,16 +94,100 @@ function getUpdateLink(href: string) {
 	return null;
 }
 
-function isPosterLink(href: string): boolean {
-	if (href.startsWith("/images/")) return true;
+export function getModalMedia(value: string): ModalPreview | null {
+	const href = value.trim();
+	if (!href) return null;
 
-	try {
-		const pathname = new URL(href, "https://sprint.invalid").pathname;
-		return pathname.includes("/storage/v1/object/public/announcement-assets/")
-			|| /\.(?:png|jpe?g|webp|svg)$/i.test(pathname);
-	} catch {
-		return false;
+	if (href.toLowerCase().includes("previewengine-accl.zohoexternal.in/image/")) {
+		return { type: "image", src: href };
 	}
+
+	let url: URL;
+	try {
+		url = new URL(href, "https://sprint.invalid");
+	} catch {
+		return null;
+	}
+
+	const { hostname, pathname, search } = url;
+	const localPath = href.startsWith("/") && !href.startsWith("//");
+	const iframe = (type: Exclude<ModalPreview["type"], "image">, src: string): ModalPreview => ({
+		type,
+		src,
+	});
+
+	if (hostname === "workdrive.zohoexternal.in") {
+		if (pathname.startsWith("/file/")) {
+			url.pathname = pathname.replace(/^\/file\//, "/embed/");
+			return iframe("workdrive", url.href);
+		}
+		if (pathname.startsWith("/embed/")) return iframe("workdrive", url.href);
+	}
+
+	if (hostname === "drive.google.com") {
+		const match = pathname.match(/^\/file\/d\/([^/]+)(?:\/.*)?$/);
+		if (match) {
+			return iframe(
+				"google-drive",
+				`https://drive.google.com/file/d/${match[1]}/preview${search}`,
+			);
+		}
+	}
+
+	if (hostname === "docs.google.com") {
+		const match = pathname.match(/^\/(document|spreadsheets|presentation)\/d\/([^/]+)(?:\/.*)?$/);
+		if (match) {
+			return iframe(
+				"google-doc",
+				`https://docs.google.com/${match[1]}/d/${match[2]}/preview${search}`,
+			);
+		}
+	}
+
+	const isYouTubeHost =
+		hostname === "youtube.com"
+		|| hostname === "www.youtube.com"
+		|| hostname === "m.youtube.com";
+	let youtubeId: string | null = null;
+	if (isYouTubeHost && pathname === "/watch") {
+		youtubeId = url.searchParams.get("v");
+	} else if (isYouTubeHost) {
+		youtubeId = pathname.match(/^\/shorts\/([^/]+)/)?.[1] ?? null;
+	} else if (hostname === "youtu.be") {
+		youtubeId = pathname.match(/^\/([^/]+)/)?.[1] ?? null;
+	}
+	if (youtubeId) {
+		return {
+			type: "youtube",
+			src: `https://www.youtube.com/embed/${encodeURIComponent(youtubeId)}`,
+			allowFullScreen: true,
+		};
+	}
+
+	if (
+		href.toLowerCase().includes("application/pdf")
+		|| /\.pdf$/i.test(pathname)
+		|| /\/(?:pdf\/embed|embed\/pdf|pdf-embed|embed-pdf)(?:\/|$)/i.test(pathname)
+	) {
+		return iframe("pdf", href);
+	}
+
+	if (/\.(?:docx?|pptx?|xlsx?)$/i.test(pathname)) {
+		return iframe(
+			"office",
+			`https://docs.google.com/gview?url=${encodeURIComponent(href)}&embedded=true`,
+		);
+	}
+
+	if (
+		(localPath && pathname.startsWith("/images/"))
+		|| pathname.includes("/storage/v1/object/public/announcement-assets/")
+		|| /\.(?:jpe?g|png|webp|gif|avif|svg)$/i.test(pathname)
+	) {
+		return { type: "image", src: href };
+	}
+
+	return null;
 }
 
 function needsUnoptimizedImage(src: string): boolean {
@@ -105,11 +205,11 @@ function needsUnoptimizedImage(src: string): boolean {
 
 function UpdateSet({
 	updates,
-	onOpenImage,
+	onOpenMedia,
 	hidden = false,
 }: {
 	updates: CampusUpdate[];
-	onOpenImage: (src: string) => void;
+	onOpenMedia: (media: ModalMedia) => void;
 	hidden?: boolean;
 }) {
 	return (
@@ -117,7 +217,10 @@ function UpdateSet({
 			{updates.map((item) => {
 				const { icon: Icon, className } = categoryStyles[item.category];
 				const link = item.link_url ? getUpdateLink(item.link_url) : null;
-				const isPoster = Boolean(link && isPosterLink(link.href));
+				const preview = link ? getModalMedia(link.href) : null;
+				const media = preview && item.link_url
+					? { ...preview, originalUrl: item.link_url, title: item.message }
+					: null;
 				const linkedContent = (
 					<>
 						<span
@@ -128,7 +231,7 @@ function UpdateSet({
 						</span>
 						<span className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-transparent px-2.5 py-0.5 text-xs font-medium leading-relaxed text-slate-100 transition-all duration-200 hover:border-red-500/40 hover:bg-white/10 hover:text-white hover:shadow-[0_0_12px_rgba(239,62,67,0.22)] active:scale-[0.98]">
 							{item.message}
-							{isPoster ? (
+							{media ? (
 								<Eye className="size-3.5 shrink-0" aria-hidden="true" />
 							) : (
 								<ArrowUpRight className="size-3.5 shrink-0" aria-hidden="true" />
@@ -157,15 +260,15 @@ function UpdateSet({
 					>
 						{!item.link_url ? (
 							<span className="inline-flex items-center gap-3">{plainContent}</span>
-						) : link && isPoster ? (
+						) : link && media ? (
 							<button
 								type="button"
 								onClick={(event) => {
 									event.stopPropagation();
-									onOpenImage(item.link_url!);
+									onOpenMedia(media);
 								}}
 								{...duplicateProps}
-								aria-label={`View announcement poster: ${item.message}`}
+								aria-label={`View announcement ${media.type}: ${item.message}`}
 								className="inline-flex items-center gap-1.5 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400"
 							>
 								{linkedContent}
@@ -200,7 +303,7 @@ function UpdateSet({
 
 export default function CampusNewsTicker({ initialUpdates }: { initialUpdates: CampusUpdate[] }) {
 	const [updates] = useState(initialUpdates.length ? initialUpdates : fallbackUpdates);
-	const [activeImageModal, setActiveImageModal] = useState<string | null>(null);
+	const [activeMedia, setActiveMedia] = useState<ModalMedia | null>(null);
 	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {
@@ -208,18 +311,18 @@ export default function CampusNewsTicker({ initialUpdates }: { initialUpdates: C
 	}, []);
 
 	useEffect(() => {
-		if (!activeImageModal) return;
+		if (!activeMedia) return;
 		const previousOverflow = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
 		const closeOnEscape = (event: KeyboardEvent) => {
-			if (event.key === "Escape") setActiveImageModal(null);
+			if (event.key === "Escape") setActiveMedia(null);
 		};
 		window.addEventListener("keydown", closeOnEscape);
 		return () => {
 			document.body.style.overflow = previousOverflow;
 			window.removeEventListener("keydown", closeOnEscape);
 		};
-	}, [activeImageModal]);
+	}, [activeMedia]);
 
 	return (
 		<section
@@ -243,42 +346,61 @@ export default function CampusNewsTicker({ initialUpdates }: { initialUpdates: C
 
 				<div className="marquee-track min-w-0 flex-1 overflow-hidden py-1">
 					<div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] hover:[animation-play-state:paused]">
-						<UpdateSet updates={updates} onOpenImage={setActiveImageModal} />
-						<UpdateSet updates={updates} onOpenImage={setActiveImageModal} hidden />
+						<UpdateSet updates={updates} onOpenMedia={setActiveMedia} />
+						<UpdateSet updates={updates} onOpenMedia={setActiveMedia} hidden />
 					</div>
 				</div>
 			</div>
-			{mounted && activeImageModal && createPortal(
+			{mounted && activeMedia && createPortal(
 				<div
 					className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md animate-in fade-in duration-200 sm:p-6"
 					role="presentation"
 					onMouseDown={(event) => {
-						if (event.target === event.currentTarget) setActiveImageModal(null);
+						if (event.target === event.currentTarget) setActiveMedia(null);
 					}}
 				>
 					<div
 						role="dialog"
 						aria-modal="true"
-						aria-label="Announcement Poster"
+						aria-label={`Announcement ${activeMedia.type}`}
 						className="relative flex max-h-[90vh] w-full max-w-4xl flex-col items-center overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 p-3 shadow-2xl"
 					>
-						<button
-							type="button"
-							onClick={() => setActiveImageModal(null)}
-							aria-label="Close poster preview"
-							className="absolute right-4 top-4 z-10 rounded-full border border-slate-700/60 bg-slate-800/80 p-2 text-white backdrop-blur transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-						>
-							<X className="size-5" aria-hidden="true" />
-						</button>
-						<Image
-							src={activeImageModal}
-							alt="Announcement Poster"
-							width={1600}
-							height={1200}
-							sizes="(max-width: 640px) 100vw, 896px"
-							unoptimized={needsUnoptimizedImage(activeImageModal)}
-							className="h-auto max-h-[82vh] w-full select-none rounded-xl object-contain"
-						/>
+						<header className="mb-3 flex w-full items-center justify-end gap-2 pr-1">
+							<a
+								href={activeMedia.originalUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="rounded-md px-2 py-1 text-sm font-medium text-slate-200 underline-offset-4 hover:text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+							>
+								Open in New Tab
+							</a>
+							<button
+								type="button"
+								onClick={() => setActiveMedia(null)}
+								aria-label="Close announcement preview"
+								className="rounded-full border border-slate-700/60 bg-slate-800/80 p-2 text-white backdrop-blur transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+							>
+								<X className="size-5" aria-hidden="true" />
+							</button>
+						</header>
+						{activeMedia.type !== "image" ? (
+							<iframe
+								src={activeMedia.src}
+								title={activeMedia.title}
+								className="h-[80vh] w-full rounded-lg bg-white"
+								allowFullScreen={activeMedia.type === "youtube"}
+							/>
+						) : (
+							<Image
+								src={activeMedia.src}
+								alt={activeMedia.title}
+								width={1600}
+								height={1200}
+								sizes="(max-width: 640px) 100vw, 896px"
+								unoptimized={needsUnoptimizedImage(activeMedia.src)}
+								className="h-auto max-h-[82vh] w-full select-none rounded-xl object-contain"
+							/>
+						)}
 					</div>
 				</div>,
 				document.body,

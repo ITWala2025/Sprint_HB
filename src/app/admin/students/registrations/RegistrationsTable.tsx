@@ -189,12 +189,19 @@ export default function RegistrationsTable({
                     </p>
                 )}
                 <div className="overflow-x-auto">
-                    <table className="w-full min-w-[1050px] text-left text-sm">
+                    <table className="w-full min-w-[1900px] text-left text-sm">
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-semibold uppercase tracking-wider text-slate-500">
                                 <th className="px-6 py-4">Applicant</th>
-                                <th className="px-6 py-4">Phone</th>
+                                <th className="px-6 py-4">Phone Number</th>
                                 <th className="px-6 py-4">College / Institution</th>
+                                <th className="px-6 py-4">Degree</th>
+                                <th className="px-6 py-4">Specialization / Branch</th>
+                                <th className="px-6 py-4">Semester / Year</th>
+                                <th className="px-6 py-4">City</th>
+                                <th className="px-6 py-4">State</th>
+                                <th className="px-6 py-4">Employment Status</th>
+                                <th className="px-6 py-4">Organization</th>
                                 <th className="px-6 py-4">Submitted</th>
                                 <th className="px-6 py-4">Status</th>
                                 <th className="px-6 py-4 text-right">Actions</th>
@@ -210,10 +217,22 @@ export default function RegistrationsTable({
                                                 {registration.application_number}
                                             </p>
                                         )}
+                                        {registration.registration_number && (
+                                            <p className="font-mono text-xs text-brand-text-muted">
+                                                {registration.registration_number}
+                                            </p>
+                                        )}
                                         <p className="mt-0.5 text-xs text-brand-text-muted">{registration.email}</p>
                                     </td>
                                     <td className="whitespace-nowrap px-6 py-4 text-brand-text-secondary">{registration.phone}</td>
                                     <td className="px-6 py-4 text-brand-text-secondary">{registration.college_institution || "Not provided"}</td>
+                                    <td className="px-6 py-4 text-brand-text-secondary">{registration.course_degree || "Not provided"}</td>
+                                    <td className="px-6 py-4 text-brand-text-secondary">{registration.specialization_branch || "Not provided"}</td>
+                                    <td className="px-6 py-4 text-brand-text-secondary">{registration.year_semester || "Not provided"}</td>
+                                    <td className="px-6 py-4 text-brand-text-secondary">{registration.city || "Not provided"}</td>
+                                    <td className="px-6 py-4 text-brand-text-secondary">{registration.state || "Not provided"}</td>
+                                    <td className="px-6 py-4 text-brand-text-secondary">{registration.employment_status || "Not provided"}</td>
+                                    <td className="px-6 py-4 text-brand-text-secondary">{registration.organization_name || "Not provided"}</td>
                                     <td className="whitespace-nowrap px-6 py-4 text-xs text-brand-text-muted">{formatSubmittedDate(registration.created_at)}</td>
                                     <td className="px-6 py-4">
                                         <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
@@ -256,7 +275,7 @@ export default function RegistrationsTable({
                             ))}
                             {registrations.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-sm text-brand-text-muted">
+                                    <td colSpan={13} className="px-6 py-12 text-center text-sm text-brand-text-muted">
                                         No course-free student registrations are available.
                                     </td>
                                 </tr>
