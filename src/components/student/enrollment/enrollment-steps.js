@@ -71,14 +71,16 @@ export const ENROLLMENT_STEPS = [
     description:
       "Help us understand your background and career interests. You can skip this step and complete it later from your Student Dashboard.",
     Component: EducationStep,
-    // Five optional fields map to college_institution, course_degree,
-    // year_semester, employment_status, and registrations.course_id (the
-    // course id the Course dropdown stores).
+    // Optional profile fields map to the corresponding registration and
+    // enrollment columns.
     initialValues: {
+      city: "",
       collegeInstitution: "",
       courseDegree: "",
+      specializationBranch: "",
       semesterYear: "",
       currentRole: "",
+      organization: "",
       course: "",
     },
     validate: validateEducationProfile,

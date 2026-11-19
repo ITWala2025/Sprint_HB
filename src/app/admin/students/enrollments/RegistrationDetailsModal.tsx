@@ -148,14 +148,9 @@ export default function RegistrationDetailsModal({
                                     <Detail label="Email" value={displayValue(registration.email)} />
                                     <Detail
                                         label="Phone Number"
-                                        value={displayValue(
-                                            registration.phone ||
-                                            registration.profiles?.phone ||
-                                            registration.profiles?.mobile_number ||
-                                            registration.registrations?.phone,
-                                        )}
+                                        value={displayValue(registration.phone)}
                                     />
-                                    <Detail label="Linked Student Account ID" value={displayValue(registration.linked_student_id || registration.student_id)} />
+                                    <Detail label="Student ID / Registration Number" value={displayValue(registration.registration_number)} />
                                     <Detail label="City" value={displayValue(registration.city)} />
                                     <Detail label="State" value={displayValue(registration.state)} />
                                     <Detail label="Employment Status" value={displayValue(registration.employment_status)} />
@@ -166,8 +161,8 @@ export default function RegistrationDetailsModal({
                             <section aria-labelledby="registration-academic-heading">
                                 <h3 id="registration-academic-heading" className="font-display text-sm font-bold text-brand-navy">Academic Details</h3>
                                 <dl className="mt-3 grid gap-4 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
-                                    <Detail label="College / Institution" value={displayValue(registration.college_institution || registration.registrations?.college_institution)} />
-                                    <Detail label="Degree" value={displayValue(registration.course_degree || registration.registrations?.course_degree)} />
+                                    <Detail label="College / Institution" value={displayValue(registration.college_institution)} />
+                                    <Detail label="Degree" value={displayValue(registration.course_degree)} />
                                     <Detail label="Branch / Department" value={displayValue(registration.specialization_branch)} />
                                     <Detail label="Semester / Year" value={displayValue(registration.year_semester)} />
                                 </dl>

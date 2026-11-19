@@ -4,6 +4,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createServerClient } from "@supabase/ssr";
+import type { User } from "@supabase/supabase-js";
 import { assertModuleAccess } from "@/app/admin/authorization";
 import { createServiceClient } from "@/lib/supabase/service";
 import { formatApplicationId, sanitizeStudentId } from "@/lib/id-utils";
@@ -56,6 +57,7 @@ export type EnrollmentRegistrationDetails = {
         id: string;
         application_id: string;
         application_number: string;
+        registration_number: string;
         student_id: string;
         linked_student_id: string;
         full_name: string;
@@ -119,6 +121,12 @@ function isMissingColumnError(error: { code?: string; message?: string }): boole
     return error.code === "42703" ||
         error.code === "PGRST204" ||
         /column .* does not exist|could not find .* column/i.test(error.message ?? "");
+}
+
+function firstText(...values: unknown[]): string {
+    return values.find((value): value is string =>
+        typeof value === "string" && value.trim().length > 0,
+    )?.trim() ?? "";
 }
 
 export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistration[]> {
@@ -341,78 +349,101 @@ export async function getEnrollmentRegistrationDetails(
     }
 
     await assertModuleAccess("student_ops");
-    const supabase = createServiceClient() ?? await createAuthenticatedServerClient();
-    const registrationResult = await supabase
+    const supabase = requireServiceClient();
+    const enrollmentResult = await supabase
         .from("enrollments")
-        .select("*, profiles(phone, mobile_number, full_name), registrations(phone, college_institution, course_degree)")
+        .select("*")
         .eq("id", id)
         .maybeSingle();
 
-    let registration = registrationResult.data;
-    if (registrationResult.error) {
-        if (!isMissingColumnError(registrationResult.error)) {
-            throw new Error(`Could not load enrollment details: ${registrationResult.error.message}`);
-        }
-
-        console.warn(
-            "Enrollment detail lookup is missing optional columns; loading core application fields:",
-            registrationResult.error.message,
-        );
-        const fallbackResult = await supabase
-            .from("enrollments")
-            .select("id, full_name, email, phone, status, created_at")
-            .eq("id", id)
-            .maybeSingle();
-        if (fallbackResult.error) {
-            throw new Error(`Could not load enrollment details: ${fallbackResult.error.message}`);
-        }
-        registration = fallbackResult.data
-            ? {
-                ...fallbackResult.data,
-                application_number: null,
-                student_id: null,
-                applicant_user_id: null,
-                batch_id: null,
-                course_id: null,
-                bundle_id: null,
-                profiles: null,
-                registrations: null,
-                college_institution: null,
-                course_degree: null,
-                specialization_branch: null,
-                year_semester: null,
-                city: null,
-                state: null,
-                employment_status: null,
-                organization_name: null,
-                source_of_info: null,
-                terms_accepted: false,
-                communication_consent: false,
-                admin_notes: null,
-                updated_at: fallbackResult.data.created_at,
-            }
-            : null;
+    if (enrollmentResult.error) {
+        throw new Error(`Could not load enrollment details: ${enrollmentResult.error.message}`);
     }
-    if (!registration) return null;
+    const enrollment = enrollmentResult.data;
+    if (!enrollment) return null;
 
-    const linkedUserUuid = registration.student_id || registration.applicant_user_id;
+    let linkedRegistration: Record<string, any> | null = null;
+    if (enrollment.legacy_registration_id) {
+        const { data, error } = await supabase
+            .from("registrations")
+            .select("*")
+            .eq("id", enrollment.legacy_registration_id)
+            .maybeSingle();
+        if (error) throw new Error(`Could not load linked registration details: ${error.message}`);
+        linkedRegistration = data;
+    }
 
-    const [courseResult, bundleResult, batchResult, enrollmentsResult, studentAccountResult] = await Promise.all([
-        registration.course_id
-            ? supabase.from("courses").select("title, category, difficulty_level, duration, delivery_method").eq("id", registration.course_id).maybeSingle()
+    const applicantUserId = enrollment.student_id || enrollment.applicant_user_id;
+    if (!linkedRegistration && applicantUserId) {
+        const { data, error } = await supabase
+            .from("registrations")
+            .select("*")
+            .eq("user_id", applicantUserId)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+        if (error) throw new Error(`Could not load linked registration details: ${error.message}`);
+        linkedRegistration = data;
+    }
+    if (!linkedRegistration && enrollment.email) {
+        const { data, error } = await supabase
+            .from("registrations")
+            .select("*")
+            .ilike("email", enrollment.email)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+        if (error) throw new Error(`Could not load linked registration details: ${error.message}`);
+        linkedRegistration = data;
+    }
+
+    const linkedUserId = applicantUserId || linkedRegistration?.user_id || null;
+    const [studentResult, profileResult] = await Promise.all([
+        linkedUserId
+            ? supabase.from("students").select("*").eq("id", linkedUserId).maybeSingle()
             : Promise.resolve({ data: null, error: null }),
-        registration.bundle_id
-            ? supabase.from("course_bundles").select("title, category, description, pathway").eq("id", registration.bundle_id).maybeSingle()
+        linkedUserId
+            ? supabase.from("profiles").select("*").eq("id", linkedUserId).maybeSingle()
             : Promise.resolve({ data: null, error: null }),
-        registration.batch_id
-            ? supabase.from("batches").select("batch_code, batch_name, start_date, end_date, mode, status").eq("id", registration.batch_id).maybeSingle()
+    ]);
+    if (studentResult.error || profileResult.error) {
+        throw new Error(
+            `Could not load applicant profile details: ${[
+                studentResult.error?.message,
+                profileResult.error?.message,
+            ].filter(Boolean).join("; ")}`,
+        );
+    }
+    const student = studentResult.data;
+    let profile = profileResult.data;
+    if (!profile && enrollment.email) {
+        const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .ilike("email", enrollment.email)
+            .limit(1)
+            .maybeSingle();
+        if (error) throw new Error(`Could not load applicant profile details: ${error.message}`);
+        profile = data;
+    }
+
+    const courseId = enrollment.course_id || linkedRegistration?.course_id || null;
+    const bundleId = enrollment.bundle_id || linkedRegistration?.bundle_id || null;
+    const batchId = enrollment.batch_id || linkedRegistration?.batch_id || null;
+    const studentId = student?.id || linkedUserId;
+    const [courseResult, bundleResult, batchResult, enrollmentsResult] = await Promise.all([
+        courseId
+            ? supabase.from("courses").select("title, category, difficulty_level, duration, delivery_method").eq("id", courseId).maybeSingle()
             : Promise.resolve({ data: null, error: null }),
-        registration.student_id
-            ? supabase.from("student_course_enrollments").select("status, progress_percentage, certificate_issued, enrolled_at, completed_at, course_id, batch_id").eq("student_id", registration.student_id)
+        bundleId
+            ? supabase.from("course_bundles").select("title, category, description, pathway").eq("id", bundleId).maybeSingle()
+            : Promise.resolve({ data: null, error: null }),
+        batchId
+            ? supabase.from("batches").select("batch_code, batch_name, start_date, end_date, mode, status").eq("id", batchId).maybeSingle()
+            : Promise.resolve({ data: null, error: null }),
+        studentId
+            ? supabase.from("student_course_enrollments").select("status, progress_percentage, certificate_issued, enrolled_at, completed_at, course_id, batch_id").eq("student_id", studentId)
             : Promise.resolve({ data: [], error: null }),
-        linkedUserUuid
-            ? supabase.from("students").select("registration_number").eq("id", linkedUserUuid).maybeSingle()
-            : Promise.resolve({ data: null, error: null }),
     ]);
 
     const relatedRecordErrors = [
@@ -448,46 +479,58 @@ export async function getEnrollmentRegistrationDetails(
     const courseNames = new Map((enrollmentCoursesResult.data ?? []).map((item) => [item.id, item.title]));
     const batchNames = new Map((enrollmentBatchesResult.data ?? []).map((item) => [item.id, item.batch_name]));
 
-    const linkedStudentId = sanitizeStudentId(
-        studentAccountResult.data?.registration_number,
-        registration.student_id || registration.applicant_user_id
-            ? "Pending ID generation"
-            : "Not linked",
+    const registrationNumber = sanitizeStudentId(
+        firstText(
+            enrollment.registration_number,
+            linkedRegistration?.registration_number,
+            student?.registration_number,
+            profile?.registration_number,
+        ) || null,
+        linkedUserId ? "Pending ID generation" : "Not linked",
     );
 
     const applicationId = formatApplicationId(
-        registration.application_number,
-        registration.id,
-        registration.created_at,
+        firstText(enrollment.application_number, linkedRegistration?.application_number, student?.application_number, profile?.application_number) || null,
+        enrollment.id,
+        enrollment.created_at,
     );
 
     return {
         registration: {
-            id: registration.id,
+            id: enrollment.id,
             application_id: applicationId,
             application_number: applicationId,
-            student_id: linkedStudentId,
-            linked_student_id: linkedStudentId,
-            full_name: registration.full_name,
-            email: registration.email,
-            phone: registration.phone,
-            profiles: registration.profiles ?? null,
-            registrations: registration.registrations ?? null,
-            college_institution: registration.college_institution,
-            course_degree: registration.course_degree,
-            specialization_branch: registration.specialization_branch,
-            year_semester: registration.year_semester,
-            city: registration.city,
-            state: registration.state,
-            employment_status: registration.employment_status,
-            organization_name: registration.organization_name,
-            source_of_info: registration.source_of_info,
-            terms_accepted: registration.terms_accepted,
-            communication_consent: registration.communication_consent,
-            admin_notes: registration.admin_notes,
-            created_at: registration.created_at,
-            updated_at: registration.updated_at,
-            status: registration.status,
+            registration_number: registrationNumber,
+            student_id: registrationNumber,
+            linked_student_id: registrationNumber,
+            full_name: firstText(enrollment.full_name, linkedRegistration?.full_name, student?.full_name, profile?.full_name),
+            email: firstText(enrollment.email, linkedRegistration?.email, student?.email, profile?.email),
+            phone: firstText(enrollment.phone, linkedRegistration?.phone, student?.phone, profile?.phone, profile?.mobile_number),
+            profiles: profile ? {
+                phone: profile.phone ?? null,
+                mobile_number: profile.mobile_number ?? null,
+                full_name: profile.full_name ?? null,
+            } : null,
+            registrations: linkedRegistration ? {
+                phone: linkedRegistration.phone ?? null,
+                college_institution: linkedRegistration.college_institution ?? null,
+                course_degree: linkedRegistration.course_degree ?? null,
+            } : null,
+            college_institution: firstText(enrollment.college_institution, linkedRegistration?.college_institution, student?.college_institution, profile?.college_institution) || null,
+            course_degree: firstText(enrollment.course_degree, linkedRegistration?.course_degree, student?.course_degree, profile?.course_degree) || null,
+            specialization_branch: firstText(enrollment.specialization_branch, linkedRegistration?.specialization_branch, student?.specialization_branch, profile?.specialization_branch) || null,
+            year_semester: firstText(enrollment.year_semester, linkedRegistration?.year_semester, student?.current_semester, profile?.year_semester) || null,
+            city: firstText(enrollment.city, linkedRegistration?.city, student?.city, profile?.city) || null,
+            state: firstText(enrollment.state, linkedRegistration?.state, student?.state, profile?.state) || null,
+            employment_status: firstText(enrollment.employment_status, linkedRegistration?.employment_status, student?.employment_status, profile?.employment_status) || null,
+            organization_name: firstText(enrollment.organization_name, linkedRegistration?.organization_name, student?.organization_name, profile?.organization_name) || null,
+            source_of_info: firstText(enrollment.source_of_info, linkedRegistration?.source_of_info, profile?.source_of_info) || null,
+            terms_accepted: enrollment.terms_accepted ?? linkedRegistration?.terms_accepted ?? false,
+            communication_consent: enrollment.communication_consent ?? linkedRegistration?.communication_consent ?? false,
+            admin_notes: enrollment.admin_notes ?? linkedRegistration?.admin_notes ?? null,
+            created_at: enrollment.created_at,
+            updated_at: enrollment.updated_at ?? enrollment.created_at,
+            status: enrollment.status,
         },
         course: courseResult.data,
         bundle: bundleResult.data,
@@ -544,7 +587,7 @@ export async function verifyRegistration(
     const supabase = requireServiceClient();
     const { data: registration, error: registrationError } = await supabase
         .from("enrollments")
-        .select("id, status")
+        .select("id, status, applicant_user_id, email, full_name, phone")
         .eq("id", id)
         .maybeSingle();
 
@@ -582,85 +625,124 @@ export async function verifyRegistration(
     }
 
     const adminUserId = await getCurrentReviewerId();
+    const applicantEmail = registration.email?.trim();
+    if (!applicantEmail) {
+        return { success: false, error: "The applicant email is missing from this enrollment." };
+    }
+
+    let applicantUserId: string | null = registration.applicant_user_id;
     try {
+        if (applicantUserId) {
+            const { data: authUser, error: authLookupError } =
+                await supabase.auth.admin.getUserById(applicantUserId);
+            if (authLookupError && authLookupError.status !== 404) {
+                return {
+                    success: false,
+                    error: `Could not verify the applicant account: ${authLookupError.message}`,
+                };
+            }
+            applicantUserId = authUser.user?.id ?? null;
+        }
+
+        if (!applicantUserId) {
+            const perPage = 1000;
+            for (let page = 1; ; page += 1) {
+                const { data, error: usersError } = await supabase.auth.admin.listUsers({
+                    page,
+                    perPage,
+                });
+                if (usersError) {
+                    return {
+                        success: false,
+                        error: `Could not check for an existing applicant account: ${usersError.message}`,
+                    };
+                }
+
+                const matchingUser = (data.users as User[]).find(
+                    (user) => user.email?.toLowerCase() === applicantEmail.toLowerCase(),
+                );
+                if (matchingUser) {
+                    applicantUserId = matchingUser.id;
+                    break;
+                }
+                if (data.users.length < perPage) break;
+            }
+        }
+
+        if (!applicantUserId) {
+            const { data, error: createUserError } = await supabase.auth.admin.createUser({
+                email: applicantEmail,
+                email_confirm: true,
+                user_metadata: {
+                    full_name: registration.full_name,
+                    mobile_number: registration.phone,
+                    role: "student",
+                },
+            });
+            if (createUserError || !data.user) {
+                return {
+                    success: false,
+                    error: `Could not create the applicant account: ${createUserError?.message ?? "No user was returned."}`,
+                };
+            }
+            applicantUserId = data.user.id;
+        }
+
+        const { error: applicantLinkError } = await supabase
+            .from("enrollments")
+            .update({ applicant_user_id: applicantUserId })
+            .eq("id", id);
+        if (applicantLinkError) {
+            return {
+                success: false,
+                error: `Could not link the applicant account to this enrollment: ${applicantLinkError.message}`,
+            };
+        }
+
         const { error: rpcError } = await supabase.rpc("verify_and_approve_enrollment", {
             p_enrollment_id: id,
             p_admin_user_id: adminUserId,
-            p_notes: adminNotes ?? null,
         });
         if (rpcError) {
-            const isMissingRpc = rpcError.code === "42883" ||
-                rpcError.code === "PGRST202" ||
-                /function .* does not exist|could not find .* function/i.test(rpcError.message ?? "");
+            console.error("Supabase RPC verification failure:", {
+                message: rpcError.message,
+                details: rpcError.details,
+                hint: rpcError.hint,
+                code: rpcError.code,
+            });
+            return {
+                success: false,
+                error: `Approval failed [${rpcError.code || "SQL"}]: ${rpcError.message}`,
+            };
+        }
 
-            if (isMissingRpc) {
-                console.warn("[SPRINT Admin Enrollments] verify_and_approve_enrollment RPC not found in DB; running direct table updates fallback.");
-                const { data: enrollmentApp, error: fetchErr } = await supabase
-                    .from("enrollments")
-                    .select("*")
-                    .eq("id", id)
-                    .maybeSingle();
-
-                if (fetchErr || !enrollmentApp) {
-                    return { success: false, error: "Enrollment record could not be loaded for approval." };
-                }
-
-                const { error: updateErr } = await supabase
-                    .from("enrollments")
-                    .update({
-                        status: "approved",
-                        reviewed_by: adminUserId,
-                        reviewed_at: new Date().toISOString(),
-                        admin_notes: adminNotes ?? enrollmentApp.admin_notes,
-                    })
-                    .eq("id", id);
-
-                if (updateErr) {
-                    return { success: false, error: `Could not update enrollment status: ${updateErr.message}` };
-                }
-
-                const studentUserId = enrollmentApp.student_id || enrollmentApp.applicant_user_id;
-                if (studentUserId) {
-                    if (enrollmentApp.course_id || enrollmentApp.bundle_id) {
-                        await supabase.from("student_courses").insert({
-                            student_id: studentUserId,
-                            course_id: enrollmentApp.course_id || null,
-                            bundle_id: enrollmentApp.bundle_id || null,
-                            status: "active",
-                            enrolled_at: new Date().toISOString(),
-                        });
-                    }
-                    if (enrollmentApp.batch_id && enrollmentApp.course_id) {
-                        await supabase.from("student_course_enrollments").insert({
-                            student_id: studentUserId,
-                            batch_id: enrollmentApp.batch_id,
-                            course_id: enrollmentApp.course_id,
-                            status: "active",
-                            progress_percentage: 0,
-                            certificate_issued: false,
-                            enrolled_at: new Date().toISOString(),
-                        });
-                    }
-                }
-            } else {
-                console.error("Supabase RPC verification failure:", {
-                    message: rpcError.message,
-                    details: rpcError.details,
-                    hint: rpcError.hint,
-                    code: rpcError.code,
-                });
+        if (adminNotes !== null) {
+            const { error: notesError } = await supabase
+                .from("enrollments")
+                .update({ admin_notes: adminNotes })
+                .eq("id", id);
+            if (notesError) {
+                revalidatePath("/admin/students/enrollments");
+                revalidatePath("/admin/students/registrations");
+                revalidatePath("/admin/students/list");
                 return {
-                    success: false,
-                    error: `Approval failed [${rpcError.code || "SQL"}]: ${rpcError.message} (${rpcError.details || "Check constraints/columns"})`,
+                    success: true,
+                    message: `Enrollment approved, but admin notes could not be saved: ${notesError.message}`,
                 };
             }
         }
     } catch (error) {
         console.error("[SPRINT Admin Enrollments] Enrollment approval RPC threw an error:", error);
-        return { success: false, error: "Could not approve the enrollment application. Please try again." };
+        return {
+            success: false,
+            error: error instanceof Error
+                ? `Could not approve the enrollment application: ${error.message}`
+                : "Could not approve the enrollment application. Please try again.",
+        };
     }
 
     revalidatePath("/admin/students/enrollments");
+    revalidatePath("/admin/students/registrations");
     revalidatePath("/admin/students/list");
     revalidatePath("/student/dashboard");
     revalidatePath("/student/my-course");
