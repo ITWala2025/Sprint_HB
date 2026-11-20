@@ -4,6 +4,12 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil, Trash2, X } from "lucide-react";
 import { useAdminPermissions } from "@/app/admin/permissions-context";
+import TablePagination from "@/components/admin/TablePagination";
+import {
+    formatSearchableDate,
+    matchesTableDateFilter,
+    type TableDateFilter,
+} from "@/lib/admin/student-table-filters";
 import {
     deleteRegistration,
     updateRegistration,
@@ -11,6 +17,8 @@ import {
     type RegistrationListItem,
     type RegistrationUpdateInput,
 } from "@/app/admin/students/registrations/actions";
+
+const PAGE_SIZE = 15;
 
 function formatSubmittedDate(value: string) {
     const date = new Date(value);
@@ -146,6 +154,56 @@ export default function RegistrationsTable({
     const [isPending, startTransition] = useTransition();
     const [editingRegistration, setEditingRegistration] = useState<RegistrationListItem | null>(null);
     const [feedback, setFeedback] = useState<{ type: "error" | "success"; message: string } | null>(null);
+    const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "active">("all");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [stateFilter, setStateFilter] = useState("all");
+    const [dateFilter, setDateFilter] = useState<TableDateFilter>("all");
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const states = [...new Set(registrations.map((registration) => registration.state?.trim()).filter((state): state is string => Boolean(state)))].sort((a, b) => a.localeCompare(b));
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    const filteredRegistrations = [...registrations]
+        .sort((left, right) => new Date(right.created_at).getTime() - new Date(left.created_at).getTime())
+        .filter((registration) => {
+            const searchText = [
+                registration.full_name,
+                registration.email,
+                registration.phone,
+                registration.application_number,
+                registration.registration_number,
+                registration.state,
+                registration.city,
+                registration.college_institution,
+                formatSearchableDate(registration.created_at),
+            ].join(" ").toLowerCase();
+            return (statusFilter === "all" || registration.status === statusFilter) &&
+                (stateFilter === "all" || registration.state?.trim() === stateFilter) &&
+                matchesTableDateFilter(registration.created_at, dateFilter, fromDate, toDate) &&
+                (!normalizedQuery || searchText.includes(normalizedQuery));
+        });
+    const totalPages = Math.ceil(filteredRegistrations.length / PAGE_SIZE);
+    const page = Math.min(currentPage, Math.max(totalPages, 1));
+    const paginatedRegistrations = filteredRegistrations.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    const hasActiveFilters = Boolean(normalizedQuery) ||
+        statusFilter !== "all" ||
+        stateFilter !== "all" ||
+        dateFilter !== "all" ||
+        Boolean(fromDate || toDate);
+
+    function resetPage() {
+        setCurrentPage(1);
+    }
+
+    function clearFilters() {
+        setSearchQuery("");
+        setStatusFilter("all");
+        setStateFilter("all");
+        setDateFilter("all");
+        setFromDate("");
+        setToDate("");
+        resetPage();
+    }
 
     function handleResult(result: RegistrationActionResult) {
         if ("error" in result) {
@@ -178,7 +236,7 @@ export default function RegistrationsTable({
 
     return (
         <>
-            <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Student registrations">
+            <section className="w-full max-w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" aria-label="Student registrations">
                 {feedback && (
                     <p
                         className={`border-b px-5 py-3 text-sm ${feedback.type === "error" ? "border-red-200 bg-red-50 text-brand-red" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}
@@ -188,7 +246,94 @@ export default function RegistrationsTable({
                         {feedback.message}
                     </p>
                 )}
-                <div className="overflow-x-auto">
+                <div className="flex min-w-0 max-w-full flex-wrap items-end gap-3 border-b border-slate-200 px-4 py-4 sm:px-6" role="group" aria-label="Filter registrations">
+                    <label className="min-w-[180px] max-w-full flex-1">
+                        <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">Search registrations</span>
+                        <input
+                            type="search"
+                            value={searchQuery}
+                            onChange={(event) => {
+                                setSearchQuery(event.target.value);
+                                resetPage();
+                            }}
+                            placeholder="Name, email, phone, ID, location, date..."
+                            className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 px-3 py-2 text-sm text-brand-navy"
+                        />
+                    </label>
+                    <div className="flex min-w-0 max-w-full flex-wrap gap-1.5" role="group" aria-label="Status filter">
+                        {([
+                            { value: "all", label: `All (${registrations.length})` },
+                            { value: "pending", label: `Pending (${registrations.filter((registration) => registration.status === "pending").length})` },
+                            { value: "active", label: `Active (${registrations.filter((registration) => registration.status === "active").length})` },
+                        ] as const).map((filter) => (
+                            <button
+                                key={filter.value}
+                                type="button"
+                                aria-pressed={statusFilter === filter.value}
+                                onClick={() => {
+                                    setStatusFilter(filter.value);
+                                    resetPage();
+                                }}
+                                className={`sprint-focus rounded-full px-3 py-2 text-xs font-semibold transition ${
+                                    statusFilter === filter.value
+                                        ? "bg-brand-navy text-white"
+                                        : "bg-slate-100 text-brand-text-secondary hover:bg-slate-200"
+                                }`}
+                            >
+                                {filter.label}
+                            </button>
+                        ))}
+                    </div>
+                    <label className="min-w-[130px] max-w-full">
+                        <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">State</span>
+                        <select
+                            value={stateFilter}
+                            onChange={(event) => {
+                                setStateFilter(event.target.value);
+                                resetPage();
+                            }}
+                            className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy"
+                        >
+                            <option value="all">All states</option>
+                            {states.map((state) => <option key={state} value={state}>{state}</option>)}
+                        </select>
+                    </label>
+                    <label className="min-w-[140px] max-w-full">
+                        <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">Submitted</span>
+                        <select
+                            value={dateFilter}
+                            onChange={(event) => {
+                                setDateFilter(event.target.value as TableDateFilter);
+                                resetPage();
+                            }}
+                            className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy"
+                        >
+                            <option value="all">All Dates</option>
+                            <option value="today">Today</option>
+                            <option value="last7">Last 7 Days</option>
+                            <option value="last30">Last 30 Days</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </label>
+                    {dateFilter === "custom" && (
+                        <>
+                            <label className="min-w-[135px] max-w-full">
+                                <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">From</span>
+                                <input type="date" value={fromDate} onChange={(event) => { setFromDate(event.target.value); resetPage(); }} className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy" />
+                            </label>
+                            <label className="min-w-[135px] max-w-full">
+                                <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">To</span>
+                                <input type="date" value={toDate} onChange={(event) => { setToDate(event.target.value); resetPage(); }} className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy" />
+                            </label>
+                        </>
+                    )}
+                    {hasActiveFilters && (
+                        <button type="button" onClick={clearFilters} className="sprint-focus rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-brand-navy hover:bg-slate-50">
+                            Clear filters
+                        </button>
+                    )}
+                </div>
+                <div className="w-full overflow-x-auto">
                     <table className="w-full min-w-[1900px] text-left text-sm">
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -208,7 +353,7 @@ export default function RegistrationsTable({
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {registrations.map((registration) => (
+                            {paginatedRegistrations.map((registration) => (
                                 <tr key={registration.id} className="hover:bg-slate-50">
                                     <td className="px-6 py-4">
                                         <p className="font-semibold text-brand-navy">{registration.full_name || "Unnamed applicant"}</p>
@@ -236,13 +381,11 @@ export default function RegistrationsTable({
                                     <td className="whitespace-nowrap px-6 py-4 text-xs text-brand-text-muted">{formatSubmittedDate(registration.created_at)}</td>
                                     <td className="px-6 py-4">
                                         <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
-                                            registration.status === "pending"
-                                                ? "bg-brand-red-light text-brand-red"
-                                                : registration.status === "approved"
-                                                    ? "bg-emerald-50 text-emerald-700"
-                                                    : "bg-slate-100 text-slate-600"
+                                            registration.status === "active"
+                                                ? "bg-emerald-50 text-emerald-700"
+                                                : "bg-brand-red-light text-brand-red"
                                         }`}>
-                                            {registration.status.charAt(0).toUpperCase() + registration.status.slice(1)}
+                                            {registration.status === "active" ? "Active" : "Pending"}
                                         </span>
                                     </td>
                                     <td className="whitespace-nowrap px-6 py-4 text-right">
@@ -273,16 +416,27 @@ export default function RegistrationsTable({
                                     </td>
                                 </tr>
                             ))}
-                            {registrations.length === 0 && (
+                            {filteredRegistrations.length === 0 && (
                                 <tr>
                                     <td colSpan={13} className="px-6 py-12 text-center text-sm text-brand-text-muted">
-                                        No course-free student registrations are available.
+                                        {statusFilter === "pending"
+                                            ? "No pending registrations are available for marketing follow-up."
+                                            : statusFilter === "active"
+                                                ? "No active enrolled students are available."
+                                                : "No course-free student registrations are available."}
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
+                <TablePagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    totalItems={filteredRegistrations.length}
+                    pageSize={PAGE_SIZE}
+                    onPageChange={setCurrentPage}
+                />
             </section>
             {editingRegistration && (
                 <RegistrationEditor

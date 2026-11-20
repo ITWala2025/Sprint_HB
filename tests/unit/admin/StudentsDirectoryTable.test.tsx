@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import StudentsDirectoryTable from "@/app/admin/students/list/StudentsDirectoryTable";
@@ -18,6 +18,7 @@ describe("StudentsDirectoryTable", () => {
         { kind: "course", title: "Full Stack Web Development" },
       ],
       status: "active",
+      created_at: "2026-10-15T00:00:00.000Z",
       dateOfEnrollment: "15 Oct 2026",
       college: "BIT Sindri",
       registrationNumber: "SPR-2026-0001",
@@ -41,6 +42,7 @@ describe("StudentsDirectoryTable", () => {
         { kind: "bundle", title: "Applied AI & Cloud Engineering" },
       ],
       status: "active",
+      created_at: "2026-10-20T00:00:00.000Z",
       dateOfEnrollment: "20 Oct 2026",
       college: "NIT Jamshedpur",
       registrationNumber: "SPR-2026-0002",
@@ -62,6 +64,7 @@ describe("StudentsDirectoryTable", () => {
       courseEnrolled: "Not enrolled",
       activeCourses: [],
       status: "active",
+      created_at: "2026-11-01T00:00:00.000Z",
       dateOfEnrollment: "01 Nov 2026",
       college: "IIT Dhanbad",
       registrationNumber: "SPR-2026-0003",
@@ -103,7 +106,7 @@ describe("StudentsDirectoryTable", () => {
     expect(screen.getByText("Aarav Patel")).toBeInTheDocument();
     expect(screen.getByText("aarav@example.com")).toBeInTheDocument();
     expect(screen.getByText("+91 9876543210")).toBeInTheDocument();
-    expect(screen.getAllByText("Active").length).toBe(3);
+    expect(screen.getAllByText("Active").length).toBe(4);
     expect(screen.getByText("15 Oct 2026")).toBeInTheDocument();
     expect(screen.getByText("BIT Sindri")).toBeInTheDocument();
     expect(screen.getAllByText("B.Tech")).toHaveLength(3);
@@ -120,7 +123,7 @@ describe("StudentsDirectoryTable", () => {
   it("keeps horizontal scrolling inside the bounded table wrapper", () => {
     const { container } = render(<StudentsDirectoryTable students={mockStudents} />);
     const directory = screen.getByRole("region", { name: "Student directory" });
-    const scrollContainer = directory.children[0];
+    const scrollContainer = directory.querySelector(".overflow-x-auto");
     const table = screen.getByRole("table");
 
     expect(directory).toHaveClass("w-full", "max-w-full", "min-w-0", "overflow-hidden");
@@ -144,7 +147,7 @@ describe("StudentsDirectoryTable", () => {
     expect(screen.getByText("Computer Science")).toBeInTheDocument();
     expect(screen.getByText("Final Year")).toBeInTheDocument();
     expect(screen.getByText("Dhanbad")).toBeInTheDocument();
-    expect(screen.getByText("Jharkhand")).toBeInTheDocument();
+    expect(within(screen.getByRole("dialog")).getByText("Jharkhand")).toBeInTheDocument();
     expect(screen.getByText("Student")).toBeInTheDocument();
     expect(screen.getByText("Not provided")).toBeInTheDocument();
     expect(screen.getAllByText("Full Stack Web Development").length).toBeGreaterThanOrEqual(1);
@@ -155,7 +158,32 @@ describe("StudentsDirectoryTable", () => {
 
   it("renders empty state message when student list is empty", () => {
     render(<StudentsDirectoryTable students={[]} />);
-    expect(screen.getByText("No verified active students are available.")).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "No verified active students are available." })).toHaveAttribute("colspan", "7");
+    expect(screen.getByText("No students match these filters.")).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "No students match these filters." })).toHaveAttribute("colspan", "7");
+  });
+
+  it("searches across student fields and paginates filtered rows", async () => {
+    const user = userEvent.setup();
+    const additionalStudents = Array.from({ length: 13 }, (_, index) => ({
+      ...mockStudents[0],
+      id: `additional-${index}`,
+      name: `Additional Student ${index + 1}`,
+      registrationNumber: `SPR-EXTRA-${index + 1}`,
+      studentId: `SPR-EXTRA-${index + 1}`,
+      created_at: `2026-09-${String(index + 1).padStart(2, "0")}T00:00:00.000Z`,
+    }));
+    render(<StudentsDirectoryTable students={[...mockStudents, ...additionalStudents]} />);
+
+    expect(screen.getByText("Showing 1–15 of 16 results")).toBeInTheDocument();
+    expect(screen.queryByText("Additional Student 1")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "NEXT →" }));
+    expect(screen.getByText("Additional Student 1")).toBeInTheDocument();
+    expect(screen.getByText("Showing 16–16 of 16 results")).toBeInTheDocument();
+
+    const search = screen.getByRole("searchbox", { name: "Search students" });
+    await user.type(search, "SPR-2026-0001");
+    expect(screen.getByText("Aarav Patel")).toBeInTheDocument();
+    expect(screen.queryByText("Sneha Reddy")).not.toBeInTheDocument();
+    expect(screen.getByText("Showing 1–1 of 1 results")).toBeInTheDocument();
   });
 });

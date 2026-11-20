@@ -18,7 +18,7 @@ export default async function RegistrationsPage() {
                         </p>
                     </div>
                     <span className="inline-flex w-fit rounded-full bg-brand-red-light px-3 py-1.5 text-xs font-bold text-brand-red">
-                        {registrations.filter((registration) => registration.status === "pending").length} pending review
+                        {registrations.filter((registration) => registration.status === "pending").length} pending leads
                     </span>
                 </div>
             </div>

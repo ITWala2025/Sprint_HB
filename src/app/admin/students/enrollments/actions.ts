@@ -56,6 +56,7 @@ export type EnrollmentRegistration = {
     email: string;
     phone: string;
     courseReference: string;
+    programs: string[];
     created_at: string;
     status: string;
 };
@@ -314,6 +315,10 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
             : null;
         const courseId = enrollment.course_id ?? linkedRegistration?.course_id;
         const bundleId = enrollment.bundle_id ?? linkedRegistration?.bundle_id;
+        const programs = [
+            courseId ? courseTitles.get(courseId) : null,
+            bundleId ? bundleTitles.get(bundleId) : null,
+        ].filter((title): title is string => Boolean(title));
         const references = [
             courseId && courseTitles.get(courseId)
                 ? `Course: ${courseTitles.get(courseId)}`
@@ -334,6 +339,7 @@ export async function getEnrollmentRegistrations(): Promise<EnrollmentRegistrati
             email: enrollment.email || linkedRegistration?.email || "",
             phone: enrollment.phone || enrollment.profiles?.phone || enrollment.profiles?.mobile_number || linkedRegistration?.phone || enrollment.registrations?.phone || "",
             courseReference: references.join(" · ") || "Not specified",
+            programs,
             created_at: enrollment.created_at,
             status: enrollment.status,
         };

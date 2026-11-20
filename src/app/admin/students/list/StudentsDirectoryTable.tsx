@@ -2,7 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { Eye, X } from "lucide-react";
+import TablePagination from "@/components/admin/TablePagination";
+import {
+    formatSearchableDate,
+    matchesTableDateFilter,
+    type TableDateFilter,
+} from "@/lib/admin/student-table-filters";
 import type { StudentDirectoryEntry } from "@/app/admin/students/list/actions";
+
+const PAGE_SIZE = 15;
 
 function ActiveCourseBadges({ student }: { student: StudentDirectoryEntry }) {
     if (!student.activeCourses || student.activeCourses.length === 0) {
@@ -136,10 +144,161 @@ export default function StudentsDirectoryTable({
     students: StudentDirectoryEntry[];
 }) {
     const [selectedStudent, setSelectedStudent] = useState<StudentDirectoryEntry | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [programFilter, setProgramFilter] = useState("all");
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [stateFilter, setStateFilter] = useState("all");
+    const [dateFilter, setDateFilter] = useState<TableDateFilter>("all");
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const programs = [...new Set(students.flatMap((student) => student.activeCourses.map((course) => course.title)))].sort((a, b) => a.localeCompare(b));
+    const states = [...new Set(students.map((student) => student.state.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    const filteredStudents = [...students]
+        .sort((left, right) => new Date(right.created_at).getTime() - new Date(left.created_at).getTime())
+        .filter((student) => {
+            const searchText = [
+                student.registrationNumber,
+                student.name,
+                student.email,
+                student.phone,
+                student.college,
+                student.degree,
+                student.state,
+                student.city,
+                student.courseEnrolled,
+                ...student.activeCourses.map((course) => course.title),
+                student.dateOfEnrollment,
+                formatSearchableDate(student.created_at),
+            ].join(" ").toLowerCase();
+            const isActive = student.status.toLowerCase() === "active";
+            return (statusFilter === "all" || (statusFilter === "active" ? isActive : !isActive)) &&
+                (stateFilter === "all" || student.state === stateFilter) &&
+                (programFilter === "all" || student.activeCourses.some((course) => course.title === programFilter)) &&
+                matchesTableDateFilter(student.created_at, dateFilter, fromDate, toDate) &&
+                (!normalizedQuery || searchText.includes(normalizedQuery));
+        });
+    const totalPages = Math.ceil(filteredStudents.length / PAGE_SIZE);
+    const page = Math.min(currentPage, Math.max(totalPages, 1));
+    const paginatedStudents = filteredStudents.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    const hasActiveFilters = Boolean(normalizedQuery) ||
+        programFilter !== "all" ||
+        statusFilter !== "all" ||
+        stateFilter !== "all" ||
+        dateFilter !== "all" ||
+        Boolean(fromDate || toDate);
+
+    function resetPage() {
+        setCurrentPage(1);
+    }
+
+    function clearFilters() {
+        setSearchQuery("");
+        setProgramFilter("all");
+        setStatusFilter("all");
+        setStateFilter("all");
+        setDateFilter("all");
+        setFromDate("");
+        setToDate("");
+        resetPage();
+    }
 
     return (
         <>
             <div className="w-full max-w-full min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white" role="region" aria-label="Student directory">
+                <div className="flex min-w-0 max-w-full flex-wrap items-end gap-3 border-b border-slate-200 px-4 py-4 sm:px-6" role="group" aria-label="Filter student directory">
+                    <label className="min-w-[180px] max-w-full flex-1">
+                        <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">Search students</span>
+                        <input
+                            type="search"
+                            value={searchQuery}
+                            onChange={(event) => {
+                                setSearchQuery(event.target.value);
+                                resetPage();
+                            }}
+                            placeholder="Student ID, name, contact, course, date..."
+                            className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 px-3 py-2 text-sm text-brand-navy"
+                        />
+                    </label>
+                    <label className="min-w-[160px] max-w-full">
+                        <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">Course / Bundle</span>
+                        <select
+                            value={programFilter}
+                            onChange={(event) => {
+                                setProgramFilter(event.target.value);
+                                resetPage();
+                            }}
+                            className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy"
+                        >
+                            <option value="all">All Programs</option>
+                            {programs.map((program) => <option key={program} value={program}>{program}</option>)}
+                        </select>
+                    </label>
+                    <label className="min-w-[130px] max-w-full">
+                        <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">Status</span>
+                        <select
+                            value={statusFilter}
+                            onChange={(event) => {
+                                setStatusFilter(event.target.value);
+                                resetPage();
+                            }}
+                            className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy"
+                        >
+                            <option value="all">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </label>
+                    <label className="min-w-[130px] max-w-full">
+                        <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">State</span>
+                        <select
+                            value={stateFilter}
+                            onChange={(event) => {
+                                setStateFilter(event.target.value);
+                                resetPage();
+                            }}
+                            className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy"
+                        >
+                            <option value="all">All States</option>
+                            {states.map((state) => <option key={state} value={state}>{state}</option>)}
+                        </select>
+                    </label>
+                    <label className="min-w-[140px] max-w-full">
+                        <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">Enrollment Date</span>
+                        <select
+                            value={dateFilter}
+                            onChange={(event) => {
+                                setDateFilter(event.target.value as TableDateFilter);
+                                resetPage();
+                            }}
+                            className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy"
+                        >
+                            <option value="all">All Dates</option>
+                            <option value="today">Today</option>
+                            <option value="last7">Last 7 Days</option>
+                            <option value="last30">Last 30 Days</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </label>
+                    {dateFilter === "custom" && (
+                        <>
+                            <label className="min-w-[135px] max-w-full">
+                                <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">From</span>
+                                <input type="date" value={fromDate} onChange={(event) => { setFromDate(event.target.value); resetPage(); }} className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy" />
+                            </label>
+                            <label className="min-w-[135px] max-w-full">
+                                <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">To</span>
+                                <input type="date" value={toDate} onChange={(event) => { setToDate(event.target.value); resetPage(); }} className="sprint-focus w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-brand-navy" />
+                            </label>
+                        </>
+                    )}
+                    {hasActiveFilters && (
+                        <button type="button" onClick={clearFilters} className="sprint-focus rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-brand-navy hover:bg-slate-50">
+                            Clear filters
+                        </button>
+                    )}
+                </div>
                 <div className="w-full max-w-full overflow-x-auto">
                     <table className="w-full table-fixed border-collapse text-left text-sm">
                         <colgroup>
@@ -163,7 +322,7 @@ export default function StudentsDirectoryTable({
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {students.map((student) => {
+                            {paginatedStudents.map((student) => {
                                 return (
                                     <tr key={student.id} className="hover:bg-slate-50">
                                         <td className="break-all px-2 py-4 font-mono text-xs font-bold text-brand-navy">
@@ -209,16 +368,23 @@ export default function StudentsDirectoryTable({
                                     </tr>
                                 );
                             })}
-                            {students.length === 0 && (
+                            {filteredStudents.length === 0 && (
                                 <tr>
                                     <td colSpan={7} className="px-6 py-12 text-center text-sm text-brand-text-muted">
-                                        No verified active students are available.
+                                        No students match these filters.
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
+                <TablePagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    totalItems={filteredStudents.length}
+                    pageSize={PAGE_SIZE}
+                    onPageChange={setCurrentPage}
+                />
             </div>
             {selectedStudent && (
                 <StudentDetailsModal

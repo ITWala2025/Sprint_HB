@@ -24,6 +24,7 @@ export type StudentDirectoryEntry = {
     courseEnrolled: string;
     activeCourses: StudentCourseBadge[];
     status: string;
+    created_at: string;
     dateOfEnrollment: string;
     college: string;
     degree: string;
@@ -217,6 +218,7 @@ export async function getStudentDirectory(): Promise<StudentDirectoryEntry[]> {
             courseEnrolled,
             activeCourses: uniqueBadges,
             status: text(student.status, profile?.status, enrollment?.status, registration?.status) || "Not provided",
+            created_at: text(student.created_at),
             dateOfEnrollment: formatEnrollmentDate(timestamps[0]),
             college: text(student.college_institution, enrollment?.college_institution, registration?.college_institution, profile?.college_institution) || "Not provided",
             degree: text(student.course_degree, enrollment?.course_degree, registration?.course_degree, profile?.course_degree) || "Not provided",

@@ -1,9 +1,7 @@
 "use server";
 
 import "server-only";
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { createServerClient } from "@supabase/ssr";
 import { assertModuleAccess } from "@/app/admin/authorization";
 import { createServiceClient } from "@/lib/supabase/service";
 
@@ -24,7 +22,7 @@ export type RegistrationListItem = {
     organization_name: string | null;
     admin_notes: string | null;
     created_at: string;
-    status: string;
+    status: "active" | "pending";
 };
 
 export type RegistrationUpdateInput = {
@@ -38,29 +36,6 @@ export type RegistrationUpdateInput = {
 export type RegistrationActionResult =
     | { success: true; message: string }
     | { success: false; error: string };
-
-async function createAuthenticatedServerClient() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-        ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!supabaseUrl || !publishableKey) {
-        throw new Error("Supabase public environment variables are not configured.");
-    }
-
-    const cookieStore = await cookies();
-    return createServerClient(supabaseUrl, publishableKey, {
-        cookies: {
-            getAll: () => cookieStore.getAll(),
-            setAll: (cookiesToSet) => {
-                try {
-                    cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-                } catch {
-                    // Server Components cannot write refreshed auth cookies.
-                }
-            },
-        },
-    });
-}
 
 function isRegistrationId(id: unknown): id is string {
     return typeof id === "string" &&
@@ -78,23 +53,47 @@ function requireServiceClient() {
 export async function getStudentRegistrations(): Promise<RegistrationListItem[]> {
     await assertModuleAccess("student_ops");
     try {
-        const supabase = createServiceClient() ?? await createAuthenticatedServerClient();
-        const { data, error } = await supabase
-            .from("registrations")
-            .select("id, registration_number, application_number, full_name, email, phone, college_institution, course_degree, specialization_branch, year_semester, city, state, employment_status, organization_name, admin_notes, created_at, status")
-            .is("course_id", null)
-            .is("bundle_id", null)
-            .order("created_at", { ascending: false });
+        const supabase = requireServiceClient();
+        const [registrationsResult, activeStudentsResult] = await Promise.all([
+            supabase
+                .from("registrations")
+                .select("id, user_id, registration_number, application_number, full_name, email, phone, college_institution, course_degree, specialization_branch, year_semester, city, state, employment_status, organization_name, admin_notes, created_at, status")
+                .is("course_id", null)
+                .is("bundle_id", null)
+                .order("created_at", { ascending: false }),
+            supabase
+                .from("students")
+                .select("id, profiles(email)")
+                .eq("status", "active"),
+        ]);
 
-        if (error) {
+        if (registrationsResult.error) {
             console.warn("[SPRINT Admin Registrations] Could not load student registrations:", {
-                code: error.code,
-                message: error.message,
-                details: error.details,
+                code: registrationsResult.error.code,
+                message: registrationsResult.error.message,
+                details: registrationsResult.error.details,
             });
             return [];
         }
-        return (data ?? []).map((row: any) => ({
+        if (activeStudentsResult.error) {
+            console.warn("[SPRINT Admin Registrations] Could not load active students:", {
+                code: activeStudentsResult.error.code,
+                message: activeStudentsResult.error.message,
+                details: activeStudentsResult.error.details,
+            });
+            return [];
+        }
+
+        const activeStudentIds = new Set((activeStudentsResult.data ?? []).map((student) => student.id));
+        const activeStudentEmails = new Set(
+            (activeStudentsResult.data ?? []).flatMap((student) => {
+                const profile = Array.isArray(student.profiles) ? student.profiles[0] : student.profiles;
+                const email = profile?.email?.trim().toLowerCase();
+                return email ? [email] : [];
+            }),
+        );
+
+        return (registrationsResult.data ?? []).map((row) => ({
             id: row.id,
             application_number: row.application_number,
             registration_number: row.registration_number,
@@ -111,7 +110,11 @@ export async function getStudentRegistrations(): Promise<RegistrationListItem[]>
             organization_name: row.organization_name,
             admin_notes: row.admin_notes,
             created_at: row.created_at,
-            status: row.status,
+            status: row.status?.toLowerCase() === "active" ||
+                (row.user_id !== null && activeStudentIds.has(row.user_id)) ||
+                (typeof row.email === "string" && activeStudentEmails.has(row.email.trim().toLowerCase()))
+                ? "active"
+                : "pending",
         }));
     } catch (error) {
         console.warn("[SPRINT Admin Registrations] Could not load student registrations:", error);
