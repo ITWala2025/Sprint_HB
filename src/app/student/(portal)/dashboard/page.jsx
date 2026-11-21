@@ -37,6 +37,10 @@ function getFirstName(fullName) {
   return first || "Student";
 }
 
+function escapeIlike(value) {
+  return value.replace(/[\\%_]/g, "\\$&");
+}
+
 async function fetchDashboardData(userId) {
   const db = createServiceClient();
   if (!db) {
@@ -232,6 +236,57 @@ export default async function StudentDashboardPage() {
 
   if (!user) {
     redirect("/student/login");
+  }
+
+  const accountDb = createServiceClient() ?? supabase;
+  const [{ data: profile, error: profileError }, { data: studentStatusRecord, error: studentError }] = await Promise.all([
+    accountDb.from("profiles").select("is_active, email").eq("id", user.id).maybeSingle(),
+    accountDb.from("students").select("status").eq("id", user.id).maybeSingle(),
+  ]);
+
+  if (profile?.is_active === false) {
+    await supabase.auth.signOut();
+    redirect("/student/login?deactivated=1");
+  }
+
+  if (profileError || studentError || !profile) {
+    await supabase.auth.signOut();
+    redirect("/student/login");
+  }
+
+  let hasDeactivatedRegistration = false;
+  if (!studentStatusRecord) {
+    const registrations = accountDb.from("registrations").select("id").eq("status", "deactivated");
+    const { data: byUserId, error: userIdError } = await registrations
+      .eq("user_id", user.id)
+      .limit(1)
+      .maybeSingle();
+    if (userIdError) {
+      await supabase.auth.signOut();
+      redirect("/student/login");
+    }
+
+    if (byUserId) {
+      hasDeactivatedRegistration = true;
+    } else if (profile.email || user.email) {
+      const { data: byEmail, error: emailError } = await accountDb
+        .from("registrations")
+        .select("id")
+        .eq("status", "deactivated")
+        .ilike("email", escapeIlike(profile.email || user.email))
+        .limit(1)
+        .maybeSingle();
+      if (emailError) {
+        await supabase.auth.signOut();
+        redirect("/student/login");
+      }
+      hasDeactivatedRegistration = Boolean(byEmail);
+    }
+  }
+
+  if (profile.is_active === false || studentStatusRecord?.status === "deactivated" || hasDeactivatedRegistration) {
+    await supabase.auth.signOut();
+    redirect("/student/login?deactivated=1");
   }
 
   const { student, enrollment, applications, progress, announcements } = await getCachedDashboardData(user.id);

@@ -1,9 +1,11 @@
 "use server";
 
 import "server-only";
+import { revalidatePath } from "next/cache";
 import { assertModuleAccess } from "@/app/admin/authorization";
 import { createServiceClient } from "@/lib/supabase/service";
 import { sanitizeStudentId } from "@/lib/id-utils";
+import { getStudentOpsServiceClient } from "@/app/admin/students/action-auth";
 
 export type StudentCourseBadge = {
     kind: "course" | "bundle";
@@ -36,6 +38,10 @@ export type StudentDirectoryEntry = {
     organization: string;
 };
 
+export type StudentStatusActionResult =
+    | { success: true; message: string }
+    | { success: false; error: string };
+
 const PAGE_SIZE = 1000;
 
 function requireServiceClient() {
@@ -50,6 +56,15 @@ function text(...values: unknown[]): string {
     return values.find((value): value is string =>
         typeof value === "string" && value.trim().length > 0,
     )?.trim() ?? "";
+}
+
+function isStudentId(id: unknown): id is string {
+    return typeof id === "string" &&
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
+}
+
+function escapeIlike(value: string): string {
+    return value.replace(/[\\%_]/g, "\\$&");
 }
 
 async function fetchAllRows<T>(
@@ -217,7 +232,9 @@ export async function getStudentDirectory(): Promise<StudentDirectoryEntry[]> {
             } : null,
             courseEnrolled,
             activeCourses: uniqueBadges,
-            status: text(student.status, profile?.status, enrollment?.status, registration?.status) || "Not provided",
+            status: student.status?.toLowerCase() === "deactivated" || profile?.is_active === false
+                ? "deactivated"
+                : text(student.status, profile?.status, enrollment?.status, registration?.status) || "Not provided",
             created_at: text(student.created_at),
             dateOfEnrollment: formatEnrollmentDate(timestamps[0]),
             college: text(student.college_institution, enrollment?.college_institution, registration?.college_institution, profile?.college_institution) || "Not provided",
@@ -230,4 +247,61 @@ export async function getStudentDirectory(): Promise<StudentDirectoryEntry[]> {
             organization: text(student.organization_name, enrollment?.organization_name, registration?.organization_name, profile?.organization_name) || "Not provided",
         };
     });
+}
+
+async function setStudentStatus(
+    studentId: string,
+    status: "active" | "deactivated",
+): Promise<StudentStatusActionResult> {
+    if (!isStudentId(studentId)) {
+        return { success: false, error: "Select a valid student." };
+    }
+
+    const authorization = await getStudentOpsServiceClient();
+    if ("error" in authorization) return authorization;
+    const supabase = authorization.client;
+
+    const [{ data: student, error: studentLookupError }, { data: profile, error: profileLookupError }] = await Promise.all([
+        supabase.from("students").select("id, email").eq("id", studentId).maybeSingle(),
+        supabase.from("profiles").select("id, email").eq("id", studentId).maybeSingle(),
+    ]);
+
+    if (studentLookupError) {
+        return { success: false, error: `Could not find the student account: ${studentLookupError.message}` };
+    }
+    if (profileLookupError) {
+        return { success: false, error: `Could not find the student profile: ${profileLookupError.message}` };
+    }
+    if (!student) {
+        return { success: false, error: "This student no longer exists." };
+    }
+
+    const email = text(profile?.email, student.email);
+    const updates = await Promise.all([
+        supabase.from("students").update({ status }).eq("id", studentId),
+        supabase.from("profiles").update({ is_active: status === "active" }).eq("id", studentId),
+        supabase.from("registrations").update({ status }).eq("user_id", studentId),
+        ...(email
+            ? [supabase.from("registrations").update({ status }).ilike("email", escapeIlike(email))]
+            : []),
+    ]);
+    const updateError = updates.find((result) => result.error)?.error;
+    if (updateError) {
+        return { success: false, error: `Could not ${status === "active" ? "activate" : "deactivate"} the student: ${updateError.message}` };
+    }
+
+    revalidatePath("/admin/students/list");
+    revalidatePath("/admin/students/registrations");
+    return {
+        success: true,
+        message: status === "active" ? "Student account activated." : "Student account deactivated.",
+    };
+}
+
+export async function deactivateStudent(studentId: string): Promise<StudentStatusActionResult> {
+    return setStudentStatus(studentId, "deactivated");
+}
+
+export async function activateStudent(studentId: string): Promise<StudentStatusActionResult> {
+    return setStudentStatus(studentId, "active");
 }

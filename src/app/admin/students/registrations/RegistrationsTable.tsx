@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil, Trash2, X } from "lucide-react";
+import { Pencil, RotateCcw, Trash2, X } from "lucide-react";
 import { useAdminPermissions } from "@/app/admin/permissions-context";
 import TablePagination from "@/components/admin/TablePagination";
 import {
@@ -11,7 +11,8 @@ import {
     type TableDateFilter,
 } from "@/lib/admin/student-table-filters";
 import {
-    deleteRegistration,
+    activateRegistration,
+    deactivateRegistration,
     updateRegistration,
     type RegistrationActionResult,
     type RegistrationListItem,
@@ -150,11 +151,10 @@ export default function RegistrationsTable({
     const router = useRouter();
     const { hasPermission } = useAdminPermissions();
     const canEdit = hasPermission("student_ops", "edit");
-    const canDelete = hasPermission("student_ops", "delete");
     const [isPending, startTransition] = useTransition();
     const [editingRegistration, setEditingRegistration] = useState<RegistrationListItem | null>(null);
     const [feedback, setFeedback] = useState<{ type: "error" | "success"; message: string } | null>(null);
-    const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "active">("all");
+    const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "active" | "deactivated">("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [stateFilter, setStateFilter] = useState("all");
     const [dateFilter, setDateFilter] = useState<TableDateFilter>("all");
@@ -224,13 +224,20 @@ export default function RegistrationsTable({
         });
     }
 
-    function removeRegistration(registration: RegistrationListItem) {
+    function deactivateRegistrationRow(registration: RegistrationListItem) {
         const applicantName = registration.full_name || registration.email;
-        if (!window.confirm(`Delete the registration for ${applicantName}? This cannot be undone.`)) return;
+        if (!window.confirm(`Deactivate ${applicantName}'s student account? They will lose access to the Student Portal.`)) return;
 
         setFeedback(null);
         startTransition(async () => {
-            handleResult(await deleteRegistration(registration.id));
+            handleResult(await deactivateRegistration(registration.id));
+        });
+    }
+
+    function activateRegistrationRow(registration: RegistrationListItem) {
+        setFeedback(null);
+        startTransition(async () => {
+            handleResult(await activateRegistration(registration.id));
         });
     }
 
@@ -265,6 +272,7 @@ export default function RegistrationsTable({
                             { value: "all", label: `All (${registrations.length})` },
                             { value: "pending", label: `Pending (${registrations.filter((registration) => registration.status === "pending").length})` },
                             { value: "active", label: `Active (${registrations.filter((registration) => registration.status === "active").length})` },
+                            { value: "deactivated", label: `Deactivated (${registrations.filter((registration) => registration.status === "deactivated").length})` },
                         ] as const).map((filter) => (
                             <button
                                 key={filter.value}
@@ -383,9 +391,13 @@ export default function RegistrationsTable({
                                         <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
                                             registration.status === "active"
                                                 ? "bg-emerald-50 text-emerald-700"
-                                                : "bg-brand-red-light text-brand-red"
+                                                : registration.status === "deactivated"
+                                                    ? "bg-slate-100 text-slate-600"
+                                                    : "bg-brand-red-light text-brand-red"
                                         }`}>
-                                            {registration.status === "active" ? "Active" : "Pending"}
+                                            {registration.status === "active"
+                                                ? "Active"
+                                                : registration.status === "deactivated" ? "Deactivated" : "Pending"}
                                         </span>
                                     </td>
                                     <td className="whitespace-nowrap px-6 py-4 text-right">
@@ -401,15 +413,29 @@ export default function RegistrationsTable({
                                                     <Pencil className="size-4" aria-hidden="true" />
                                                 </button>
                                             )}
-                                            {canDelete && (
+                                            {canEdit && registration.status !== "deactivated" && (
                                                 <button
                                                     type="button"
-                                                    onClick={() => removeRegistration(registration)}
+                                                    onClick={() => deactivateRegistrationRow(registration)}
                                                     disabled={isPending}
-                                                    aria-label={`Delete ${registration.full_name || registration.email}`}
+                                                    aria-label={`Deactivate ${registration.full_name || registration.email}`}
+                                                    title="Deactivate student"
                                                     className="sprint-focus inline-flex size-9 items-center justify-center rounded-lg border border-transparent text-brand-red transition hover:border-brand-red/20 hover:bg-brand-red-light disabled:opacity-50"
                                                 >
                                                     <Trash2 className="size-4" aria-hidden="true" />
+                                                </button>
+                                            )}
+                                            {canEdit && registration.status === "deactivated" && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => activateRegistrationRow(registration)}
+                                                    disabled={isPending}
+                                                    aria-label={`Activate ${registration.full_name || registration.email}`}
+                                                    title="Activate student"
+                                                    className="sprint-focus inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:opacity-50"
+                                                >
+                                                    <RotateCcw className="size-4" aria-hidden="true" />
+                                                    Activate
                                                 </button>
                                             )}
                                         </div>
@@ -423,7 +449,9 @@ export default function RegistrationsTable({
                                             ? "No pending registrations are available for marketing follow-up."
                                             : statusFilter === "active"
                                                 ? "No active enrolled students are available."
-                                                : "No course-free student registrations are available."}
+                                                : statusFilter === "deactivated"
+                                                    ? "No deactivated registrations are available."
+                                                    : "No course-free student registrations are available."}
                                     </td>
                                 </tr>
                             )}

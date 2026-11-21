@@ -175,8 +175,18 @@ export async function updateSession(request: NextRequest) {
     const isAdmin = profile?.role === "admin" ||
       (assignedRole?.is_active === true && assignedRole.permissions?.full_access === true);
     const isActiveStaff = profile?.role === "staff" && profile?.is_active === true && !isAdmin;
+    const { data: studentRecord } = profile?.role === "student"
+      ? await supabase
+        .from("students")
+        .select("registration_number, status")
+        .eq("id", user.id)
+        .maybeSingle()
+      : { data: null };
     const isActiveStudent =
-      profile?.role === "student" && profile?.status === "active";
+      profile?.role === "student" &&
+      profile?.status === "active" &&
+      profile?.is_active !== false &&
+      studentRecord?.status !== "deactivated";
 
     // Issue/refresh verified admin session cookie for fast subsequent navigations
     if ((isAdmin || isActiveStaff) && profile?.is_active === true) {
@@ -209,12 +219,6 @@ export async function updateSession(request: NextRequest) {
 
     // Issue/refresh verified student session cookie for fast subsequent navigations
     if (isActiveStudent) {
-      const { data: studentRecord } = await supabase
-        .from("students")
-        .select("registration_number")
-        .eq("id", user.id)
-        .maybeSingle();
-
       try {
         const sessionToken = await createStudentSessionToken({
           userId: user.id,

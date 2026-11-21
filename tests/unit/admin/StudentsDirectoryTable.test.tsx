@@ -1,8 +1,24 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import StudentsDirectoryTable from "@/app/admin/students/list/StudentsDirectoryTable";
 import type { StudentDirectoryEntry } from "@/app/admin/students/list/actions";
+import { activateStudent, deactivateStudent } from "@/app/admin/students/list/actions";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
+}));
+
+vi.mock("@/app/admin/permissions-context", () => ({
+  useAdminPermissions: () => ({ hasPermission: () => true }),
+}));
+
+vi.mock("@/app/admin/students/list/actions", () => ({
+  activateStudent: vi.fn(),
+  deactivateStudent: vi.fn(),
+}));
+
+afterEach(() => vi.restoreAllMocks());
 
 describe("StudentsDirectoryTable", () => {
   const mockStudents: StudentDirectoryEntry[] = [
@@ -88,7 +104,7 @@ describe("StudentsDirectoryTable", () => {
     expect(screen.getByRole("columnheader", { name: "College / Institution & Degree" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Status" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Date of Enrollment" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Details" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Actions" })).toBeInTheDocument();
     for (const removedColumn of [
       "Specialization / Branch",
       "Semester / Year",
@@ -185,5 +201,42 @@ describe("StudentsDirectoryTable", () => {
     expect(screen.getByText("Aarav Patel")).toBeInTheDocument();
     expect(screen.queryByText("Sneha Reddy")).not.toBeInTheDocument();
     expect(screen.getByText("Showing 1–1 of 1 results")).toBeInTheDocument();
+  });
+
+  it("moves students between active and deactivated views after status actions", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    vi.mocked(deactivateStudent).mockResolvedValue({
+      success: true,
+      message: "Student account deactivated.",
+    });
+    vi.mocked(activateStudent).mockResolvedValue({
+      success: true,
+      message: "Student account activated.",
+    });
+    const deactivatedStudent = {
+      ...mockStudents[0],
+      id: "66666666-ffff-0000-1111-444444444444",
+      name: "Deactivated Student",
+      status: "deactivated",
+    };
+
+    render(<StudentsDirectoryTable students={[mockStudents[0], deactivatedStudent]} />);
+
+    expect(screen.getByRole("button", { name: "Active Students (1)" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Deactivated Students (1)" })).toBeInTheDocument();
+    expect(screen.getByText("Aarav Patel")).toBeInTheDocument();
+    expect(screen.queryByText("Deactivated Student")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Deactivate student" }));
+    await waitFor(() => expect(deactivateStudent).toHaveBeenCalledWith(mockStudents[0].id));
+    await waitFor(() => expect(screen.getByRole("button", { name: "Active Students (0)" })).toBeInTheDocument());
+    expect(screen.queryByText("Aarav Patel")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Deactivated Students (2)" }));
+    expect(screen.getByText("Aarav Patel")).toBeInTheDocument();
+    await user.click(screen.getAllByRole("button", { name: "Activate student" })[0]);
+    await waitFor(() => expect(activateStudent).toHaveBeenCalled());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Deactivated Students (1)" })).toBeInTheDocument());
   });
 });

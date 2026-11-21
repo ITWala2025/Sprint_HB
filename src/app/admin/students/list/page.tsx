@@ -35,7 +35,7 @@ export default async function StudentDirectoryPage() {
                         <p className="mt-2 text-sm text-brand-text-secondary">Manage approved students, contact information, enrolled courses, and enrollment dates.</p>
                     </div>
                     <span className="inline-flex w-fit rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700">
-                        {students.length} approved students
+                        {students.filter((student) => student.status.toLowerCase() !== "deactivated").length} active students
                     </span>
                 </div>
             </div>

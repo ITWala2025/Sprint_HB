@@ -1,8 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eye, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Eye, RotateCcw, Trash2, X } from "lucide-react";
+import { useAdminPermissions } from "@/app/admin/permissions-context";
 import TablePagination from "@/components/admin/TablePagination";
+import {
+    activateStudent,
+    deactivateStudent,
+    type StudentStatusActionResult,
+} from "@/app/admin/students/list/actions";
 import {
     formatSearchableDate,
     matchesTableDateFilter,
@@ -143,7 +150,12 @@ export default function StudentsDirectoryTable({
 }: {
     students: StudentDirectoryEntry[];
 }) {
+    const router = useRouter();
+    const { hasPermission } = useAdminPermissions();
+    const canManageStudents = hasPermission("student_ops", "edit");
+    const [directoryStudents, setDirectoryStudents] = useState(students);
     const [selectedStudent, setSelectedStudent] = useState<StudentDirectoryEntry | null>(null);
+    const [activeView, setActiveView] = useState<"active" | "deactivated">("active");
     const [searchQuery, setSearchQuery] = useState("");
     const [programFilter, setProgramFilter] = useState("all");
     const [statusFilter, setStatusFilter] = useState("all");
@@ -152,10 +164,18 @@ export default function StudentsDirectoryTable({
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const programs = [...new Set(students.flatMap((student) => student.activeCourses.map((course) => course.title)))].sort((a, b) => a.localeCompare(b));
-    const states = [...new Set(students.map((student) => student.state.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    const [busyStudentId, setBusyStudentId] = useState<string | null>(null);
+    const [feedback, setFeedback] = useState<{ type: "error" | "success"; message: string } | null>(null);
+
+    useEffect(() => setDirectoryStudents(students), [students]);
+
+    const activeStudents = directoryStudents.filter((student) => student.status.toLowerCase() !== "deactivated");
+    const deactivatedStudents = directoryStudents.filter((student) => student.status.toLowerCase() === "deactivated");
+    const viewStudents = activeView === "active" ? activeStudents : deactivatedStudents;
+    const programs = [...new Set(directoryStudents.flatMap((student) => student.activeCourses.map((course) => course.title)))].sort((a, b) => a.localeCompare(b));
+    const states = [...new Set(directoryStudents.map((student) => student.state.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b));
     const normalizedQuery = searchQuery.trim().toLowerCase();
-    const filteredStudents = [...students]
+    const filteredStudents = [...viewStudents]
         .sort((left, right) => new Date(right.created_at).getTime() - new Date(left.created_at).getTime())
         .filter((student) => {
             const searchText = [
@@ -204,9 +224,71 @@ export default function StudentsDirectoryTable({
         resetPage();
     }
 
+    async function changeStudentStatus(student: StudentDirectoryEntry, status: "active" | "deactivated") {
+        if (status === "deactivated" && !window.confirm(`Deactivate ${student.name}? They will lose access to the Student Portal.`)) {
+            return;
+        }
+
+        setBusyStudentId(student.id);
+        setFeedback(null);
+        try {
+            const result: StudentStatusActionResult = status === "deactivated"
+                ? await deactivateStudent(student.id)
+                : await activateStudent(student.id);
+            if ("error" in result) {
+                setFeedback({ type: "error", message: result.error });
+                return;
+            }
+
+            setDirectoryStudents((current) => current.map((item) =>
+                item.id === student.id ? { ...item, status } : item,
+            ));
+            setSelectedStudent((current) =>
+                current?.id === student.id ? { ...current, status } : current,
+            );
+            setCurrentPage(1);
+            setFeedback({ type: "success", message: result.message });
+            router.refresh();
+        } catch (error) {
+            setFeedback({
+                type: "error",
+                message: error instanceof Error ? error.message : "Could not update the student account.",
+            });
+        } finally {
+            setBusyStudentId(null);
+        }
+    }
+
     return (
         <>
             <div className="w-full max-w-full min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white" role="region" aria-label="Student directory">
+                {feedback && (
+                    <p
+                        className={`border-b px-5 py-3 text-sm ${feedback.type === "error" ? "border-red-200 bg-red-50 text-brand-red" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}
+                        role={feedback.type === "error" ? "alert" : "status"}
+                        aria-live="polite"
+                    >
+                        {feedback.message}
+                    </p>
+                )}
+                <div className="flex min-w-0 max-w-full flex-wrap gap-2 border-b border-slate-200 px-4 py-3 sm:px-6" role="group" aria-label="Student status views">
+                    <button
+                        type="button"
+                        aria-pressed={activeView === "active"}
+                        onClick={() => { setActiveView("active"); resetPage(); }}
+                        className={`sprint-focus rounded-full px-4 py-2 text-xs font-semibold transition ${activeView === "active" ? "bg-brand-navy text-white" : "bg-slate-100 text-brand-text-secondary hover:bg-slate-200"}`}
+                    >
+                        Active Students ({activeStudents.length})
+                    </button>
+                    <button
+                        type="button"
+                        aria-pressed={activeView === "deactivated"}
+                        onClick={() => { setActiveView("deactivated"); resetPage(); }}
+                        className={`sprint-focus rounded-full px-4 py-2 text-xs font-semibold transition ${activeView === "deactivated" ? "bg-brand-navy text-white" : "bg-slate-100 text-brand-text-secondary hover:bg-slate-200"}`}
+                    >
+                        Deactivated Students ({deactivatedStudents.length})
+                    </button>
+                </div>
                 <div className="flex min-w-0 max-w-full flex-wrap items-end gap-3 border-b border-slate-200 px-4 py-4 sm:px-6" role="group" aria-label="Filter student directory">
                     <label className="min-w-[180px] max-w-full flex-1">
                         <span className="mb-1 block text-[11px] font-semibold text-brand-text-muted">Search students</span>
@@ -302,13 +384,13 @@ export default function StudentsDirectoryTable({
                 <div className="w-full max-w-full overflow-x-auto">
                     <table className="w-full table-fixed border-collapse text-left text-sm">
                         <colgroup>
-                            <col className="w-[14%]" />
-                            <col className="w-[12%]" />
-                            <col className="w-[23%]" />
-                            <col className="w-[18%]" />
-                            <col className="w-[11%]" />
                             <col className="w-[13%]" />
-                            <col className="w-[9%]" />
+                            <col className="w-[11%]" />
+                            <col className="w-[20%]" />
+                            <col className="w-[17%]" />
+                            <col className="w-[10%]" />
+                            <col className="w-[12%]" />
+                            <col className="w-[17%]" />
                         </colgroup>
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/75 text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -318,7 +400,7 @@ export default function StudentsDirectoryTable({
                                 <th className="break-words px-2 py-4">College / Institution &amp; Degree</th>
                                 <th className="break-words px-2 py-4">Status</th>
                                 <th className="break-words px-2 py-4">Date of Enrollment</th>
-                                <th className="break-words px-2 py-4 text-right">Details</th>
+                                <th className="break-words px-2 py-4 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -356,14 +438,42 @@ export default function StudentsDirectoryTable({
                                             {student.dateOfEnrollment}
                                         </td>
                                         <td className="px-2 py-4 text-right">
-                                            <button
-                                                type="button"
-                                                onClick={() => setSelectedStudent(student)}
-                                                aria-label={`View details for ${student.name}`}
-                                                className="sprint-focus inline-flex size-8 items-center justify-center rounded-lg border border-slate-200 text-brand-navy transition hover:border-brand-navy hover:bg-slate-100"
-                                            >
-                                                <Eye className="size-4" aria-hidden="true" />
-                                            </button>
+                                            <div className="flex flex-nowrap items-center justify-end gap-1">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setSelectedStudent(student)}
+                                                    aria-label={`View details for ${student.name}`}
+                                                    title="View Details"
+                                                    className="sprint-focus inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-brand-navy transition hover:border-brand-navy hover:bg-slate-100"
+                                                >
+                                                    <Eye className="size-4" aria-hidden="true" />
+                                                </button>
+                                                {canManageStudents && activeView === "active" && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => void changeStudentStatus(student, "deactivated")}
+                                                        disabled={busyStudentId === student.id}
+                                                        aria-label="Deactivate student"
+                                                        title="Deactivate student"
+                                                        className="sprint-focus inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-brand-red transition hover:bg-brand-red-light disabled:opacity-50"
+                                                    >
+                                                        <Trash2 className="size-4" aria-hidden="true" />
+                                                    </button>
+                                                )}
+                                                {canManageStudents && activeView === "deactivated" && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => void changeStudentStatus(student, "active")}
+                                                        disabled={busyStudentId === student.id}
+                                                        aria-label="Activate student"
+                                                        title="Activate"
+                                                        className="sprint-focus inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:opacity-50"
+                                                    >
+                                                        <RotateCcw className="size-4" aria-hidden="true" />
+                                                        Activate
+                                                    </button>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 );

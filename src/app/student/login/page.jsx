@@ -17,6 +17,46 @@ import { resolveStudentLoginNextPath } from "@/lib/student-login-redirect";
 
 import "./login.css";
 
+const DEACTIVATED_ACCOUNT_MESSAGE = "Your account is deactivated. Contact to SPRINT.";
+
+function escapeIlike(value) {
+  return value.replace(/[\\%_]/g, "\\$&");
+}
+
+async function hasDeactivatedRegistration(supabase, userId, email) {
+  const { data: byUserId, error: userIdError } = await supabase
+    .from("registrations")
+    .select("id")
+    .eq("status", "deactivated")
+    .eq("user_id", userId)
+    .limit(1)
+    .maybeSingle();
+
+  if (userIdError) throw new Error(`Could not verify registration status: ${userIdError.message}`);
+  if (byUserId) return true;
+  if (!email) return false;
+
+  const { data: byEmail, error: emailError } = await supabase
+    .from("registrations")
+    .select("id")
+    .eq("status", "deactivated")
+    .ilike("email", escapeIlike(email))
+    .limit(1)
+    .maybeSingle();
+
+  if (emailError) throw new Error(`Could not verify registration status: ${emailError.message}`);
+  return Boolean(byEmail);
+}
+
+async function signOutDeactivatedStudent(supabase) {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) console.error("[StudentLogin] Could not sign out a deactivated account:", error.message);
+  } catch (error) {
+    console.error("[StudentLogin] Could not sign out a deactivated account:", error);
+  }
+}
+
 function getEnrollmentReturnPath() {
   if (typeof window === "undefined") return "/student/dashboard";
   return resolveStudentLoginNextPath(window.location.search);
@@ -64,8 +104,14 @@ export default function StudentLoginPage() {
     let mounted = true;
 
     const checkExistingSession = async () => {
+      const supabase = createClient();
+      if (new URLSearchParams(window.location.search).get("deactivated") === "1") {
+        await signOutDeactivatedStudent(supabase);
+        setError(DEACTIVATED_ACCOUNT_MESSAGE);
+        return;
+      }
+
       try {
-        const supabase = createClient();
         const {
           data: { user },
         } = await supabase.auth.getUser();
@@ -76,7 +122,7 @@ export default function StudentLoginPage() {
 
         const { data: profile } = await supabase
           .from("profiles")
-          .select("role, status")
+          .select("role, status, is_active, email")
           .eq("id", user.id)
           .maybeSingle();
 
@@ -84,15 +130,47 @@ export default function StudentLoginPage() {
           return;
         }
 
-        if (profile?.role === "student" && profile?.status === "active") {
+        const { data: student, error: studentError } = await supabase
+          .from("students")
+          .select("status")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        if (studentError) {
+          await supabase.auth.signOut();
+          if (mounted) setError("We couldn't verify your Student Portal account. Please try again or contact SPRINT support.");
+          return;
+        }
+        const deactivated = profile?.is_active === false ||
+          student?.status === "deactivated" ||
+          (!student && await hasDeactivatedRegistration(
+            supabase,
+            user.id,
+            profile?.email || user.email || "",
+          ));
+
+        if (!mounted) {
+          return;
+        }
+
+        if (deactivated) {
+          await signOutDeactivatedStudent(supabase);
+          setError(DEACTIVATED_ACCOUNT_MESSAGE);
+          return;
+        }
+
+        if (profile?.role === "student" && profile?.status === "active" && profile?.is_active !== false) {
           window.location.href = getEnrollmentReturnPath();
           return;
         }
 
         // A session without an active student profile is stale on this screen.
         await supabase.auth.signOut();
-      } catch {
-        // Treat any failure as a fresh sign-in flow.
+      } catch (error) {
+        console.error("[StudentLogin] Could not verify the current account:", error);
+        if (mounted) {
+          setError("We couldn't verify your Student Portal account. Please try again or contact SPRINT support.");
+        }
       }
     };
 
@@ -161,7 +239,7 @@ export default function StudentLoginPage() {
        */
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role, status")
+        .select("role, status, is_active, email")
         .eq("id", userId)
         .maybeSingle();
 
@@ -173,6 +251,45 @@ export default function StudentLoginPage() {
         return;
       }
 
+      if (profile.is_active === false) {
+        await signOutDeactivatedStudent(supabase);
+        setError(DEACTIVATED_ACCOUNT_MESSAGE);
+        return;
+      }
+
+      const { data: student, error: studentError } = await supabase
+        .from("students")
+        .select("status")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (studentError) {
+        await supabase.auth.signOut();
+        setError("We couldn't verify your Student Portal account. Please try again or contact SPRINT support.");
+        return;
+      }
+
+      let registrationDeactivated = false;
+      if (!student) {
+        try {
+          registrationDeactivated = await hasDeactivatedRegistration(
+            supabase,
+            userId,
+            profile.email || data.user.email || trimmedEmail,
+          );
+        } catch {
+          await supabase.auth.signOut();
+          setError("We couldn't verify your Student Portal account. Please try again or contact SPRINT support.");
+          return;
+        }
+      }
+
+      if (profile.is_active === false || student?.status === "deactivated" || registrationDeactivated) {
+        await signOutDeactivatedStudent(supabase);
+        setError(DEACTIVATED_ACCOUNT_MESSAGE);
+        return;
+      }
+
       if (profile.role !== "student") {
         await supabase.auth.signOut();
         setError(
@@ -181,7 +298,7 @@ export default function StudentLoginPage() {
         return;
       }
 
-      if (profile.status !== "active") {
+      if (profile.status !== "active" || profile.is_active === false) {
         await supabase.auth.signOut();
         setError(
           "Your account is currently inactive. Please contact SPRINT support."

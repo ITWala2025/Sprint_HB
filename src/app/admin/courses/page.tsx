@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAdminPermissions } from "@/app/admin/permissions-context";
+import TablePagination from "@/components/admin/TablePagination";
 import {
     type BundleItem, type CourseAudience, type CourseItem, type LearningPathItem,
     type LearningPathStage, type ProgramRoadmapStage, type SyllabusModule,
@@ -32,6 +33,8 @@ type LearningPathPayload = Omit<LearningPathItem, "id">;
 type Notice = { type: "success" | "error"; message: string };
 type CatalogView = "grid" | "table";
 type DashboardView = "courses" | "learningPaths" | "bundles";
+
+const PAGE_SIZE = 9;
 
 const categories = [
     "Artificial Intelligence & ML",
@@ -115,6 +118,7 @@ export default function CourseManagementPage() {
     const [bundles, setBundles] = useState<BundleItem[]>([]);
     const [learningPaths, setLearningPaths] = useState<LearningPathItem[]>([]);
     const [dashboardView, setDashboardView] = useState<DashboardView>("courses");
+    const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("all");
     const [difficultyFilter, setDifficultyFilter] = useState("all");
@@ -127,6 +131,7 @@ export default function CourseManagementPage() {
     const [editingBundle, setEditingBundle] = useState<BundleItem | null | undefined>(undefined);
     const [editingLearningPath, setEditingLearningPath] = useState<LearningPathItem | null | undefined>(undefined);
     const [viewingCourse, setViewingCourse] = useState<CourseItem | null>(null);
+    const coursesListRef = useRef<HTMLDivElement>(null);
     const hasCoursePermission = (capability: string) => hasPermission(["courses", "cms_courses"], capability);
     const hasBundlePermission = (capability: string) => hasPermission(["course_bundle_cms", "cms_courses"], capability);
     const hasLearningPathPermission = (capability: string) => hasPermission(["courses", "course_bundle_cms", "cms_courses"], capability);
@@ -252,6 +257,24 @@ export default function CourseManagementPage() {
             return matchesSearch && matchesCategory && matchesDifficulty && matchesAudience;
         });
     }, [courses, search, categoryFilter, difficultyFilter, audienceFilter]);
+
+    const totalPages = Math.ceil(filteredCourses.length / PAGE_SIZE);
+    const safeCurrentPage = Math.min(currentPage, Math.max(1, totalPages));
+    const paginatedCourses = filteredCourses.slice((safeCurrentPage - 1) * PAGE_SIZE, safeCurrentPage * PAGE_SIZE);
+
+    useEffect(() => {
+        if (currentPage !== safeCurrentPage) setCurrentPage(safeCurrentPage);
+    }, [currentPage, safeCurrentPage]);
+
+    function changeDashboardView(view: DashboardView) {
+        setCurrentPage(1);
+        setDashboardView(view);
+    }
+
+    function changeCoursePage(page: number) {
+        setCurrentPage(Math.min(page, Math.max(1, totalPages)));
+        requestAnimationFrame(() => coursesListRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+    }
 
     const publishedCount = courses.filter((course) => course.is_published).length;
     const featuredCount = courses.filter((course) => course.is_featured).length;
@@ -576,9 +599,9 @@ export default function CourseManagementPage() {
             </section>
 
             <div className="flex max-w-full flex-wrap rounded-lg border border-slate-200 bg-white p-1" role="tablist" aria-label="Course management views">
-                <button type="button" role="tab" aria-selected={dashboardView === "courses"} onClick={() => setDashboardView("courses")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "courses" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><BookOpen className="size-4" aria-hidden="true" />Standard Courses</button>
-                <button type="button" role="tab" aria-selected={dashboardView === "learningPaths"} onClick={() => setDashboardView("learningPaths")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "learningPaths" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><GraduationCap className="size-4" aria-hidden="true" />Role-Based Learning Paths</button>
-                <button type="button" role="tab" aria-selected={dashboardView === "bundles"} onClick={() => setDashboardView("bundles")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "bundles" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><Layers className="size-4" aria-hidden="true" />Flagship Programs &amp; Bundles</button>
+                <button type="button" role="tab" aria-selected={dashboardView === "courses"} onClick={() => changeDashboardView("courses")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "courses" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><BookOpen className="size-4" aria-hidden="true" />Standard Courses</button>
+                <button type="button" role="tab" aria-selected={dashboardView === "learningPaths"} onClick={() => changeDashboardView("learningPaths")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "learningPaths" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><GraduationCap className="size-4" aria-hidden="true" />Role-Based Learning Paths</button>
+                <button type="button" role="tab" aria-selected={dashboardView === "bundles"} onClick={() => changeDashboardView("bundles")} className={`sprint-focus inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold ${dashboardView === "bundles" ? "bg-brand-navy text-white" : "text-brand-navy hover:bg-slate-50"}`}><Layers className="size-4" aria-hidden="true" />Flagship Programs &amp; Bundles</button>
             </div>
 
             {notice && <div className="fixed right-4 top-24 z-[120] w-[min(36rem,calc(100vw-2rem))]"><NoticeBanner notice={notice} onDismiss={() => setNotice(null)} /></div>}
@@ -595,22 +618,22 @@ export default function CourseManagementPage() {
                     <label className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-brand-text-muted sm:max-w-md">
                         <Search className="size-4 shrink-0" aria-hidden="true" />
                         <span className="sr-only">Search courses by title or slug</span>
-                        <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search title or slug" className="min-w-0 flex-1 bg-transparent text-brand-navy outline-none placeholder:text-brand-text-muted" />
+                        <input type="search" value={search} onChange={(event) => { setSearch(event.target.value); setCurrentPage(1); }} placeholder="Search title or slug" className="min-w-0 flex-1 bg-transparent text-brand-navy outline-none placeholder:text-brand-text-muted" />
                     </label>
                     <div className="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
                         <div className="grid gap-2 sm:grid-cols-3">
                             <label className="sr-only" htmlFor="course-category-filter">Filter by category</label>
-                            <select id="course-category-filter" value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)} className="sprint-focus rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy">
+                            <select id="course-category-filter" value={categoryFilter} onChange={(event) => { setCategoryFilter(event.target.value); setCurrentPage(1); }} className="sprint-focus rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy">
                                 <option value="all">All</option>
                                 {categories.map((category) => <option key={category} value={category}>{category}</option>)}
                             </select>
                             <label className="sr-only" htmlFor="course-level-filter">Filter by level</label>
-                            <select id="course-level-filter" value={difficultyFilter} onChange={(event) => setDifficultyFilter(event.target.value)} className="sprint-focus rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy">
+                            <select id="course-level-filter" value={difficultyFilter} onChange={(event) => { setDifficultyFilter(event.target.value); setCurrentPage(1); }} className="sprint-focus rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy">
                                 <option value="all">All</option>
                                 {difficulties.map((difficulty) => <option key={difficulty} value={difficulty}>{difficulty}</option>)}
                             </select>
                             <label className="sr-only" htmlFor="course-audience-filter">Filter by audience</label>
-                            <select id="course-audience-filter" value={audienceFilter} onChange={(event) => setAudienceFilter(event.target.value)} className="sprint-focus rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy">
+                            <select id="course-audience-filter" value={audienceFilter} onChange={(event) => { setAudienceFilter(event.target.value); setCurrentPage(1); }} className="sprint-focus rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy">
                                 <option value="all">All</option>
                                 {audiences.map((audience) => <option key={audience.value} value={audience.value}>{audience.label}</option>)}
                             </select>
@@ -621,29 +644,32 @@ export default function CourseManagementPage() {
                         </div>
                     </div>
                 </div>
-                {catalogView === "table" && <div className="overflow-x-auto">
-                    <table className="w-full min-w-[1180px] text-left text-sm">
-                        <thead className="bg-slate-50 text-[10px] uppercase tracking-wider text-brand-text-muted">
-                            <tr>
-                                <th className="px-5 py-3 font-bold sm:px-6">Course</th>
-                                <th className="px-4 py-3 font-bold">Category</th>
-                                <th className="px-4 py-3 font-bold">Target Audience</th>
-                                <th className="px-4 py-3 font-bold">Mode &amp; Level</th>
-                                <th className="px-4 py-3 font-bold">Duration</th>
-                                <th className="px-4 py-3 font-bold">Status</th>
-                                <th className="px-4 py-3 text-center font-bold">Featured</th>
-                                <th className="px-5 py-3 text-right font-bold sm:px-6">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {isLoading ? <tr><td colSpan={8} className="px-6 py-16 text-center text-sm text-brand-text-muted">Loading courses…</td></tr>
-                                : filteredCourses.length === 0 ? <tr><td colSpan={8} className="px-6 py-16 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</td></tr>
-                                    : filteredCourses.map((course) => <CourseRow key={course.id} course={course} isBusy={savingId === course.id} canEdit={hasCoursePermission("edit")} canDelete={hasCoursePermission("delete")} onView={() => setViewingCourse(course)} onEdit={() => setEditingCourse(course)} onDelete={() => void deleteCourse(course)} onToggleFeatured={() => void toggleFeatured(course)} />)}
-                        </tbody>
-                    </table>
-                </div>}
-                {catalogView === "grid" && <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">{isLoading ? <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">Loading courses…</p> : filteredCourses.length ? filteredCourses.map((course) => <AdminCourseCard key={course.id} course={course} isBusy={savingId === course.id} canEdit={hasCoursePermission("edit")} canDelete={hasCoursePermission("delete")} onEdit={() => setEditingCourse(course)} onTogglePublished={() => void togglePublished(course)} onDelete={() => void deleteCourse(course)} />) : <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</p>}</div>}
+                <div ref={coursesListRef} className="scroll-mt-4">
+                    {catalogView === "table" && <div className="overflow-x-auto">
+                        <table className="w-full min-w-[1180px] text-left text-sm">
+                            <thead className="bg-slate-50 text-[10px] uppercase tracking-wider text-brand-text-muted">
+                                <tr>
+                                    <th className="px-5 py-3 font-bold sm:px-6">Course</th>
+                                    <th className="px-4 py-3 font-bold">Category</th>
+                                    <th className="px-4 py-3 font-bold">Target Audience</th>
+                                    <th className="px-4 py-3 font-bold">Mode &amp; Level</th>
+                                    <th className="px-4 py-3 font-bold">Duration</th>
+                                    <th className="px-4 py-3 font-bold">Status</th>
+                                    <th className="px-4 py-3 text-center font-bold">Featured</th>
+                                    <th className="px-5 py-3 text-right font-bold sm:px-6">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {isLoading ? <tr><td colSpan={8} className="px-6 py-16 text-center text-sm text-brand-text-muted">Loading courses…</td></tr>
+                                    : filteredCourses.length === 0 ? <tr><td colSpan={8} className="px-6 py-16 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</td></tr>
+                                        : paginatedCourses.map((course) => <CourseRow key={course.id} course={course} isBusy={savingId === course.id} canEdit={hasCoursePermission("edit")} canDelete={hasCoursePermission("delete")} onView={() => setViewingCourse(course)} onEdit={() => setEditingCourse(course)} onDelete={() => void deleteCourse(course)} onToggleFeatured={() => void toggleFeatured(course)} />)}
+                            </tbody>
+                        </table>
+                    </div>}
+                    {catalogView === "grid" && <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-6 xl:grid-cols-3">{isLoading ? <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">Loading courses…</p> : paginatedCourses.length ? paginatedCourses.map((course) => <AdminCourseCard key={course.id} course={course} isBusy={savingId === course.id} canEdit={hasCoursePermission("edit")} canDelete={hasCoursePermission("delete")} onEdit={() => setEditingCourse(course)} onTogglePublished={() => void togglePublished(course)} onDelete={() => void deleteCourse(course)} />) : <p className="col-span-full py-12 text-center text-sm text-brand-text-muted">{courses.length ? "No courses match these filters." : "No courses have been added yet."}</p>}</div>}
+                </div>
                 <div className="border-t border-slate-100 px-5 py-3 text-xs text-brand-text-muted sm:px-6">Showing {filteredCourses.length} of {courses.length} courses</div>
+                <TablePagination currentPage={safeCurrentPage} totalPages={totalPages} totalItems={filteredCourses.length} pageSize={PAGE_SIZE} onPageChange={changeCoursePage} />
             </section>}
 
             {dashboardView === "bundles" && <section aria-label="Flagship programs and bundles" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
