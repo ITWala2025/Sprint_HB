@@ -107,3 +107,17 @@ export function filterAssessmentsByCourseAccess<T extends {
         return Boolean(name && access.courseNames.has(name));
     });
 }
+
+export function filterLiveClassesByCourseAccess<T extends {
+    course_name?: string | null;
+}>(
+    liveClasses: T[],
+    access: StudentCourseAccess,
+): T[] {
+    if (access.courseIds.size === 0 && access.courseNames.size === 0) return [];
+
+    return liveClasses.filter((liveClass) => {
+        const name = normalizeCourseName(liveClass.course_name);
+        return Boolean(name && access.courseNames.has(name));
+    });
+}

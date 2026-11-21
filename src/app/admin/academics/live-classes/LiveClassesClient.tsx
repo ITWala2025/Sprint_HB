@@ -7,12 +7,37 @@ import {
 } from "lucide-react";
 import { useAdminPermissions } from "@/app/admin/permissions-context";
 import { getLiveClassesAction, saveLiveClassAction, updateLiveClassStatusAction } from "./actions";
-import type { LiveClass, LiveClassInput, LiveClassPlatform, LiveClassStatus } from "./types";
+import type {
+    LiveClass,
+    LiveClassCourseOption,
+    LiveClassInput,
+    LiveClassPlatform,
+    LiveClassStatus,
+} from "./types";
 
 type Notice = { type: "success" | "error"; message: string };
+type CourseOption = LiveClassCourseOption & { kind: "course" | "bundle" | "flagship"; value: string };
 const access = ["academic_ops", "academics"];
 const inputClass = "sprint-focus mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-brand-navy placeholder:text-brand-text-muted";
 const labelClass = "block text-xs font-bold text-brand-navy";
+
+function normalizeCourseName(value: string | null | undefined) {
+    return value?.trim().toLowerCase() ?? "";
+}
+
+function CourseOptionGroups({ options }: { options: CourseOption[] }) {
+    return <>
+        <optgroup label="Flagship Programs">
+            {options.filter((option) => option.kind === "flagship").map((option) => <option key={option.value} value={option.value}>{option.title}</option>)}
+        </optgroup>
+        <optgroup label="Course Bundles">
+            {options.filter((option) => option.kind === "bundle").map((option) => <option key={option.value} value={option.value}>{option.title}</option>)}
+        </optgroup>
+        <optgroup label="Courses">
+            {options.filter((option) => option.kind === "course").map((option) => <option key={option.value} value={option.value}>{option.title}</option>)}
+        </optgroup>
+    </>;
+}
 
 function emptyForm(): LiveClassInput {
     return {
@@ -68,9 +93,15 @@ function statusStyle(status: LiveClassStatus) {
 
 export default function LiveClassesClient({
     initialClasses,
+    initialCourses,
+    initialCourseBundles,
+    initialFlagshipPrograms,
     initialError,
 }: {
     initialClasses: LiveClass[];
+    initialCourses: LiveClassCourseOption[];
+    initialCourseBundles: LiveClassCourseOption[];
+    initialFlagshipPrograms: LiveClassCourseOption[];
     initialError?: string;
 }) {
     const { hasPermission } = useAdminPermissions();
@@ -80,12 +111,18 @@ export default function LiveClassesClient({
     const [notice, setNotice] = useState<Notice | null>(initialError ? { type: "error", message: initialError } : null);
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
+    const [selectedCourseValue, setSelectedCourseValue] = useState("");
     const [editing, setEditing] = useState<LiveClass | null | undefined>(undefined);
     const [form, setForm] = useState<LiveClassInput>(emptyForm);
     const [isSaving, setIsSaving] = useState(false);
     const [updatingId, setUpdatingId] = useState<string | null>(null);
     const formRef = useRef<HTMLFormElement>(null);
 
+    const courseOptions = useMemo<CourseOption[]>(() => [
+        ...initialFlagshipPrograms.map((option) => ({ ...option, kind: "flagship" as const, value: `flagship:${option.id}` })),
+        ...initialCourseBundles.map((option) => ({ ...option, kind: "bundle" as const, value: `bundle:${option.id}` })),
+        ...initialCourses.map((option) => ({ ...option, kind: "course" as const, value: `course:${option.id}` })),
+    ], [initialCourses, initialCourseBundles, initialFlagshipPrograms]);
     const filtered = useMemo(() => {
         const query = search.trim().toLowerCase();
         return classes.filter((item) => {
@@ -109,6 +146,10 @@ export default function LiveClassesClient({
     function openEditor(item: LiveClass | null) {
         setNotice(null);
         setEditing(item);
+        const matchingOption = item
+            ? courseOptions.find((option) => normalizeCourseName(option.title) === normalizeCourseName(item.course_name))
+            : null;
+        setSelectedCourseValue(matchingOption?.value ?? "");
         setForm(item ? {
             title: item.title,
             course_name: item.course_name,
@@ -120,6 +161,12 @@ export default function LiveClassesClient({
             meeting_url: item.meeting_url ?? "",
             status: item.status,
         } : emptyForm());
+    }
+
+    function selectCourse(value: string) {
+        const option = courseOptions.find((item) => item.value === value);
+        setSelectedCourseValue(option?.value ?? "");
+        setForm({ ...form, course_name: option?.title ?? "" });
     }
 
     async function save(event: FormEvent<HTMLFormElement>) {
@@ -226,7 +273,10 @@ export default function LiveClassesClient({
                     <form ref={formRef} onSubmit={(event) => void save(event)} className="flex-1 space-y-5 p-5 sm:p-7">
                         <div className="grid gap-4 sm:grid-cols-2">
                             <label className={`${labelClass} sm:col-span-2`}>Session title<input required maxLength={160} value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} className={inputClass} placeholder="e.g. Data structures live session" /></label>
-                            <label className={labelClass}>Course<input required maxLength={120} value={form.course_name} onChange={(event) => setForm({ ...form, course_name: event.target.value })} className={inputClass} /></label>
+                            <label className={labelClass}>Course<select required value={selectedCourseValue} onChange={(event) => selectCourse(event.target.value)} className={inputClass}>
+                                <option value="">Select a course</option>
+                                <CourseOptionGroups options={courseOptions} />
+                            </select></label>
                             <label className={labelClass}>Batch<input required maxLength={120} value={form.batch_name} onChange={(event) => setForm({ ...form, batch_name: event.target.value })} className={inputClass} /></label>
                             <label className={labelClass}>Mentor<input required maxLength={120} value={form.mentor_name} onChange={(event) => setForm({ ...form, mentor_name: event.target.value })} className={inputClass} /></label>
                             <label className={labelClass}>Platform<select value={form.platform} onChange={(event) => setForm({ ...form, platform: event.target.value as LiveClassPlatform })} className={inputClass}><option>Google Meet</option><option>Zoom</option><option>Other</option></select></label>

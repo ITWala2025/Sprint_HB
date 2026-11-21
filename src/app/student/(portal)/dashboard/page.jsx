@@ -6,6 +6,7 @@ import { formatApplicationId } from "@/lib/id-utils";
 import { createServiceClient } from "@/lib/supabase/service";
 import {
   filterAssessmentsByCourseAccess,
+  filterLiveClassesByCourseAccess,
   getStudentCourseAccess,
 } from "@/lib/student-assessment-access";
 import { unstable_cache } from "next/cache";
@@ -123,8 +124,7 @@ async function fetchDashboardData(userId) {
     db.from("live_classes")
       .select("id, title, course_name, batch_name, mentor_name, scheduled_at, duration_mins, platform, meeting_url")
       .or(`status.eq.live,and(status.eq.scheduled,scheduled_at.gte.${new Date().toISOString()})`)
-      .order("scheduled_at", { ascending: true })
-      .limit(5),
+      .order("scheduled_at", { ascending: true }),
     db.from("announcements")
       .select("id, type, message, created_at")
       .eq("is_active", true)
@@ -249,6 +249,10 @@ async function fetchDashboardData(userId) {
       week_label: assessment.week_label,
       due_date: assessment.due_date,
     }));
+  const liveClasses = filterLiveClassesByCourseAccess(
+    liveClassesError ? [] : liveClassRows ?? [],
+    studentCourseAccess,
+  ).slice(0, 5);
   const activeCourseIds = new Set([
     ...(enrollments ?? [])
       .filter((item) => item.status === "active")
@@ -276,7 +280,7 @@ async function fetchDashboardData(userId) {
     activeCourseCount: activeCourseIds.size,
     pendingAssignments,
     pendingAssignmentCount: pendingAssignments.length,
-    liveClasses: liveClassesError ? [] : liveClassRows ?? [],
+    liveClasses,
     certificateCount: 0,
   };
 }

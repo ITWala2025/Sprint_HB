@@ -17,3 +17,8 @@ export type LiveClass = {
 };
 
 export type LiveClassInput = Omit<LiveClass, "id" | "created_by" | "created_at">;
+
+export type LiveClassCourseOption = {
+    id: string;
+    title: string;
+};

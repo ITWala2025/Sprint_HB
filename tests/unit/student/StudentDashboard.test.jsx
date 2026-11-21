@@ -2,7 +2,10 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import DashboardBento from "@/components/student/dashboard/DashboardBento";
-import { filterAssessmentsByCourseAccess } from "@/lib/student-assessment-access";
+import {
+  filterAssessmentsByCourseAccess,
+  filterLiveClassesByCourseAccess,
+} from "@/lib/student-assessment-access";
 
 const dashboardProps = {
   student: { firstName: "Ananya" },
@@ -67,6 +70,25 @@ describe("Student dashboard", () => {
       "by-name",
     ]);
     expect(filterAssessmentsByCourseAccess(assessments, {
+      courseIds: new Set(),
+      courseNames: new Set(),
+    })).toEqual([]);
+  });
+
+  it("limits live class visibility to normalized enrolled course names", () => {
+    const liveClasses = [
+      { id: "enrolled", course_name: "  AI Engineering " },
+      { id: "unrelated", course_name: "Cloud Engineering" },
+    ];
+    const access = {
+      courseIds: new Set(),
+      courseNames: new Set(["ai engineering"]),
+    };
+
+    expect(filterLiveClassesByCourseAccess(liveClasses, access).map((item) => item.id)).toEqual([
+      "enrolled",
+    ]);
+    expect(filterLiveClassesByCourseAccess(liveClasses, {
       courseIds: new Set(),
       courseNames: new Set(),
     })).toEqual([]);
