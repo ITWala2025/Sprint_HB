@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import StudentSidebar from "@/components/student/StudentSidebar";
 import navigation from "@/config/student-navigation.json";
@@ -18,18 +18,30 @@ vi.mock("next/link", () => ({
 }));
 
 /* The sidebar now hosts the session control, which reaches Supabase on click. */
-const { supabaseMock } = vi.hoisted(() => ({
+const { supabaseMock, useStudentDataMock } = vi.hoisted(() => ({
   supabaseMock: { auth: { signOut: vi.fn() } },
+  useStudentDataMock: vi.fn(),
 }));
 
 vi.mock("@/lib/supabase/client", () => ({
   createClient: () => supabaseMock,
 }));
 
+vi.mock("@/components/student/StudentDataProvider", () => ({
+  useStudentData: () => useStudentDataMock(),
+}));
+
 const getNav = () =>
   screen.getByRole("navigation", { name: /student portal navigation/i });
 
 describe("StudentSidebar", () => {
+  beforeEach(() => {
+    useStudentDataMock.mockReturnValue({
+      student: { ...mockStudent, registrationNumber: mockStudent.id },
+      pendingAssignmentCount: 3,
+    });
+  });
+
   it("renders every portal nav item from the shared config", () => {
     render(<StudentSidebar />);
 
@@ -102,6 +114,20 @@ describe("StudentSidebar", () => {
     expect(screen.getAllByRole("link", { current: "page" })).toHaveLength(1);
   });
 
+  it("shows the live pending assignment count and hides it when there are none", () => {
+    const { rerender } = render(<StudentSidebar />);
+
+    expect(screen.getByLabelText("3 pending assignments")).toHaveTextContent("3");
+
+    useStudentDataMock.mockReturnValue({
+      student: mockStudent,
+      pendingAssignmentCount: 0,
+    });
+    rerender(<StudentSidebar />);
+
+    expect(screen.queryByLabelText(/pending assignments?/i)).not.toBeInTheDocument();
+  });
+
   it("derives the active item from the current pathname", () => {
     mockPathname.mockReturnValueOnce("/student/certificates");
     render(<StudentSidebar />);
@@ -143,7 +169,7 @@ describe("StudentSidebar", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText("Student Portal")).not.toBeInTheDocument();
     // The collapsed badge is dropped to keep the rail 76px wide.
-    expect(screen.queryByText("2")).not.toBeInTheDocument();
+    expect(screen.queryByText("3")).not.toBeInTheDocument();
   });
 
   it("shows the signed-in student identity block", () => {

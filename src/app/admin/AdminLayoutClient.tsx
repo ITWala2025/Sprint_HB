@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
     Award, Bell, BookOpen, Briefcase, Building2, ChevronDown, ChevronRight, ClipboardCheck,
     ExternalLink, FileEdit, FileText, Globe, GraduationCap, Hourglass, LayoutDashboard, Layers, LogOut,
-    Menu, Megaphone, PhoneCall, Search, School, ShieldAlert, ShieldCheck, UserCheck, Users,
+    Menu, Megaphone, PhoneCall, Search, School, ShieldAlert, ShieldCheck, UserCheck, Users, Video,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { adminRoutePermissions, canAccessAdminRoute, roleHasPermission, type AdminPermissionMap } from "@/app/admin/auth-types";
@@ -70,6 +70,7 @@ const navigationGroups: NavigationGroup[] = [
         label: "Academic & Curriculum", icon: ClipboardCheck, items: [
             { label: "Assign Assessments", href: "/admin/academics/assessments/assign", icon: ClipboardCheck },
             { label: "Assessment Results", href: "/admin/academics/assessments/results", icon: Award },
+            { label: "Live Classes", href: "/admin/academics/live-classes", icon: Video },
             { label: "Mock Results", href: "/admin/academics/mocks/results", icon: GraduationCap },
         ]
     },

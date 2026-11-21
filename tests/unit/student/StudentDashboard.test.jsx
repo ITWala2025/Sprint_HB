@@ -1,187 +1,141 @@
-import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
-import StudentDashboardPage from "@/app/student/(portal)/dashboard/page";
-import StudentPortalLayout from "@/app/student/(portal)/layout";
-import {
-  mockAnnouncements,
-  mockLearningProgress,
-  mockQuickActions,
-  mockStudent,
-} from "@/data/student";
+import DashboardBento from "@/components/student/dashboard/DashboardBento";
+import { filterAssessmentsByCourseAccess } from "@/lib/student-assessment-access";
 
-vi.mock("next/navigation", () => ({
-  usePathname: () => "/student/dashboard",
-}));
-
-vi.mock("next/link", () => ({
-  default: ({ children, ...props }) => <a {...props}>{children}</a>,
-}));
-
-vi.mock("next/image", () => ({
-  default: ({ src, alt, ...rest }) => <img src={src} alt={alt} {...rest} />,
-}));
+const dashboardProps = {
+  student: { firstName: "Ananya" },
+  enrollment: { courseTitle: "AI Engineering" },
+  progress: { completionPercent: 68, status: "On track" },
+  activeCourseCount: 2,
+  pendingAssignments: [
+    {
+      id: "assessment-1",
+      title: "Build a portfolio project",
+      course_name: "AI Engineering",
+      week_label: "Week 4",
+      due_date: "2026-11-25",
+    },
+  ],
+  pendingAssignmentCount: 1,
+  certificateCount: 0,
+  applications: [
+    {
+      id: "application-1",
+      courseTitle: "Cloud Engineering",
+      status: "pending",
+      createdAt: "2026-11-10",
+    },
+  ],
+  liveClasses: [
+    {
+      id: "class-1",
+      title: "Prompt Engineering Workshop",
+      course_name: "AI Engineering",
+      mentor_name: "Riya Mentor",
+      scheduled_at: "2026-11-25T09:30:00.000Z",
+      platform: "Google Meet",
+      meeting_url: "https://meet.google.com/example",
+    },
+  ],
+  announcements: [
+    {
+      id: "announcement-1",
+      title: "Schedule update",
+      body: "The next workshop has moved to Wednesday.",
+      tag: "ANNOUNCEMENT",
+      date: "2026-11-18",
+    },
+  ],
+};
 
 describe("Student dashboard", () => {
-  it("pairs the welcome heading with progress and cohort dates in the hero", () => {
-    render(<StudentDashboardPage />);
+  it("limits assessment visibility to enrolled course IDs or normalized course names", () => {
+    const assessments = [
+      { id: "by-id", course_id: "course-1", course_name: "Different display name" },
+      { id: "by-name", course_name: "  Cloud Engineering " },
+      { id: "unrelated", course_id: "course-2", course_name: "Data Science" },
+    ];
+    const access = {
+      courseIds: new Set(["course-1"]),
+      courseNames: new Set(["cloud engineering"]),
+    };
 
-    const heading = screen.getByRole("heading", {
-      level: 1,
-      name: new RegExp(`welcome back, ${mockStudent.firstName}`, "i"),
-    });
-
-    expect(heading).toBeInTheDocument();
-    const hero = heading.closest("section");
-    expect(hero).toHaveClass("bg-brand-navy", "rounded-2xl");
-    expect(
-      within(hero).getByRole("heading", { name: /my learning progress/i }),
-    ).toBeInTheDocument();
-    expect(
-      within(hero).getByRole("img", {
-        name: `${mockLearningProgress.completionPercent} percent learning progress`,
-      }),
-    ).toBeInTheDocument();
-    expect(
-      within(hero).getByText(mockLearningProgress.status),
-    ).toBeInTheDocument();
-    expect(
-      within(hero).getByText(/Cohort: 1 Jul 2026 – 15 Jan 2027/),
-    ).toBeInTheDocument();
-    expect(
-      within(hero).queryByText(mockStudent.greetingQuote),
-    ).not.toBeInTheDocument();
-    expect(within(hero).queryByText("Student Portal")).not.toBeInTheDocument();
-    expect(
-      within(hero).queryByText(mockStudent.program),
-    ).not.toBeInTheDocument();
-  });
-
-  it("removes the calendar, info cards, enrollment, feedback, and offer letters", () => {
-    render(<StudentDashboardPage />);
-
-    [
-      /current course/i,
-      /learning status/i,
-      /mentors/i,
-      /current enrollment/i,
-      /share your experience/i,
-      /offer letters/i,
-    ].forEach((name) => {
-      expect(screen.queryByRole("heading", { name })).not.toBeInTheDocument();
-    });
-    expect(screen.queryByText("Class day")).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("link", { name: /share feedback/i }),
-    ).not.toBeInTheDocument();
-  });
-
-  it("orders the announcement shortcut, classes, quick actions, then the full announcements", () => {
-    render(<StudentDashboardPage />);
-
-    const hero = screen.getByRole("heading", { level: 1 }).closest("section");
-    const shortcut = screen.getByRole("link", {
-      name: /announcements.*2 new/i,
-    });
-    const classes = screen
-      .getByRole("heading", { name: /upcoming live classes/i })
-      .closest("section");
-    const quickActions = screen
-      .getByRole("heading", { name: /quick actions/i })
-      .closest("section");
-    const announcements = screen
-      .getByRole("heading", { name: /^announcements/i })
-      .closest("section");
-
-    expect(Array.from(hero.parentElement.children)).toEqual([
-      hero,
-      shortcut,
-      classes,
-      quickActions,
-      announcements,
+    expect(filterAssessmentsByCourseAccess(assessments, access).map((item) => item.id)).toEqual([
+      "by-id",
+      "by-name",
     ]);
-    expect(shortcut).toHaveAttribute("href", "#dashboard-announcements");
-    expect(announcements).toHaveAttribute("id", "dashboard-announcements");
+    expect(filterAssessmentsByCourseAccess(assessments, {
+      courseIds: new Set(),
+      courseNames: new Set(),
+    })).toEqual([]);
   });
 
-  it("shows only the requested progress details in the hero", () => {
-    render(<StudentDashboardPage />);
+  it("renders the welcome banner and four KPI cards", () => {
+    render(<DashboardBento {...dashboardProps} />);
 
-    const progress = screen
-      .getByRole("heading", { name: /my learning progress/i })
-      .closest("section");
-
-    expect(
-      within(progress).getByRole("img", {
-        name: `${mockLearningProgress.completionPercent} percent learning progress`,
-      }),
-    ).toBeInTheDocument();
-    expect(
-      within(progress).getByText(mockLearningProgress.status),
-    ).toBeInTheDocument();
-    expect(within(progress).getByText(/Cohort:/)).toBeInTheDocument();
-    expect(within(progress).queryByText("Attended")).not.toBeInTheDocument();
-    expect(within(progress).queryByText("Missed")).not.toBeInTheDocument();
-  });
-
-  it("renders the upcoming live classes empty state", () => {
-    render(<StudentDashboardPage />);
-
-    expect(screen.getByText("Upcoming Live Classes")).toBeInTheDocument();
-    expect(
-      screen.getByText("No live classes scheduled yet"),
-    ).toBeInTheDocument();
-  });
-
-  it("renders every quick action", () => {
-    render(<StudentDashboardPage />);
-
-    mockQuickActions.forEach((action) => {
-      expect(screen.getByRole("link", { name: action.label })).toHaveAttribute(
-        "href",
-        action.href,
-      );
-    });
-    expect(
-      screen.getByRole("heading", { name: /quick actions/i }),
-    ).toBeInTheDocument();
-  });
-
-  it("renders compact announcement rows and the live unread count", () => {
-    render(<StudentDashboardPage />);
-
-    const unread = mockAnnouncements.filter((item) => item.unread).length;
-    const announcements = screen
-      .getByRole("heading", { name: /^announcements/i })
-      .closest("section");
-
-    expect(
-      screen.getByRole("link", {
-        name: new RegExp(`announcements ${unread} new`, "i"),
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: /^announcements/i }),
-    ).toBeInTheDocument();
-    expect(
-      within(announcements).getByText(`${unread} new`),
-    ).toBeInTheDocument();
-    mockAnnouncements.forEach((item) => {
-      expect(screen.getByText(item.title)).toBeInTheDocument();
-      expect(screen.getByText(item.body)).toBeInTheDocument();
-      expect(screen.getByText(item.tag)).toBeInTheDocument();
-    });
-  });
-
-  it("keeps Dashboard highlighted in the portal sidebar layout", () => {
-    render(
-      <StudentPortalLayout>
-        <StudentDashboardPage />
-      </StudentPortalLayout>,
+    expect(screen.getByRole("heading", { name: /welcome back, ananya/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /browse courses/i })).toHaveAttribute(
+      "href",
+      "/student/apply-course",
     );
+    expect(screen.getAllByText("68%")).toHaveLength(2);
 
-    const activeLinks = screen.getAllByRole("link", { current: "page" });
-    expect(activeLinks).toHaveLength(1);
-    expect(activeLinks[0]).toHaveTextContent(/dashboard/i);
+    const stats = screen.getByRole("region", { name: "Student overview" });
+    expect(within(stats).getByText("Active Courses")).toBeInTheDocument();
+    expect(within(stats).getByText("2")).toBeInTheDocument();
+    expect(within(stats).getByText("Pending Assignments")).toBeInTheDocument();
+    expect(within(stats).getByText("Overall Progress")).toBeInTheDocument();
+    expect(within(stats).getByText("Certificates")).toBeInTheDocument();
+  });
+
+  it("switches between pending assignments and course applications", () => {
+    render(<DashboardBento {...dashboardProps} />);
+
+    expect(screen.getByText("Build a portfolio project")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "My Course Applications" }));
+
+    expect(screen.getByText("Cloud Engineering")).toBeInTheDocument();
+    expect(screen.queryByText("Build a portfolio project")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /view all/i })).toHaveAttribute(
+      "href",
+      "/student/apply-course",
+    );
+  });
+
+  it("renders live class details, an IST label, and a direct join link", () => {
+    render(<DashboardBento {...dashboardProps} />);
+
+    expect(screen.getByText("Prompt Engineering Workshop")).toBeInTheDocument();
+    expect(screen.getByText("Google Meet")).toBeInTheDocument();
+    const joinLink = screen.getByRole("link", { name: /join class/i });
+    expect(joinLink).toHaveAttribute("href", "https://meet.google.com/example");
+    expect(joinLink).toHaveAttribute("target", "_blank");
+    expect(screen.getByText(/IST/)).toBeInTheDocument();
+  });
+
+  it("renders one unified announcements card and four quick actions", () => {
+    render(<DashboardBento {...dashboardProps} />);
+
+    expect(screen.getAllByRole("heading", { name: "Announcements" })).toHaveLength(1);
+    expect(screen.getByText("Schedule update")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Quick Actions" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /assignments/i })).toHaveAttribute(
+      "href",
+      "/student/assignments",
+    );
+    expect(screen.getByRole("link", { name: /resources/i })).toHaveAttribute(
+      "href",
+      "/student/resources",
+    );
+    expect(screen.getByRole("link", { name: /results/i })).toHaveAttribute(
+      "href",
+      "/student/result",
+    );
+    expect(screen.getByRole("link", { name: /certificates/i })).toHaveAttribute(
+      "href",
+      "/student/certificates",
+    );
   });
 });

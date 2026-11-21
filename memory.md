@@ -593,17 +593,17 @@ Sections 8 onward are dated implementation history. Where an older entry describ
 - When an invitation token is supplied, marking its matching pending invitation as used is now best-effort: update errors and thrown errors are logged, while setup can still succeed. Unexpected setup errors return a failure result.
 - These application changes were already present in the worktree when this memory update began. No application code was changed and no tests were run for them as part of this documentation-only update.
 
-## 57. Current Codebase Reconciliation — 2026-10-28
+## 57. Codebase Reconciliation Snapshot — 2026-10-28
 
-This section records the current implementation where earlier entries are incomplete or describe an older state. The repository currently has 497 tracked files, including 271 files under `src/` and 79 under `tests/`; this is a feature and architecture map, not a line-by-line inventory of static assets. The workspace also contains untracked dependencies, generated build output, and Git internals, which are not project source-of-truth.
+This section records the implementation as of 2026-10-28; later changes are reflected in §§65–69, with §69 as the current route and feature reference. The repository then had 497 tracked files, including 271 files under `src/` and 79 under `tests/`; this is a feature and architecture map, not a line-by-line inventory of static assets. The workspace also contains untracked dependencies, generated build output, and Git internals, which are not project source-of-truth.
 
 ### Routes, shells, and session handling
 
 - Public content routes currently include `/`, `/home`, `/about`, `/courses`, `/courses/[slug]`, `/bundles/[slug]`, `/learning-paths/[slug]`, `/programs/sprint-rise`, `/programs/career-accelerator`, `/careers`, `/contact`, `/updates`, `/terms`, and `/privacy`.
 - Public authentication routes include `/login`, `/forgot-password`, and `/set-password`. Student auth routes currently exist at `/student/login`, `/student/forgot-password`, `/student/check-email`, `/student/reset-password`, and `/student/password-reset-success`. This supersedes §42's historical note that the student auth routes had been removed.
-- Student routes use the parallel/intercepted modal shell in [src/app/student/layout.jsx](src/app/student/layout.jsx) and [src/components/student/StudentPortalRouteShell.jsx](src/components/student/StudentPortalRouteShell.jsx). `/student/dashboard` and `/student/enroll` render as full pages; secondary portal sections include assignments, certificates, help/support, courses, profile, resources, results, and settings. The secondary sections still use the shared “being built” placeholder, so the complete portal workflows are not implemented.
+- The route-modal and shared-placeholder details in this 2026-10-28 snapshot are historical: §65 records the later removal of the intercepted modal, and §69 records the current portal pages and feature status.
 - Student login and password recovery use Supabase Auth. Enrollment uses a multi-step wizard; its presence does not imply that every downstream enrollment workflow or student portal section is complete.
-- The public shell is centralized in [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx). It conditionally displays public chrome, the chatbot, and the intercepted student modal; admin and focused auth layouts have different chrome behavior.
+- The public shell is centralized in [src/components/layout/PublicSiteShell.jsx](src/components/layout/PublicSiteShell.jsx). In this snapshot it handled public chrome, the chatbot, and the intercepted student modal; §65 records the modal removal. Admin and focused auth layouts have different chrome behavior.
 - [src/proxy.ts](src/proxy.ts) delegates session checks to [src/lib/supabase/middleware.ts](src/lib/supabase/middleware.ts) for admin, staff, and student route families. [next.config.mjs](next.config.mjs) rewrites `/admin/login` to `/admin` and eligible `/staff/*` routes to the corresponding admin route.
 
 ### Admin RBAC, staff access, and password security
@@ -747,7 +747,7 @@ No application code was changed for this reconciliation. The local role-unassign
   - Added empty-state UI ("Welcome to SPRINT!" with "Explore Courses" CTA) when no enrollment exists.
 - **Verification**: `npx tsc --noEmit` passes; `npm run build` succeeds; all 14 existing auth/enrollment tests pass.
 
-## 40. Student Profile Section & Header Avatar � 2026-11-08
+## 40. Student Profile Section & Header Avatar — 2026-11-08
 
 - Replaced OTP single text field with 6-box OTP input in PersonalInformationStep.jsx.
 - Fixed PublicSiteShell modal rendering on non-student routes.
@@ -767,13 +767,11 @@ No application code was changed for this reconciliation. The local role-unassign
 - The Supabase auth-state listener applies the same local state and storage cleanup on `SIGNED_OUT` or an absent session before routing to the applicable login page. Storage-access failures are logged and do not prevent the final sign-out navigation.
 - Validation: `npx tsc --noEmit` and `git diff --check` passed.
 
-<<<<<<< HEAD
-## 40. Enrollment & Dashboard Performance Fixes � 2026-11-09
+## 40. Enrollment & Dashboard Performance Fixes — 2026-11-09
 
 - Parallelized 5 sequential Supabase queries in the student dashboard into a single Promise.all, cutting dashboard load latency.
 - Added client-side prefetch on sidebar links (hover/focus) so portal page-to-page navigation is instant.
 
-=======
 ## 43. Admin Profile Verification Resilience — 2026-11-09
 
 - [src/app/admin/layout.tsx](src/app/admin/layout.tsx) now catches and logs failures loading the server-side admin session/profile and evaluating enrollment permissions. It passes a recoverable verification error to the client shell rather than letting an exception crash the layout.
@@ -837,20 +835,17 @@ No application code was changed for this reconciliation. The local role-unassign
 - [src/lib/supabase/middleware.ts](src/lib/supabase/middleware.ts) handles the sign-out marker before its cached-session redirect path, expires the HttpOnly admin session cookie and Supabase auth cookies, then redirects to `/admin`.
 - [src/app/admin/students/registrations/actions.ts](src/app/admin/students/registrations/actions.ts): `getStudentRegistrations()` retains its authorization check, logs and returns an empty list for query or client errors, including database permission errors, instead of throwing through the page render.
 - Validation: `npx tsc --noEmit`, focused admin session/authorization tests (2 files, 10 tests), and `git diff --check` passed.
->>>>>>> dfc3b6b6d281844ccf6ae17dff9345e0defe3623
 
-## 41. Student Avatar Dropdown � 2026-11-09
+## 41. Student Avatar Dropdown — 2026-11-09
 
 - Added StudentAvatarDropdown component with Dashboard and Sign out menu items, replacing the static circular avatar in the header.
 - Wired into desktop HeaderActions and mobile MobileNavigation, showing initials + full name from the Supabase profile.
 
+## 42. Chatbot Fixes — 2026-11-09
 
-## 42. Chatbot Fixes � 2026-11-09
-
-- Fixed bug: all reply objects returned suggestions as plain strings, but the frontend expected objects with label/query/href. Added a 	oSuggestions helper and wrapped every suggestion array in the service and demo core.
-- Added indSimilarQuestions to surface related verified Q&A when a query has no verified answer, surfaced via a new similarQuestions field on the assistant response.
-- Added 
-ormalizeSuggestions as a final safety net in getLocalChatbotReply so all code paths return the correct shape.
+- Fixed suggestion-shape mismatches: the frontend expects objects with `label`, `query`, and `href`; `toSuggestions` normalizes backend and demo suggestions.
+- Added `findSimilarQuestions` to surface verified Q&A when no exact answer is available, returning the results through `similarQuestions`.
+- Added `normalizeSuggestions` as a final shape guard in `getLocalChatbotReply`.
 - Updated the chat API route and frontend AiAssistant to pass through and render similarQuestions as clickable chips.
 - Updated affected unit tests to match the new object shape. All 60 chatbot tests pass.
 
@@ -893,3 +888,43 @@ ormalizeSuggestions as a final safety net in getLocalChatbotReply so all code pa
 - **Consistency**: All course types (standard courses, bundles, signature programs) now share the same enrollment action. Standard courses and bundles use `CourseApplicationForm` → `applyForCourseAction` for one-click enrollment. Signature programs and flagship programs use "Enroll Now" → `/student/enroll?bundle=<slug>` → wizard pre-selection → same `applyForCourseAction` on submit.
 
 - **Validation**: `npx tsc --noEmit` passes with 0 errors; all 95 tests in `tests/unit/student/enrollment/` pass; `npm run build` succeeds.
+
+## 69. Current Codebase Inventory & Portal Academics — 2026-11-21
+
+This is the current-state reference for routes and modules; dated entries above remain the implementation history. Route links and navigation entries do not imply that every linked placeholder or CMS destination has a page.
+
+### Routes
+
+- **Public**: `/`, `/home`, `/about`, `/courses`, `/courses/[slug]`, `/bundles/[slug]`, `/learning-paths/[slug]`, `/programs/sprint-rise`, `/programs/career-accelerator`, `/careers`, `/contact`, `/terms`, `/privacy`. `/updates` and `/register` currently contain only `.gitkeep` files and are not rendered routes.
+- **Public auth**: `/login`, `/forgot-password`, `/set-password`.
+- **Student auth and enrollment**: `/student/login`, `/student/forgot-password`, `/student/check-email`, `/student/reset-password`, `/student/password-reset-success`, `/student/enroll`; `/student/[...segments]` is the catch-all page.
+- **Student portal** (under `src/app/student/(portal)/`): `/student/dashboard`, `/student/profile`, `/student/apply-course`, `/student/my-course`, `/student/assignments`, `/student/certificates`, `/student/result`, `/student/help-support`, `/student/resources`, `/student/settings`. The dashboard, profile, course view, and assignments have data-backed behavior; several remaining destinations still use `StudentPlaceholderPage`.
+- **Admin pages**: `/admin`, `/admin/dashboard`, `/admin/careers`, `/admin/courses`, `/admin/enquiries`, `/admin/roles`, `/admin/users`, `/admin/updates`, `/admin/students/registrations`, `/admin/students/enrollments`, `/admin/students/list`, `/admin/academics/assessments/assign`, `/admin/academics/live-classes`. `/admin/login` is rewritten to `/admin`; some sidebar destinations (including results, scholarships, CMS, partners, and trainers) do not yet have route files.
+- **Staff**: `/staff`, `/staff/login`, `/staff/invitation/[token]`; `/staff/dashboard` is rewritten to `/admin/dashboard`.
+- **API routes**: `POST /api/contact`; `GET|POST|OPTIONS /api/chat`; `/api/ai-chat` is a compatibility endpoint. Chat UI and verified-answer architecture are documented in §57.
+
+### Current student and admin features
+
+- **Student dashboard**: [src/app/student/(portal)/dashboard/page.jsx](src/app/student/%28portal%29/dashboard/page.jsx) loads authenticated student data server-side and passes it to [DashboardBento.jsx](src/components/student/dashboard/DashboardBento.jsx). The 12-column workspace includes a slim welcome banner/progress ring, Browse Courses CTA, four KPIs, an 8/4-column assignments/applications and live-class/announcements layout, and four Quick Actions. Live classes include `live` sessions and future `scheduled` sessions; Join Class opens the meeting URL in a new tab.
+- **Assignments**: [src/app/student/(portal)/assignments/page.jsx](src/app/student/%28portal%29/assignments/page.jsx), its authenticated [actions.ts](src/app/student/%28portal%29/assignments/actions.ts), and [AssignmentsClient.jsx](src/components/student/AssignmentsClient.jsx) provide assignment KPIs, tabs/search/course filters, submissions, and a submission/feedback drawer. Students can submit GitHub/live URLs, optional notes, or private PDF/ZIP/PNG/JPG files (10 MB maximum) to `assessment-uploads`; graded submissions show score and mentor feedback.
+- **Enrollment access and badge**: [student-assessment-access.ts](src/lib/student-assessment-access.ts) resolves approved `enrollments`, active `student_courses`, and active `student_course_enrollments`, expands bundles via `bundle_courses`, and filters by course ID with normalized course-name fallback. Dashboard, assignments, and [StudentDataProvider.jsx](src/components/student/StudentDataProvider.jsx) use this access scope. The provider refreshes the pending count after submission; [StudentSidebar.jsx](src/components/student/StudentSidebar.jsx) hides the badge at zero.
+- **Admin assessments**: `/admin/academics/assessments/assign` uses `AssessmentAssignmentsClient.tsx` and `actions.ts` for KPI/filter views, a grouped live course selector (Flagship Programs, Course Bundles, Courses), draft/active/closed save flow, submission progress, and grading with score/feedback. Grading obtains 15-minute signed URLs for private upload files. Server actions require academic module permissions. `course_id` is persisted when available; the action retries with canonical `course_name` for schemas without that column.
+- **Admin live classes**: `/admin/academics/live-classes` provides create/edit/reschedule/status actions for Google Meet, Zoom, or other sessions, with permission checks and safe HTTP(S) meeting URLs. The Live Classes link appears under Academic & Curriculum in `AdminLayoutClient.tsx`; schedule formatters use explicit `en-IN` and `Asia/Kolkata` settings for consistent rendering.
+- **Announcements and ticker**: `/admin/updates` supports PNG/JPEG/WebP/PDF uploads to `announcement-assets`; the public ticker uses cached announcements and invalidates on CMS mutations (see §66). `CampusNewsTickerClient.tsx` previews direct images, Zoho preview images, PDFs, Google Drive/Docs/Sheets/Slides, Zoho WorkDrive, YouTube, and Office files in a modal; regular web links retain the external-arrow/new-tab behavior. The modal preserves the original URL for its Open in New Tab fallback. Tests live in `tests/unit/layout/CampusNewsTicker.test.tsx`.
+
+### Components, actions, and utilities
+
+- Component families under `src/components/`: shared header/footer/layout, AI assistant, Home and sections, course/catalogue/detail/enrollment, careers, contact, legal, cards, admin roles/users/auth, staff auth, and student portal. The student family includes the dashboard widgets under `student/dashboard/`, auth kit under `student/auth/`, enrollment wizard/steps under `student/enrollment/`, `StudentLayout`, `StudentSidebar`, `StudentDataProvider`, and `AssignmentsClient`.
+- Server-action modules are [courses/actions.ts](src/app/courses/actions.ts); student [enroll/actions.ts](src/app/student/enroll/actions.ts), [(portal)/profile/actions.ts](src/app/student/%28portal%29/profile/actions.ts), and [(portal)/assignments/actions.ts](src/app/student/%28portal%29/assignments/actions.ts); admin [courses/actions.ts](src/app/admin/courses/actions.ts), [updates/actions.ts](src/app/admin/updates/actions.ts), [roles/actions.ts](src/app/admin/roles/actions.ts), [users/actions.ts](src/app/admin/users/actions.ts), [students/registrations/actions.ts](src/app/admin/students/registrations/actions.ts), [students/enrollments/actions.ts](src/app/admin/students/enrollments/actions.ts), [students/list/actions.ts](src/app/admin/students/list/actions.ts), [academics/assessments/assign/actions.ts](src/app/admin/academics/assessments/assign/actions.ts), [academics/live-classes/actions.ts](src/app/admin/academics/live-classes/actions.ts); and staff [login/actions.ts](src/app/staff/login/actions.ts). These cover course/bundle applications and CRUD, student enrollment/profile, assessment catalog/save/grade, live-class CRUD/status, announcements and upload, student operations, role/user administration, and first-time staff setup. Route handlers are in `src/app/api/`.
+- Shared library modules include Supabase browser/cookie-server/public-server/service clients and middleware; `student-assessment-access.ts`; `course-utils.ts`; `program-data.server.js`; `id-utils.ts`; `student-login-redirect.js`; `contact-phone.js`; `admin/student-table-filters.ts`; student/admin signed-session helpers; and email delivery/rendering under `src/lib/email/`. Enrollment validation/options/locations/steps and logout state are under `src/components/student/`; shared date helpers are in `src/utils/dates.js`.
+- Configuration sources are `src/config/site.config.json` (contact/social details), `navigation.json` (public navigation), and `student-navigation.json` (student rail). Public data modules include courses, programs, learning paths, careers, student/about data; verified chatbot topic data is under `data/chatbot/`.
+
+### Database and storage state
+
+- The tracked base schema/migrations define `profiles`, `students`, `courses`, `course_bundles`, `bundle_courses`, `batches`, `registrations`, `enrollments`, `student_course_enrollments`, `student_courses`, `assessments`, legacy `assessment_results`, `enquiries`, career openings/applications, campus updates, instructors, testimonials, partners, `learning_paths`, `roles`, `staff_invitations`, and staff password-reset state. `sprint_careers_jobs` is defined by the careers migration.
+- The live portal/admin code also expects `assessment_submissions`, `live_classes`, `notification_logs`, and `announcements`. These tables, their RLS policies, the private `assessment-uploads` bucket, and its object policies were provisioned in Supabase but are **not defined by a matching tracked SQL migration** in `src/Supabase/`; keep deployment schema setup documented separately. `notification_logs` has no current application consumer found in the route/component scan.
+- Base schema RLS covers public published/active catalog and public content, own student/profile/enrollment records, and staff/admin operations; role-based modules use permission checks. The user-provisioned assessment-submission and live-class policies are required alongside the authenticated service-action checks. Student upload object paths are `submissions/{assessment_id}/{student_id}/{timestamp}_{filename}`. Student file viewing creates a one-hour signed URL; admin grading uses 15-minute signed URLs.
+- `announcement-assets` is a separate public-URL bucket used for announcement poster/PDF links. The ticker reads `announcements`, while the legacy/base schema also contains `campus_updates`; do not treat these as the same table.
+- Public content updates also include the YouTube social destination in `src/config/site.config.json` and image-led “What Makes Us Truly Unique” cards in `src/components/sections/WhyChooseSprint.jsx`; keep media and social destinations in their existing config/data sources.
+
+No application code was changed for this inventory update. The database and storage notes distinguish tracked migrations from Supabase resources provisioned outside the repository.

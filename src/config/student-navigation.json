@@ -14,8 +14,7 @@
   {
     "label": "Assignment",
     "href": "/student/assignments",
-    "icon": "clipboardList",
-    "badge": "2"
+    "icon": "clipboardList"
   },
   { "label": "Certificate", "href": "/student/certificates", "icon": "award" },
   { "label": "Result", "href": "/student/result", "icon": "graduationCap" },

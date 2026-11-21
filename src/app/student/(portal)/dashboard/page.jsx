@@ -1,16 +1,13 @@
-import AnnouncementsCard from "@/components/student/dashboard/AnnouncementsCard";
-import ApplicationStatusCard from "@/components/student/dashboard/ApplicationStatusCard";
-import LearningProgress from "@/components/student/dashboard/LearningProgress";
-import QuickActions from "@/components/student/dashboard/QuickActions";
-import UpcomingLiveClasses from "@/components/student/dashboard/UpcomingLiveClasses";
-import WelcomeBanner from "@/components/student/dashboard/WelcomeBanner";
+import DashboardBento from "@/components/student/dashboard/DashboardBento";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, Bell } from "lucide-react";
 import { formatApplicationId } from "@/lib/id-utils";
 import { createServiceClient } from "@/lib/supabase/service";
+import {
+  filterAssessmentsByCourseAccess,
+  getStudentCourseAccess,
+} from "@/lib/student-assessment-access";
 import { unstable_cache } from "next/cache";
 
 export const metadata = {
@@ -50,6 +47,11 @@ async function fetchDashboardData(userId) {
       applications: [],
       progress: null,
       announcements: [],
+      activeCourseCount: 0,
+      pendingAssignments: [],
+      pendingAssignmentCount: 0,
+      liveClasses: [],
+      certificateCount: 0,
     };
   }
 
@@ -66,6 +68,11 @@ async function fetchDashboardData(userId) {
       applications: [],
       progress: null,
       announcements: [],
+      activeCourseCount: 0,
+      pendingAssignments: [],
+      pendingAssignmentCount: 0,
+      liveClasses: [],
+      certificateCount: 0,
     };
   }
 
@@ -76,6 +83,15 @@ async function fetchDashboardData(userId) {
     initials: getInitials(profile.full_name),
     email: profile.email || "",
   };
+
+  let studentCourseAccess = { courseIds: new Set(), courseNames: new Set() };
+  try {
+    studentCourseAccess = await getStudentCourseAccess(db, userId);
+  } catch (error) {
+    console.warn("[StudentDashboard] Could not resolve approved student courses:", error);
+  }
+  const hasStudentCourseAccess =
+    studentCourseAccess.courseIds.size > 0 || studentCourseAccess.courseNames.size > 0;
 
   const [
     { data: studentRecord, error: studentRecordError },
@@ -88,6 +104,37 @@ async function fetchDashboardData(userId) {
     db.from("student_course_enrollments").select("id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)").eq("student_id", profile.id).order("enrolled_at", { ascending: false }),
     db.from("student_courses").select("id, status, enrolled_at, course_id, bundle_id, courses:course_id(title, category), course_bundles:bundle_id(title, category)").eq("student_id", profile.id).eq("status", "active"),
   ]);
+
+  const [
+    { data: assessmentRows, error: assessmentsError },
+    { data: submissionRows, error: submissionsError },
+    { data: liveClassRows, error: liveClassesError },
+    { data: announcementRows, error: announcementsError },
+  ] = await Promise.all([
+    hasStudentCourseAccess
+      ? db.from("assessments")
+          .select("*")
+          .in("status", ["active", "closed"])
+          .order("due_date", { ascending: true })
+      : Promise.resolve({ data: [], error: null }),
+    db.from("assessment_submissions")
+      .select("assessment_id, status")
+      .eq("student_id", userId),
+    db.from("live_classes")
+      .select("id, title, course_name, batch_name, mentor_name, scheduled_at, duration_mins, platform, meeting_url")
+      .or(`status.eq.live,and(status.eq.scheduled,scheduled_at.gte.${new Date().toISOString()})`)
+      .order("scheduled_at", { ascending: true })
+      .limit(5),
+    db.from("announcements")
+      .select("id, type, message, created_at")
+      .eq("is_active", true)
+      .order("priority", { ascending: false })
+      .limit(5),
+  ]);
+  if (assessmentsError) console.warn("[StudentDashboard] Could not load assessments:", assessmentsError.message);
+  if (submissionsError) console.warn("[StudentDashboard] Could not load assessment submissions:", submissionsError.message);
+  if (liveClassesError) console.warn("[StudentDashboard] Could not load live classes:", liveClassesError.message);
+  if (announcementsError) console.warn("[StudentDashboard] Could not load announcements:", announcementsError.message);
 
   if (studentRecordError) {
     console.warn("[StudentDashboard] Could not load student record:", studentRecordError.message);
@@ -189,6 +236,34 @@ async function fetchDashboardData(userId) {
         lastUpdated: null,
       };
 
+  const completedAssessmentIds = new Set((submissionRows ?? []).map((submission) => submission.assessment_id));
+  const pendingAssignments = filterAssessmentsByCourseAccess(
+    assessmentsError ? [] : assessmentRows ?? [],
+    studentCourseAccess,
+  )
+    .filter((assessment) => assessment.status === "active" && !completedAssessmentIds.has(assessment.id))
+    .map((assessment) => ({
+      id: assessment.id,
+      title: assessment.title,
+      course_name: assessment.course_name,
+      week_label: assessment.week_label,
+      due_date: assessment.due_date,
+    }));
+  const activeCourseIds = new Set([
+    ...(enrollments ?? [])
+      .filter((item) => item.status === "active")
+      .map((item) => item.course_id || item.bundle_id || item.id),
+    ...(studentCourses ?? []).map((item) => item.course_id || item.bundle_id || item.id),
+  ]);
+  const announcements = (announcementsError ? [] : announcementRows ?? []).map((item) => ({
+    id: item.id,
+    title: item.message,
+    body: "",
+    tag: item.type || "Announcement",
+    date: item.created_at,
+    unread: false,
+  }));
+
   return {
     student: {
       ...student,
@@ -197,7 +272,12 @@ async function fetchDashboardData(userId) {
     enrollment,
     applications,
     progress,
-    announcements: [],
+    announcements,
+    activeCourseCount: activeCourseIds.size,
+    pendingAssignments,
+    pendingAssignmentCount: pendingAssignments.length,
+    liveClasses: liveClassesError ? [] : liveClassRows ?? [],
+    certificateCount: 0,
   };
 }
 
@@ -289,63 +369,31 @@ export default async function StudentDashboardPage() {
     redirect("/student/login?deactivated=1");
   }
 
-  const { student, enrollment, applications, progress, announcements } = await getCachedDashboardData(user.id);
-  const unreadCount = announcements.filter((item) => item.unread).length;
+  const {
+    student,
+    enrollment,
+    applications,
+    progress,
+    announcements,
+    activeCourseCount,
+    pendingAssignments,
+    pendingAssignmentCount,
+    liveClasses,
+    certificateCount,
+  } = await getCachedDashboardData(user.id);
 
   return (
-    <div className="flex flex-col gap-5 lg:gap-6">
-      <WelcomeBanner student={student}>
-        <LearningProgress compact enrollment={enrollment} progress={progress} />
-      </WelcomeBanner>
-
-      {(!enrollment || enrollment.progressPercent === 0) && applications.length === 0 ? (
-        <section
-          id="dashboard-empty-enrollment"
-          className="rounded-2xl border border-dashed border-brand-border bg-brand-off-white p-5 sm:p-6 shadow-sm"
-        >
-          <h2
-            id="dashboard-empty-enrollment-heading"
-            className="font-display text-lg font-bold text-brand-navy"
-          >
-            Welcome to SPRINT!
-          </h2>
-          <p className="mt-1 text-sm text-brand-text-secondary">
-            You have successfully registered. You haven&rsquo;t enrolled in any
-            course yet. Explore available courses to start your learning
-            journey.
-          </p>
-          <Link
-            href="/student/apply-course"
-            className="mt-4 sprint-focus inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full bg-brand-red px-6 py-2.5 text-sm font-semibold text-white shadow-brand-cta transition-colors hover:bg-brand-red-dark sm:self-start"
-          >
-            Explore Courses
-            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-          </Link>
-        </section>
-      ) : null}
-
-      <ApplicationStatusCard applications={applications} />
-
-      <Link
-        href="#dashboard-announcements"
-        className="sprint-focus group flex min-h-12 items-center gap-3 rounded-lg border border-brand-border bg-brand-white px-4 py-2.5 text-sm transition-colors hover:border-brand-red hover:bg-brand-red-light"
-      >
-        <Bell className="size-4 shrink-0 text-brand-red" aria-hidden="true" />
-        <span className="font-semibold text-brand-navy">Announcements</span>
-        <span className="rounded-full bg-brand-red-light px-2 py-0.5 text-[11px] font-bold text-brand-red">
-          {unreadCount} new
-        </span>
-        <ArrowRight
-          className="ml-auto size-4 shrink-0 text-brand-text-muted transition-transform group-hover:translate-x-0.5"
-          aria-hidden="true"
-        />
-      </Link>
-
-      <UpcomingLiveClasses />
-
-      <QuickActions />
-
-      <AnnouncementsCard items={announcements} />
-    </div>
+    <DashboardBento
+      student={student}
+      enrollment={enrollment}
+      progress={progress}
+      activeCourseCount={activeCourseCount}
+      pendingAssignments={pendingAssignments}
+      pendingAssignmentCount={pendingAssignmentCount}
+      certificateCount={certificateCount}
+      applications={applications}
+      liveClasses={liveClasses}
+      announcements={announcements}
+    />
   );
 }

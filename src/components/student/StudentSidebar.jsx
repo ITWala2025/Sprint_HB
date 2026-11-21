@@ -51,7 +51,7 @@ export default function StudentSidebar({
   const prefetch = (href) => router.prefetch(href);
   const isActive = (href) =>
     pathname === href || pathname.startsWith(`${href}/`);
-  const { student } = useStudentData();
+  const { student, pendingAssignmentCount } = useStudentData();
   const profile = student ?? {
     id: "",
     fullName: "Student",
@@ -90,6 +90,10 @@ export default function StudentSidebar({
         {navigation.map((item) => {
           const active = isActive(item.href);
           const Icon = ICONS[item.icon] ?? LayoutDashboard;
+          const badge = item.href === "/student/assignments"
+            ? pendingAssignmentCount
+            : item.badge;
+          const hasBadge = typeof badge === "number" ? badge > 0 : Boolean(badge);
 
           return (
             <li key={item.href}>
@@ -121,15 +125,16 @@ export default function StudentSidebar({
                 >
                   {item.label}
                 </span>
-                {!collapsed && item.badge ? (
+                {!collapsed && hasBadge ? (
                   <span
+                    aria-label={`${badge} pending assignment${badge === 1 ? "" : "s"}`}
                     className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${
                       active
                         ? "bg-white/15 text-white"
                         : "bg-brand-red-light text-brand-red"
                     }`}
                   >
-                    {item.badge}
+                    {badge}
                   </span>
                 ) : null}
               </Link>
