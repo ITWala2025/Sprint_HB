@@ -145,7 +145,7 @@ export async function getStudentDirectory(): Promise<StudentDirectoryEntry[]> {
 
     return students.map((student) => {
         const profile = profilesById.get(student.id);
-        const studentEmail = text(profile?.email, student.email).toLowerCase();
+        const studentEmail = text(profile?.email).toLowerCase();
         const matchingEnrollments = enrollments.filter((enrollment) =>
             enrollment.student_id === student.id ||
             enrollment.applicant_user_id === student.id ||
@@ -224,7 +224,7 @@ export async function getStudentDirectory(): Promise<StudentDirectoryEntry[]> {
             studentId: registrationNumber,
             registrationNumber,
             name: text(student.full_name, enrollment?.full_name, registration?.full_name, profile?.full_name) || "Not provided",
-            email: text(profile?.email, student.email, enrollment?.email, registration?.email) || "Not provided",
+            email: text(profile?.email, enrollment?.email, registration?.email) || "Not provided",
             phone: text(student.phone, enrollment?.phone, registration?.phone, profile?.phone, profile?.mobile_number) || "Not provided",
             profiles: profile ? {
                 phone: profile.phone ?? null,
@@ -259,11 +259,11 @@ async function setStudentStatus(
 
     const authorization = await getStudentOpsServiceClient();
     if ("error" in authorization) return authorization;
-    const supabase = authorization.client;
+    const supabaseAdmin = authorization.client;
 
     const [{ data: student, error: studentLookupError }, { data: profile, error: profileLookupError }] = await Promise.all([
-        supabase.from("students").select("id, email").eq("id", studentId).maybeSingle(),
-        supabase.from("profiles").select("id, email").eq("id", studentId).maybeSingle(),
+        supabaseAdmin.from("students").select("id, status, registration_number").eq("id", studentId).maybeSingle(),
+        supabaseAdmin.from("profiles").select("id, email").eq("id", studentId).maybeSingle(),
     ]);
 
     if (studentLookupError) {
@@ -276,13 +276,21 @@ async function setStudentStatus(
         return { success: false, error: "This student no longer exists." };
     }
 
-    const email = text(profile?.email, student.email);
+    let email = text(profile?.email);
+    if (!email) {
+        const { data: authUser, error: authUserError } = await supabaseAdmin.auth.admin.getUserById(studentId);
+        if (authUserError) {
+            return { success: false, error: `Could not find the student's email address: ${authUserError.message}` };
+        }
+        email = text(authUser.user?.email);
+    }
+
     const updates = await Promise.all([
-        supabase.from("students").update({ status }).eq("id", studentId),
-        supabase.from("profiles").update({ is_active: status === "active" }).eq("id", studentId),
-        supabase.from("registrations").update({ status }).eq("user_id", studentId),
+        supabaseAdmin.from("students").update({ status }).eq("id", studentId),
+        supabaseAdmin.from("profiles").update({ is_active: status === "active" }).eq("id", studentId),
+        supabaseAdmin.from("registrations").update({ status }).eq("user_id", studentId),
         ...(email
-            ? [supabase.from("registrations").update({ status }).ilike("email", escapeIlike(email))]
+            ? [supabaseAdmin.from("registrations").update({ status }).ilike("email", escapeIlike(email))]
             : []),
     ]);
     const updateError = updates.find((result) => result.error)?.error;

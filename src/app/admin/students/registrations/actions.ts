@@ -69,7 +69,7 @@ async function findLinkedRecordIds(
         (data ?? []).forEach((row) => ids.add(row.id));
     }
 
-    if (email) {
+    if (email && table === "profiles") {
         const { data, error } = await supabase.from(table).select("id").ilike("email", escapeIlike(email));
         if (error) return { success: false, error: `Could not find linked ${table}: ${error.message}` };
         (data ?? []).forEach((row) => ids.add(row.id));
