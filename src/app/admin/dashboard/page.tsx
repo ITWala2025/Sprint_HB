@@ -6,7 +6,6 @@ import {
     Building2,
     Megaphone,
     PhoneCall,
-    ShieldCheck,
     Users,
 } from "lucide-react";
 import EnquiriesCategoryView from "@/components/admin/EnquiriesCategoryView";
@@ -60,12 +59,6 @@ type Metric = {
     icon: typeof Users;
     accent: string;
 };
-
-const shortcuts = [
-    { href: "/admin/courses", label: "Manage Courses", description: "Review and update course catalogue.", icon: BookOpen, color: "bg-brand-blue-light text-brand-blue", moduleKeys: ["courses", "cms_courses"] },
-    { href: "/admin/enquiries/students", label: "Review Enquiries", description: "Follow up on the latest admissions enquiries.", icon: PhoneCall, color: "bg-brand-red-light text-brand-red", moduleKeys: ["admissions", "marketing", "support"] },
-    { href: "/admin/users", label: "Manage Staff", description: "Review staff accounts and access roles.", icon: ShieldCheck, color: "bg-emerald-50 text-emerald-600", moduleKeys: ["user_management", "access_control"] },
-];
 
 export default async function AdminDashboardPage() {
     const session = await getAdminSession();
@@ -153,7 +146,6 @@ export default async function AdminDashboardPage() {
         { label: "Total Courses", value: String(coursesResult.count ?? 0), note: "Courses in the catalogue", href: "/admin/courses", icon: BookOpen, accent: "bg-orange-50 text-orange-600" },
         { label: "Total Staffs", value: String(profilesResult.count ?? 0), note: "Active admin and staff accounts", href: "/admin/users", icon: Building2, accent: "bg-emerald-50 text-emerald-600" },
     ];
-    const visibleShortcuts = shortcuts.filter((shortcut) => canView(shortcut.moduleKeys));
     const dashboardError = queryErrors.length
         ? `Some dashboard totals could not be loaded: ${queryErrors.map(({ name, message }) => `${name}: ${message}`).join("; ")}`
         : null;
@@ -162,13 +154,25 @@ export default async function AdminDashboardPage() {
         <div className="mx-auto w-full max-w-[1500px] min-w-0 space-y-6 overflow-hidden">
             <section className="relative overflow-hidden rounded-2xl bg-brand-navy px-6 py-7 text-white shadow-brand-card sm:px-8">
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,rgba(11,99,182,0.45),transparent_35%),radial-gradient(circle_at_10%_100%,rgba(248,21,41,0.2),transparent_30%)]" />
-                <div className="relative flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+                <div className="relative flex min-w-0 flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                     <div className="min-w-0">
                         <p className="text-xs font-bold uppercase tracking-[0.2em] text-red-200">{session.roleName || (session.isAdmin ? "Admin Console" : "Staff Workspace")}</p>
                         <h1 className="mt-2 break-words font-display text-2xl font-bold sm:text-3xl">Welcome, {displayName.split(/\s+/)[0]}.</h1>
                         <p className="mt-2 max-w-xl text-sm leading-6 text-slate-300">Here is the latest pulse across your workspace.</p>
                     </div>
-                    {showEnquiries && <Link href="/admin/enquiries/students" className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-red to-brand-purple px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">Review enquiries <ArrowUpRight className="size-4" aria-hidden="true" /></Link>}
+                    <div className="flex min-w-0 flex-wrap items-center gap-3">
+                        {showEnquiries && <Link href="/admin/enquiries/students" className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-red to-brand-purple px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">Review enquiries <ArrowUpRight className="size-4" aria-hidden="true" /></Link>}
+                        {canView(["courses", "cms_courses"]) && (
+                            <Link href="/admin/courses" className="sprint-focus inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+                                Manage Courses <ArrowUpRight className="size-4 opacity-70" aria-hidden="true" />
+                            </Link>
+                        )}
+                        {canView(["user_management", "access_control"]) && (
+                            <Link href="/admin/users" className="sprint-focus inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+                                Manage Staff <ArrowUpRight className="size-4 opacity-70" aria-hidden="true" />
+                            </Link>
+                        )}
+                    </div>
                 </div>
             </section>
 
@@ -251,27 +255,6 @@ export default async function AdminDashboardPage() {
                 )}
             </section>
 
-            {visibleShortcuts.length > 0 && (
-                <section className="min-w-0">
-                    <div className="mb-4">
-                        <h2 className="font-display text-lg font-bold text-brand-navy">Quick Shortcuts</h2>
-                        <p className="mt-1 text-xs text-brand-text-muted">Jump directly into common workspace tasks</p>
-                    </div>
-                    <div className="grid min-w-0 gap-4 md:grid-cols-3">
-                        {visibleShortcuts.map((shortcut) => {
-                            const Icon = shortcut.icon;
-                            return (
-                                <Link key={shortcut.href} href={shortcut.href} className="group w-full max-w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-blue hover:shadow-md">
-                                    <span className={`flex size-10 items-center justify-center rounded-xl ${shortcut.color}`}><Icon className="size-5" aria-hidden="true" /></span>
-                                    <p className="mt-4 font-display font-bold text-brand-navy">{shortcut.label}</p>
-                                    <p className="mt-1 text-xs leading-5 text-brand-text-muted">{shortcut.description}</p>
-                                    <ArrowUpRight className="mt-4 size-4 text-brand-blue transition group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true" />
-                                </Link>
-                            );
-                        })}
-                    </div>
-                </section>
-            )}
         </div>
     );
 }
