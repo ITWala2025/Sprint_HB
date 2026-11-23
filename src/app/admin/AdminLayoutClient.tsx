@@ -56,7 +56,8 @@ const navigationGroups: NavigationGroup[] = [
     {
         label: "Training & Courses", icon: BookOpen, items: [
             { label: "Course Management", href: "/admin/courses", icon: BookOpen },
-            { label: "Update Scholarship", href: "/admin/scholarships", icon: Award },
+            // Temporarily hidden for future development
+            // { label: "Update Scholarship", href: "/admin/scholarships", icon: Award },
         ]
     },
     {
