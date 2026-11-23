@@ -961,3 +961,17 @@ This is the current-state reference for routes and modules; dated entries above 
 - Public content updates also include the YouTube social destination in `src/config/site.config.json` and image-led “What Makes Us Truly Unique” cards in `src/components/sections/WhyChooseSprint.jsx`; keep media and social destinations in their existing config/data sources.
 
 No application code was changed for this inventory update. The database and storage notes distinguish tracked migrations from Supabase resources provisioned outside the repository.
+
+## 70. Security Audit Fixes — 2026-11-23
+
+Applied four security and cleanup fixes from the read-only security audit:
+
+1. **Contact API Error Handling** (`src/app/api/contact/route.js:110-118`): Removed raw `error.message`/`String(error)` from client responses. Server-side logs full error via `console.error`; returns generic client-safe message `"Failed to send enquiry. Please try again."`.
+
+2. **Contact API TLS Configuration** (`src/app/api/contact/route.js:51`): Removed `tls: { rejectUnauthorized: false }` in production. Now conditionally disables TLS verification only in non-production: `tls: process.env.NODE_ENV === "production" ? undefined : { rejectUnauthorized: false }`.
+
+3. **Admin Users Actions Deduplication** (`src/app/admin/users/actions.ts`): Removed duplicate local `createServiceClient()` function (lines 49-60). Now imports from `@/lib/supabase/service` (shared module at `src/lib/supabase/service.ts`).
+
+4. **Public Site Shell WhatsApp URL** (`src/components/layout/PublicSiteShell.jsx:57`): Replaced hardcoded WhatsApp URL with `siteConfig.contact.whatsappHref` from `src/config/site.config.json`. Added import for `siteConfig`.
+
+- **Validation**: `npx tsc --noEmit` passes (0 errors). `npm run build` succeeds (65 pages generated). `git diff --check` passes.
