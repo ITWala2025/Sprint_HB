@@ -48,7 +48,7 @@ export async function POST(request) {
       port,
       secure: process.env.SMTP_SECURE === "true" || port === 465,
       auth: { user, pass },
-      tls: { rejectUnauthorized: false },
+      tls: process.env.NODE_ENV === "production" ? undefined : { rejectUnauthorized: false },
     });
 
     const safeText = (value) => String(value ?? "").replace(/[<>&"]/g, (character) => ({
@@ -109,11 +109,10 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error("[Contact API] Failed to send enquiry:", error);
-    console.error("SMTP Error Details:", error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: "Failed to send enquiry. Please try again.",
       },
       { status: 500 },
     );

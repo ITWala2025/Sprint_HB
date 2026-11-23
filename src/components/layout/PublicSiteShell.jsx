@@ -5,6 +5,7 @@ import Header from "@/components/header/Header";
 import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";
 import Footer from "@/components/footer/Footer";
 import AiAssistant from "@/components/ai/AiAssistant";
+import siteConfig from "@/config/site.config.json";
 
 /**
  * Routes with focused layouts. Student routes retain the public site chrome
@@ -54,7 +55,7 @@ export default function PublicSiteShell({ children, ticker }) {
       )}
       {showPublicChrome && (
         <a
-          href="https://wa.me/918521283184?text=Hello%20SPRINT%2C%20I%20would%20like%20to%20know%20more%20about%20your%20programs."
+          href={siteConfig.contact.whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat on WhatsApp"
