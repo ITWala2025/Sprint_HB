@@ -32,7 +32,8 @@ function getInitials(fullName) {
 function getFirstName(fullName) {
   const name = String(fullName || "Student").trim();
   const first = name.split(/\s+/).find(Boolean);
-  return first || "Student";
+  if (!first) return "Student";
+  return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
 }
 
 function escapeIlike(value) {

@@ -17,7 +17,7 @@ const inter = Inter({
   weight: ["400", "500", "600"],
 });
 export const metadata = {
-  metadataBase: new URL("https://sprint.institute"),
+  metadataBase: new URL("https://sprintai.in"),
   manifest: "/favicons/site.webmanifest",
   icons: {
     icon: [
@@ -43,15 +43,18 @@ export const metadata = {
     ],
   },
   title: {
-    default: "SPRINT",
+    default: "SPRINT | AI, Cloud, DevOps & Full-Stack Training in Jharkhand",
     template: "%s | SPRINT",
   },
   description:
     "SPRINT is a job-ready training hub in Hazaribagh, Jharkhand, bridging the academic-industry gap with hands-on programs in AI/ML, Cloud and DevOps.",
   openGraph: {
-    siteName: "SPRINT",
+    siteName: "SPRINT Institutional Training Hub",
     locale: "en_IN",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
   },
 };
 

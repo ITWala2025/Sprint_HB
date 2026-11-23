@@ -1,8 +1,24 @@
 import LegalLayout from "@/components/legal/LegalLayout";
+import siteConfig from "@/config/site.config.json";
 
 export const metadata = {
-  title: { absolute: "Privacy Policy | SPRINT" },
+  title: "Privacy Policy",
   description: "Privacy Policy for the SPRINT educational technology website.",
+  alternates: { canonical: "/privacy" },
+  openGraph: {
+    title: "Privacy Policy | SPRINT",
+    description: "Privacy Policy for the SPRINT educational technology website.",
+    url: "/privacy",
+    type: "website",
+    siteName: "SPRINT Institutional Training Hub",
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary",
+    title: "Privacy Policy | SPRINT",
+    description: "Privacy Policy for the SPRINT educational technology website.",
+  },
+  robots: { index: true, follow: true },
 };
 
 const sections = [
