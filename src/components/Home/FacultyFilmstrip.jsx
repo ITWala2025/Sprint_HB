@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { BadgeCheck } from "lucide-react";
 import styles from "./FacultyFilmstrip.module.css";
 
 function wrappedDelta(index, activeIndex, count) {
@@ -203,7 +204,7 @@ export default function FacultyFilmstrip({ profiles }) {
     >
       <div className={styles.stage} aria-label="Select a faculty card to browse">
         <p className={styles.srOnly}>
-          Select a faculty portrait or use the arrow keys to browse.
+          Select a faculty card or use the arrow keys to browse.
         </p>
         <div className={styles.deck}>
           {profiles.map((profile, index) => {
@@ -227,16 +228,18 @@ export default function FacultyFilmstrip({ profiles }) {
             };
             const initials = profile.name
               .split(" ")
+              .filter(Boolean)
               .map((part) => part[0])
               .slice(0, 2)
               .join("")
               .toUpperCase();
+            const skills = profile.skills?.length ? profile.skills : profile.tags ?? [];
 
             return (
               <button
                 key={profile.name}
                 type="button"
-                className={styles.card}
+                className={`${styles.card} ${index === activeIndex ? "" : styles.sideCard}`}
                 style={cardStyle}
                 aria-label={`Select ${profile.name}, ${profile.designation}`}
                 aria-current={index === activeIndex ? "true" : "false"}
@@ -246,23 +249,29 @@ export default function FacultyFilmstrip({ profiles }) {
                   pauseAndRestart();
                 }}
               >
-                <span className={styles.portrait}>
-                  {profile.image ? (
-                    <img src={profile.image} alt={`${profile.name} portrait`} />
-                  ) : (
-                    <span className={styles.initials} aria-hidden="true">
+                <span className={styles.cardContent}>
+                  <span className={styles.topRow}>
+                    <span className={styles.monogram} aria-hidden="true">
                       {initials}
                     </span>
-                  )}
-                </span>
-                <span className={styles.footer}>
-                  <span className={styles.index}>
-                    {String(index + 1).padStart(2, "0")}
+                    <span className={styles.experience}>
+                      {profile.experience || "Industry Mentor"}
+                    </span>
                   </span>
-                  <span className={styles.meta}>
+                  <span className={styles.identity}>
                     <span className={styles.name}>{profile.name}</span>
-                    <span className={styles.role}>{profile.designation}</span>
+                    <span className={styles.verified}>
+                      <BadgeCheck className={styles.verifiedIcon} aria-hidden="true" />
+                      Verified Industry Mentor
+                    </span>
                   </span>
+                  <span className={styles.role}>{profile.designation}</span>
+                  <span className={styles.skills} aria-label="Domains and skills">
+                    {skills.slice(0, 4).map((skill) => (
+                      <span className={styles.skill} key={skill}>{skill}</span>
+                    ))}
+                  </span>
+                  <span className={styles.bio}>{profile.bio}</span>
                 </span>
               </button>
             );

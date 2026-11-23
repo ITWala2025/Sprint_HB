@@ -110,12 +110,19 @@
   },
   "faculty": {
     "heading": "Faculty & Experts",
-    "subtitle": "Learn from experienced industry leaders, mentors and practitioners",
+    "subtitle": "Active practitioners from leading tech enterprises — showcased by verified domains and credentials.",
     "profiles": [
       {
         "name": "Satish J",
         "designation": "Founder & CEO — Tech Leadership & Strategy Consulting",
-        "bio": "Technology leader with 30+ years of experience in tech leadership, strategic consulting and guiding organizations toward technology-driven growth.",
+        "experience": "30+ Yrs Exp",
+        "skills": [
+          "Tech Leadership",
+          "Strategy Consulting",
+          "Enterprise Technology",
+          "Architecture"
+        ],
+        "bio": "Mentors teams through technology strategy, architecture decisions and practical leadership challenges drawn from enterprise delivery.",
         "verified": true,
         "tags": [
           "Tech Leadership",
@@ -132,7 +139,14 @@
       {
         "name": "Ajay K",
         "designation": "Founder & CEO — Digital Marketing & Product Excellence",
-        "bio": "Industry expert with 30+ years of experience in digital marketing, product excellence and customer experience, helping businesses build customer-focused products and strategies.",
+        "experience": "30+ Yrs Exp",
+        "skills": [
+          "Digital Marketing",
+          "Product Strategy",
+          "Customer Experience",
+          "Product Excellence"
+        ],
+        "bio": "Coaches learners in customer-led product strategy, digital growth and experience design through practical business cases.",
         "verified": true,
         "tags": [
           "Digital Marketing",
@@ -149,7 +163,14 @@
       {
         "name": "Mukesh D",
         "designation": "CEO & AI / Cloud SME",
-        "bio": "Technology executive with 30+ years of experience in AI, cloud technologies and enterprise technology consulting.",
+        "experience": "30+ Yrs Exp",
+        "skills": [
+          "Artificial Intelligence",
+          "Cloud Computing",
+          "Enterprise Architecture",
+          "Technology Consulting"
+        ],
+        "bio": "Guides hands-on AI and cloud projects, connecting architecture choices with production-ready enterprise delivery.",
         "verified": true,
         "tags": [
           "Artificial Intelligence",
@@ -166,7 +187,14 @@
       {
         "name": "Dhanesh K",
         "designation": "Founder & CEO — Consumer Solutions",
-        "bio": "Business leader with 27+ years of experience in building sustainable consumer solutions and driving innovation through customer-focused strategies.",
+        "experience": "27+ Yrs Exp",
+        "skills": [
+          "Consumer Solutions",
+          "Business Strategy",
+          "Sustainability",
+          "Customer Innovation"
+        ],
+        "bio": "Coaches learners to validate customer needs, shape sustainable solutions and turn business strategy into practical decisions.",
         "verified": true,
         "tags": [
           "Consumer Solutions",
@@ -183,7 +211,14 @@
       {
         "name": "Reyaz A",
         "designation": "Cloud Solutions Architect — IT Consulting & Solutions",
-        "bio": "Cloud solutions architect with 22+ years of experience in designing cloud solutions and leading IT consulting and technology implementation.",
+        "experience": "22+ Yrs Exp",
+        "skills": [
+          "Cloud Architecture",
+          "Cloud Solutions",
+          "IT Consulting",
+          "Implementation"
+        ],
+        "bio": "Leads hands-on cloud architecture and implementation exercises, from solution design through secure enterprise deployment.",
         "verified": true,
         "tags": [
           "Cloud Architecture",
@@ -200,7 +235,14 @@
       {
         "name": "Prashant S",
         "designation": "Innovation, AI & Digital Transformation",
-        "bio": "Technology professional with 25+ years of experience in innovation, artificial intelligence and driving digital transformation in large IT product organizations.",
+        "experience": "25+ Yrs Exp",
+        "skills": [
+          "Artificial Intelligence",
+          "Innovation",
+          "Digital Transformation",
+          "IT Products"
+        ],
+        "bio": "Mentors teams through applied AI and digital transformation projects, focused on innovation that scales in large organizations.",
         "verified": true,
         "tags": [
           "Artificial Intelligence",
@@ -217,7 +259,14 @@
       {
         "name": "Ajeet D",
         "designation": "Enterprise Automation & AI Architect",
-        "bio": "Enterprise technology architect with 23+ years of experience in enterprise automation and AI-driven solutions for large IT products and services organizations.",
+        "experience": "23+ Yrs Exp",
+        "skills": [
+          "Enterprise Automation",
+          "Artificial Intelligence",
+          "Solution Architecture",
+          "Workflow Design"
+        ],
+        "bio": "Guides practical automation and AI architecture work, translating enterprise workflows into reliable solutions.",
         "verified": true,
         "tags": [
           "Enterprise Automation",
@@ -234,7 +283,14 @@
       {
         "name": "Gyan P",
         "designation": "Enterprise Software & Consumer Products",
-        "bio": "Technology professional with 17+ years of experience in enterprise software and consumer product development within large manufacturing organizations.",
+        "experience": "17+ Yrs Exp",
+        "skills": [
+          "Enterprise Software",
+          "Consumer Products",
+          "Software Development",
+          "Manufacturing"
+        ],
+        "bio": "Coaches learners through enterprise software and consumer product development, from requirements to dependable delivery.",
         "verified": true,
         "tags": [
           "Enterprise Software",
@@ -251,7 +307,14 @@
       {
         "name": "Snehav S",
         "designation": "Product Lead — AI-Driven CRM",
-        "bio": "Product leader with 15+ years of experience in product development and AI-driven CRM solutions, focusing on building intelligent and customer-centric products.",
+        "experience": "15+ Yrs Exp",
+        "skills": [
+          "Product Management",
+          "AI-Driven CRM",
+          "Artificial Intelligence",
+          "Product Discovery"
+        ],
+        "bio": "Leads hands-on product discovery and AI-driven CRM projects, pairing customer insight with practical product delivery.",
         "verified": true,
         "tags": [
           "Product Management",
@@ -268,7 +331,14 @@
       {
         "name": "Manzoor A",
         "designation": "Business & Economic Administration",
-        "bio": "Professional with 15+ years of experience in business and economic administration, contributing to business operations and financial-sector engagements.",
+        "experience": "15+ Yrs Exp",
+        "skills": [
+          "Business Administration",
+          "Economics",
+          "Business Operations",
+          "Financial Services"
+        ],
+        "bio": "Brings business operations and economic administration into practical case work, connecting analysis with real decisions.",
         "verified": true,
         "tags": [
           "Business Administration",
@@ -285,7 +355,14 @@
       {
         "name": "Piyush R",
         "designation": "Delivery Manager & Agile Coach",
-        "bio": "Delivery management professional with 15+ years of experience in managing technology delivery, agile methodologies and coaching teams in large IT services organizations.",
+        "experience": "15+ Yrs Exp",
+        "skills": [
+          "Delivery Management",
+          "Agile",
+          "Team Coaching",
+          "Technology Delivery"
+        ],
+        "bio": "Coaches teams in Agile delivery, facilitation and continuous improvement through realistic software execution scenarios.",
         "verified": true,
         "tags": [
           "Delivery Management",
@@ -302,7 +379,14 @@
       {
         "name": "Alisha R",
         "designation": "Communication & Personality Development Coach",
-        "bio": "Professional corporate trainer specializing in communication and personality development, helping learners strengthen their interpersonal and professional skills.",
+        "experience": "01+ Yrs Exp",
+        "skills": [
+          "Communication Skills",
+          "Personality Development",
+          "Corporate Training",
+          "Workplace Readiness"
+        ],
+        "bio": "Guides communication and professional presence practice, helping learners build confidence for workplace collaboration.",
         "verified": true,
         "tags": [
           "Communication Skills",

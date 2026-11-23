@@ -11,18 +11,16 @@ export default function FacultyExperts({
   return (
     <section id="faculty" className={sectionClassName}>
       <div className={contentClassName}>
-        <div className="max-w-2xl">
-          {eyebrow ? (
-            <p className={`text-xs font-bold uppercase tracking-[0.2em] ${accessibleBrandRed ? "text-brand-red-accessible" : "text-brand-red"}`}>
-              {eyebrow}
-            </p>
-          ) : null}
+        <div className="mx-auto mb-10 max-w-2xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">
+            {eyebrow ?? "INDUSTRY MENTORS"}
+          </p>
           <h2
-            className={`${eyebrow ? "mt-2 " : ""}text-3xl font-bold tracking-tight text-brand-navy sm:text-4xl`}
+            className="mt-2 text-3xl font-bold tracking-tight text-[#0B1D3A] md:text-4xl"
           >
             {about.faculty.heading}
           </h2>
-          <p className="mt-2 text-lg leading-relaxed text-brand-text-secondary">
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-500 md:text-base">
             {about.faculty.subtitle}
           </p>
         </div>

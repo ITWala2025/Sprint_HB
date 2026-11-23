@@ -22,23 +22,20 @@ describe("Home faculty filmstrip", () => {
       within(section).getByRole("region", { name: "Faculty filmstrip carousel" }),
     ).toBeInTheDocument();
     expect(within(section).getByRole("heading", { name: "Faculty & Experts" })).toBeInTheDocument();
-    expect(within(section).getByText("Practitioners who have shipped what they teach")).toBeInTheDocument();
-    expect(within(section).getByRole("button", { name: /dr\. sneha gupta/i })).toBeInTheDocument();
-    expect(within(section).getByRole("button", { name: /akash sinha/i })).toBeInTheDocument();
-    expect(within(section).getByRole("button", { name: /nikhil verma/i })).toBeInTheDocument();
-    expect(within(section).getByRole("button", { name: /ananya roy/i })).toBeInTheDocument();
-    expect(within(section).getByRole("button", { name: /priya verma, director of academics/i })).toBeInTheDocument();
+    expect(within(section).getByText("INDUSTRY MENTORS")).toBeInTheDocument();
+    expect(within(section).getByText("Active practitioners from leading tech enterprises — showcased by verified domains and credentials.")).toBeInTheDocument();
+    expect(within(section).getByRole("button", { name: /satish j/i })).toBeInTheDocument();
+    expect(within(section).getByRole("button", { name: /ajay k/i })).toBeInTheDocument();
+    expect(within(section).getByRole("button", { name: /mukesh d/i })).toBeInTheDocument();
+    expect(within(section).getByRole("button", { name: /alisha r/i })).toBeInTheDocument();
     expect(within(section).queryByText(/Faculty 04 \/ 04/)).not.toBeInTheDocument();
-    expect(within(section).queryByText(/Software engineer teaching DSA/i)).not.toBeInTheDocument();
     expect(within(section).queryByRole("article", { name: /faculty profile/i })).not.toBeInTheDocument();
-    expect(within(section).getByRole("img", { name: "Ananya Roy portrait" })).toHaveAttribute(
-      "src",
-      "/images/home/Ananya.jpeg",
-    );
-    expect(within(section).getByRole("img", { name: "Priya Verma portrait" })).toHaveAttribute(
-      "src",
-      "/images/home/Priya.jpeg",
-    );
+    expect(within(section).getAllByText("Verified Industry Mentor")).toHaveLength(12);
+    expect(within(section).queryByRole("img")).not.toBeInTheDocument();
+    const satish = within(section).getByRole("button", { name: /satish j/i });
+    expect(within(satish).getByText("SJ")).toBeInTheDocument();
+    expect(within(satish).getByText("30+ Yrs Exp")).toBeInTheDocument();
+    expect(within(satish).getByText("Architecture")).toBeInTheDocument();
   });
 
   it("supports card selection and keyboard navigation", async () => {
@@ -46,13 +43,13 @@ describe("Home faculty filmstrip", () => {
     render(<HomePage />);
 
     const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
-    const akash = within(carousel).getByRole("button", { name: /akash sinha/i });
+    const akash = within(carousel).getByRole("button", { name: /ajay k/i });
     await user.click(akash);
 
     expect(akash).toHaveAttribute("aria-current", "true");
 
     fireEvent.keyDown(akash, { key: "ArrowRight" });
-    expect(within(carousel).getByRole("button", { name: /nikhil verma/i })).toHaveAttribute(
+    expect(within(carousel).getByRole("button", { name: /mukesh d/i })).toHaveAttribute(
       "aria-current",
       "true",
     );
@@ -65,7 +62,7 @@ describe("Home faculty filmstrip", () => {
 
     const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
     const stage = carousel.querySelector("div[class*='stage']");
-    const activeCard = within(carousel).getByRole("button", { name: /dr\. sneha gupta/i });
+    const activeCard = within(carousel).getByRole("button", { name: /satish j/i });
     expect(within(carousel).queryByRole("group", { name: "Carousel controls" })).not.toBeInTheDocument();
     expect(within(carousel).queryByRole("button", { name: /rotation/i })).not.toBeInTheDocument();
 
@@ -94,7 +91,7 @@ describe("Home faculty filmstrip", () => {
     });
 
     expect(activeCard).toHaveAttribute("aria-current", "true");
-    expect(within(carousel).getByRole("button", { name: /akash sinha/i })).toHaveAttribute(
+    expect(within(carousel).getByRole("button", { name: /ajay k/i })).toHaveAttribute(
       "aria-current",
       "false",
     );
@@ -118,13 +115,13 @@ describe("Home faculty filmstrip", () => {
 
     const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
     const stage = carousel.querySelector("div[class*='stage']");
-    const sneha = within(carousel).getByRole("button", { name: /dr\. sneha gupta/i });
+    const sneha = within(carousel).getByRole("button", { name: /satish j/i });
 
     swipeOn(stage, 300, 400, 200, 400);
 
     expect(sneha).toHaveAttribute("aria-current", "false");
     expect(
-      within(carousel).getByRole("button", { name: /akash sinha/i }),
+      within(carousel).getByRole("button", { name: /ajay k/i }),
     ).toHaveAttribute("aria-current", "true");
   });
 
@@ -133,13 +130,13 @@ describe("Home faculty filmstrip", () => {
 
     const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
     const stage = carousel.querySelector("div[class*='stage']");
-    const sneha = within(carousel).getByRole("button", { name: /dr\. sneha gupta/i });
+    const sneha = within(carousel).getByRole("button", { name: /satish j/i });
 
     swipeOn(stage, 200, 400, 300, 400);
 
     expect(sneha).toHaveAttribute("aria-current", "false");
     expect(
-      within(carousel).getByRole("button", { name: /priya verma, director of academics/i }),
+      within(carousel).getByRole("button", { name: /alisha r, communication/i }),
     ).toHaveAttribute("aria-current", "true");
   });
 
@@ -148,7 +145,7 @@ describe("Home faculty filmstrip", () => {
 
     const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
     const stage = carousel.querySelector("div[class*='stage']");
-    const sneha = within(carousel).getByRole("button", { name: /dr\. sneha gupta/i });
+    const sneha = within(carousel).getByRole("button", { name: /satish j/i });
 
     swipeOn(stage, 300, 400, 310, 400);
 
@@ -160,7 +157,7 @@ describe("Home faculty filmstrip", () => {
 
     const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
     const stage = carousel.querySelector("div[class*='stage']");
-    const sneha = within(carousel).getByRole("button", { name: /dr\. sneha gupta/i });
+    const sneha = within(carousel).getByRole("button", { name: /satish j/i });
 
     fireEvent.pointerDown(stage, touch({ clientX: 300, clientY: 400 }));
     fireEvent.pointerMove(stage, touch({ clientX: 300, clientY: 300 }));
@@ -176,21 +173,21 @@ describe("Home faculty filmstrip", () => {
 
       const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
       expect(
-        within(carousel).getByRole("button", { name: /dr\. sneha gupta/i }),
+        within(carousel).getByRole("button", { name: /satish j/i }),
       ).toHaveAttribute("aria-current", "true");
 
       act(() => {
         vi.advanceTimersByTime(5000);
       });
       expect(
-        within(carousel).getByRole("button", { name: /akash sinha/i }),
+        within(carousel).getByRole("button", { name: /ajay k/i }),
       ).toHaveAttribute("aria-current", "true");
 
       act(() => {
         vi.advanceTimersByTime(5000);
       });
       expect(
-        within(carousel).getByRole("button", { name: /nikhil verma/i }),
+        within(carousel).getByRole("button", { name: /mukesh d/i }),
       ).toHaveAttribute("aria-current", "true");
     } finally {
       vi.useRealTimers();
@@ -204,8 +201,8 @@ describe("Home faculty filmstrip", () => {
 
       const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
       const stage = carousel.querySelector("div[class*='stage']");
-      const akash = within(carousel).getByRole("button", { name: /akash sinha/i });
-      const nikhil = within(carousel).getByRole("button", { name: /nikhil verma/i });
+      const akash = within(carousel).getByRole("button", { name: /ajay k/i });
+      const nikhil = within(carousel).getByRole("button", { name: /mukesh d/i });
 
       swipeOn(stage, 300, 400, 200, 400);
       expect(akash).toHaveAttribute("aria-current", "true");
@@ -243,9 +240,9 @@ describe("Home faculty filmstrip", () => {
       render(<HomePage />);
 
       const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
-      const sneha = within(carousel).getByRole("button", { name: /dr\. sneha gupta/i });
-      const akash = within(carousel).getByRole("button", { name: /akash sinha/i });
-      const nikhil = within(carousel).getByRole("button", { name: /nikhil verma/i });
+      const sneha = within(carousel).getByRole("button", { name: /satish j/i });
+      const akash = within(carousel).getByRole("button", { name: /ajay k/i });
+      const nikhil = within(carousel).getByRole("button", { name: /mukesh d/i });
 
       const advanceCooldown = () => {
         act(() => {
@@ -290,7 +287,7 @@ describe("Home faculty filmstrip", () => {
       render(<HomePage />);
 
       const carousel = screen.getByRole("region", { name: "Faculty filmstrip carousel" });
-      const sneha = within(carousel).getByRole("button", { name: /dr\. sneha gupta/i });
+      const sneha = within(carousel).getByRole("button", { name: /satish j/i });
 
       act(() => {
         vi.advanceTimersByTime(10000);
