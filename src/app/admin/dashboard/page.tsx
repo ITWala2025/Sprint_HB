@@ -46,7 +46,10 @@ function formatAnnouncementDate(value: string) {
     const date = new Date(value);
     return Number.isNaN(date.getTime())
         ? "Date unavailable"
-        : new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(date);
+        : new Intl.DateTimeFormat("en-GB", {
+            dateStyle: "medium",
+            timeZone: "Asia/Kolkata",
+        }).format(date);
 }
 
 type Metric = {

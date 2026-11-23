@@ -48,10 +48,24 @@ function formatValue(value: unknown): string {
 function formatDate(value: string): string {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return "Date unavailable";
-    return new Intl.DateTimeFormat(undefined, {
-        dateStyle: "medium",
-        timeStyle: "short",
-    }).format(date);
+    const parts = new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "Asia/Kolkata",
+    }).formatToParts(date);
+    const part = (type: Intl.DateTimeFormatPartTypes) =>
+        parts.find((item) => item.type === type)?.value ?? "";
+    const day = part("day");
+    const month = part("month");
+    const year = part("year");
+    const hour = part("hour");
+    const minute = part("minute");
+    const dayPeriod = part("dayPeriod").toUpperCase();
+    return `${day} ${month} ${year}, ${hour}:${minute} ${dayPeriod}`;
 }
 
 function interestSummary(enquiry: Enquiry): string {
