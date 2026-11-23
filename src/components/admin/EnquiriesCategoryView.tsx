@@ -12,6 +12,7 @@ import type {
 } from "@/components/admin/enquiries-types";
 
 const pageSize = 15;
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
 const statusOptions: EnquiryStatus[] = ["new", "contacted", "resolved"];
 const categories: { value: EnquiryAudience | "all"; label: string }[] = [
     { value: "all", label: "All" },
@@ -45,27 +46,19 @@ function formatValue(value: unknown): string {
     return String(value);
 }
 
-function formatDate(value: string): string {
+function formatDate(value: string | null | undefined): string {
+    if (!value) return "—";
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return "Date unavailable";
-    const parts = new Intl.DateTimeFormat("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-        timeZone: "Asia/Kolkata",
-    }).formatToParts(date);
-    const part = (type: Intl.DateTimeFormatPartTypes) =>
-        parts.find((item) => item.type === type)?.value ?? "";
-    const day = part("day");
-    const month = part("month");
-    const year = part("year");
-    const hour = part("hour");
-    const minute = part("minute");
-    const dayPeriod = part("dayPeriod").toUpperCase();
-    return `${day} ${month} ${year}, ${hour}:${minute} ${dayPeriod}`;
+    if (Number.isNaN(date.getTime())) return "—";
+    const ist = new Date(date.getTime() + 330 * 60 * 1000);
+    const day = String(ist.getUTCDate()).padStart(2, "0");
+    const month = MONTHS[ist.getUTCMonth()];
+    const year = ist.getUTCFullYear();
+    const rawHours = ist.getUTCHours();
+    const period = rawHours >= 12 ? "PM" : "AM";
+    const hours = rawHours % 12 || 12;
+    const minutes = String(ist.getUTCMinutes()).padStart(2, "0");
+    return `${day} ${month} ${year}, ${hours}:${minutes} ${period}`;
 }
 
 function interestSummary(enquiry: Enquiry): string {

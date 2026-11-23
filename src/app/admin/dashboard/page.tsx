@@ -23,6 +23,8 @@ type DashboardAnnouncement = {
     created_at: string;
 };
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
+
 function isAnnouncementActive(row: Record<string, unknown>) {
     if (row.is_active === false || row.is_published === false) return false;
     const status = typeof row.status === "string" ? row.status.toLowerCase() : "";
@@ -42,13 +44,18 @@ function toDashboardAnnouncement(row: Record<string, unknown>, index: number): D
 }
 
 function formatAnnouncementDate(value: string) {
+    if (!value) return "—";
     const date = new Date(value);
-    return Number.isNaN(date.getTime())
-        ? "Date unavailable"
-        : new Intl.DateTimeFormat("en-GB", {
-            dateStyle: "medium",
-            timeZone: "Asia/Kolkata",
-        }).format(date);
+    if (Number.isNaN(date.getTime())) return "—";
+    const ist = new Date(date.getTime() + 330 * 60 * 1000);
+    const day = String(ist.getUTCDate()).padStart(2, "0");
+    const month = MONTHS[ist.getUTCMonth()];
+    const year = ist.getUTCFullYear();
+    const rawHours = ist.getUTCHours();
+    const period = rawHours >= 12 ? "PM" : "AM";
+    const hours = rawHours % 12 || 12;
+    const minutes = String(ist.getUTCMinutes()).padStart(2, "0");
+    return `${day} ${month} ${year}, ${hours}:${minutes} ${period}`;
 }
 
 type Metric = {

@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
     Award, Bell, BookOpen, Briefcase, Building2, ChevronDown, ChevronRight, ClipboardCheck,
     ExternalLink, FileEdit, FileText, Globe, GraduationCap, Hourglass, LayoutDashboard, Layers, LogOut,
-    Menu, Megaphone, PhoneCall, Search, School, ShieldAlert, ShieldCheck, UserCheck, Users, Video,
+    Menu, Megaphone, PhoneCall, Search, School, ShieldAlert, ShieldCheck, Users, Video,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { adminRoutePermissions, canAccessAdminRoute, roleHasPermission, type AdminPermissionMap } from "@/app/admin/auth-types";
@@ -74,16 +74,24 @@ const navigationGroups: NavigationGroup[] = [
             { label: "Mock Results", href: "/admin/academics/mocks/results", icon: GraduationCap },
         ]
     },
+    // Temporarily hidden for future development
+    /*
     {
         label: "Partner Companies (B2B Hiring)", icon: Building2, items: [
             { label: "List of Partners", href: "/admin/partners/companies/list", icon: Building2 },
         ]
     },
+    */
+    // Temporarily hidden for future development
+    /*
     {
         label: "Partner Colleges / Institutes", icon: School, items: [
             { label: "List of Colleges", href: "/admin/partners/colleges/list", icon: School },
         ]
     },
+    */
+    // Temporarily hidden for future development
+    /*
     {
         label: "Trainer Management", icon: UserCheck, items: [
             { label: "Trainer Profiles", href: "/admin/trainers/list", icon: UserCheck },
@@ -91,6 +99,7 @@ const navigationGroups: NavigationGroup[] = [
             { label: "Batch Allocations", href: "/admin/trainers/batches", icon: GraduationCap },
         ]
     },
+    */
     {
         label: "Access Management",
         icon: ShieldCheck,
