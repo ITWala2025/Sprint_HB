@@ -6,6 +6,7 @@ import {
   getCourse,
 } from "@/data/courses";
 import { createPublicServerClient } from "@/lib/supabase/public-server";
+import siteConfig from "@/config/site.config.json";
 
 export const dynamic = "force-dynamic";
 export function generateStaticParams() { return courses.map(({ slug }) => ({ slug })); }
@@ -84,14 +85,107 @@ async function findCourse(slug) {
   };
 }
 
+/* Helper to build Course JSON-LD */
+function buildCourseJsonLd(item) {
+  const imageUrl = item.image?.startsWith("http")
+    ? item.image
+    : item.image?.startsWith("/")
+      ? `${siteConfig.url}${item.image}`
+      : `${siteConfig.url}/images/courses/abstract-code.svg`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: item.title,
+    description: item.description,
+    provider: {
+      "@type": "EducationalOrganization",
+      name: siteConfig.legalName,
+      url: siteConfig.url,
+    },
+    category: item.category,
+    educationalLevel: item.level || "Beginner",
+    timeRequired: item.duration ? `PT${item.duration.replace(/\s+/g, "").toUpperCase()}` : undefined,
+    teaches: item.outcomes,
+    coursePrerequisites: item.prerequisites,
+    hasCourseInstance: {
+      "@type": "CourseInstance",
+      courseMode: item.delivery || "Hybrid",
+      location: {
+        "@type": "Place",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Hazaribagh",
+          addressRegion: "Jharkhand",
+          addressCountry: "IN",
+        },
+      },
+    },
+    image: imageUrl,
+    url: `${siteConfig.url}/courses/${item.slug}`,
+  };
+}
+
+/* Helper to safely serialize JSON-LD for dangerouslySetInnerHTML */
+function ldJson(obj) {
+  return {
+    __html: JSON.stringify(obj).replace(/</g, "\\u003c"),
+  };
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const item = await findCourse(slug);
-  return item ? { title: item.title, description: item.description, alternates: { canonical: `/courses/${item.slug}` } } : {};
+  if (!item) return { title: "Course Not Found", robots: { index: false } };
+
+  const imageUrl = item.image?.startsWith("http")
+    ? item.image
+    : item.image?.startsWith("/")
+      ? `${siteConfig.url}${item.image}`
+      : `${siteConfig.url}/images/courses/abstract-code.svg`;
+
+  return {
+    title: item.title,
+    description: item.description.slice(0, 155),
+    alternates: { canonical: `/courses/${item.slug}` },
+    openGraph: {
+      title: item.title,
+      description: item.description.slice(0, 155),
+      url: `/courses/${item.slug}`,
+      type: "website",
+      siteName: "SPRINT Institutional Training Hub",
+      locale: "en_IN",
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: item.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: item.title,
+      description: item.description.slice(0, 155),
+      images: [imageUrl],
+    },
+  };
 }
-export default async function CoursePage({ params, searchParams }) {
+
+export default async function CoursePage({ params }) {
   const { slug } = await params;
   const item = await findCourse(slug);
   if (!item) notFound();
-  return <DetailPage item={item} searchParams={searchParams} />;
+
+  return (
+    <>
+      {/* Structured data: Course schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={ldJson(buildCourseJsonLd(item))}
+      />
+      <DetailPage item={item} />
+    </>
+  );
 }

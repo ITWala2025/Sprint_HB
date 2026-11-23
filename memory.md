@@ -533,6 +533,39 @@ Sections 8 onward are dated implementation history. Where an older entry describ
 - The magic URL is returned to and displayed in the admin UI for sharing; it is not emailed automatically. No SMTP dispatch is configured in this flow.
 - On success, the action revalidates `/admin/users`. Validation passed `npx tsc --noEmit`, the focused `CreateUserModal` Vitest tests (2 tests), and `git diff --check`.
 
+## 49. Production SEO Implementation — 2026-11-23
+
+- **Root layout** (`src/app/layout.jsx`): Updated `metadataBase` to `https://sprintai.in`, title template to `%s | SPRINT`, default title to `SPRINT | AI, Cloud, DevOps & Full-Stack Training in Jharkhand`, `siteName` to `SPRINT Institutional Training Hub`, added `twitter.card: summary_large_image`. All downstream pages inherit these defaults.
+
+- **Site config** (`src/config/site.config.json`): Changed canonical domain from `sprint.institute` to `sprintai.in`. All contact details, social URLs, and structured data now resolve to `https://sprintai.in`.
+
+- **Crawler rules** (`src/app/robots.ts`): New file using `MetadataRoute.Robots`. Allows `/`; disallows `/admin/`, `/staff/`, `/student/`, `/api/`, `/login`, `/forgot-password`, `/set-password`. References `https://sprintai.in/sitemap.xml`.
+
+- **Dynamic sitemap** (`src/app/sitemap.ts`): New file using `MetadataRoute.Sitemap`. Static public routes (`/`, `/about`, `/courses`, `/programs/sprint-rise`, `/programs/career-accelerator`, `/careers`, `/contact`, `/terms`, `/privacy`). Dynamic routes for courses (`/courses/[slug]`), bundles (`/bundles/[slug]`), learning paths (`/learning-paths/[slug]`) fetched from Supabase (`courses`, `course_bundles`, `learning_paths` tables) with fallback to static datasets in `src/data/`. Deduplication, `changeFrequency`/`priority` per route type, `lastModified` from record timestamps.
+
+- **Static public pages metadata** (`src/app/page.jsx` [root redirect], `src/app/home/page.jsx`, `src/app/about/page.jsx`, `src/app/courses/page.jsx`, `src/app/programs/sprint-rise/page.jsx`, `src/app/programs/career-accelerator/page.jsx`, `src/app/careers/page.jsx`, `src/app/contact/page.jsx`, `src/app/terms/page.jsx`, `src/app/privacy/page.jsx`): Each exports `metadata` with unique `title`, `description` (≤155 chars), `openGraph` (title, description, url, type, siteName, locale, images), `twitter`, and `alternates.canonical`. Root redirect (`/`) sets `robots: { index: false, follow: true }` and canonical `/`. `/home` canonical points to `/`.
+
+- **Dynamic public pages `generateMetadata`** (`src/app/courses/[slug]/page.jsx`, `src/app/bundles/[slug]/page.jsx`, `src/app/learning-paths/[slug]/page.jsx`): Await `params`, fetch item via Supabase with static fallback, return title/description/canonical/OG/twitter with absolute image URLs. Safe fallback metadata if item not found (no throw).
+
+- **JSON-LD structured data**:
+  - `Organization` schema on `/about` (existing, updated URL to `sprintai.in`).
+  - `EducationalOrganization` + `FAQPage` (via `@graph`) on `/` (home) and `/contact`, sourced from `site.config.json` and `src/data/contactFaqs.js` / `src/data/data.js`.
+  - `Course` schema on `/courses/[slug]` and `/bundles/[slug]` with provider, category, educationalLevel, timeRequired, teaches, prerequisites, courseInstance, image, url.
+  - `JobPosting` array on `/careers` mapped from `src/data/careers.js` with hiringOrganization, jobLocation, baseSalary, responsibilities, qualifications.
+
+- **Data file refactor**: Extracted contact FAQ data to `src/data/contactFaqs.js` so it can be imported by both the server component (`/contact`) and the client component (`FAQSection.jsx`).
+
+- **Verification**:
+  - `npx tsc --noEmit` → no errors.
+  - `npm run build` → success, 65 pages generated (static + dynamic), sitemap.xml and robots.txt routes registered.
+  - `git diff --check` → no whitespace errors (only LF/CRLF line-ending warning).
+
+- **Fallback strategy**: All Supabase calls in `sitemap.ts` and `generateMetadata` wrap queries in try/catch and fall back to `src/data/` static datasets. Build succeeds with or without Supabase credentials.
+
+- **No regressions**: Authenticated portals (`/admin/*`, `/staff/*`, `/student/*`), middleware, database schemas, and UI behavior unchanged.
+
+---
+
 ## 48. Student Portal Header Modal — 2026-10-13
 
 - Desktop and mobile `Student Portal` actions now open the existing `/student/login` screen in a modal without changing the current route. The login route remains available for direct visits.
@@ -928,3 +961,17 @@ This is the current-state reference for routes and modules; dated entries above 
 - Public content updates also include the YouTube social destination in `src/config/site.config.json` and image-led “What Makes Us Truly Unique” cards in `src/components/sections/WhyChooseSprint.jsx`; keep media and social destinations in their existing config/data sources.
 
 No application code was changed for this inventory update. The database and storage notes distinguish tracked migrations from Supabase resources provisioned outside the repository.
+
+## 70. Security Audit Fixes — 2026-11-23
+
+Applied four security and cleanup fixes from the read-only security audit:
+
+1. **Contact API Error Handling** (`src/app/api/contact/route.js:110-118`): Removed raw `error.message`/`String(error)` from client responses. Server-side logs full error via `console.error`; returns generic client-safe message `"Failed to send enquiry. Please try again."`.
+
+2. **Contact API TLS Configuration** (`src/app/api/contact/route.js:51`): Removed `tls: { rejectUnauthorized: false }` in production. Now conditionally disables TLS verification only in non-production: `tls: process.env.NODE_ENV === "production" ? undefined : { rejectUnauthorized: false }`.
+
+3. **Admin Users Actions Deduplication** (`src/app/admin/users/actions.ts`): Removed duplicate local `createServiceClient()` function (lines 49-60). Now imports from `@/lib/supabase/service` (shared module at `src/lib/supabase/service.ts`).
+
+4. **Public Site Shell WhatsApp URL** (`src/components/layout/PublicSiteShell.jsx:57`): Replaced hardcoded WhatsApp URL with `siteConfig.contact.whatsappHref` from `src/config/site.config.json`. Added import for `siteConfig`.
+
+- **Validation**: `npx tsc --noEmit` passes (0 errors). `npm run build` succeeds (65 pages generated). `git diff --check` passes.

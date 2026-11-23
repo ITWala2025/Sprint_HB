@@ -1,8 +1,24 @@
 import LegalLayout from "@/components/legal/LegalLayout";
+import siteConfig from "@/config/site.config.json";
 
 export const metadata = {
-  title: { absolute: "Terms & Conditions | SPRINT" },
+  title: "Terms & Conditions",
   description: "Terms and Conditions for the SPRINT educational technology website.",
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    title: "Terms & Conditions | SPRINT",
+    description: "Terms and Conditions for the SPRINT educational technology website.",
+    url: "/terms",
+    type: "website",
+    siteName: "SPRINT Institutional Training Hub",
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary",
+    title: "Terms & Conditions | SPRINT",
+    description: "Terms and Conditions for the SPRINT educational technology website.",
+  },
+  robots: { index: true, follow: true },
 };
 
 const sections = [

@@ -6,6 +6,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient, type User } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export type ProvisionStaffUserInput = {
     fullName: string;
@@ -44,19 +45,6 @@ function roleHasPermission(permissions: unknown, moduleKey: string, capability: 
         !Array.isArray(modulePermissions) &&
         (modulePermissions as Record<string, unknown>)[capability] === true,
     );
-}
-
-function createServiceClient() {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !serviceKey) return null;
-
-    return createClient(url, serviceKey, {
-        auth: {
-            autoRefreshToken: false,
-            persistSession: false,
-        },
-    });
 }
 
 async function createSessionClient() {

@@ -5,6 +5,7 @@ import { bundles, getBundle, getCourse } from "@/data/courses";
 import { getProgram } from "@/data/programs";
 import { createPublicServerClient } from "@/lib/supabase/public-server";
 import { normalizeBundle } from "@/lib/course-utils";
+import siteConfig from "@/config/site.config.json";
 
 export const dynamic = "force-dynamic";
 export function generateStaticParams() { return [...bundles, ...getStaticPrograms()].map(({ slug }) => ({ slug })); }
@@ -57,35 +58,123 @@ async function findBundle(slug) {
   return fallback ? toFlagshipItem(fallback) : null;
 }
 
+/* Helper to build Course JSON-LD for bundles (using Course type for the bundle as a whole) */
+function buildBundleJsonLd(item) {
+  const imageUrl = item.image?.startsWith("http")
+    ? item.image
+    : item.image?.startsWith("/")
+      ? `${siteConfig.url}${item.image}`
+      : `${siteConfig.url}/images/courses/abstract-code.svg`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: item.title,
+    description: item.description,
+    provider: {
+      "@type": "EducationalOrganization",
+      name: siteConfig.legalName,
+      url: siteConfig.url,
+    },
+    category: item.category || "Career Package",
+    educationalLevel: item.level || "Curated pathway",
+    timeRequired: item.duration ? `PT${item.duration.replace(/\s+/g, "").toUpperCase()}` : undefined,
+    teaches: item.outcomes || item.highlights || [],
+    coursePrerequisites: item.prerequisites,
+    hasCourseInstance: {
+      "@type": "CourseInstance",
+      courseMode: item.trainingMode || item.delivery || "Hybrid",
+      location: {
+        "@type": "Place",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Hazaribagh",
+          addressRegion: "Jharkhand",
+          addressCountry: "IN",
+        },
+      },
+    },
+    image: imageUrl,
+    url: `${siteConfig.url}/bundles/${item.slug}`,
+  };
+}
+
+/* Helper to safely serialize JSON-LD for dangerouslySetInnerHTML */
+function ldJson(obj) {
+  return {
+    __html: JSON.stringify(obj).replace(/</g, "\\u003c"),
+  };
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const item = await findBundle(slug);
-  return item
-    ? {
-        title: item.title,
-        description: item.description,
-        alternates: { canonical: `/bundles/${item.slug}` },
-      }
-    : {};
+  if (!item) return { title: "Program Not Found", robots: { index: false } };
+
+  const imageUrl = item.image?.startsWith("http")
+    ? item.image
+    : item.image?.startsWith("/")
+      ? `${siteConfig.url}${item.image}`
+      : `${siteConfig.url}/images/courses/abstract-code.svg`;
+
+  return {
+    title: item.title,
+    description: item.description.slice(0, 155),
+    alternates: { canonical: `/bundles/${item.slug}` },
+    openGraph: {
+      title: item.title,
+      description: item.description.slice(0, 155),
+      url: `/bundles/${item.slug}`,
+      type: "website",
+      siteName: "SPRINT Institutional Training Hub",
+      locale: "en_IN",
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: item.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: item.title,
+      description: item.description.slice(0, 155),
+      images: [imageUrl],
+    },
+  };
 }
+
 export default async function BundlePage({ params }) {
   const { slug } = await params;
   const item = await findBundle(slug);
   if (!item) notFound();
-  if (item.kind === "bundle") {
-    const includedCourses = item.courses.map((courseSlug) => {
-      const course = getCourse(courseSlug);
-      if (!course) {
-        throw new Error(
-          `Bundle "${item.slug}" references unknown course "${courseSlug}".`,
-        );
-      }
-      return course;
-    });
 
-    return (
-      <BundleDetailPage item={item} includedCourses={includedCourses} />
-    );
-  }
-  return <DetailPage item={item} />;
+  return (
+    <>
+      {/* Structured data: Course schema for bundle */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={ldJson(buildBundleJsonLd(item))}
+      />
+      {item.kind === "bundle" ? (
+        (() => {
+          const includedCourses = item.courses.map((courseSlug) => {
+            const course = getCourse(courseSlug);
+            if (!course) {
+              throw new Error(
+                `Bundle "${item.slug}" references unknown course "${courseSlug}".`,
+              );
+            }
+            return course;
+          });
+
+          return <BundleDetailPage item={item} includedCourses={includedCourses} />;
+        })()
+      ) : (
+        <DetailPage item={item} />
+      )}
+    </>
+  );
 }
