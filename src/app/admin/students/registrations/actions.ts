@@ -2,7 +2,9 @@
 
 import "server-only";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { assertModuleAccess } from "@/app/admin/authorization";
+import { getAdminSession } from "@/app/admin/session";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getStudentOpsServiceClient } from "@/app/admin/students/action-auth";
 
@@ -114,8 +116,7 @@ async function getLinkedStudentAndProfileIds(
     };
 }
 
-export async function getStudentRegistrations(): Promise<RegistrationListItem[]> {
-    await assertModuleAccess("student_ops");
+async function loadStudentRegistrations(): Promise<RegistrationListItem[]> {
     try {
         const supabase = requireServiceClient();
         const [registrationsResult, activeStudentsResult] = await Promise.all([
@@ -188,6 +189,19 @@ export async function getStudentRegistrations(): Promise<RegistrationListItem[]>
     }
 }
 
+export async function getStudentRegistrations(): Promise<RegistrationListItem[]> {
+    await assertModuleAccess("student_ops");
+    return loadStudentRegistrations();
+}
+
+export async function getPendingCourseFreeRegistrationCount(): Promise<number> {
+    const session = await getAdminSession();
+    if (!session?.isActive) redirect("/admin");
+
+    const registrations = await loadStudentRegistrations();
+    return registrations.filter((registration) => registration.status === "pending").length;
+}
+
 export async function updateRegistration(
     id: string,
     input: RegistrationUpdateInput,
@@ -237,6 +251,7 @@ export async function updateRegistration(
     }
 
     revalidatePath("/admin/students/registrations");
+    revalidatePath("/admin/dashboard");
     return { success: true, message: "Registration details updated." };
 }
 
@@ -263,6 +278,7 @@ export async function deleteRegistration(id: string): Promise<RegistrationAction
     }
 
     revalidatePath("/admin/students/registrations");
+    revalidatePath("/admin/dashboard");
     return { success: true, message: "Student registration deleted." };
 }
 
@@ -321,6 +337,7 @@ async function setRegistrationStatus(
 
     revalidatePath("/admin/students/registrations");
     revalidatePath("/admin/students/list");
+    revalidatePath("/admin/dashboard");
     return {
         success: true,
         message: status === "active"

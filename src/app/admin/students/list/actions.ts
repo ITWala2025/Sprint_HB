@@ -300,6 +300,7 @@ async function setStudentStatus(
 
     revalidatePath("/admin/students/list");
     revalidatePath("/admin/students/registrations");
+    revalidatePath("/admin/dashboard");
     return {
         success: true,
         message: status === "active" ? "Student account activated." : "Student account deactivated.",

@@ -36,10 +36,10 @@ const directItems: NavigationItem[] = [
 const navigationGroups: NavigationGroup[] = [
     {
         label: "Admissions & Enquiries", icon: PhoneCall, items: [
-            { label: "Enquiries", href: "/admin/enquiries", icon: PhoneCall },
-            { label: "Std/Emp Enquiries", href: "/admin/admissions/students", icon: PhoneCall, badge: "14" },
-            { label: "Partner Company Enquiries", href: "/admin/admissions/companies", icon: Building2 },
-            { label: "Partner College Enquiries", href: "/admin/admissions/colleges", icon: School },
+            { label: "Student Enquiries", href: "/admin/enquiries/students", icon: PhoneCall },
+            { label: "Working Professional Enquiries", href: "/admin/enquiries/professionals", icon: Briefcase },
+            { label: "Partner Institute Enquiries", href: "/admin/enquiries/institutes", icon: School },
+            { label: "Partner Company Enquiries", href: "/admin/enquiries/companies", icon: Building2 },
         ]
     },
     {
@@ -126,6 +126,10 @@ function getPageLabel(pathname: string, isAdmin: boolean) {
         "/admin/dashboard": "Dashboard",
         "/admin/users": "Staff & User Directory",
         "/admin/enquiries": "Enquiries",
+        "/admin/enquiries/students": "Student Enquiries",
+        "/admin/enquiries/professionals": "Working Professional Enquiries",
+        "/admin/enquiries/institutes": "Partner Institute Enquiries",
+        "/admin/enquiries/companies": "Partner Company Enquiries",
         "/admin/roles": "Roles & Permissions",
         "/admin/courses": "Courses",
         "/admin/students/registrations": "Registrations",

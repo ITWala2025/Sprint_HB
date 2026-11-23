@@ -639,6 +639,7 @@ export async function verifyRegistration(
 
         revalidatePath("/admin/students/enrollments");
         revalidatePath("/admin/students/list");
+        revalidatePath("/admin/dashboard");
         revalidatePath("/student/dashboard");
         revalidatePath("/student/my-course");
         return { success: true, message: "Application rejected." };
@@ -744,6 +745,7 @@ export async function verifyRegistration(
                 revalidatePath("/admin/students/enrollments");
                 revalidatePath("/admin/students/registrations");
                 revalidatePath("/admin/students/list");
+                revalidatePath("/admin/dashboard");
                 return {
                     success: true,
                     message: `Enrollment approved, but admin notes could not be saved: ${notesError.message}`,
@@ -763,6 +765,7 @@ export async function verifyRegistration(
     revalidatePath("/admin/students/enrollments");
     revalidatePath("/admin/students/registrations");
     revalidatePath("/admin/students/list");
+    revalidatePath("/admin/dashboard");
     revalidatePath("/student/dashboard");
     revalidatePath("/student/my-course");
     return { success: true, message: "Enrollment approved and student course access updated." };
