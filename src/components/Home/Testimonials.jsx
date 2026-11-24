@@ -3,7 +3,7 @@ import TextTestimonials from "./TextTestimonials";
 
 export default function Testimonials() {
   return (
-    <section className="bg-[linear-gradient(145deg,var(--color-brand-blue-light)_0%,#f5faff_48%,#dcecff_100%)] py-6 md:py-8 lg:py-10">
+    <section className="bg-[linear-gradient(145deg,var(--color-brand-blue-light)_0%,#f5faff_48%,#dcecff_100%)] pt-6 pb-3 md:pt-8 md:pb-4 lg:pt-10 lg:pb-5">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-red-accessible">Learner stories</p>

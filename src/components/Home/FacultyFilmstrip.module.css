@@ -4,14 +4,17 @@
   margin-top: 2rem;
   color: #171612;
   touch-action: pan-y;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .stage {
   position: relative;
-  height: clamp(390px, 43vw, 480px);
+  height: auto;
+  min-height: max(400px, calc(var(--active-card-height, 360px) + 40px));
   min-width: 0;
-  overflow: hidden;
+  padding: 16px 0;
+  overflow: visible;
   isolation: isolate;
   background: radial-gradient(
     ellipse at 50% 48%,
@@ -24,9 +27,30 @@
 .deck {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  z-index: 1;
+  overflow: visible;
   pointer-events: none;
   transform-style: flat;
+}
+
+.edgeFadeLeft,
+.edgeFadeRight {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  width: 4rem;
+  pointer-events: none;
+}
+
+.edgeFadeLeft {
+  left: 0;
+  background: linear-gradient(to right, #ffffff, transparent);
+}
+
+.edgeFadeRight {
+  right: 0;
+  background: linear-gradient(to left, #ffffff, transparent);
 }
 
 .card {
@@ -35,12 +59,15 @@
   top: 50%;
   left: 50%;
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: clamp(300px, 30vw, 380px);
-  height: 310px;
-  padding: 20px;
+  height: auto;
+  min-height: 360px;
+  padding: 24px;
   overflow: hidden;
   border: 1px solid #e2e8f0;
-  border-radius: 1.25rem;
+  border-radius: 1.5rem;
   color: #0b1d3a;
   background: #ffffff;
   box-shadow: 0 20px 40px -15px rgba(11, 29, 58, calc(var(--focus) * 0.1));
@@ -69,6 +96,23 @@
   will-change: transform, opacity, filter;
 }
 
+.activeCard::before {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    #011f3e,
+    var(--color-brand-red, #f81529),
+    #011f3e
+  );
+  content: "";
+  pointer-events: none;
+}
+
 .sideCard {
   border-color: #e2e8f0;
   background-color: #f8fafc;
@@ -95,6 +139,7 @@
 
 .cardContent {
   display: flex;
+  flex: 1;
   width: 100%;
   min-width: 0;
   flex-direction: column;
@@ -114,26 +159,28 @@
   height: 48px;
   flex: 0 0 48px;
   place-items: center;
-  border: 1px solid #0b1d3a;
+  border: 1px solid #0a3666;
   border-radius: 50%;
   color: #ffffff;
-  background: #0b1d3a;
+  background: linear-gradient(135deg, #011f3e, #0a3666);
   font-size: 15px;
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 0 4px #f1f5f9, 0 4px 8px rgba(15, 23, 42, 0.12);
 }
 
 .experience {
   max-width: 58%;
   padding: 7px 10px;
-  border: 1px solid #fecdd3;
+  border: 1px solid rgba(254, 202, 202, 0.8);
   border-radius: 999px;
-  color: #be123c;
-  background: #fff1f2;
+  color: var(--color-brand-red, #f81529);
+  background: rgba(254, 242, 242, 0.9);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
 }
 
 .identity {
@@ -171,15 +218,13 @@
 }
 
 .role {
-  display: -webkit-box;
-  overflow: hidden;
+  display: block;
   margin-top: 12px;
   color: #0b1d3a;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.35;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .skills {
@@ -204,16 +249,15 @@
 }
 
 .bio {
-  display: -webkit-box;
-  overflow: hidden;
-  margin-top: auto;
-  padding-top: 10px;
+  display: block;
+  margin-top: 16px;
+  padding-top: 14px;
+  padding-bottom: 2px;
+  border-top: 1px solid #f1f5f9;
   color: #475569;
   font-size: 12px;
   font-weight: 400;
-  line-height: 1.45;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  line-height: 1.55;
 }
 
 .srOnly {
@@ -228,14 +272,9 @@
   border: 0;
 }
 
-@media (max-width: 650px) {
-  .stage {
-    height: 420px;
-  }
-
+@media (max-width: 639px) {
   .card {
     width: clamp(260px, 78vw, 310px);
-    height: 300px;
     --card-yaw: calc(var(--delta) * -5deg);
     transform:
       translate(-50%, -50%)
@@ -243,7 +282,35 @@
       rotateX(calc(var(--delta) * 2.1deg))
       rotateY(var(--rotate-y))
       rotateZ(calc(var(--delta) * -1.4deg))
-      scale(calc(0.54 + var(--side) * 0.15 + var(--focus) * 0.54));
+      scale(calc(0.54 + var(--side) * 0.15 + var(--focus) * 0.31));
+  }
+
+  .root {
+    margin-top: 12px;
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+
+  .stage {
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+
+  .sideCard {
+    visibility: hidden;
+    opacity: 0 !important;
+    pointer-events: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 28px;
+  }
+
+  .edgeFadeLeft,
+  .edgeFadeRight {
+    width: 7rem;
   }
 }
 

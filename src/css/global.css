@@ -253,17 +253,17 @@ a {
   height: 2rem;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 639px) {
   .whatsapp-float {
-    right: 1rem;
-    bottom: calc(env(safe-area-inset-bottom) + 1.5rem);
-    width: 3.5rem;
-    height: 3.5rem;
+    right: 0.75rem;
+    bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
+    width: 2.75rem;
+    height: 2.75rem;
   }
 
   .whatsapp-float svg {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
 

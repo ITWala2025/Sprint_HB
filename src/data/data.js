@@ -163,8 +163,8 @@ export const videoTestimonials = [
   {
     id: "v4",
     name: "Farhat Afreen",
-    role: "BTech Grad | ITWala",
-    youtubeVideoId: "J_wZKqwU-qE",
+    role: "MCA Grad | ITWala",
+    youtubeVideoId: "D1OxmYUmraA",
   },
 
   {
@@ -176,9 +176,9 @@ export const videoTestimonials = [
 
   {
     id: "v2",
-    name: "Sarvesh Chandra",
-    role: "BTech Graduate",
-    youtubeVideoId: "F6c2FhZhLiw",
+    name: "Khushboo",
+    role: "MCA Grad | MNC",
+    youtubeVideoId: "Kzn_d0hiZc0",
   },
 
   {
@@ -187,6 +187,36 @@ export const videoTestimonials = [
     role: "CS Student",
     youtubeVideoId: "E4cluoF1JTk",
   },
+
+  {
+    id: "v5",
+    name: "Tanisha Pandit",
+    role: "BTech Grad | IT Wala",
+    youtubeVideoId: "LtKTEZVM3RE",
+  },
+
+  {
+    id: "v6",
+    name: "Ujjwal Mandal",
+    role: "BTech Grad | TCS",
+    youtubeVideoId: "F_mV7ajRKWg",
+  },
+
+  {
+    id: "v7",
+    name: "Aditya",
+    role: "BTech Student",
+    youtubeVideoId: "DzSNc3ULnug",
+  },
+
+  {
+    id: "v9",
+    name: "Sarvesh Chandra",
+    role: "BTech Graduate",
+    youtubeVideoId: "F6c2FhZhLiw",
+  },
+
+  
 ];
 
 export const textTestimonials = [
@@ -221,14 +251,6 @@ export const textTestimonials = [
     photoUrl: "",
     quote:
       "SPRINT helped me improve my technical knowledge through practical assignments, experienced mentors, and a professional learning environment focused on growth.",
-  },
-  {
-    id: "t5",
-    name: "Tanisha Pandit",
-    role: "IT Grad | Intern - ITWala",
-    photoUrl: "",
-    quote:
-      "The trainers are helpful, and the structured sessions made programming easier to understand.",
   },
   {
     id: "t6",

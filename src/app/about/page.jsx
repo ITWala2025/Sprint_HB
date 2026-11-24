@@ -6,6 +6,7 @@ import siteConfig from "@/config/site.config.json";
 import StoryVisionMission from "@/components/sections/StoryVisionMission";
 import FacultyExperts from "@/components/sections/FacultyExperts";
 import FacultyFilmstrip from "@/components/Home/FacultyFilmstrip";
+import SmeVideo from "@/components/Home/SmeVideo";
 import ProfileCard from "@/components/cards/ProfileCard";
 import WhyChooseSprint from "@/components/sections/WhyChooseSprint";
 import ImpactWeCreate from "@/components/sections/ImpactWeCreate";
@@ -260,6 +261,8 @@ export default function AboutPage() {
           <FacultyFilmstrip profiles={about.faculty.profiles} />
         }
       />
+
+      <SmeVideo />
 
       <WhyChooseSprint />
 

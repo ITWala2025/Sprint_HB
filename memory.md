@@ -975,3 +975,12 @@ Applied four security and cleanup fixes from the read-only security audit:
 4. **Public Site Shell WhatsApp URL** (`src/components/layout/PublicSiteShell.jsx:57`): Replaced hardcoded WhatsApp URL with `siteConfig.contact.whatsappHref` from `src/config/site.config.json`. Added import for `siteConfig`.
 
 - **Validation**: `npx tsc --noEmit` passes (0 errors). `npm run build` succeeds (65 pages generated). `git diff --check` passes.
+
+## 71. Home, Faculty, and Video Showcase Polish — 2026-11-24–25
+
+- **Home campus tour** (`src/components/Home/BrandVideo.jsx`): Refined the section copy to the concise “NO LECTURES. PURE EXECUTION.” / “We Do Not Teach, We Empower.” messaging, tightened vertical spacing, and added interactive numbered pillar cards alongside a layered 16:9 YouTube facade for `dVzpvw9Z8Tw`, styled to align with the About-page showcase.
+- **About SME roundtable** (`src/components/Home/SmeVideo.jsx`, `src/app/about/page.jsx`): Added a centered click-to-play showcase for the combined SME roundtable film `dManUjTSO7o` (03:18), followed by a minimalist three-column typographic stat bar with no additional boxed cards.
+- **Faculty presentation** (`src/components/Home/FacultyFilmstrip.jsx`, `src/components/Home/FacultyFilmstrip.module.css`, `src/components/sections/FacultyExperts.jsx`): Replaced fixed card/stage heights and role/bio clamps with intrinsic text sizing and active-card height tracking via `ResizeObserver`. Added carousel edge fades and arrow/dot controls, improved active card styling, and adjusted the faculty header and section spacing. The Home subtitle punctuation is sourced from `src/data/about.json`.
+- **Learner stories and FAQ spacing** (`src/components/Home/VideoTestimonials.jsx`, `src/components/Home/Testimonials.jsx`, `src/components/Home/FAQSection.jsx`): Improved portrait video thumbnail crop and embed backdrop, and reduced the vertical gap between quote pagination and the FAQ heading.
+- **Mobile layout and floating actions** (`src/components/ai/AiAssistant.tsx`, `src/css/global.css`, `src/components/Home/FacultyFilmstrip.module.css`): At 393px, inactive faculty cards are hidden to protect the subtitle and the active card fits the stage. WhatsApp and AI assistant launchers are compact 44px controls, stacked at the bottom right with an 8px gap.
+- **Validation**: `npm run build` passed and responsive browser checks were performed at 393px and desktop width. The build continues to log the existing dynamic-rendering diagnostic for `/student/assignments`, which is rendered as a dynamic route.

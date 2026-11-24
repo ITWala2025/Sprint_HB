@@ -9,7 +9,7 @@ function VideoTestimonial({ testimonial, isActive, onVideoPlay }) {
 
   return (
 
-    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-[#011f3e] shadow-sm">
+    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-slate-900 shadow-sm">
 
       {isActive ? (
         <iframe
@@ -17,7 +17,7 @@ function VideoTestimonial({ testimonial, isActive, onVideoPlay }) {
           title={`${testimonial.name}'s testimonial`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
-          className="absolute inset-0 h-full w-full border-0"
+          className="absolute inset-0 h-full w-full border-0 bg-slate-900"
         />
       ) : (
         <>
@@ -25,7 +25,7 @@ function VideoTestimonial({ testimonial, isActive, onVideoPlay }) {
             src={`https://img.youtube.com/vi/${testimonial.youtubeVideoId}/hqdefault.jpg`}
             alt=""
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full scale-105 object-cover"
           />
 
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />

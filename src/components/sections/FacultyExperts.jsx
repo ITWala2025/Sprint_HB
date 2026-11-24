@@ -11,7 +11,7 @@ export default function FacultyExperts({
   return (
     <section id="faculty" className={sectionClassName}>
       <div className={contentClassName}>
-        <div className="mx-auto mb-10 max-w-2xl text-center">
+        <div className="relative z-20 mx-auto mb-6 max-w-2xl text-center sm:mb-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#E11D48]">
             {eyebrow ?? "INDUSTRY MENTORS"}
           </p>
@@ -20,7 +20,7 @@ export default function FacultyExperts({
           >
             {about.faculty.heading}
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-500 md:text-base">
+          <p className="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600 md:text-base">
             {about.faculty.subtitle}
           </p>
         </div>

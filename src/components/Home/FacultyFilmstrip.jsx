@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./FacultyFilmstrip.module.css";
 
 function wrappedDelta(index, activeIndex, count) {
@@ -21,8 +21,10 @@ const SWIPE_MAX_DURATION = 300;
  */
 export default function FacultyFilmstrip({ profiles }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [activeCardHeight, setActiveCardHeight] = useState(360);
   const profileCount = profiles.length;
   const containerRef = useRef(null);
+  const activeCardRef = useRef(null);
   const accumulatorRef = useRef(0);
   const cooldownRef = useRef(false);
 
@@ -110,6 +112,20 @@ export default function FacultyFilmstrip({ profiles }) {
       }
     };
   }, [profileCount]);
+
+  useEffect(() => {
+    const activeCard = activeCardRef.current;
+    if (!activeCard) return;
+
+    const updateHeight = () => setActiveCardHeight(activeCard.offsetHeight);
+    updateHeight();
+
+    if (typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(activeCard);
+    return () => observer.disconnect();
+  }, [activeIndex, profileCount]);
 
   const handlePointerDown = (event) => {
     // Only touch/pen drives swipes; mouse drags are intentionally ignored.
@@ -202,7 +218,11 @@ export default function FacultyFilmstrip({ profiles }) {
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
     >
-      <div className={styles.stage} aria-label="Select a faculty card to browse">
+      <div
+        className={styles.stage}
+        aria-label="Select a faculty card to browse"
+        style={{ "--active-card-height": `${activeCardHeight}px` }}
+      >
         <p className={styles.srOnly}>
           Select a faculty card or use the arrow keys to browse.
         </p>
@@ -239,7 +259,8 @@ export default function FacultyFilmstrip({ profiles }) {
               <button
                 key={profile.name}
                 type="button"
-                className={`${styles.card} ${index === activeIndex ? "" : styles.sideCard}`}
+                ref={index === activeIndex ? activeCardRef : undefined}
+                className={`${styles.card} ${index === activeIndex ? styles.activeCard : styles.sideCard}`}
                 style={cardStyle}
                 aria-label={`Select ${profile.name}, ${profile.designation}`}
                 aria-current={index === activeIndex ? "true" : "false"}
@@ -277,8 +298,60 @@ export default function FacultyFilmstrip({ profiles }) {
             );
           })}
         </div>
+        <span className={styles.edgeFadeLeft} aria-hidden="true" />
+        <span className={styles.edgeFadeRight} aria-hidden="true" />
       </div>
 
+      {profileCount > 0 && (
+        <nav
+          aria-label="Faculty carousel controls"
+          className="mt-6 flex items-center justify-center gap-3"
+        >
+          <button
+            type="button"
+            aria-label="Previous faculty mentor"
+            onClick={() => {
+              moveBy(-1);
+              pauseAndRestart();
+            }}
+            className="sprint-focus flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-navy shadow-xs transition-all hover:border-brand-navy hover:bg-brand-navy hover:text-white"
+          >
+            <ChevronLeft size={18} aria-hidden="true" />
+          </button>
+
+          <div className="flex items-center justify-center gap-2" aria-label="Select a faculty mentor">
+            {profiles.map((profile, index) => (
+              <button
+                key={profile.name}
+                type="button"
+                aria-label={`Show ${profile.name}`}
+                aria-current={index === activeIndex ? "true" : undefined}
+                onClick={() => {
+                  setActiveIndex(index);
+                  pauseAndRestart();
+                }}
+                className={`sprint-focus h-1.5 rounded-full transition-all motion-reduce:transition-none ${
+                  index === activeIndex
+                    ? "w-6 bg-brand-navy"
+                    : "w-1.5 bg-slate-300 hover:bg-slate-400"
+                }`}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            aria-label="Next faculty mentor"
+            onClick={() => {
+              moveBy(1);
+              pauseAndRestart();
+            }}
+            className="sprint-focus flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-brand-navy shadow-xs transition-all hover:border-brand-navy hover:bg-brand-navy hover:text-white"
+          >
+            <ChevronRight size={18} aria-hidden="true" />
+          </button>
+        </nav>
+      )}
     </div>
   );
 }

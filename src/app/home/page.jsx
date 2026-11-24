@@ -4,6 +4,7 @@ import FeaturedProgram from "@/components/Home/FeaturedProgram";
 import MoreCourses from "@/components/Home/MoreCourses";
 import FacultyExperts from "@/components/sections/FacultyExperts";
 import FacultyFilmstrip from "@/components/Home/FacultyFilmstrip";
+import BrandVideo from "@/components/Home/BrandVideo";
 import Testimonials from "@/components/Home/Testimonials";
 import FAQSection from "@/components/Home/FAQSection";
 import ContactCTA from "@/components/Home/ContactCTA";
@@ -118,11 +119,12 @@ export default function HomePage() {
         <FacultyExperts
           accessibleBrandRed
           sectionClassName="sprint-section bg-brand-white"
-          contentClassName="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:py-10"
+          contentClassName="mx-auto max-w-[1200px] px-4 pt-6 pb-4 sm:px-6 md:pt-8 md:pb-6 lg:pt-10 lg:pb-6"
           profilesContent={<FacultyFilmstrip profiles={about.faculty.profiles} />}
         />
         {/* <WhyChooseSprint />  */}
 
+        <BrandVideo />
         <Testimonials />
         <FAQSection />
         <ContactCTA />

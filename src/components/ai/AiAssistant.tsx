@@ -334,7 +334,7 @@ export default function AiAssistant() {
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.94 }}
         className={cx(
-          "fixed bottom-[calc(env(safe-area-inset-bottom)+6rem)] right-4 z-[60] grid size-14 place-items-center rounded-full bg-[#011f3e] text-white shadow-[0_12px_32px_rgba(1,31,62,0.3)] transition-colors hover:bg-[#062c52] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f81529] sm:bottom-[8.5rem] sm:right-8 sm:size-16",
+          "fixed bottom-[calc(env(safe-area-inset-bottom)+4rem)] right-3 z-[60] grid size-11 place-items-center rounded-full bg-[#011f3e] text-white shadow-[0_12px_32px_rgba(1,31,62,0.3)] transition-colors hover:bg-[#062c52] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f81529] sm:bottom-[8.5rem] sm:right-8 sm:size-16",
           isOpen && "pointer-events-none opacity-0",
         )}
       >
@@ -345,7 +345,7 @@ export default function AiAssistant() {
           alt=""
           width={48}
           height={48}
-          className="relative size-12 object-contain"
+          className="relative size-10 object-contain"
         />
       </motion.button>
 
