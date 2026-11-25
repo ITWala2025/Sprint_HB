@@ -443,6 +443,16 @@ function getDirectChatbotReply(message) {
     };
   }
 
+  const asksAboutInternship = /\bintern(?:s|ships?)?\b/.test(normalizedMessage);
+  if (asksAboutInternship) {
+    return {
+      reply:
+        "SPRINT RISE includes a 90-hour internship stage as part of its six-month program. For current internship or career-support details, the admissions team can guide you.",
+      action: { label: "Explore SPRINT RISE", href: "/programs/sprint-rise" },
+      suggestions: ["Contact admissions", "Explore SPRINT RISE"],
+    };
+  }
+
   const asksAboutProgram =
     /\b(program|programs|programme|programmes|pathway|sprint rise|career accelerator|internship)\b/.test(
       normalizedMessage,

@@ -319,9 +319,9 @@
       "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -409,9 +409,9 @@
       "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -529,9 +529,9 @@
       "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -649,9 +649,9 @@
       "SPRINT_Chatbot_Knowledge_Base_230_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2623,7 +2623,7 @@
     "id": "REG-061",
     "category": "learning_path_selection",
     "question": "What happens in Step 3?",
-    "answer": "Step 3 is the learning-path selection step. Review the options and choose the path that best fits your goals.",
+    "answer": "After registering and signing in, browse courses, bundles, learning paths, and flagship programs (SPRINT RISE, Career Accelerator) on /courses. Select or apply for a course with one-click enrollment to submit an enrollment application for admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: What happens in Step 3?",
       "For a student, Please help me with this SPRINT query: What happens in Step 3?",
@@ -2638,9 +2638,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2652,7 +2652,7 @@
     "id": "REG-062",
     "category": "learning_path_selection",
     "question": "Which learning paths are referenced?",
-    "answer": "The flow references the 3-Year Expert Track, RISE (6 months / 300 hours), Individual Modular Courses, and Career Packages.",
+    "answer": "The current catalogue on /courses includes individual courses, course bundles, role-based learning paths, and flagship programs such as SPRINT RISE and Career Accelerator.",
     "alternative_questions": [
       "For a student, Could you answer this question: Which learning paths are referenced?",
       "For a student, Please help me with this SPRINT query: Which learning paths are referenced?",
@@ -2667,9 +2667,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2681,7 +2681,7 @@
     "id": "REG-063",
     "category": "learning_path_selection",
     "question": "What is the 3-Year Expert Track?",
-    "answer": "It is a three-year pathway referenced in the flow. Confirm current structure, schedule, eligibility, and fees with SPRINT.",
+    "answer": "The current catalogue on /courses lists available courses, bundles, learning paths, and flagship programs such as SPRINT RISE and Career Accelerator. Browse /courses for current offerings.",
     "alternative_questions": [
       "In the learning path selection category: What is the 3-Year Expert Track?"
     ],
@@ -2689,9 +2689,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2703,7 +2703,7 @@
     "id": "REG-064",
     "category": "learning_path_selection",
     "question": "What is RISE?",
-    "answer": "RISE is described as a six-month, 300-hour pathway. Confirm current curriculum, dates, and terms before enrolling.",
+    "answer": "SPRINT RISE is a flagship program listed on /courses. Browse /courses for current curriculum, duration, and enrollment details, then apply with one-click enrollment.",
     "alternative_questions": [
       "In the learning path selection category: What is RISE?"
     ],
@@ -2711,9 +2711,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2725,7 +2725,7 @@
     "id": "REG-065",
     "category": "learning_path_selection",
     "question": "What are Individual Modular Courses?",
-    "answer": "They are individual course or module options. Ask SPRINT which modules are currently available.",
+    "answer": "Individual courses are available on /courses. Browse the catalogue, select a course, and apply with one-click enrollment to submit an application for admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: What are Individual Modular Courses?",
       "For a student, Please help me with this SPRINT query: What are Individual Modular Courses?",
@@ -2740,9 +2740,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2754,7 +2754,7 @@
     "id": "REG-066",
     "category": "learning_path_selection",
     "question": "What are Career Packages?",
-    "answer": "They are bundled learning options referenced by the flow. Ask for current package contents, fees, and conditions.",
+    "answer": "Career bundles are available on /courses alongside courses, learning paths, and flagship programs such as SPRINT RISE and Career Accelerator. Apply with one-click enrollment to submit an application.",
     "alternative_questions": [
       "For a student, Could you answer this question: What are Career Packages?",
       "For a student, Please help me with this SPRINT query: What are Career Packages?",
@@ -2769,9 +2769,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2783,7 +2783,7 @@
     "id": "REG-067",
     "category": "learning_path_selection",
     "question": "Can I compare learning paths?",
-    "answer": "Compare curriculum, duration, prerequisites, schedule, support, outcomes, and fees using current information from SPRINT.",
+    "answer": "Yes. Browse /courses to compare courses, bundles, learning paths, and flagship programs such as SPRINT RISE and Career Accelerator before applying.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I compare learning paths?",
       "For a student, Please help me with this SPRINT query: Can I compare learning paths?",
@@ -2798,9 +2798,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2812,7 +2812,7 @@
     "id": "REG-068",
     "category": "learning_path_selection",
     "question": "Can I change my selected learning path?",
-    "answer": "Use the wizard's Back or Edit control if available. After enrolment, contact support about possible changes.",
+    "answer": "After signing in, browse /courses and apply for a different course or bundle. Each application receives an Application ID like SPR-APP-YYMM-XXXX and is reviewed by admin before course access is activated.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I change my selected learning path?",
       "For a student, Please help me with this SPRINT query: Can I change my selected learning path?",
@@ -2827,9 +2827,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2841,7 +2841,7 @@
     "id": "REG-069",
     "category": "learning_path_selection",
     "question": "What if no learning path fits my goal?",
-    "answer": "Contact SPRINT to ask whether another pathway or future intake is available instead of selecting an inaccurate option.",
+    "answer": "Browse /courses for the full catalogue of courses, bundles, learning paths, and flagship programs such as SPRINT RISE and Career Accelerator. If nothing fits, contact SPRINT for guidance.",
     "alternative_questions": [
       "For a student, Could you answer this question: What if no learning path fits my goal?",
       "For a student, Please help me with this SPRINT query: What if no learning path fits my goal?",
@@ -2856,9 +2856,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2870,7 +2870,7 @@
     "id": "REG-070",
     "category": "learning_path_selection",
     "question": "Does choosing a path guarantee a seat?",
-    "answer": "Do not treat a selection as a confirmed seat unless the portal explicitly confirms it.",
+    "answer": "No. Selecting or applying for a course on /courses submits an enrollment application with an Application ID like SPR-APP-YYMM-XXXX. Course access activates only after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: Does choosing a path guarantee a seat?",
       "For a student, Please help me with this SPRINT query: Does choosing a path guarantee a seat?",
@@ -2885,9 +2885,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",

@@ -63,9 +63,9 @@ const CONTEXTUAL_SUGGESTIONS: {
   {
     keywords: ["fee", "cost", "scholarship", "pricing", "price"],
     suggestions: [
-      { label: "Scholarship Details", query: "What scholarship options are available?" },
+      { label: "Contact Admissions", query: "Contact admissions" },
       { label: "Payment Plans", query: "What payment plans are available?" },
-      { label: "Fee Structure", href: "/contact" },
+      { label: "Internship Opportunities", query: "Does SPRINT provide internships?" },
     ],
   },
   {

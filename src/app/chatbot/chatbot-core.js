@@ -70,7 +70,7 @@ export function getDemoChatbotReply(message, pathname = "/") {
     };
   }
 
-  if (/\b(intern|placement|job|employment)\b/.test(text)) {
+  if (/\b(intern(?:s|ships?)?|placement|job|employment)\b/.test(text)) {
     return {
       reply:
         "SPRINT RISE includes a 90-hour internship stage as part of its six-month program. For current internship or career-support details, the admissions team can guide you.",
@@ -92,6 +92,15 @@ export function getDemoChatbotReply(message, pathname = "/") {
     return {
       reply: `You can reach SPRINT at ${DEMO_CONTACT.phone} or ${DEMO_CONTACT.email}. The centre is at ${DEMO_CONTACT.address}.`,
       action: createAction("Open contact page", "/contact"),
+    };
+  }
+
+  if (/\b(timing|timings|hours|office time|working days|visit|visiting|open today|open on)\b/i.test(text)) {
+    return {
+      reply:
+        "Office hours: Monday–Thursday & Saturday, 10:00 AM – 4:00 PM (Friday WFH, Sunday closed). Office address: Plot No. 283, Ward No. 12, near Dhobia Talab, Ompuri, Matwari, Hazaribagh, Jharkhand. Please confirm before visiting via the Contact page or admissions team.",
+      action: createAction("Contact page", "/contact"),
+      suggestions: toSuggestions(["Contact page", "Explore courses"]),
     };
   }
 

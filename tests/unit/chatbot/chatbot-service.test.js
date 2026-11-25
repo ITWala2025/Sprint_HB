@@ -197,13 +197,73 @@ describe("chatbot service", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("does not repeat the conflicting office schedule from the master FAQ", async () => {
+  it("returns verified office schedule for office-hours queries", async () => {
     vi.stubEnv("OLLAMA_URL", "");
     vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
 
     const result = await getLocalChatbotReply({ message: "What days does SPRINT work?" });
 
-    expect(result.reply).toMatch(/don’t have verified details/i);
+    expect(result.reply).toContain("10:00 AM to 4:00 PM");
+    expect(result.reply).toContain("Friday");
+    expect(result.reply).toContain("Sunday");
+    expect(result.action).toBeNull();
+  });
+
+  it("returns internship policy for internship provide by sprint", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: "internship provide by sprint",
+    });
+
+    expect(result.reply).toContain("internship");
+    expect(result.reply).not.toContain("SPRINT RISE is a six-month program");
+  });
+
+  it("returns office hours for sprint timing", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({ message: "sprint timing" });
+
+    expect(result.reply).toContain("10:00 AM");
+    expect(result.reply).toContain("4:00 PM");
+    expect(result.reply).not.toContain("SPRINT is a training hub");
+  });
+
+  it("returns office hours / visit guidance for when we can visit sprint", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: "when we can visit sprint",
+    });
+
+    expect(result.reply).toContain("10:00 AM");
+    expect(result.reply).toContain("Friday");
+    expect(result.reply).not.toContain("SPRINT is a training hub");
+  });
+
+  it("returns office hours for office time", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({ message: "office time" });
+
+    expect(result.reply).toContain("10:00 AM");
+    expect(result.reply).toContain("4:00 PM");
+  });
+
+  it("returns admissions contact handoff for scholarship available in sprint", async () => {
+    vi.stubEnv("OLLAMA_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_OLLAMA_URL", "");
+
+    const result = await getLocalChatbotReply({
+      message: "scholarship available in sprint",
+    });
+
+    expect(result.reply).toContain("contact");
     expect(result.action.href).toBe("/contact");
   });
 

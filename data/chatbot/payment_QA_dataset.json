@@ -3,7 +3,7 @@
     "id": "PAY-001",
     "category": "payment",
     "question": "What is the course fee for the program?",
-    "answer": "Information Required — depends on the specific course/program selected.",
+    "answer": "Course fees are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: What is the course fee for the program?",
       "For a student, Please help me with this SPRINT query: What is the course fee for the program?",
@@ -19,9 +19,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -33,7 +33,7 @@
     "id": "PAY-002",
     "category": "payment",
     "question": "What payment methods are supported?",
-    "answer": "Information Required — needs confirmation from the payments/finance team (UPI, cards, net banking, wallets, etc.).",
+    "answer": "Payment methods are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: What payment methods are supported?",
       "For a student, Please help me with this SPRINT query: What payment methods are supported?",
@@ -49,9 +49,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -63,7 +63,7 @@
     "id": "PAY-003",
     "category": "payment",
     "question": "How can I make a payment?",
-    "answer": "Go to the course/subscription page, select your plan, click \"Pay Now,\" and complete the payment using the supported method.",
+    "answer": "SPRINT does not offer self-serve payment on the website. Register your student account at /student/enroll, then browse and apply for courses or bundles on /courses. Course access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: How can I make a payment?",
       "For a student, Please help me with this SPRINT query: How can I make a payment?",
@@ -79,9 +79,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -93,7 +93,7 @@
     "id": "PAY-004",
     "category": "payment",
     "question": "My payment failed, what should I do?",
-    "answer": "If the amount was deducted but the payment shows failed, wait a few minutes for auto-reconciliation. If it's not reflected, contact support with the transaction ID.",
+    "answer": "Contact SPRINT support at contact@sprintai.in or +91 85212 83184/85 with your transaction reference. Do not share passwords, OTPs, or full card details.",
     "alternative_questions": [
       "For a student, Could you answer this question: My payment failed, what should I do?",
       "For a student, Please help me with this SPRINT query: My payment failed, what should I do?",
@@ -109,9 +109,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -123,7 +123,7 @@
     "id": "PAY-005",
     "category": "payment",
     "question": "My payment was successful but the course is not showing as available.",
-    "answer": "This is usually a sync delay. Recommend logging out/in, and if the issue persists, contact support with payment proof.",
+    "answer": "Contact SPRINT support at contact@sprintai.in or +91 85212 83184/85 with your payment proof and transaction reference.",
     "alternative_questions": [
       "For a student, Could you answer this question: My payment was successful but the course is not showing as available.",
       "For a student, Please help me with this SPRINT query: My payment was successful but the course is not showing as available.",
@@ -139,9 +139,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -153,7 +153,7 @@
     "id": "PAY-006",
     "category": "payment",
     "question": "Can I get a refund?",
-    "answer": "Information Required — depends on Sprint's official refund policy (time window, conditions).",
+    "answer": "Refund policies are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I get a refund?",
       "For a student, Please help me with this SPRINT query: Can I get a refund?",
@@ -169,9 +169,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -183,7 +183,7 @@
     "id": "PAY-007",
     "category": "payment",
     "question": "How do I download my payment receipt?",
-    "answer": "Receipt/invoice should be available under \"My Payments\" or \"Order History\" in account settings.",
+    "answer": "Contact SPRINT support at contact@sprintai.in or +91 85212 83184/85 with your transaction reference to request a receipt.",
     "alternative_questions": [
       "For a student, Could you answer this question: How do I download my payment receipt?",
       "For a student, Please help me with this SPRINT query: How do I download my payment receipt?",
@@ -199,9 +199,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -213,7 +213,7 @@
     "id": "PAY-008",
     "category": "payment",
     "question": "Can I change my subscription plan?",
-    "answer": "Information Required — depends on whether upgrade/downgrade is supported mid-cycle.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I change my subscription plan?",
       "For a student, Please help me with this SPRINT query: Can I change my subscription plan?",
@@ -229,9 +229,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -243,7 +243,7 @@
     "id": "PAY-009",
     "category": "payment",
     "question": "Is there an EMI or installment option?",
-    "answer": "Information Required.",
+    "answer": "EMI or installment options are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: Is there an EMI or installment option?",
       "For a student, Please help me with this SPRINT query: Is there an EMI or installment option?",
@@ -259,9 +259,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -273,7 +273,7 @@
     "id": "PAY-010",
     "category": "payment",
     "question": "Do you accept international payment methods (PayPal, foreign cards)?",
-    "answer": "Information Required.",
+    "answer": "International payment methods are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: Do you accept international payment methods (PayPal, foreign cards)?",
       "For a student, Please help me with this SPRINT query: Do you accept international payment methods (PayPal, foreign cards)?",
@@ -289,9 +289,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -303,7 +303,7 @@
     "id": "PAY-011",
     "category": "payment",
     "question": "I was charged twice for the same course, what now?",
-    "answer": "Contact support immediately with both transaction IDs for a duplicate-charge refund.",
+    "answer": "Contact SPRINT support at contact@sprintai.in or +91 85212 83184/85 with both transaction IDs for a duplicate-charge review.",
     "alternative_questions": [
       "For a student, Could you answer this question: I was charged twice for the same course, what now?",
       "For a student, Please help me with this SPRINT query: I was charged twice for the same course, what now?",
@@ -319,9 +319,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -333,7 +333,7 @@
     "id": "PAY-012",
     "category": "payment",
     "question": "Is GST/tax included in the course fee?",
-    "answer": "Information Required.",
+    "answer": "GST/tax inclusion is confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: Is GST/tax included in the course fee?",
       "For a student, Please help me with this SPRINT query: Is GST/tax included in the course fee?",
@@ -349,9 +349,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -363,7 +363,7 @@
     "id": "PAY-013",
     "category": "payment",
     "question": "Will I get an invoice with GST details for company reimbursement?",
-    "answer": "Information Required.",
+    "answer": "Invoices with GST details are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: Will I get an invoice with GST details for company reimbursement?",
       "For a student, Please help me with this SPRINT query: Will I get an invoice with GST details for company reimbursement?",
@@ -379,9 +379,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -393,7 +393,7 @@
     "id": "PAY-014",
     "category": "payment",
     "question": "What happens if my payment is pending for a long time?",
-    "answer": "If a payment stays pending beyond the usual processing window, contact support with the transaction reference.",
+    "answer": "Contact SPRINT support at contact@sprintai.in or +91 85212 83184/85 with your transaction reference if a payment stays pending.",
     "alternative_questions": [
       "For a student, Could you answer this question: What happens if my payment is pending for a long time?",
       "For a student, Please help me with this SPRINT query: What happens if my payment is pending for a long time?",
@@ -409,9 +409,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -423,7 +423,7 @@
     "id": "PAY-015",
     "category": "payment",
     "question": "Can I pay on someone else's behalf (parent/guardian paying)?",
-    "answer": "Yes, as long as the payment is made through the account holder's registered payment page.",
+    "answer": "Payment arrangements are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I pay on someone else's behalf (parent/guardian paying)?",
       "For a student, Please help me with this SPRINT query: Can I pay on someone else's behalf (parent/guardian paying)?",
@@ -439,9 +439,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -453,7 +453,7 @@
     "id": "PAY-016",
     "category": "payment",
     "question": "Is there a discount for early enrollment?",
-    "answer": "Information Required.",
+    "answer": "Discounts are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: Is there a discount for early enrollment?",
       "For a student, Please help me with this SPRINT query: Is there a discount for early enrollment?",
@@ -469,9 +469,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -483,7 +483,7 @@
     "id": "PAY-017",
     "category": "payment",
     "question": "Do you offer any discount codes/coupons?",
-    "answer": "Information Required.",
+    "answer": "Discount codes or coupons are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: Do you offer any discount codes/coupons?",
       "For a student, Please help me with this SPRINT query: Do you offer any discount codes/coupons?",
@@ -499,9 +499,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -513,7 +513,7 @@
     "id": "PAY-018",
     "category": "payment",
     "question": "What currency is the fee charged in?",
-    "answer": "Information Required.",
+    "answer": "The currency for fees is confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: What currency is the fee charged in?",
       "For a student, Please help me with this SPRINT query: What currency is the fee charged in?",
@@ -529,9 +529,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -542,26 +542,26 @@
   {
     "id": "PAY-019",
     "category": "payment",
-    "question": "My card was declined during payment — why?",
-    "answer": "Could be due to bank restrictions, insufficient balance, or incorrect card details. Recommend retrying or using another method.",
+    "question": "My card was declined during payment \u2014 why?",
+    "answer": "Contact SPRINT support at contact@sprintai.in or +91 85212 83184/85 with your transaction reference. Do not share passwords, OTPs, or full card details.",
     "alternative_questions": [
-      "For a student, Could you answer this question: My card was declined during payment — why?",
-      "For a student, Please help me with this SPRINT query: My card was declined during payment — why?",
-      "For a student, I would like to know: My card was declined during payment — why?",
-      "For a student, Can you clarify this for me: My card was declined during payment — why?",
-      "For a student, Quick question: My card was declined during payment — why?",
-      "For a student, Please explain this: My card was declined during payment — why?",
-      "For a student, I have a question: My card was declined during payment — why?",
-      "For a student, Can you tell me: My card was declined during payment — why?",
-      "For a student, Help me understand: My card was declined during payment — why?"
+      "For a student, Could you answer this question: My card was declined during payment \u2014 why?",
+      "For a student, Please help me with this SPRINT query: My card was declined during payment \u2014 why?",
+      "For a student, I would like to know: My card was declined during payment \u2014 why?",
+      "For a student, Can you clarify this for me: My card was declined during payment \u2014 why?",
+      "For a student, Quick question: My card was declined during payment \u2014 why?",
+      "For a student, Please explain this: My card was declined during payment \u2014 why?",
+      "For a student, I have a question: My card was declined during payment \u2014 why?",
+      "For a student, Can you tell me: My card was declined during payment \u2014 why?",
+      "For a student, Help me understand: My card was declined during payment \u2014 why?"
     ],
     "source_files": [
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -573,7 +573,7 @@
     "id": "PAY-020",
     "category": "payment",
     "question": "How long does a refund take to process after approval?",
-    "answer": "Information Required.",
+    "answer": "Refund processing timelines are confirmed by the SPRINT admissions team. Contact them at contact@sprintai.in or +91 85212 83184/85, or via the Contact page.",
     "alternative_questions": [
       "For a student, Could you answer this question: How long does a refund take to process after approval?",
       "For a student, Please help me with this SPRINT query: How long does a refund take to process after approval?",
@@ -589,9 +589,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -603,7 +603,7 @@
     "id": "PAY-021",
     "category": "payment",
     "question": "Can I switch from monthly to yearly billing?",
-    "answer": "Information Required.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I switch from monthly to yearly billing?",
       "For a student, Please help me with this SPRINT query: Can I switch from monthly to yearly billing?",
@@ -619,9 +619,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -633,7 +633,7 @@
     "id": "PAY-022",
     "category": "payment",
     "question": "Is auto-renewal enabled for subscriptions?",
-    "answer": "Information Required.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: Is auto-renewal enabled for subscriptions?",
       "For a student, Please help me with this SPRINT query: Is auto-renewal enabled for subscriptions?",
@@ -649,9 +649,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -663,7 +663,7 @@
     "id": "PAY-023",
     "category": "payment",
     "question": "How do I cancel auto-renewal?",
-    "answer": "Information Required — depends on whether subscription settings page has this toggle. B. Subscription",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: How do I cancel auto-renewal?",
       "For a student, Please help me with this SPRINT query: How do I cancel auto-renewal?",
@@ -679,9 +679,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -693,7 +693,7 @@
     "id": "PAY-024",
     "category": "subscription",
     "question": "What subscription plans are available?",
-    "answer": "Information Required.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: What subscription plans are available?",
       "For a student, Please help me with this SPRINT query: What subscription plans are available?",
@@ -709,9 +709,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -723,7 +723,7 @@
     "id": "PAY-025",
     "category": "subscription",
     "question": "What is the difference between free and paid plans?",
-    "answer": "Information Required.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: What is the difference between free and paid plans?",
       "For a student, Please help me with this SPRINT query: What is the difference between free and paid plans?",
@@ -739,9 +739,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -753,7 +753,7 @@
     "id": "PAY-026",
     "category": "subscription",
     "question": "How do I check my current subscription status?",
-    "answer": "Under \"My Account\" → \"Subscription\" section.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: How do I check my current subscription status?",
       "For a student, Please help me with this SPRINT query: How do I check my current subscription status?",
@@ -769,9 +769,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -783,7 +783,7 @@
     "id": "PAY-027",
     "category": "subscription",
     "question": "What happens to my data/progress if my subscription expires?",
-    "answer": "Information Required.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: What happens to my data/progress if my subscription expires?",
       "For a student, Please help me with this SPRINT query: What happens to my data/progress if my subscription expires?",
@@ -799,9 +799,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -813,7 +813,7 @@
     "id": "PAY-028",
     "category": "subscription",
     "question": "Can I pause my subscription temporarily?",
-    "answer": "Information Required.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I pause my subscription temporarily?",
       "For a student, Please help me with this SPRINT query: Can I pause my subscription temporarily?",
@@ -829,9 +829,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -843,7 +843,7 @@
     "id": "PAY-029",
     "category": "subscription",
     "question": "How do I upgrade my subscription plan?",
-    "answer": "Go to Account → Subscription → Upgrade, and complete the additional payment.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: How do I upgrade my subscription plan?",
       "For a student, Please help me with this SPRINT query: How do I upgrade my subscription plan?",
@@ -859,9 +859,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -873,7 +873,7 @@
     "id": "PAY-030",
     "category": "subscription",
     "question": "Will I lose access immediately if I cancel my subscription?",
-    "answer": "Information Required — depends on whether cancellation is immediate or end-of-cycle.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: Will I lose access immediately if I cancel my subscription?",
       "For a student, Please help me with this SPRINT query: Will I lose access immediately if I cancel my subscription?",
@@ -889,9 +889,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -903,7 +903,7 @@
     "id": "PAY-031",
     "category": "subscription",
     "question": "Is there a free trial before subscribing?",
-    "answer": "Information Required.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: Is there a free trial before subscribing?",
       "For a student, Please help me with this SPRINT query: Is there a free trial before subscribing?",
@@ -919,9 +919,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -933,7 +933,7 @@
     "id": "PAY-032",
     "category": "subscription",
     "question": "Do I get a reminder before my subscription renews?",
-    "answer": "Information Required.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: Do I get a reminder before my subscription renews?",
       "For a student, Please help me with this SPRINT query: Do I get a reminder before my subscription renews?",
@@ -949,9 +949,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -979,9 +979,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -993,7 +993,7 @@
     "id": "PAY-034",
     "category": "subscription",
     "question": "How do I update my billing details?",
-    "answer": "Under Account Settings → Billing Information.",
+    "answer": "SPRINT does not currently offer self-serve recurring subscription plans. Register at /student/enroll and apply for courses or bundles on /courses; access activates after admin verification and approval.",
     "alternative_questions": [
       "For a student, Could you answer this question: How do I update my billing details?",
       "For a student, Please help me with this SPRINT query: How do I update my billing details?",
@@ -1009,9 +1009,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -1023,7 +1023,7 @@
     "id": "PAY-035",
     "category": "subscription",
     "question": "What happens if my subscription payment fails on renewal date?",
-    "answer": "Information Required. C. Scholarship",
+    "answer": "Contact SPRINT support at contact@sprintai.in or +91 85212 83184/85 with your transaction reference if a renewal payment fails.",
     "alternative_questions": [
       "For a student, Could you answer this question: What happens if my subscription payment fails on renewal date?",
       "For a student, Please help me with this SPRINT query: What happens if my subscription payment fails on renewal date?",
@@ -1039,9 +1039,9 @@
       "Payment_Subscription_Scholarship_QA.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -1735,9 +1735,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",

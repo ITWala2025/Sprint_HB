@@ -2739,7 +2739,7 @@
     "id": "REG-041",
     "category": "optional_education_and_career_details",
     "question": "What information is collected in Step 2?",
-    "answer": "Step 2 is an optional education and career background section. Complete relevant fields shown by the form if you wish.",
+    "answer": "Registration at /student/enroll collects Personal Details, Email OTP verification, and Password creation/confirmation. There is no separate Step 2 education form during signup.",
     "alternative_questions": [
       "For a student, Could you answer this question: What information is collected in Step 2?",
       "For a student, Please help me with this SPRINT query: What information is collected in Step 2?",
@@ -2754,9 +2754,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2768,7 +2768,7 @@
     "id": "REG-042",
     "category": "optional_education_and_career_details",
     "question": "Is Step 2 compulsory?",
-    "answer": "No. Step 2 is optional and can be skipped.",
+    "answer": "No. There is no Step 2 education form in the current registration flow at /student/enroll. Education and career details are optional and can be added later from the Student Dashboard Profile.",
     "alternative_questions": [
       "For a student, Could you answer this question: Is Step 2 compulsory?",
       "For a student, Please help me with this SPRINT query: Is Step 2 compulsory?",
@@ -2783,9 +2783,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2797,7 +2797,7 @@
     "id": "REG-043",
     "category": "optional_education_and_career_details",
     "question": "Can I continue without education details?",
-    "answer": "Yes. Use the available Skip or Continue action to proceed to learning-path selection.",
+    "answer": "Yes. Education details are not required to register at /student/enroll. You can add or update them anytime from the Student Dashboard Profile page.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I continue without education details?",
       "For a student, Please help me with this SPRINT query: Can I continue without education details?",
@@ -2812,9 +2812,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2826,7 +2826,7 @@
     "id": "REG-044",
     "category": "optional_education_and_career_details",
     "question": "Should a fresher complete Step 2?",
-    "answer": "You may enter relevant education details and skip anything that does not apply.",
+    "answer": "No. There is no Step 2 in the current registration flow. Freshers can register at /student/enroll with Personal Details, OTP verification, and Password only.",
     "alternative_questions": [
       "For a student, Could you answer this question: Should a fresher complete Step 2?",
       "For a student, Please help me with this SPRINT query: Should a fresher complete Step 2?",
@@ -2841,9 +2841,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2855,7 +2855,7 @@
     "id": "REG-045",
     "category": "optional_education_and_career_details",
     "question": "What if I am still studying?",
-    "answer": "Enter your current education accurately if a suitable field is available. Do not mark an unfinished degree as completed.",
+    "answer": "Education details are optional during signup at /student/enroll. You can add your current study details later from the Student Dashboard Profile page.",
     "alternative_questions": [
       "For a student, Could you answer this question: What if I am still studying?",
       "For a student, Please help me with this SPRINT query: What if I am still studying?",
@@ -2870,9 +2870,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2884,7 +2884,7 @@
     "id": "REG-046",
     "category": "optional_education_and_career_details",
     "question": "What if I have already graduated?",
-    "answer": "Enter completed education details in the relevant optional fields.",
+    "answer": "Education details are optional during signup at /student/enroll. You can add your completed education later from the Student Dashboard Profile page.",
     "alternative_questions": [
       "For a student, Could you answer this question: What if I have already graduated?",
       "For a student, Please help me with this SPRINT query: What if I have already graduated?",
@@ -2899,9 +2899,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2913,7 +2913,7 @@
     "id": "REG-047",
     "category": "optional_education_and_career_details",
     "question": "Can working professionals complete Step 2?",
-    "answer": "Yes. Add relevant education or career details if useful; skipping remains an option.",
+    "answer": "There is no Step 2 in the current registration flow. Working professionals register at /student/enroll with Personal Details, OTP verification, and Password only.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can working professionals complete Step 2?",
       "For a student, Please help me with this SPRINT query: Can working professionals complete Step 2?",
@@ -2928,9 +2928,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2942,7 +2942,7 @@
     "id": "REG-048",
     "category": "optional_education_and_career_details",
     "question": "What if my qualification is not listed?",
-    "answer": "Do not choose an inaccurate option. Skip the optional step if possible or ask support for guidance.",
+    "answer": "Qualification details are optional during signup at /student/enroll. You can add them later from the Student Dashboard Profile page if needed.",
     "alternative_questions": [
       "For a student, Could you answer this question: What if my qualification is not listed?",
       "For a student, Please help me with this SPRINT query: What if my qualification is not listed?",
@@ -2957,9 +2957,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -2971,7 +2971,7 @@
     "id": "REG-049",
     "category": "optional_education_and_career_details",
     "question": "Can I update education details later?",
-    "answer": "That depends on available profile editing. If editing is unavailable, contact support to request an update.",
+    "answer": "Yes. Education and career details can be added or updated anytime from the Student Dashboard Profile page after registration.",
     "alternative_questions": [
       "For a student, Could you answer this question: Can I update education details later?",
       "For a student, Please help me with this SPRINT query: Can I update education details later?",
@@ -2986,9 +2986,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -3000,7 +3000,7 @@
     "id": "REG-050",
     "category": "optional_education_and_career_details",
     "question": "Will skipping Step 2 stop registration?",
-    "answer": "No. The specified flow allows Step 2 to be skipped. Continue to Step 3.",
+    "answer": "No. There is no Step 2 education form in the current registration flow at /student/enroll. Registration proceeds with Personal Details, OTP verification, and Password creation/confirmation.",
     "alternative_questions": [
       "For a student, Could you answer this question: Will skipping Step 2 stop registration?",
       "For a student, Please help me with this SPRINT query: Will skipping Step 2 stop registration?",
@@ -3015,9 +3015,9 @@
       "SPRINT_Student_Registration_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",

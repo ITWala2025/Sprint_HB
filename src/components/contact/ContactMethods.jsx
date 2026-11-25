@@ -12,7 +12,7 @@ const contactMethods = [
     icon: Phone,
     title: "Call Us",
     value: "+91 85212 83184",
-    description: "Mon – Sat, 9:00 AM – 5:00 PM",
+    description: "Mon–Thu & Sat, 10:00 AM – 4:00 PM (Fri WFH)",
     href: "tel:+918521283184",
     action: "Call Now",
   },
@@ -95,8 +95,8 @@ export default function ContactMethods() {
 
         <div>
           <h3>Office Hours</h3>
-          <p>Monday – Saturday, 9:00 AM – 6:00 PM</p>
-          <p>Sunday: Closed</p>
+          <p>Monday – Thursday & Saturday: 10:00 AM – 4:00 PM</p>
+          <p>Friday: Work From Home (Online Support) · Sunday: Closed</p>
         </div>
       </div>
     </section>

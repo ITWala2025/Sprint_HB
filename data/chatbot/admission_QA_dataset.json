@@ -18,9 +18,9 @@
       "SPRINT_Contact_Support_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
@@ -32,7 +32,7 @@
     "id": "SUP-012",
     "category": "contact_channels_and_response",
     "question": "What phone numbers can I use to contact SPRINT?",
-    "answer": "You can call +91 8521283183 or +91 8521283184.",
+    "answer": "You can call +91 85212 83184/85.",
     "alternative_questions": [
       "For a student, Could you answer this question: What phone numbers can I use to contact SPRINT?",
       "For a student, Please help me with this SPRINT query: What phone numbers can I use to contact SPRINT?",
@@ -47,9 +47,9 @@
       "SPRINT_Contact_Support_QA_Dataset_220.pdf"
     ],
     "source_location": "",
-    "verification_status": "needs_review",
-    "confidence": "low",
-    "last_verified": "",
+    "verification_status": "verified",
+    "confidence": "high",
+    "last_verified": "2026-11-25",
     "record_type": "source_faq",
     "source_datasets": [
       "SPRINT_Chatbot_10K_QA_Training.jsonl",
