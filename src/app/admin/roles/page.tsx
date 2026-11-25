@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Activity, CheckSquare, Edit3, Filter, Plus, RefreshCw, Search, Shield, SlidersHorizontal, Trash2, Users } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import {
     deleteRoleAction,
     deleteStaffProfileAction,
@@ -41,24 +40,13 @@ export default function RolesPage() {
     const [userModal, setUserModal] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
-    const supabase = useMemo(() => createClient(), []);
 
     const loadData = useCallback(async () => {
         setIsLoading(true); setError("");
         try {
             const result = await getRolesAndStaffProfiles();
             if (result.error) {
-                // Fallback to client supabase if server action returns an error
-                const [{ data: roleData, error: roleError }, { data: profileData, error: profileError }] = await Promise.all([
-                    supabase.from("roles").select("*").order("name"),
-                    supabase.from("profiles").select("id, full_name, email, role_id, is_active, roles(id, name, color)").neq("role", "student").order("full_name"),
-                ]);
-                if (roleError || profileError) {
-                    setError(roleError?.message ?? profileError?.message ?? result.error);
-                } else {
-                    setRoles((roleData ?? []).map((role) => ({ ...role, permissions: role.permissions ?? {}, assigned_count: (profileData ?? []).filter((profile) => profile.role_id === role.id).length })) as Role[]);
-                    setUsers((profileData ?? []).map((profile) => ({ ...profile, roles: Array.isArray(profile.roles) ? profile.roles[0] ?? null : profile.roles })) as unknown as StaffProfile[]);
-                }
+                setError(result.error);
             } else {
                 setRoles(result.roles);
                 setUsers(result.users);
@@ -68,7 +56,7 @@ export default function RolesPage() {
         } finally {
             setIsLoading(false);
         }
-    }, [supabase]);
+    }, []);
 
     useEffect(() => { void loadData(); }, [loadData]);
 

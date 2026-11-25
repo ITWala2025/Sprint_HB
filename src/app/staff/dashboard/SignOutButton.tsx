@@ -10,12 +10,16 @@ export default function SignOutButton() {
 
     async function handleSignOut() {
         setIsSigningOut(true);
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            setIsSigningOut(false);
-            return;
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) {
+                console.error("Staff sign out error:", error);
+            }
+        } catch (error) {
+            console.error("Staff sign out error:", error);
+        } finally {
+            window.location.assign("/staff/login?signout=1");
         }
-        window.location.assign("/staff/login");
     }
 
     return (

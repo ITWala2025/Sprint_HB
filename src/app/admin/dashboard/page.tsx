@@ -67,6 +67,10 @@ type Metric = {
     accent: string;
 };
 
+function emptyCountResult() {
+    return { count: 0, error: null };
+}
+
 export default async function AdminDashboardPage() {
     const session = await getAdminSession();
     if (!session || !session.isActive) redirect("/admin");
@@ -79,35 +83,51 @@ export default async function AdminDashboardPage() {
     const canView = (moduleKeys: string | string[]) =>
         session.isAdmin || (Array.isArray(moduleKeys) ? moduleKeys : [moduleKeys])
             .some((moduleKey) => roleHasPermission(session.permissions, moduleKey, "view"));
+    const canViewStudents = canView("student_ops");
+    const canViewCourses = canView(["courses", "cms_courses"]);
+    const canViewStaff = canView(["user_management", "access_control"]);
     const showEnquiries = canView(["admissions", "marketing", "support"]);
     const showAnnouncements = canView(["cms_announcements", "marketing"]);
+    const workspacePath = (adminPath: string) => session.role === "staff" && !session.isAdmin
+        ? `/staff${adminPath.slice("/admin".length)}`
+        : adminPath;
     const displayName = session.fullName?.trim() || session.email || (session.isAdmin ? "Admin" : "Staff");
 
     const [
         studentsResult,
         pendingRegistrationsCount,
         coursesResult,
-        profilesResult,
+        staffResult,
         announcementsResult,
     ] = await Promise.all([
-        serviceClient.from("students").select("id", { count: "exact", head: true }),
-        getPendingCourseFreeRegistrationCount(),
-        serviceClient.from("courses").select("id", { count: "exact", head: true }),
-        serviceClient.from("profiles").select("id", { count: "exact", head: true }).eq("is_active", true).neq("role", "student"),
-        serviceClient.from("announcements").select("*").order("created_at", { ascending: false }),
+        canViewStudents
+            ? serviceClient.from("students").select("id", { count: "exact", head: true })
+            : Promise.resolve(emptyCountResult()),
+        canViewStudents ? getPendingCourseFreeRegistrationCount() : Promise.resolve(0),
+        canViewCourses
+            ? serviceClient.from("courses").select("id", { count: "exact", head: true })
+            : Promise.resolve(emptyCountResult()),
+        canViewStaff
+            ? serviceClient.from("staff").select("id", { count: "exact", head: true }).eq("is_active", true)
+            : Promise.resolve(emptyCountResult()),
+        showAnnouncements
+            ? serviceClient.from("announcements").select("*").order("created_at", { ascending: false })
+            : Promise.resolve({ data: null, error: null }),
     ]);
 
     const queryErrors: { name: string; message: string }[] = [];
     if (studentsResult.error) queryErrors.push({ name: "students", message: studentsResult.error.message });
     if (coursesResult.error) queryErrors.push({ name: "courses", message: coursesResult.error.message });
-    if (profilesResult.error) queryErrors.push({ name: "active staff", message: profilesResult.error.message });
+    if (staffResult.error) queryErrors.push({ name: "active staff", message: staffResult.error.message });
     for (const error of queryErrors) {
         console.error("[admin-dashboard] summary query failed", { query: error.name, message: error.message });
     }
 
-    let announcementRows = announcementsResult.data as Record<string, unknown>[] | null;
-    let announcementsError = announcementsResult.error?.message ?? null;
-    if (announcementsResult.error || !announcementRows?.length) {
+    let announcementRows = showAnnouncements
+        ? announcementsResult.data as Record<string, unknown>[] | null
+        : null;
+    let announcementsError = showAnnouncements ? announcementsResult.error?.message ?? null : null;
+    if (showAnnouncements && (announcementsResult.error || !announcementRows?.length)) {
         const { data, error } = await serviceClient
             .from("campus_updates")
             .select("*")
@@ -147,12 +167,19 @@ export default async function AdminDashboardPage() {
         }
     }
 
-    const metrics: Metric[] = [
-        { label: "Total Students", value: String(studentsResult.count ?? 0), note: "Registered student records", href: "/admin/students/list", icon: Users, accent: "bg-brand-blue-light text-brand-blue" },
-        { label: "Pending Registrations", value: String(pendingRegistrationsCount), note: "Registered leads without a course", href: "/admin/students/registrations", icon: PhoneCall, accent: "bg-brand-red-light text-brand-red" },
-        { label: "Total Courses", value: String(coursesResult.count ?? 0), note: "Courses in the catalogue", href: "/admin/courses", icon: BookOpen, accent: "bg-orange-50 text-orange-600" },
-        { label: "Total Staffs", value: String(profilesResult.count ?? 0), note: "Active admin and staff accounts", href: "/admin/users", icon: Building2, accent: "bg-emerald-50 text-emerald-600" },
-    ];
+    const metrics: Metric[] = [];
+    if (canViewStudents) {
+        metrics.push(
+            { label: "Total Students", value: String(studentsResult.count ?? 0), note: "Registered student records", href: workspacePath("/admin/students/list"), icon: Users, accent: "bg-brand-blue-light text-brand-blue" },
+            { label: "Pending Registrations", value: String(pendingRegistrationsCount), note: "Registered leads without a course", href: workspacePath("/admin/students/registrations"), icon: PhoneCall, accent: "bg-brand-red-light text-brand-red" },
+        );
+    }
+    if (canViewCourses) {
+        metrics.push({ label: "Total Courses", value: String(coursesResult.count ?? 0), note: "Courses in the catalogue", href: workspacePath("/admin/courses"), icon: BookOpen, accent: "bg-orange-50 text-orange-600" });
+    }
+    if (canViewStaff) {
+        metrics.push({ label: "Total Staffs", value: String(staffResult.count ?? 0), note: "Active staff accounts", href: workspacePath("/admin/users"), icon: Building2, accent: "bg-emerald-50 text-emerald-600" });
+    }
     const dashboardError = queryErrors.length
         ? `Some dashboard totals could not be loaded: ${queryErrors.map(({ name, message }) => `${name}: ${message}`).join("; ")}`
         : null;
@@ -168,14 +195,14 @@ export default async function AdminDashboardPage() {
                         <p className="mt-2 max-w-xl text-sm leading-6 text-slate-300">Here is the latest pulse across your workspace.</p>
                     </div>
                     <div className="flex min-w-0 flex-wrap items-center gap-3">
-                        {showEnquiries && <Link href="/admin/enquiries/students" className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-red to-brand-purple px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">Review enquiries <ArrowUpRight className="size-4" aria-hidden="true" /></Link>}
+                        {showEnquiries && <Link href={workspacePath("/admin/enquiries/students")} className="sprint-focus inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-red to-brand-purple px-4 py-3 text-sm font-bold text-white shadow-brand-cta transition hover:brightness-110">Review enquiries <ArrowUpRight className="size-4" aria-hidden="true" /></Link>}
                         {canView(["courses", "cms_courses"]) && (
-                            <Link href="/admin/courses" className="sprint-focus inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+                            <Link href={workspacePath("/admin/courses")} className="sprint-focus inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
                                 Manage Courses <ArrowUpRight className="size-4 opacity-70" aria-hidden="true" />
                             </Link>
                         )}
                         {canView(["user_management", "access_control"]) && (
-                            <Link href="/admin/users" className="sprint-focus inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+                            <Link href={workspacePath("/admin/users")} className="sprint-focus inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
                                 Manage Staff <ArrowUpRight className="size-4 opacity-70" aria-hidden="true" />
                             </Link>
                         )}
@@ -222,7 +249,7 @@ export default async function AdminDashboardPage() {
                                 <h2 className="font-display text-lg font-bold text-brand-navy">Live Enquiries</h2>
                                 <p className="mt-1 text-xs text-brand-text-muted">Latest submissions across all enquiry categories</p>
                             </div>
-                            <Link href="/admin/enquiries/students" className="shrink-0 text-xs font-bold text-brand-blue hover:underline">View all</Link>
+                            <Link href={workspacePath("/admin/enquiries/students")} className="shrink-0 text-xs font-bold text-brand-blue hover:underline">View all</Link>
                         </header>
                         {enquiriesError
                             ? <p className="m-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">Could not load enquiries: {enquiriesError}</p>
@@ -237,7 +264,7 @@ export default async function AdminDashboardPage() {
                                 <h2 className="font-display text-lg font-bold text-brand-navy">Announcements &amp; Updates</h2>
                                 <p className="mt-1 text-xs text-brand-text-muted">Latest published workspace notices</p>
                             </div>
-                            <Link href="/admin/updates" className="shrink-0 text-xs font-bold text-brand-blue hover:underline">View all</Link>
+                            <Link href={workspacePath("/admin/updates")} className="shrink-0 text-xs font-bold text-brand-blue hover:underline">View all</Link>
                         </header>
                         {announcementsError
                             ? <p className="m-5 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">Could not load announcements: {announcementsError}</p>

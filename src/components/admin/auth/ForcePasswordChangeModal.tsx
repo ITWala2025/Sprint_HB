@@ -2,17 +2,18 @@
 
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import { Eye, EyeOff, KeyRound, LoaderCircle, ShieldCheck } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { completeFirstTimeStaffSetupAction } from "@/app/staff/login/actions";
 
 type ForcePasswordChangeModalProps = {
     onSuccess: () => void;
     mode?: "first_login" | "password_reset";
+    invitationToken?: string | null;
 };
 
 export default function ForcePasswordChangeModal({
     onSuccess,
     mode = "first_login",
+    invitationToken,
 }: ForcePasswordChangeModalProps) {
     const [password, setPassword] = useState("");
     const [confirmation, setConfirmation] = useState("");
@@ -24,8 +25,6 @@ export default function ForcePasswordChangeModal({
     const passwordRef = useRef<HTMLInputElement>(null);
     const dialogRef = useRef<HTMLDivElement>(null);
     const id = useId();
-    const router = useRouter();
-    const supabase = createClient();
 
     const passwordRules = [
         { label: "At least 8 characters", valid: password.length >= 8 },
@@ -90,49 +89,18 @@ export default function ForcePasswordChangeModal({
 
         setIsSaving(true);
         try {
-            const { error: passwordError } = await supabase.auth.updateUser({ password });
-            if (passwordError) {
-                setError(passwordError.message);
+            const result = await completeFirstTimeStaffSetupAction({ newPassword: password, invitationToken });
+            if (result.success === false) {
+                if (result.code === "SESSION_EXPIRED") {
+                    window.location.replace(getStaffLoginHref());
+                    return;
+                }
+                setError(result.error);
                 return;
             }
 
-            if (mode === "password_reset") {
-                const { data: authData, error: authError } = await supabase.auth.getUser();
-                if (authError || !authData.user) {
-                    setError("Your password changed, but your account could not be verified. Please contact support.");
-                    return;
-                }
-
-                const { data: profile, error: profileError } = await supabase
-                    .from("profiles")
-                    .update({ must_change_password: false, first_login: false })
-                    .eq("id", authData.user.id)
-                    .select("id")
-                    .maybeSingle();
-                if (profileError || !profile) {
-                    setError("Your password changed, but your account status could not be updated. Please contact support.");
-                    return;
-                }
-
-                const { error: signOutError } = await supabase.auth.signOut();
-                if (signOutError) {
-                    setError("Your password was reset, but sign-out did not complete. Please sign out and log in again.");
-                    return;
-                }
-
-                onSuccess();
-                window.location.assign("/admin?password_reset=success");
-                return;
-            }
-
-            const { data: resetComplete, error: resetError } = await supabase.rpc("complete_staff_password_reset");
-            if (resetError || resetComplete !== true) {
-                setError("Your password changed, but the required reset could not be verified. Submit again or contact an administrator.");
-                return;
-            }
-
-            router.refresh();
             onSuccess();
+            window.location.replace(mode === "password_reset" ? "/admin/dashboard" : "/staff/dashboard");
         } catch {
             setError("We could not complete the password update. Check your connection and try again.");
         } finally {
@@ -188,6 +156,17 @@ export default function ForcePasswordChangeModal({
             </section>
         </div>
     );
+}
+
+function getStaffLoginHref() {
+    const currentQuery = new URLSearchParams(window.location.search);
+    const query = new URLSearchParams();
+    const invitation = currentQuery.get("invitation");
+    const email = currentQuery.get("email");
+    if (invitation) query.set("invitation", invitation);
+    if (email) query.set("email", email);
+    const search = query.toString();
+    return `/staff/login${search ? `?${search}` : ""}`;
 }
 
 function EyeToggle({ visible }: { visible: boolean }) {

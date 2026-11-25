@@ -3,20 +3,22 @@
 import { FormEvent, useState } from "react";
 import { Eye, EyeOff, LoaderCircle, ShieldCheck } from "lucide-react";
 import { completeFirstTimeStaffSetupAction } from "@/app/staff/login/actions";
-import { createClient } from "@/lib/supabase/client";
 
 type FirstTimePasswordModalProps = {
-    invitationToken?: string;
+    invitationToken?: string | null;
+    destination?: "/staff/dashboard" | "/admin/dashboard";
 };
 
-export default function FirstTimePasswordModal({ invitationToken }: FirstTimePasswordModalProps) {
+export default function FirstTimePasswordModal({
+    invitationToken,
+    destination = "/staff/dashboard",
+}: FirstTimePasswordModalProps) {
     const [newPassword, setNewPassword] = useState("");
     const [confirmation, setConfirmation] = useState("");
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [error, setError] = useState("");
     const [isSaving, setIsSaving] = useState(false);
-    const supabase = createClient({ detectSessionInUrl: false });
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -37,21 +39,24 @@ export default function FirstTimePasswordModal({ invitationToken }: FirstTimePas
 
         setIsSaving(true);
         try {
-            const { error: passwordError } = await supabase.auth.updateUser({ password: newPassword });
-            if (passwordError) {
-                setError(passwordError.message);
-                return;
-            }
-
-            const result = await completeFirstTimeStaffSetupAction(invitationToken);
+            const result = await completeFirstTimeStaffSetupAction({ newPassword, invitationToken });
             if (result.success === false) {
+                if (result.code === "SESSION_EXPIRED") {
+                    window.location.replace(getStaffLoginHref(invitationToken));
+                    return;
+                }
                 setError(result.error);
                 return;
             }
 
-            window.location.assign("/staff/dashboard");
-        } catch {
-            setError("We could not complete your password update. Check your connection and try again.");
+            window.location.replace(destination);
+        } catch (err) {
+            console.error("[SPRINT Staff Setup] Could not complete first-time password setup:", err);
+            setError(
+                err instanceof Error && err.message
+                    ? err.message
+                    : "We could not complete your password update. Check your connection and try again.",
+            );
         } finally {
             setIsSaving(false);
         }
@@ -90,6 +95,17 @@ export default function FirstTimePasswordModal({ invitationToken }: FirstTimePas
             </section>
         </div>
     );
+}
+
+function getStaffLoginHref(invitationToken?: string | null) {
+    const currentQuery = new URLSearchParams(window.location.search);
+    const query = new URLSearchParams();
+    const invitation = currentQuery.get("invitation") ?? invitationToken;
+    const email = currentQuery.get("email");
+    if (invitation) query.set("invitation", invitation);
+    if (email) query.set("email", email);
+    const search = query.toString();
+    return `/staff/login${search ? `?${search}` : ""}`;
 }
 
 function PasswordEye({ visible }: { visible: boolean }) {

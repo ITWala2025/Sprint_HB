@@ -1,16 +1,19 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { canAccessAdminRoute, type AdminPermissionMap } from "@/app/admin/auth-types";
 import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE_SECONDS,
   createAdminSessionToken,
-  verifyAdminSessionToken,
 } from "@/lib/auth/admin-session";
 import {
   STUDENT_SESSION_COOKIE,
   STUDENT_SESSION_MAX_AGE_SECONDS,
   createStudentSessionToken,
+  verifyStudentSessionToken,
 } from "@/lib/auth/student-session";
+import { createServiceClient } from "@/lib/supabase/service";
+import { getUserAccountRecord, type StaffDirectoryRecord } from "@/lib/supabase/staff";
 
 /**
  * Every portal page that requires a signed-in student. These are the URL
@@ -37,7 +40,9 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const isLoginPage = pathname === "/admin" || pathname === "/admin/login";
-  if (pathname === "/admin" && request.nextUrl.searchParams.get("signout") === "1") {
+  const isAdminSignOut = pathname === "/admin" && request.nextUrl.searchParams.get("signout") === "1";
+  const isStaffSignOut = pathname === "/staff/login" && request.nextUrl.searchParams.get("signout") === "1";
+  if (isAdminSignOut || isStaffSignOut) {
     const url = request.nextUrl.clone();
     url.searchParams.delete("signout");
     const response = NextResponse.redirect(url);
@@ -54,6 +59,10 @@ export async function updateSession(request: NextRequest) {
     pathname === "/admin" && request.nextUrl.searchParams.get("reset") === "true";
   const isAdminSubRoute = pathname.startsWith("/admin/") && !isLoginPage;
   const isStaffLogin = pathname === "/staff/login";
+  const isServerAction = request.headers.has("next-action");
+  const isLoginSubmission =
+    (isLoginPage || isStaffLogin) &&
+    (request.method !== "GET" || isServerAction);
   const isStaffInvitation = pathname === "/staff/invitation" || pathname.startsWith("/staff/invitation/");
   const isStaffWorkspaceRoute = pathname.startsWith("/staff/") && !isStaffLogin && !isStaffInvitation;
 
@@ -63,36 +72,25 @@ export async function updateSession(request: NextRequest) {
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
 
-  // Fast Path: Check cryptographically verified admin session token (0ms network calls)
-  const existingAdminSession = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  let hasVerifiedAdminSession = false;
-  if (existingAdminSession) {
-    const verifiedSession = await verifyAdminSessionToken(existingAdminSession);
-    if (verifiedSession && verifiedSession.isActive) {
-      hasVerifiedAdminSession = true;
-      const isAdmin = verifiedSession.isAdmin;
-      const isActiveStaff = verifiedSession.role === "staff" && !isAdmin;
+  const redirectTo = (targetPath: string, clearAdminSession = false) => {
+    const url = request.nextUrl.clone();
+    url.pathname = targetPath;
+    const response = NextResponse.redirect(url);
+    if (clearAdminSession) response.cookies.delete(ADMIN_SESSION_COOKIE);
+    return response;
+  };
 
-      if (isAdmin && (isLoginPage || isStaffLogin) && !isPasswordResetCallback) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/admin/dashboard";
-        return NextResponse.redirect(url);
-      }
-      if (isActiveStaff && (isLoginPage || isStaffLogin) && !isPasswordResetCallback) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/staff/dashboard";
-        return NextResponse.redirect(url);
-      }
-      if (isAdmin && isStaffWorkspaceRoute) {
-        const url = request.nextUrl.clone();
-        url.pathname = `/admin${pathname.slice("/staff".length)}`;
-        return NextResponse.redirect(url);
-      }
-
-      // Keep the staff fast path; admin routes must still refresh Supabase auth cookies.
-      if (isStaffWorkspaceRoute) {
-        return supabaseResponse;
-      }
+  // Fast Path: Check cryptographically verified student session token (0ms network calls)
+  const existingStudentSession = request.cookies.get(STUDENT_SESSION_COOKIE)?.value;
+  if (existingStudentSession && isStudentPortalRoute) {
+    const verifiedSession = await verifyStudentSessionToken(existingStudentSession);
+    if (
+      verifiedSession &&
+      verifiedSession.isActive &&
+      verifiedSession.onboardingCompleted === true
+    ) {
+      // If user is accessing protected student portal routes and has verified session, pass through immediately!
+      return supabaseResponse;
     }
   }
 
@@ -123,27 +121,25 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const serviceClient = user ? createServiceClient() : null;
 
   // 1. If an unauthenticated visitor tries to reach /admin/dashboard or subroutes, bounce to /admin
+  if (!user && request.cookies.has(ADMIN_SESSION_COOKIE) && !isServerAction) {
+    supabaseResponse.cookies.delete(ADMIN_SESSION_COOKIE);
+  }
+
+  // Server Actions run as POSTs to the current page. Let the action return its
+  // own authorization result instead of replacing it with a page redirect.
+  if (isLoginSubmission || isServerAction) {
+    return supabaseResponse;
+  }
+
   if (!user && isAdminSubRoute) {
-    if (hasVerifiedAdminSession) {
-      return supabaseResponse;
-    }
-    if (request.cookies.has(ADMIN_SESSION_COOKIE)) {
-      supabaseResponse.cookies.delete(ADMIN_SESSION_COOKIE);
-    }
-    const url = request.nextUrl.clone();
-    url.pathname = "/admin";
-    return NextResponse.redirect(url);
+    return redirectTo("/admin", request.cookies.has(ADMIN_SESSION_COOKIE));
   }
 
   if (!user && isStaffWorkspaceRoute) {
-    if (request.cookies.has(ADMIN_SESSION_COOKIE)) {
-      supabaseResponse.cookies.delete(ADMIN_SESSION_COOKIE);
-    }
-    const url = request.nextUrl.clone();
-    url.pathname = "/staff/login";
-    return NextResponse.redirect(url);
+    return redirectTo("/staff/login", request.cookies.has(ADMIN_SESSION_COOKIE));
   }
 
   // 2. If an unauthenticated visitor tries to open a student portal page, send them to Sign In.
@@ -159,23 +155,58 @@ export async function updateSession(request: NextRequest) {
 
   // 3. If already logged in, check role/status for authorization
   if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role, status, is_active, onboarding_completed, must_change_password, full_name, email, roles(name, permissions, is_active)")
-      .eq("id", user.id)
-      .maybeSingle();
+    let profile: (StaffDirectoryRecord & { role: string }) | null = null;
+    if (!serviceClient) {
+      const { data: fallbackProfile, error } = await supabase
+        .from("profiles")
+        .select("role, status, is_active, onboarding_completed, first_login, must_change_password, full_name, email")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (error) {
+        console.error("[SPRINT Middleware] Could not load the account profile:", error.message);
+      }
+      if (fallbackProfile?.role === "student") {
+        profile = {
+          ...fallbackProfile,
+          account_type: "student",
+          role_name: null,
+          created_at: "",
+          updated_at: "",
+          roles: null,
+        } as unknown as StaffDirectoryRecord & { role: string };
+      } else {
+        console.error("[SPRINT Middleware] Server-side Supabase service role is not configured.");
+      }
+    } else {
+      const { record, error } = await getUserAccountRecord(user.id, serviceClient);
+      if (error) {
+        console.error("[SPRINT Middleware] Could not revalidate the authenticated account and role:", error);
+      }
+      profile = record ? { ...record, role: record.account_type } : null;
+    }
 
     const assignedRole = Array.isArray(profile?.roles) ? profile.roles[0] : profile?.roles;
-    const isAdmin = profile?.role === "admin" ||
-      (assignedRole?.is_active === true && assignedRole.permissions?.full_access === true);
-    const isActiveStaff = profile?.role === "staff" && profile?.is_active === true && !isAdmin;
-    const { data: studentRecord } = profile?.role === "student"
-      ? await supabase
+    const isAdmin = profile?.is_active === true && (
+      profile.role === "admin" ||
+      (profile.role === "staff" && assignedRole?.is_active === true && assignedRole.permissions?.full_access === true)
+    );
+    const isActiveStaff = profile?.role === "staff" &&
+      profile?.is_active === true &&
+      !isAdmin;
+    const mustCompleteStaffSetup = profile?.role === "staff" &&
+      profile?.is_active === true &&
+      (profile.first_login === true || profile.must_change_password === true);
+    const studentClient = serviceClient ?? supabase;
+    const { data: studentRecord, error: studentError } = profile?.role === "student"
+      ? await studentClient
         .from("students")
         .select("registration_number, status")
         .eq("id", user.id)
         .maybeSingle()
       : { data: null };
+    if (studentError) {
+      console.error("[SPRINT Middleware] Could not revalidate the student record:", studentError.message);
+    }
     const isDeactivatedStudent =
       profile?.role === "student" &&
       (profile?.is_active === false || studentRecord?.status === "deactivated");
@@ -186,7 +217,7 @@ export async function updateSession(request: NextRequest) {
       profile?.onboarding_completed === true &&
       !isDeactivatedStudent;
 
-    // Issue/refresh verified admin session cookie for fast subsequent navigations
+    // Keep the client session snapshot current; protected server checks re-read the database.
     if ((isAdmin || isActiveStaff) && profile?.is_active === true) {
       try {
         const sessionToken = await createAdminSessionToken({
@@ -194,11 +225,13 @@ export async function updateSession(request: NextRequest) {
           email: profile.email ?? user.email ?? null,
           fullName: profile.full_name ?? null,
           role: profile.role,
-          roleName: assignedRole?.is_active ? assignedRole.name : profile.role,
+          roleName: assignedRole?.is_active ? assignedRole.name : profile.role_name ?? profile.role,
           isActive: profile.is_active === true,
           isAdmin,
-          mustChangePassword: profile.must_change_password === true && !isAdmin,
-          permissions: (assignedRole?.is_active ? assignedRole.permissions : null) as any,
+          mustChangePassword: (
+            profile.first_login === true || profile.must_change_password === true
+          ) && !isAdmin,
+          permissions: (assignedRole?.is_active ? assignedRole.permissions : null) as AdminPermissionMap | null,
         });
 
         supabaseResponse.cookies.set(ADMIN_SESSION_COOKIE, sessionToken, {
@@ -243,25 +276,35 @@ export async function updateSession(request: NextRequest) {
 
     // Staff and admins share the workspace; other roles cannot access it.
     if (!isAdmin && !isActiveStaff && !isPasswordResetCallback && (isLoginPage || isAdminSubRoute || isStaffWorkspaceRoute)) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/home";
-      return NextResponse.redirect(url);
+      return redirectTo("/home", request.cookies.has(ADMIN_SESSION_COOKIE));
     }
 
-    if (isAdmin && (isLoginPage || isStaffLogin) && !isPasswordResetCallback) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/admin/dashboard";
-      return NextResponse.redirect(url);
+    if (mustCompleteStaffSetup && (isStaffWorkspaceRoute || isAdminSubRoute)) {
+      return redirectTo("/staff/login");
     }
-    if (isActiveStaff && (isLoginPage || isStaffLogin) && !isPasswordResetCallback) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/staff/dashboard";
-      return NextResponse.redirect(url);
+    if (mustCompleteStaffSetup && isLoginPage && !isPasswordResetCallback) {
+      return redirectTo("/staff/login");
+    }
+    if (isAdmin && (isLoginPage || isStaffLogin) && !mustCompleteStaffSetup && !isPasswordResetCallback) {
+      return redirectTo("/admin/dashboard");
+    }
+    if (isActiveStaff && !mustCompleteStaffSetup && (isLoginPage || isStaffLogin) && !isPasswordResetCallback) {
+      return redirectTo("/staff/dashboard");
     }
     if (isAdmin && isStaffWorkspaceRoute) {
-      const url = request.nextUrl.clone();
-      url.pathname = `/admin${pathname.slice("/staff".length)}`;
-      return NextResponse.redirect(url);
+      return redirectTo(`/admin${pathname.slice("/staff".length)}`);
+    }
+    if (isActiveStaff && !mustCompleteStaffSetup && isStaffWorkspaceRoute && pathname !== "/staff/dashboard") {
+      const adminPath = `/admin${pathname.slice("/staff".length)}`;
+      if (!canAccessAdminRoute(adminPath, (assignedRole?.is_active ? assignedRole.permissions : null) as AdminPermissionMap | null, "staff")) {
+        return redirectTo("/staff/dashboard");
+      }
+
+      const rewriteUrl = request.nextUrl.clone();
+      rewriteUrl.pathname = adminPath;
+      const rewriteResponse = NextResponse.rewrite(rewriteUrl, { request });
+      supabaseResponse.cookies.getAll().forEach((cookie) => rewriteResponse.cookies.set(cookie));
+      return rewriteResponse;
     }
 
     /*
@@ -277,6 +320,12 @@ export async function updateSession(request: NextRequest) {
       const url = request.nextUrl.clone();
       url.pathname = "/student/login";
       url.search = "?deactivated=1";
+      return NextResponse.redirect(url);
+    }
+
+    if (isStudentPortalRoute && profile?.role !== "student") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/student/login";
       return NextResponse.redirect(url);
     }
 

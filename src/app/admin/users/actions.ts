@@ -3,10 +3,11 @@
 import "server-only";
 import { randomBytes } from "node:crypto";
 import { createServerClient } from "@supabase/ssr";
-import { createClient, type User } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { isSmtpConfigured, sendStaffInviteEmail } from "@/lib/email/mailer";
 import { createServiceClient } from "@/lib/supabase/service";
+import { getUserAccountRecord } from "@/lib/supabase/staff";
 
 export type ProvisionStaffUserInput = {
     fullName: string;
@@ -17,11 +18,11 @@ export type ProvisionStaffUserInput = {
 };
 
 export type ProvisionStaffUserResult =
-    | { success: true; userId: string; email: string; tempPassword: string; inviteUrl: string }
+    | { success: true; userId: string; email: string; tempPassword: string; inviteUrl: string; emailSent: boolean; emailWarning?: string }
     | { success: false; error: string };
 
 export type ResendStaffInvitationResult =
-    | { success: true; email: string; tempPassword: string; inviteUrl: string; emailSent: boolean }
+    | { success: true; email: string; tempPassword: string; inviteUrl: string; emailSent: boolean; emailWarning?: string }
     | { success: false; error: string };
 
 export type DeleteStaffUserResult =
@@ -71,6 +72,53 @@ async function createSessionClient() {
 }
 
 type ServiceClient = NonNullable<ReturnType<typeof createServiceClient>>;
+
+async function rollbackProvisionedStaffAccount(serviceClient: ServiceClient, userId: string) {
+    const cleanupErrors: string[] = [];
+    const operations = [
+        serviceClient.from("staff_invitations").delete().eq("user_id", userId),
+        serviceClient.from("staff").delete().eq("id", userId),
+        serviceClient.from("profiles").delete().eq("id", userId),
+    ];
+
+    for (const operation of operations) {
+        const { error } = await operation;
+        if (error) cleanupErrors.push(error.message);
+    }
+
+    const { error: authDeleteError } = await serviceClient.auth.admin.deleteUser(userId);
+    if (authDeleteError) cleanupErrors.push(authDeleteError.message);
+    return cleanupErrors.length ? cleanupErrors.join("; ") : null;
+}
+
+async function upsertStaffMirror(
+    serviceClient: ServiceClient,
+    staff: {
+        id: string;
+        fullName: string;
+        email: string;
+        roleId: string | null;
+        roleName: string | null;
+        isActive: boolean;
+        firstLogin: boolean;
+        mustChangePassword: boolean;
+        status?: string | null;
+    },
+) {
+    const { error } = await serviceClient.from("staff").upsert({
+        id: staff.id,
+        full_name: staff.fullName,
+        email: staff.email,
+        account_type: "staff",
+        role_id: staff.roleId,
+        role_name: staff.roleName,
+        is_active: staff.isActive,
+        status: staff.status ?? "active",
+        first_login: staff.firstLogin,
+        must_change_password: staff.mustChangePassword,
+    }, { onConflict: "id" });
+    return error;
+}
 
 async function authorizeStaffManagement(
     sessionClient: Awaited<ReturnType<typeof createSessionClient>>,
@@ -124,15 +172,45 @@ async function authorizeStaffManagement(
     return { authorized: true as const, userId: authData.user.id };
 }
 
-async function findAuthUserByEmail(serviceClient: ServiceClient, email: string) {
-    for (let page = 1; ; page += 1) {
-        const { data, error } = await serviceClient.auth.admin.listUsers({ page, perPage: 1000 });
-        if (error) return { user: null, error };
-        const users: User[] = data.users;
-        const user = users.find((candidate) => candidate.email?.toLowerCase() === email);
-        if (user) return { user, error: null };
-        if (data.users.length < 1000) return { user: null, error: null };
+function isMissingEmailLookupRpc(error: { code?: string; message?: string }) {
+    return error.code === "PGRST202" ||
+        error.code === "42883" ||
+        /could not find the function|function .*check_auth_email_exists.*does not exist/i.test(error.message ?? "");
+}
+
+async function checkAuthEmailExists(serviceClient: ServiceClient, email: string) {
+    const findProfileMatch = async () => {
+        const { data: profile, error: profileError } = await serviceClient
+            .from("profiles")
+            .select("id")
+            .ilike("email", email)
+            .limit(1)
+            .maybeSingle();
+
+        if (profileError) return { exists: false, error: profileError.message };
+        return { exists: Boolean(profile), error: null };
+    };
+
+    if (typeof serviceClient.rpc !== "function") {
+        return findProfileMatch();
     }
+
+    const { data, error } = await serviceClient.rpc("check_auth_email_exists", {
+        p_email: email,
+    });
+
+    if (!error) {
+        if (typeof data !== "boolean") {
+            return { exists: false, error: "The email existence check returned an unexpected response." };
+        }
+        return { exists: data, error: null };
+    }
+
+    if (!isMissingEmailLookupRpc(error)) {
+        return { exists: false, error: error.message };
+    }
+
+    return findProfileMatch();
 }
 
 function createInvitationToken() {
@@ -146,6 +224,55 @@ function getInvitationUrl(token: string) {
 
 function createTemporaryPassword() {
     return randomBytes(24).toString("base64url");
+}
+
+async function deliverStaffInvitationEmail({
+    email,
+    fullName,
+    roleName,
+    tempPassword,
+    inviteUrl,
+}: {
+    email: string;
+    fullName: string;
+    roleName: string;
+    tempPassword: string;
+    inviteUrl: string;
+}) {
+    if (!isSmtpConfigured()) {
+        return {
+            emailSent: false,
+            emailWarning: "SMTP is not configured, so the invitation email was not sent. Share the temporary password and invitation link with the staff member.",
+        };
+    }
+
+    try {
+        const result = await sendStaffInviteEmail(
+            { email, name: fullName },
+            {
+                actionUrl: inviteUrl,
+                roleName,
+                tempPassword,
+                expiresInMinutes: 60,
+            },
+        );
+
+        if (result.success) return { emailSent: true };
+
+        const reason = result.error ?? "The SMTP provider did not accept the email.";
+        console.error("[SPRINT Staff Invite] Invitation email delivery failed:", reason);
+        return {
+            emailSent: false,
+            emailWarning: `The account was created, but the invitation email could not be sent: ${reason} Share the temporary password and invitation link with the staff member.`,
+        };
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : "Unexpected SMTP delivery error.";
+        console.error("[SPRINT Staff Invite] Invitation email delivery failed:", reason);
+        return {
+            emailSent: false,
+            emailWarning: `The account was created, but the invitation email could not be sent: ${reason} Share the temporary password and invitation link with the staff member.`,
+        };
+    }
 }
 
 export async function provisionStaffUserAction(
@@ -190,54 +317,36 @@ export async function provisionStaffUserAction(
         return { success: false, error: "The selected role is no longer active. Refresh the page and try again." };
     }
 
-    const { user: existingUser, error: existingUserError } = await findAuthUserByEmail(serviceClient, email);
-    if (existingUserError) {
-        return { success: false, error: `Could not verify whether this email is already registered: ${existingUserError.message}` };
+    const existingEmail = await checkAuthEmailExists(serviceClient, email);
+    if (existingEmail.error) {
+        return { success: false, error: `Could not verify whether this email is already registered: ${existingEmail.error}` };
     }
-    if (existingUser) {
-        const { data: existingProfile, error: existingProfileError } = await serviceClient
-            .from("profiles")
-            .select("is_active")
-            .eq("id", existingUser.id)
-            .maybeSingle();
-
-        if (existingProfileError) {
-            return { success: false, error: `Could not verify the existing account: ${existingProfileError.message}` };
-        }
-        if (existingProfile?.is_active === true) {
-            return { success: false, error: "A user with this email address has already been registered." };
-        }
-        return { success: false, error: "An account already exists for this email address and must be reviewed before it can be invited." };
+    if (existingEmail.exists) {
+        return { success: false, error: "A user with this email already exists." };
     }
 
     const inviteToken = createInvitationToken();
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
     const inviteUrl = getInvitationUrl(inviteToken);
-    const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(email, {
-        data: { full_name: fullName },
-        redirectTo: inviteUrl,
-    });
-
-    if (inviteError || !inviteData.user) {
-        return { success: false, error: inviteError?.message ?? "The staff invitation could not be sent." };
-    }
-
-    const { error: passwordError } = await serviceClient.auth.admin.updateUserById(inviteData.user.id, {
+    const { data: authData, error: authError } = await serviceClient.auth.admin.createUser({
+        email,
         password: tempPassword,
-        email_confirm: true, // <--- Auto-confirms so sign-in works immediately with temp password
+        email_confirm: true,
+        user_metadata: { full_name: fullName, role: "staff" },
     });
-    if (passwordError) {
-        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id);
-        return {
-            success: false,
-            error: cleanupError
-                ? `${passwordError.message} The newly invited account could not be removed; contact a system administrator.`
-                : passwordError.message,
-        };
+
+    if (authError || !authData.user) {
+        if (
+            authError?.code === "email_exists" ||
+            /already registered|already exists|email.*taken/i.test(authError?.message ?? "")
+        ) {
+            return { success: false, error: "A user with this email already exists." };
+        }
+        return { success: false, error: authError?.message ?? "The staff Auth account could not be created." };
     }
 
     const { error: profileError } = await serviceClient.from("profiles").upsert({
-        id: inviteData.user.id,
+        id: authData.user.id,
         full_name: fullName,
         email,
         role: "staff",
@@ -248,12 +357,32 @@ export async function provisionStaffUserAction(
     });
 
     if (profileError) {
-        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id);
+        const cleanupError = await rollbackProvisionedStaffAccount(serviceClient, authData.user.id);
         return {
             success: false,
             error: cleanupError
-                ? `${profileError.message} The newly created auth user could not be removed; contact a system administrator.`
+                ? `${profileError.message} Provisioning rollback also failed: ${cleanupError}`
                 : profileError.message,
+        };
+    }
+
+    const staffError = await upsertStaffMirror(serviceClient, {
+        id: authData.user.id,
+        fullName,
+        email,
+        roleId,
+        roleName: role.name,
+        isActive: true,
+        firstLogin: true,
+        mustChangePassword: true,
+    });
+    if (staffError) {
+        const cleanupError = await rollbackProvisionedStaffAccount(serviceClient, authData.user.id);
+        return {
+            success: false,
+            error: cleanupError
+                ? `${staffError.message} Provisioning rollback also failed: ${cleanupError}`
+                : staffError.message,
         };
     }
 
@@ -264,39 +393,48 @@ export async function provisionStaffUserAction(
         .eq("status", "pending");
 
     if (expireError) {
-        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id);
+        const cleanupError = await rollbackProvisionedStaffAccount(serviceClient, authData.user.id);
         return {
             success: false,
             error: cleanupError
-                ? `${expireError.message} The newly invited account could not be removed; contact a system administrator.`
+                ? `${expireError.message} Provisioning rollback also failed: ${cleanupError}`
                 : expireError.message,
         };
     }
 
     const { error: invitationError } = await serviceClient.from("staff_invitations").insert({
-        user_id: inviteData.user.id,
+        user_id: authData.user.id,
         email,
         token: inviteToken,
         status: "pending",
         expires_at: expiresAt,
     });
     if (invitationError) {
-        const { error: cleanupError } = await serviceClient.auth.admin.deleteUser(inviteData.user.id);
+        const cleanupError = await rollbackProvisionedStaffAccount(serviceClient, authData.user.id);
         return {
             success: false,
             error: cleanupError
-                ? `${invitationError.message} The newly invited account could not be removed; contact a system administrator.`
+                ? `${invitationError.message} Provisioning rollback also failed: ${cleanupError}`
                 : invitationError.message,
         };
     }
 
+    const emailDelivery = await deliverStaffInvitationEmail({
+        email,
+        fullName,
+        roleName,
+        tempPassword,
+        inviteUrl,
+    });
+
     revalidatePath("/admin/users");
     return {
         success: true,
-        userId: inviteData.user.id,
+        userId: authData.user.id,
         email,
         tempPassword,
         inviteUrl,
+        ...emailDelivery,
     };
 }
 
@@ -319,17 +457,15 @@ export async function resendStaffInvitationAction(
         return { success: false, error: authorization.error };
     }
 
-    const { data: profile, error: profileError } = await serviceClient
-        .from("profiles")
-        .select("email, full_name, is_active, first_login, must_change_password")
-        .eq("id", targetId)
-        .maybeSingle();
-
+    const { record: profile, error: profileError } = await getUserAccountRecord(targetId, serviceClient);
     if (profileError || !profile) {
-        return { success: false, error: `The staff profile could not be verified${profileError ? `: ${profileError.message}` : "."}` };
+        return { success: false, error: `The staff profile could not be verified${profileError ? `: ${profileError}` : "."}` };
     }
     if (profile.is_active !== true) {
         return { success: false, error: "Invitations cannot be resent to an inactive account." };
+    }
+    if (profile.account_type !== "staff") {
+        return { success: false, error: "Invitations can only be resent to staff accounts." };
     }
     if (profile.first_login !== true && profile.must_change_password !== true) {
         return { success: false, error: "This staff member has already completed first login." };
@@ -341,6 +477,18 @@ export async function resendStaffInvitationAction(
     }
     const email = authData.user.email.trim().toLowerCase();
     const fullName = profile.full_name?.trim() || email;
+    let roleName = profile.role_name || "Staff";
+    if (profile.role_id) {
+        const { data: role, error: roleError } = await serviceClient
+            .from("roles")
+            .select("name")
+            .eq("id", profile.role_id)
+            .maybeSingle();
+        if (roleError) {
+            return { success: false, error: `The assigned staff role could not be verified: ${roleError.message}` };
+        }
+        if (role?.name) roleName = role.name;
+    }
     const tempPassword = createTemporaryPassword();
     const inviteToken = createInvitationToken();
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
@@ -355,30 +503,6 @@ export async function resendStaffInvitationAction(
         return { success: false, error: `The previous invitation could not be invalidated: ${expireError.message}` };
     }
 
-    const emailSent = !authData.user.email_confirmed_at;
-    if (emailSent) {
-        const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(email, {
-            data: { full_name: fullName },
-            redirectTo: inviteUrl,
-        });
-        if (inviteError || !inviteData.user) {
-            return { success: false, error: inviteError?.message ?? "The staff invitation could not be resent." };
-        }
-    }
-
-    const { error: passwordError } = await serviceClient.auth.admin.updateUserById(targetId, {
-        password: tempPassword,
-        email_confirm: true,
-    });
-    if (passwordError) {
-        return {
-            success: false,
-            error: emailSent
-                ? `The invitation was sent, but the temporary password could not be updated: ${passwordError.message}`
-                : `The temporary password could not be updated: ${passwordError.message}`,
-        };
-    }
-
     const { error: invitationError } = await serviceClient.from("staff_invitations").insert({
         user_id: targetId,
         email,
@@ -387,16 +511,80 @@ export async function resendStaffInvitationAction(
         expires_at: expiresAt,
     });
     if (invitationError) {
+        return { success: false, error: `The new invitation could not be tracked: ${invitationError.message}` };
+    }
+
+    const { error: profileUpdateError } = await serviceClient
+        .from("profiles")
+        .update({ must_change_password: true, first_login: true })
+        .eq("id", targetId);
+    if (profileUpdateError) {
+        const { error: cleanupError } = await serviceClient
+            .from("staff_invitations")
+            .update({ status: "expired" })
+            .eq("token", inviteToken)
+            .eq("status", "pending");
         return {
             success: false,
-            error: emailSent
-                ? `The invitation email was sent, but it could not be tracked: ${invitationError.message}`
-                : `The new credentials were created, but the invitation could not be tracked: ${invitationError.message}`,
+            error: cleanupError
+                ? `First-login security could not be reset: ${profileUpdateError.message}. The new invitation could not be invalidated; contact an administrator.`
+                : `First-login security could not be reset: ${profileUpdateError.message}`,
         };
     }
 
+    const staffError = await upsertStaffMirror(serviceClient, {
+        id: targetId,
+        fullName,
+        email,
+        roleId: profile.role_id,
+        roleName,
+        isActive: profile.is_active,
+        firstLogin: true,
+        mustChangePassword: true,
+        status: profile.status,
+    });
+    if (staffError) {
+        const { error: cleanupError } = await serviceClient
+            .from("staff_invitations")
+            .update({ status: "expired" })
+            .eq("token", inviteToken)
+            .eq("status", "pending");
+        return {
+            success: false,
+            error: cleanupError
+                ? `The staff mirror could not be updated: ${staffError.message}. The new invitation could not be invalidated; contact an administrator.`
+                : `The staff mirror could not be updated: ${staffError.message}`,
+        };
+    }
+
+    const { error: passwordError } = await serviceClient.auth.admin.updateUserById(targetId, {
+        password: tempPassword,
+        email_confirm: true,
+    });
+    if (passwordError) {
+        const { error: cleanupError } = await serviceClient
+            .from("staff_invitations")
+            .update({ status: "expired" })
+            .eq("token", inviteToken)
+            .eq("status", "pending");
+        return {
+            success: false,
+            error: cleanupError
+                ? `The temporary password could not be updated: ${passwordError.message}. The new invitation could not be invalidated; contact an administrator.`
+                : `The temporary password could not be updated: ${passwordError.message}`,
+        };
+    }
+
+    const emailDelivery = await deliverStaffInvitationEmail({
+        email,
+        fullName,
+        roleName,
+        tempPassword,
+        inviteUrl,
+    });
+
     revalidatePath("/admin/users");
-    return { success: true, email, tempPassword, inviteUrl, emailSent };
+    return { success: true, email, tempPassword, inviteUrl, ...emailDelivery };
 }
 
 export async function deleteStaffUserAction(targetUserId: string): Promise<DeleteStaffUserResult> {
@@ -489,6 +677,15 @@ export async function deleteStaffUserAction(targetUserId: string): Promise<Delet
         invitationsError.code !== "42P01"
     ) {
         return { success: false, error: `Invitation cleanup failed: ${invitationsError.message}` };
+    }
+
+    const { error: staffDeleteError } = await serviceClient
+        .from("staff")
+        .delete()
+        .eq("id", targetId);
+
+    if (staffDeleteError) {
+        return { success: false, error: `Staff mirror deletion failed: ${staffDeleteError.message}` };
     }
 
     const { error: profileDeleteError } = await serviceClient

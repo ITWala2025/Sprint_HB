@@ -1,45 +1,17 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createServerClient } from "@supabase/ssr";
 import { assertModuleAccess, canAccessAdminRoute, roleHasPermission, type AdminPermissionMap } from "@/app/admin/authorization";
 import { getAdminSession } from "@/app/admin/session";
 import { createServiceClient } from "@/lib/supabase/service";
+import { getStaffDirectoryRecords } from "@/lib/supabase/staff";
 import UserDirectoryTable, { type DirectoryRole, type DirectoryUser } from "@/components/admin/users/UserDirectoryTable";
 
 export const metadata: Metadata = {
     robots: { index: false, follow: false },
 };
 
-type ProfileRow = Omit<DirectoryUser, "roleName" | "roleColor"> & {
-    roles: DirectoryRole | DirectoryRole[] | null;
-};
-
 export default async function AdminUsersPage() {
     await assertModuleAccess("user_management");
-
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-        ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!supabaseUrl || !supabaseKey) {
-        throw new Error("Supabase public environment variables are not configured.");
-    }
-
-    const cookieStore = await cookies();
-    const supabase = createServerClient(supabaseUrl, supabaseKey, {
-        cookies: {
-            getAll: () => cookieStore.getAll(),
-            setAll: (cookiesToSet) => {
-                try {
-                    cookiesToSet.forEach(({ name, value, options }) => {
-                        cookieStore.set(name, value, options);
-                    });
-                } catch {
-                    // Server Components cannot write refreshed auth cookies.
-                }
-            },
-        },
-    });
 
     const session = await getAdminSession();
     if (!session || !session.isActive) redirect("/admin");
@@ -57,30 +29,34 @@ export default async function AdminUsersPage() {
         roleHasPermission(session.permissions, "access_control", "delete");
 
     const serviceClient = createServiceClient();
-    const queryClient = serviceClient ?? supabase;
+    if (!serviceClient) {
+        throw new Error("Server-side Supabase service role is not configured.");
+    }
 
-    const [{ data: profiles, error: profilesError }, { data: roleRows, error: rolesError }] = await Promise.all([
-        queryClient
-            .from("profiles")
-            .select("id, full_name, email, role, role_id, is_active, must_change_password, first_login, avatar_url, roles(id, name, color)")
-            .neq("role", "student")
-            .order("full_name"),
-        queryClient
+    const [staffRecords, { data: roleRows, error: rolesError }] = await Promise.all([
+        getStaffDirectoryRecords(serviceClient),
+        serviceClient
             .from("roles")
             .select("id, name, slug, description, permissions, is_active, is_system, color")
             .eq("is_active", true)
             .order("name"),
     ]);
 
-    if (profilesError) throw new Error(`Could not load the staff directory: ${profilesError.message}`);
     if (rolesError) throw new Error(`Could not load staff roles: ${rolesError.message}`);
 
-    const users = ((profiles ?? []) as unknown as ProfileRow[]).map((profile) => {
-        const role = Array.isArray(profile.roles) ? profile.roles[0] : profile.roles;
+    const users: DirectoryUser[] = staffRecords.map((record) => {
+        const role = Array.isArray(record.roles) ? record.roles[0] : record.roles;
         return {
-            ...profile,
-            roles: undefined,
-            roleName: role?.name ?? profile.role,
+            id: record.id,
+            full_name: record.full_name,
+            email: record.email,
+            role: record.account_type,
+            role_id: record.role_id,
+            is_active: record.is_active,
+            must_change_password: record.must_change_password,
+            first_login: record.first_login,
+            avatar_url: null,
+            roleName: role?.name ?? record.role_name ?? record.account_type,
             roleColor: role?.color ?? "navy",
         };
     });
@@ -97,7 +73,7 @@ export default async function AdminUsersPage() {
             </header>
             <UserDirectoryTable
                 users={users}
-                roles={roleRows ?? []}
+                roles={(roleRows ?? []) as DirectoryRole[]}
                 canInvite={canCreateUsers}
                 canDelete={canDeleteUsers}
             />
