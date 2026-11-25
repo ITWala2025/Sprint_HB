@@ -3,6 +3,8 @@ import { createPublicServerClient } from "@/lib/supabase/public-server";
 import { createServiceClient } from "@/lib/supabase/service";
 import CourseCard from "@/components/cards/CourseCard";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Apply for a Course" };
 
 export default async function StudentApplyCoursePage() {
