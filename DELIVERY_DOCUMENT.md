@@ -1,6 +1,6 @@
 # SPRINT Institutional Training Hub — Project Delivery Document
 
-**Version:** 1.1  
+**Version:** 1.2  
 **Date:** 2026-11-25  
 **Prepared for:** SPRINT Institutional Training Hub, Hazaribagh, Jharkhand  
 **Repository:** `sprint-hb` (Next.js 16, React 19, Supabase)
@@ -13,15 +13,15 @@ This document describes the complete, production-ready codebase for the SPRINT I
 
 The codebase implements:
 
-- **Public marketing site** with SEO-optimized pages, structured data, dynamic sitemap, and crawler rules
-- **Multi-audience contact/enquiry system** with server-side email delivery via Nodemailer
-- **Student enrollment wizard** with multi-step form, OTP verification, and Supabase-backed persistence
-- **Student portal** with authenticated dashboard, assignments, progress tracking, and profile management
-- **Admin console** with RBAC (Role-Based Access Control), course/bundle/learning-path management, student operations, announcements CMS, and staff provisioning
-- **Staff workspace** with first-time setup, invitation flow, and password management
-- **AI chatbot** with verified Q&A, local Ollama integration, and fallback deterministic responses
+- **Public marketing site** with SEO-optimized pages, structured data, dynamic sitemap, and crawler rules; new video components (BrandVideo, SmeVideo) for campus tours and industry expert insights
+- **Multi-audience contact/enquiry system** with server-side email delivery via Nodemailer; full CRUD admin enquiry management with category-specific pages (students, institutes, professionals, companies)
+- **Student enrollment wizard** with streamlined multi-step form (personal details + password setup), OTP verification, and Supabase-backed persistence; profile completion tracking and onboarding state management
+- **Student portal** with authenticated dashboard, assignments, progress tracking, and profile management; profile completion card with dynamic visibility
+- **Admin console** with RBAC (Role-Based Access Control), course/bundle/learning-path management, student operations, announcements CMS, staff provisioning, and enhanced staff directory management with role-based user accounts
+- **Staff workspace** with first-time setup, invitation flow, password management, and new staff service client for directory records
+- **AI chatbot** with enhanced intent routing, verified Q&A datasets, local Ollama integration, and fallback deterministic responses; aligned office hours with contact methods
 - **Transactional email system** with branded templates for verification, password setup/reset, staff invites, and enrollment approvals
-- **Three-role authentication system** (Student, Admin, Staff) with Supabase Auth, profile-based authorization, middleware session protection, and cryptographic session cookies
+- **Three-role authentication system** (Student, Admin, Staff) with Supabase Auth, profile-based authorization, middleware session protection, and cryptographic session cookies; 8-second admin auth timeout guard
 - **Comprehensive test suite** (200+ unit tests) and CI-ready build configuration
 
 All code has been validated: `npx tsc --noEmit` passes with zero errors; `npm run build` succeeds generating 65 routes (static + dynamic); `git diff --check` passes.
@@ -119,7 +119,7 @@ Route prefixes protected:
 | File/Directory | Purpose |
 |----------------|---------|
 | `src/app/page.jsx` | Root redirect to `/home` with `robots: { index: false }`, canonical `/` |
-| `src/app/home/page.jsx` | Hero, partner marquee (22 logos), featured program (zigzag timeline), course paths, faculty filmstrip, testimonials carousel, FAQ, contact CTA |
+| `src/app/home/page.jsx` | Hero, partner marquee (22 logos), featured program (zigzag timeline), course paths, **BrandVideo** (campus tour with interactive pillars), **SmeVideo** (industry expert insights with playback & stats), faculty filmstrip, testimonials carousel, FAQ, contact CTA |
 | `src/app/about/page.jsx` | 10-section spec: hero with dark overlay + impact band, story/vision/mission swap, leadership, faculty, industry connections, verified stats, CTA |
 | `src/app/courses/page.jsx` | Filterable catalogue (audience tabs, category/level filters), Supabase-backed with static fallback, ISR 1m |
 | `src/app/courses/[slug]/page.jsx` | Dynamic course detail with `generateMetadata`, JSON-LD Course schema, curriculum, enrollment CTA |
@@ -130,7 +130,7 @@ Route prefixes protected:
 | `src/app/careers/page.jsx` | Job listings with role detail modal, application form, JSON-LD JobPosting schema |
 | `src/app/contact/page.jsx` | 4-audience tabbed enquiry form, contact cards, map, FAQ accordion |
 | `src/app/terms/page.jsx`, `src/app/privacy/page.jsx` | Compact single-column legal layout |
-| `src/components/Home/*` | Reusable sections: Hero, PartnerCarousel, FeaturedProgram, Testimonials, FacultyFilmstrip, MoreCourses, ContactCTA, FAQSection |
+| `src/components/Home/*` | Reusable sections: Hero, PartnerCarousel, FeaturedProgram, **BrandVideo**, **SmeVideo**, Testimonials, FacultyFilmstrip, MoreCourses, ContactCTA, FAQSection |
 | `src/components/sections/*` | Shared sections: FacultyExperts, StoryVisionMission, WhyChooseSprint, ImpactWeCreate, IndustryAcademicConnection |
 
 **SEO & Structured Data (all public pages):**
@@ -141,41 +141,75 @@ Route prefixes protected:
 - `src/app/sitemap.ts`: Static + dynamic routes (courses, bundles, learning paths) with deduplication, Supabase + static fallback
 - `src/app/robots.ts`: Allow `/`; disallow `/admin/`, `/staff/`, `/student/`, `/api/`, auth routes; sitemap reference
 
+**Video Components Added (2026-11-25):**
+- `BrandVideo` (`src/components/Home/BrandVideo.jsx`): Campus tour showcase with 4 interactive pillars (campus, lab, library, sports), responsive video modal, keyboard accessible
+- `SmeVideo` (`src/components/Home/SmeVideo.jsx`): Industry expert video insights with playback controls, statistics overlay, hover effects
+- Enhanced `FacultyFilmstrip` with improved layout, dynamic height adjustments, and CSS modules
+- Updated `Testimonials` and `FAQSection` for consistent styling and responsiveness
+
 ### 3.2 Contact & Enquiry Module
 
 | File | Purpose |
 |------|---------|
-| `src/app/api/contact/route.js` | Serverless POST handler: validates payload, sends email via Nodemailer, returns generic success/error (no raw error leakage) |
+| `src/app/api/contact/route.js` | Serverless POST handler: validates payload, sends email via Nodemailer, returns generic success/error (no raw error leakage); handles enquiry submissions with email notifications |
 | `src/components/contact/EnquirySection.jsx` | Tabbed form for 4 audiences (Student, Working Professional, Institute, Company) |
 | `src/components/contact/*Form.jsx` | Audience-specific form components with validation |
-| `src/components/contact/ContactMethods.jsx` | Click-to-call, mailto, WhatsApp (from `site.config.json`), address |
+| `src/components/contact/ContactMethods.jsx` | Click-to-call, mailto, WhatsApp (from `site.config.json`), address; **updated office hours alignment with chatbot** |
 | `src/components/contact/FAQSection.jsx` | Accordion with data from `src/data/contactFaqs.js` |
 | `src/lib/contact-phone.js` | Phone validation utility (Indian format) |
+| `src/app/admin/enquiries/actions.ts` | Server actions for enquiry CRUD: fetch, update status, delete; revalidation paths for dashboard sync |
+| `src/app/admin/enquiries/page.tsx` | Main enquiries dashboard with redirect to student enquiries |
+| `src/app/admin/enquiries/students/page.tsx` | Student enquiries category view |
+| `src/app/admin/enquiries/institutes/page.tsx` | Institute enquiries category view |
+| `src/app/admin/enquiries/professionals/page.tsx` | Professional enquiries category view |
+| `src/app/admin/enquiries/companies/page.tsx` | Company enquiries category view |
+| `src/components/admin/EnquiriesCategoryView.tsx` | Reusable category view component: table, status badges, actions (update/delete), pagination |
+| `src/components/admin/enquiries-types.ts` | Type definitions for enquiry audiences, statuses, and table columns |
+| `src/Supabase/Enquiries Dashboard Migration.sql` | Database migration for enquiries dashboard tables and indexes |
 
 **Security fixes applied (2026-11-23):**
 - Error responses return generic message: `"Failed to send enquiry. Please try again."` (raw `error.message` logged server-side only)
 - TLS `rejectUnauthorized: false` only in non-production environments
 
+**Admin Enquiry Management (added 2026-11-23):**
+- Full CRUD operations for enquiries across 4 audience categories
+- Category-specific pages with consistent UI via `EnquiriesCategoryView`
+- Status management (new, in-progress, resolved, closed)
+- Email notification integration on enquiry submission
+- Dashboard revalidation for real-time updates
+
 ### 3.3 Student Authentication & Enrollment Module
 
 | File/Directory | Purpose |
 |----------------|---------|
-| `src/app/student/login/page.jsx` | Sign-in form, mock-delay backend seam (replaceable with Supabase), redirects to dashboard |
+| `src/app/student/login/page.jsx` | Sign-in form, mock-delay backend seam (replaceable with Supabase), redirects to dashboard; handles `deactivated=1` query param |
 | `src/app/student/forgot-password/page.jsx` | Email entry → `/student/check-email?email=` |
 | `src/app/student/check-email/page.jsx` | Resend cooldown, client-side query param read |
 | `src/app/student/reset-password/page.jsx` | 6-box OTP input + password requirements live validation |
 | `src/app/student/password-reset-success/page.jsx` | Confirmation screen |
-| `src/app/student/enroll/page.jsx` | 5-step wizard shell, reads `?course=` / `?bundle=` for pre-selection |
+| `src/app/student/enroll/page.jsx` | **Streamlined 3-step wizard shell** (Personal Information → Specialization → Account), reads `?course=` / `?bundle=` for pre-selection |
 | `src/app/student/enroll/actions.ts` | Server actions: `applyForCourseAction` (course/bundle), enrollment insert, magic link generation, password-recovery email dispatch |
-| `src/components/student/enrollment/EnrollmentWizard.jsx` | Wizard state machine: controlled steps, validation, focus management, optional steps, progress bar |
-| `src/components/student/enrollment/steps/*` | PersonalInformation (OTP), Education (optional, cross-slice write to specialization), Specialization, LearningPath, Account (password setup) |
+| `src/components/student/enrollment/EnrollmentWizard.jsx` | Wizard state machine: controlled steps, validation, focus management, **optional steps removed**, progress bar |
+| `src/components/student/enrollment/steps/*` | **PersonalInformation** (OTP), **Specialization**, **Account** (password setup) — Education step removed |
 | `src/components/student/enrollment/enrollment-steps.js` | Single source of truth for step registry (labels, components, validation, `isScaffolded`, `isOptional`) |
 | `src/components/student/auth/*` | Shared primitives: AuthButton, AuthField, AuthCard, PasswordInput, PasswordRequirements, auth-validation.js |
+| `src/app/student/auth-types.ts` | Type definitions: `StudentProfile`, `onboarding_completed` flag |
+| `src/app/student/session.ts` | Student session utilities with onboarding completion check |
+| `src/lib/student-login-redirect.js` | Resolves `?next=` course path for student post-login redirect |
 
 **Key flows:**
-1. **Enrollment**: Multi-step wizard → server action validates → inserts into `public.enrollments` with `application_number` (`SPR-APP-YYMM-XXXX`) → generates Supabase magic link (`/student/enroll?token=`) → sends password-recovery email via custom SMTP mailer → applicant checks status on dashboard
+1. **Enrollment**: Streamlined 3-step wizard (Personal Info → Specialization → Account) → server action validates → inserts into `public.enrollments` with `application_number` (`SPR-APP-YYMM-XXXX`) → generates Supabase magic link (`/student/enroll?token=`) → sends password-recovery email via custom SMTP mailer → applicant checks status on dashboard
 2. **Admin Approval**: RPC `verify_and_approve_enrollment` creates/updates `public.students`, `public.profiles`, `public.student_courses`, generates registration number `SPR-<year>-<uuid>`
 3. **Password Setup**: Applicant clicks magic link → `/set-password` → sets password → auto-sign-in → `/student/dashboard`
+4. **Profile Completion Tracking**: Dashboard displays profile completion card with dynamic visibility based on `onboarding_completed` flag and completion percentage; `StudentPortalSessionGuard` handles onboarding completion status for active students
+
+**Student Onboarding Enhancements (2026-11-25):**
+- Removed Education step from enrollment wizard (was optional, cross-slice write to specialization)
+- Reduced wizard from 5 steps to 3 core steps for faster onboarding
+- Added `onboarding_completed` field to `public.profiles` table via `Student Onboarding State Migration.sql`
+- `StudentPortalSessionGuard` now checks onboarding completion and redirects appropriately
+- `DashboardBento` includes profile completion card with progress percentage
+- Updated `EnrollmentProgress`, `EnrollmentStepFooter`, `EnrollmentSuccessPanel` for new step count and clearer post-registration actions
 
 ### 3.4 Student Portal Module
 
@@ -185,11 +219,13 @@ Route prefixes protected:
 | `src/components/student/StudentLayout.jsx` | Responsive: desktop collapsible sidebar, mobile slide-out drawer (backdrop dismiss, Escape, scroll lock) |
 | `src/components/student/StudentSidebar.jsx` | Navigation rail from `student-navigation.json` (9 items), active `aria-current`, identity block with avatar dropdown |
 | `src/components/student/StudentDataProvider.jsx` | Client context: assessment access scope, pending badge count, refresh after submission |
-| `src/app/student/(portal)/dashboard/page.jsx` | Server-side data fetch → `DashboardBento.jsx` (12-col grid: welcome/progress, KPIs, assignments/applications, live classes/announcements, quick actions) |
+| `src/app/student/(portal)/dashboard/page.jsx` | Server-side data fetch → `DashboardBento.jsx` (12-col grid: welcome/progress, **profile completion card**, KPIs, assignments/applications, live classes/announcements, quick actions) |
 | `src/app/student/(portal)/assignments/page.jsx` | `AssignmentsClient.jsx`: KPIs, tabs/search/course filters, submission drawer (GitHub/live URLs, notes, file upload to `assessment-uploads` bucket, 10 MB max) |
 | `src/app/student/(portal)/profile/page.jsx` | Supabase profile fetch + edit form (personal, education, social, URL validation) |
 | `src/components/student/LogoutButton.jsx` + `student-session.js` | Sign-out: `supabase.auth.signOut()`, clears storage keys, hard navigation to `/student/login` |
 | `src/lib/student-assessment-access.ts` | Authorization scope: approved enrollments + active student_courses + active student_course_enrollments, bundle expansion via `bundle_courses` |
+| `src/components/student/dashboard/DashboardBento.jsx` | **Profile completion card** with dynamic visibility based on `onboarding_completed` flag and completion percentage; 12-col responsive grid layout |
+| `src/lib/student-portal-session-guard.ts` | **StudentPortalSessionGuard**: handles onboarding completion status for active students, redirects to profile completion if needed |
 
 ### 3.5 Admin Console Module
 
@@ -213,6 +249,12 @@ Route prefixes protected:
 | `src/app/admin/students/list/page.tsx` | Student directory: ID, name, contact, enrolled courses (multi-table resolution), status, enrollment date |
 | `src/app/admin/academics/assessments/assign/page.tsx` | Assessment assignment: KPI/filter, grouped course selector (flagship/bundle/course), draft/active/closed, grading with signed URLs |
 | `src/app/admin/academics/live-classes/page.tsx` | Live class CRUD: Google Meet/Zoom/other, status actions, permission checks |
+| `src/app/admin/dashboard/page.tsx` | **Refactored dashboard** with streamlined shortcut links, improved layout, metrics cards |
+| `src/app/admin/session.ts` | Admin session utilities with permission loading and validation |
+| `src/lib/supabase/staff.ts` | **Staff service client**: `getStaffDirectoryRecords()`, `getUserAccountRecords()` with role metadata for directory management |
+| `src/components/admin/roles/CreateUserModal.tsx` | Enhanced modal for creating users with role assignment and email sending |
+| `src/components/admin/users/UserDirectoryTable.tsx` | Staff directory table with role metadata display and user account record selection |
+| `src/components/admin/auth/ForcePasswordChangeModal.tsx` | Improved password change modal with session handling alignment |
 
 **RBAC Model:**
 - Legacy: `profiles.role = 'admin'` → full access
@@ -220,6 +262,14 @@ Route prefixes protected:
 - Module permissions: `user_management`, `access_control`, `academic`, `admissions`, `cms`, `careers`, `partners`, `trainers`, `scholarships`
 - Capabilities: `create`, `read`, `update`, `delete`
 - Admin layout loads permissions via RPC; submodule routes call `assertModuleAccess(module, capability)`
+
+**Admin Console Enhancements (2026-11-25):**
+- **Staff Service Client** (`src/lib/supabase/staff.ts`): Centralized staff directory management with `StaffDirectoryRecord` and `UserAccountRecord` types; includes `onboarding_completed` field for tracking
+- **Enhanced User Directory**: `UserDirectoryTable` displays staff records with role metadata; `CreateUserModal` handles email sending scenarios
+- **Refactored Admin Dashboard**: Streamlined shortcut links, improved layout for better usability
+- **Improved ForcePasswordChangeModal**: Aligned with new session handling patterns
+- **Updated AdminLayoutClient**: Enhanced sidebar navigation and permission-gated groups
+- **Comprehensive test coverage**: New tests for staff directory data, user directory table, admin layout sign-out, create user modal, force password change modal, staff login actions and flow
 
 ### 3.6 Staff Workspace Module
 
@@ -229,22 +279,41 @@ Route prefixes protected:
 | `src/app/staff/login/actions.ts` | First-time setup: verifies user, clears `must_change_password`/`first_login`, activates profile, revalidates `/staff/dashboard` |
 | `src/app/staff/invitation/[token]/page.tsx` | Invitation acceptance: sets password, confirms email, redirects to setup |
 | `src/components/staff/auth/FirstTimePasswordModal.tsx` | Modal for initial password change |
+| `src/app/staff/dashboard/SignOutButton.tsx` | Staff sign-out button with session cleanup |
+| `src/app/staff/login/StaffLoginForm.tsx` | Staff login form with session recovery and error handling |
+| `src/app/staff/login/actions.ts` | `completeFirstTimeStaffSetupAction`: verifies session, updates profile flags, marks invitation as used, revalidates dashboard |
+| `src/lib/supabase/staff.ts` | **Staff service client**: `getStaffDirectoryRecords()`, `getUserAccountRecords()` with role metadata for directory management |
 
 **Flow:** Admin provisions staff via `/admin/users` → `auth.admin.inviteUserByEmail` + temp password + magic URL → staff clicks URL → `/staff/invitation/[token]` → sets password → `/staff/login` → first-time setup modal → `/staff/dashboard` (rewritten to `/admin/dashboard`)
+
+**Staff Workspace Enhancements (2026-11-25):**
+- **Staff Service Client** (`src/lib/supabase/staff.ts`): Shared with admin console for consistent staff directory management; provides `StaffDirectoryRecord` (with `onboarding_completed` field) and `UserAccountRecord` types
+- **Enhanced Staff Login**: `StaffLoginForm` with improved session recovery, error handling, and 8-second timeout guard alignment
+- **First-Time Setup Improvements**: `FirstTimePasswordModal` and `completeFirstTimeStaffSetupAction` aligned with new session handling patterns
+- **Sign-Out Button**: Dedicated `SignOutButton` component for staff dashboard with proper session cleanup
+- **Comprehensive test coverage**: Staff login actions, staff login flow, session recovery, error handling
 
 ### 3.7 Chatbot Module
 
 | File | Purpose |
 |------|---------|
-| `src/components/ai/AiAssistant.tsx` | Floating chat widget: suggestions chips, similar questions, markdown rendering, copy-to-clipboard, auto-scroll |
+| `src/components/ai/AiAssistant.tsx` | Floating chat widget: suggestions chips, similar questions, markdown rendering, copy-to-clipboard, auto-scroll; **updated contextual suggestions for better user guidance** |
 | `src/app/api/chat/route.ts` | POST/GET/OPTIONS: validates message (1-500 chars), history (last 12), calls `getLocalChatbotReply` |
-| `src/app/chatbot/chatbot-service.server.js` | Server-only: deterministic reply selection + optional Ollama call (timeout 8s) |
-| `src/app/chatbot/chatbot-core.js` | Deterministic rules: greetings, career guidance, fees (hands off to admissions), eligibility, internships, duration, contact, courses |
+| `src/app/chatbot/chatbot-service.server.js` | Server-only: deterministic reply selection + optional Ollama call (timeout 8s); **enhanced intent routing** |
+| `src/app/chatbot/chatbot-core.js` | Deterministic rules: greetings, career guidance, fees (hands off to admissions), eligibility, **internships (enhanced)**, duration, contact, courses; **updated regex patterns for office hours and internship queries** |
 | `src/app/chatbot/chatbot-qa-datasets.js` | Loads verified Q&A from `data/chatbot/sprint-qa-master.json` |
-| `data/chatbot/*.json` | Topic datasets: accommodation, support, dashboard, scholarship, etc. |
+| `data/chatbot/*.json` | Topic datasets: about_sprint, admission, career, courses, payment, accommodation, support, dashboard, scholarship, etc. |
 | `scripts/build/build-chatbot-qa-master.js` | Builds consolidated `sprint-qa-master.json` from source topics |
+| `data/chatbot/sprint-qa-master.json` | **Consolidated verified Q&A master dataset** (updated 2026-11-25) |
 
 **Behavior:** Exact match → verified Q&A → Ollama (if configured) → deterministic rules → fallback suggestions. No fees/policy invention; hands off to `/contact`.
+
+**Chatbot Enhancements (2026-11-25):**
+- **Enhanced Intent Routing**: Improved keyword detection and regex patterns for internships and office hours queries
+- **Verified Q&A Updates**: Updated `about_sprint_QA_dataset.json`, `admission_QA_dataset.json`, `career_QA_dataset.json`, `courses_QA_dataset.json`, `payment_QA_dataset.json` with latest information
+- **Office Hours Alignment**: Chatbot office hours responses now synchronized with `ContactMethods.jsx` component (single source of truth)
+- **Contextual Suggestions**: Updated `AiAssistant.tsx` suggestion chips for better user guidance
+- **Comprehensive Test Coverage**: Added unit tests for office hours and internship query responses in `chatbot-service.test.js`
 
 ### 3.8 Transactional Email Module
 
@@ -276,7 +345,7 @@ Route prefixes protected:
 | `src/lib/id-utils.ts` | `formatApplicationId` (`SPR-APP-YYMM-XXXX`), `generateNextApplicationId`, `isUuid`, `sanitizeStudentId` |
 | `src/utils/dates.js` | `formatShortDate` (en-IN) |
 
-### 3.10 Database Migrations (26 SQL files in `src/Supabase/`)
+### 3.10 Database Migrations (27 SQL files in `src/Supabase/`)
 
 | Migration | Purpose |
 |-----------|---------|
@@ -304,6 +373,7 @@ Route prefixes protected:
 | `Enrollment Approval Preflight.sql` | Pre-approval checks |
 | `Enrollment Approval and Student Directory Migration.sql` | Directory query support |
 | `Unified Registration Enrollment OTP Migration.sql` | OTP field for enrollment |
+| `Student Onboarding State Migration.sql` | **Adds `onboarding_completed` boolean field to `public.profiles` table for tracking student onboarding completion status** |
 
 **Note:** Tables `assessment_submissions`, `live_classes`, `notification_logs`, `announcements`, and bucket `assessment-uploads` are provisioned in Supabase but **not defined by tracked SQL migrations** — deployment schema setup must be documented separately.
 
@@ -632,7 +702,7 @@ Several `/student/(portal)/*` routes use `StudentPlaceholderPage` (shared compon
 
 The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **do not have route files**:
 
-- **Admissions & Enquiries** → Students, Institutes, Professionals, Companies (only `/admin/enquiries` exists with category tabs)
+- **Admissions & Enquiries** → Students, Institutes, Professionals, Companies — **NOW RESOLVED**: `/admin/enquiries` exists with category tabs AND dedicated pages at `/admin/enquiries/students`, `/admin/enquiries/institutes`, `/admin/enquiries/professionals`, `/admin/enquiries/companies` (added 2026-11-23)
 - **Website CMS** → Updates (exists), Scholarships, Partners, Trainers, Results (`.gitkeep` only)
 - **Academic & Curriculum** → Assessments (exists), Live Classes (exists), but no "Results" page
 - **Access Management** → Roles (exists), Users (exists)
@@ -719,13 +789,16 @@ The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **d
 | **Contact form / SMTP** | `src/app/api/contact/route.js`, `src/lib/email/mailer.ts` |
 | **Student auth flows** | `src/app/student/*/page.jsx`, `src/app/student/enroll/actions.ts`, `src/components/student/enrollment/*` |
 | **Login flows (all roles)** | `src/app/student/login/page.jsx`, `src/app/admin/page.tsx`, `src/app/staff/login/page.tsx`, `src/app/staff/login/StaffLoginForm.tsx`, `src/app/staff/login/actions.ts`, `src/lib/supabase/middleware.ts`, `src/lib/auth/student-session.ts`, `src/lib/auth/admin-session.ts`, `src/lib/student-login-redirect.js`, `src/components/student/student-session.js` |
-| **Student portal data** | `src/app/student/(portal)/dashboard/page.jsx`, `src/lib/student-assessment-access.ts` |
-| **Admin RBAC / permissions** | `src/app/admin/auth-types.ts`, `src/app/admin/authorization.ts`, `src/app/admin/roles/*` |
+| **Student portal data** | `src/app/student/(portal)/dashboard/page.jsx`, `src/lib/student-assessment-access.ts`, `src/components/student/dashboard/DashboardBento.jsx`, `src/lib/student-portal-session-guard.ts` |
+| **Admin RBAC / permissions** | `src/app/admin/auth-types.ts`, `src/app/admin/authorization.ts`, `src/app/admin/roles/*`, `src/app/admin/session.ts` |
 | **Course/bundle/learning path admin** | `src/app/admin/courses/*`, `src/lib/course-utils.ts` |
 | **Announcements / ticker** | `src/app/admin/updates/*`, `src/components/layout/CampusNewsTicker.tsx` |
-| **Chatbot logic** | `src/app/chatbot/chatbot-core.js`, `src/app/chatbot/chatbot-service.server.js` |
+| **Chatbot logic** | `src/app/chatbot/chatbot-core.js`, `src/app/chatbot/chatbot-service.server.js`, `data/chatbot/*.json` |
 | **Transactional emails** | `src/lib/email/templates/*.ts`, `src/Supabase/email-templates/*.html` |
 | **Database schema** | `src/Supabase/*.sql` (apply in filename order) |
+| **Staff directory management** | `src/lib/supabase/staff.ts`, `src/components/admin/users/UserDirectoryTable.tsx`, `src/components/admin/roles/CreateUserModal.tsx` |
+| **Enquiry management** | `src/app/admin/enquiries/*`, `src/components/admin/EnquiriesCategoryView.tsx`, `src/components/admin/enquiries-types.ts` |
+| **Video components** | `src/components/Home/BrandVideo.jsx`, `src/components/Home/SmeVideo.jsx` |
 
 ### 9.2 Common Operational Tasks
 
@@ -786,7 +859,7 @@ The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **d
 | `/student/check-email` | Static | Resend cooldown |
 | `/student/reset-password` | Static | OTP + password |
 | `/student/password-reset-success` | Static | Confirmation |
-| `/student/enroll` | Static | 5-step wizard, pre-select via `?course=`/`?bundle=` |
+| `/student/enroll` | Static | **3-step wizard** (Personal Info → Specialization → Account), pre-select via `?course=`/`?bundle=` |
 
 ### Student Portal (Protected)
 
@@ -814,6 +887,10 @@ The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **d
 | `/admin/users` | **Functional** — staff list, invite, delete |
 | `/admin/updates` | **Functional** — CMS + instant cache invalidation |
 | `/admin/enquiries` | **Functional** — category tabs |
+| `/admin/enquiries/students` | **Functional** — student enquiries category |
+| `/admin/enquiries/institutes` | **Functional** — institute enquiries category |
+| `/admin/enquiries/professionals` | **Functional** — professional enquiries category |
+| `/admin/enquiries/companies` | **Functional** — company enquiries category |
 | `/admin/students/registrations` | **Functional** — course-free only |
 | `/admin/students/enrollments` | **Functional** — approve/reject via RPC |
 | `/admin/students/list` | **Functional** — multi-table course resolution |
@@ -840,3 +917,8 @@ The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **d
 
 **End of Delivery Document**  
 *This document reflects the codebase state as of commit dated 2026-11-25. All statements are based on actual project files; items marked as missing, incomplete, or ambiguous are explicitly flagged.*
+
+**Related Documentation:**
+- `docs/md/SPRINT_SUPABASE_DATABASE_MIGRATION_REFERENCE.md` — Complete database migration reference
+- `docs/md/STUDENT_DASHBOARD_ACCESS_FIX.md` — Student dashboard access fix details
+- `docs/md/Staff_User_and_Roles_Flow.md` — Staff user provisioning and role assignment flow documentation
