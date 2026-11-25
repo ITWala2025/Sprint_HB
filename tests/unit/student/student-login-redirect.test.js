@@ -8,6 +8,15 @@ describe("resolveStudentLoginNextPath", () => {
     ).toBe("/courses/cloud-fundamentals");
   });
 
+  it("preserves course bundles and protected student deep links", () => {
+    expect(
+      resolveStudentLoginNextPath("?next=%2Fbundles%2Fcareer-path"),
+    ).toBe("/bundles/career-path");
+    expect(
+      resolveStudentLoginNextPath("?next=%2Fstudent%2Fapply-course%3Ftab%3Dpending"),
+    ).toBe("/student/apply-course?tab=pending");
+  });
+
   it.each([
     "?next=https%3A%2F%2Fexample.com",
     "?next=%2F%2Fevil.example",

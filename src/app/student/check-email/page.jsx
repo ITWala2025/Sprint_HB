@@ -163,19 +163,6 @@ export default function CheckEmailPage() {
         ====================================================== */}
         <section className="student-check-email-panel">
           <div className="student-check-email-wrapper">
-            {/* Mobile-only logo */}
-            <div className="student-check-email-mobile-logo">
-              <Link href="/" aria-label="SPRINT Home">
-                <Image
-                  src="/images/student/sprint-full-logo.webp"
-                  alt="SPRINT - School of Professional Studies & Information Technology"
-                  width={500}
-                  height={130}
-                  priority
-                />
-              </Link>
-            </div>
-
             {/* Back */}
             <Link
               href="/student/login"

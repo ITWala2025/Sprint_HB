@@ -1,21 +1,24 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { Suspense } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import Header from "@/components/header/Header";
 import ConditionalCampusNewsTicker from "@/components/layout/ConditionalCampusNewsTicker";
 import Footer from "@/components/footer/Footer";
 import AiAssistant from "@/components/ai/AiAssistant";
+import HeaderLogo from "@/components/header/HeaderLogo";
 import siteConfig from "@/config/site.config.json";
 
 /**
- * Routes with focused layouts. Student routes retain the public site chrome
- * while their pages render inside the student portal or auth flow.
+ * Routes with focused layouts that omit the public site chrome.
  */
 const FOCUSED_ROUTES = [
   "/login",
   "/forgot-password",
   "/set-password",
   "/student/login",
+  "/student/enroll",
   "/student/forgot-password",
   "/student/check-email",
   "/student/reset-password",
@@ -23,21 +26,65 @@ const FOCUSED_ROUTES = [
   "/staff",
 ];
 
+const STUDENT_AUTH_ROUTES = [
+  "/student/login",
+  "/student/enroll",
+  "/student/forgot-password",
+  "/student/check-email",
+  "/student/reset-password",
+  "/student/password-reset-success",
+];
+
 const matchesRoute = (pathname, routes) =>
   routes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
+function StudentAuthContextualLink({ pathname }) {
+  const searchParams = useSearchParams();
+  const requestedNext = searchParams.get("next");
+  const enrollmentHref = requestedNext
+    ? `/student/enroll?${new URLSearchParams({ next: requestedNext })}`
+    : "/student/enroll";
+  const loginHref = requestedNext
+    ? `/student/login?${new URLSearchParams({ next: requestedNext })}`
+    : "/student/login";
+  const authLink = pathname === "/student/login"
+    ? { href: enrollmentHref, label: "Don't have an account? Enroll Now →" }
+    : pathname === "/student/enroll"
+      ? { href: loginHref, label: "Already enrolled? Sign in" }
+      : { href: loginHref, label: "Back to Sign in" };
+
+  return (
+    <Link
+      href={authLink.href}
+      className="sprint-focus rounded-lg text-right text-xs font-semibold text-brand-navy hover:text-brand-red sm:text-sm"
+    >
+      {authLink.label}
+    </Link>
+  );
+}
+
 export default function PublicSiteShell({ children, ticker }) {
   const pathname = usePathname();
 
   const isAdminRoute = pathname.startsWith("/admin");
-  const isStudentRoute = pathname.startsWith("/student/");
   const isFocusedRoute = matchesRoute(pathname, FOCUSED_ROUTES);
-  const showPublicChrome = !isAdminRoute && (!isFocusedRoute || isStudentRoute);
+  const isStudentAuthRoute = matchesRoute(pathname, STUDENT_AUTH_ROUTES);
+  const showPublicChrome = !isAdminRoute && !isFocusedRoute;
 
   return (
     <>
+      {isStudentAuthRoute && (
+        <header className="border-b border-brand-border bg-brand-white">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+            <HeaderLogo />
+            <Suspense fallback={<span className="w-32" aria-hidden="true" />}>
+              <StudentAuthContextualLink pathname={pathname} />
+            </Suspense>
+          </div>
+        </header>
+      )}
       {showPublicChrome && <Header />}
 
       {showPublicChrome && (
@@ -47,11 +94,7 @@ export default function PublicSiteShell({ children, ticker }) {
         {children}
       </main>
       {showPublicChrome && (
-        <Footer
-          className={
-            pathname === "/student/enroll" ? "pb-40 md:pb-0" : undefined
-          }
-        />
+        <Footer />
       )}
       {showPublicChrome && (
         <a

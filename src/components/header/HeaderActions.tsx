@@ -6,11 +6,13 @@ export default function HeaderActions({
   isAdmin = false,
   studentInitials = null,
   studentFullName = null,
+  isOnboardedStudent = false,
   accessibleBrandRed = false,
 }: {
   isAdmin?: boolean;
   studentInitials?: string | null;
   studentFullName?: string | null;
+  isOnboardedStudent?: boolean;
   accessibleBrandRed?: boolean;
 }) {
   return (
@@ -20,7 +22,7 @@ export default function HeaderActions({
           <LayoutDashboard className="size-4.5" aria-hidden="true" />
           Go to Dashboard
         </Link>
-) : studentInitials ? (
+) : isOnboardedStudent && studentInitials ? (
         <StudentAvatarDropdown
           initials={studentInitials}
           fullName={studentFullName || "Student"}

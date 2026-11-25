@@ -342,19 +342,6 @@ export default function ResetPasswordPage() {
         ====================================================== */}
         <section className="student-reset-panel">
           <div className="student-reset-wrapper">
-            {/* Mobile-only logo */}
-            <div className="student-reset-mobile-logo">
-              <Link href="/" aria-label="SPRINT Home">
-                <Image
-                  src="/images/student/sprint-full-logo.webp"
-                  alt="SPRINT - School of Professional Studies & Information Technology"
-                  width={500}
-                  height={130}
-                  priority
-                />
-              </Link>
-            </div>
-
             {/* Back */}
             <Link
               href="/student/login"

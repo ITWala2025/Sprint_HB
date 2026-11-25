@@ -89,20 +89,34 @@ describe("student portal session guard", () => {
 
   it("admits an active student to the portal while the session is live", async () => {
     signIn();
-    profileMock.mockResolvedValue({ data: { role: "student", status: "active" } });
+    profileMock.mockResolvedValue({
+      data: {
+        role: "student",
+        status: "active",
+        is_active: true,
+        onboarding_completed: true,
+      },
+    });
 
     const response = await visit("/student/dashboard");
 
     expect(response.status).toBe(200);
   });
 
-  it("rejects an authenticated user who is not an active student", async () => {
+  it("resumes enrollment for a student whose onboarding is incomplete", async () => {
     signIn();
-    profileMock.mockResolvedValue({ data: { role: "student", status: "inactive" } });
+    profileMock.mockResolvedValue({
+      data: {
+        role: "student",
+        status: "inactive",
+        is_active: true,
+        onboarding_completed: false,
+      },
+    });
 
     const response = await visit("/student/dashboard");
 
     expect(response.status).toBe(307);
-    expect(response.headers.get("location")).toContain("/student/login");
+    expect(response.headers.get("location")).toContain("/student/enroll");
   });
 });

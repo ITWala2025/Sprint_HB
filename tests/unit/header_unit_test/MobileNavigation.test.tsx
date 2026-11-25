@@ -22,6 +22,30 @@ describe("MobileNavigation", () => {
   });
 
   describe("rendering", () => {
+    it("gates the student avatar on completed onboarding", () => {
+      const { rerender } = renderWithProps({
+        studentInitials: "AS",
+        studentFullName: "Ananya Sharma",
+      });
+      expect(
+        screen.queryByRole("button", { name: /student account menu/i }),
+      ).not.toBeInTheDocument();
+
+      rerender(
+        <MobileNavigation
+          pathname={pathname}
+          isOpen={false}
+          setIsOpen={mockSetIsOpen}
+          studentInitials="AS"
+          studentFullName="Ananya Sharma"
+          isOnboardedStudent
+        />,
+      );
+      expect(
+        screen.getByRole("button", { name: /student account menu/i }),
+      ).toHaveTextContent("AS");
+    });
+
     it("renders an Enroll link", () => {
       renderWithProps();
       expect(screen.getByRole("link", { name: "Enroll Now" })).toHaveAttribute(

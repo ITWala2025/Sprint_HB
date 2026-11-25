@@ -188,7 +188,7 @@ export async function submitStudentEnrollmentAction(
     const email = asText(personal.email).toLowerCase();
     const dob = asText(personal.dob);
     const country = asText(personal.country);
-    const city = asText(education.city);
+    const city = asText(personal.city) || asText(education.city);
     const state = asText(personal.state);
     const phone = normalizePhone(asText(personal.phone));
     const courseDegree = asText(education.courseDegree);
@@ -208,6 +208,9 @@ export async function submitStudentEnrollmentAction(
     }
     if (!dob || !isValidDate(dob)) {
       return { success: false, error: "Please enter a valid date of birth." };
+    }
+    if (!city) {
+      return { success: false, error: "Please enter your town or city." };
     }
     if (!country) {
       return { success: false, error: "Please select your country." };
@@ -337,7 +340,7 @@ export async function submitStudentEnrollmentAction(
 
       if (enrollmentRows.some((enrollment) =>
         !enrollment.application_number ||
-        !/^SPR-APP-\d{4}-\d{4}$/i.test(enrollment.application_number.trim()),
+        !/^SPR-APP-\d{4}-[A-F0-9]{4}$/i.test(enrollment.application_number.trim()),
       )) {
         console.error("Student enrollment submission created an application without a valid application number.");
         return {
@@ -371,6 +374,44 @@ export async function submitStudentEnrollmentAction(
           error: "Your enrollment details could not be saved. Please try again.",
         };
       }
+    }
+
+    const fullName = `${firstName} ${lastName}`;
+    const { data: updatedProfile, error: profileUpdateError } = await serviceClient
+      .from("profiles")
+      .update({ onboarding_completed: true, full_name: fullName })
+      .eq("id", authData.user.id)
+      .select("id")
+      .maybeSingle();
+
+    if (profileUpdateError || !updatedProfile) {
+      console.error(
+        "Student onboarding profile could not be completed:",
+        profileUpdateError?.message ?? "The profile record was not found.",
+      );
+      return {
+        success: false,
+        error: "Your registration was saved, but your profile could not be completed. Please contact SPRINT support.",
+      };
+    }
+
+    const { error: metadataError } = await serviceClient.auth.admin.updateUserById(
+      authData.user.id,
+      {
+        user_metadata: {
+          full_name: fullName,
+          first_name: firstName,
+          last_name: lastName,
+        },
+      },
+    );
+
+    if (metadataError) {
+      console.error("Student auth metadata could not be synchronized:", metadataError.message);
+      return {
+        success: false,
+        error: "Your registration was saved, but your account details could not be synchronized. Please contact SPRINT support.",
+      };
     }
 
     return {

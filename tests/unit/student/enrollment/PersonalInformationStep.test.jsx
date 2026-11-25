@@ -11,20 +11,22 @@ const FIELD_IDS = [
   "personal-firstName",
   "personal-lastName",
   "personal-email",
-  "personal-dob",
-  "personal-country",
-  "personal-state",
   "personal-phone",
+  "personal-dob",
+  "personal-city",
+  "personal-state",
+  "personal-country",
 ];
 
 const FIELD_LABELS = [
   /^first name/i,
   /^last name/i,
   /email address/i,
-  /date of birth/i,
-  /^country/i,
-  /^state/i,
   /phone number/i,
+  /date of birth/i,
+  /^town \/ city/i,
+  /^state/i,
+  /^country/i,
 ];
 
 describe("PersonalInformationStep", () => {
@@ -43,26 +45,25 @@ describe("PersonalInformationStep", () => {
     vi.clearAllMocks();
   });
 
-  it("renders the seven labelled fields in the agreed order", () => {
+  it("renders the eight labelled fields in the agreed order", () => {
     renderStep();
 
     FIELD_LABELS.forEach((label) => {
       expect(screen.getByLabelText(label)).toBeInTheDocument();
     });
 
-    // The two-column grid holds exactly those fields, in that order — the
-    // phone lands alone in the left column of the last row.
+    // The grid holds exactly the required personal fields in order.
     const grid = screen.getByLabelText(/^first name/i).closest(".grid");
     const ids = [...grid.children].map((cell) => cell.querySelector("input, select")?.id);
     expect(ids).toEqual(FIELD_IDS);
   });
 
-  it("drops Full Name, Gender and City", () => {
+  it("drops Full Name and Gender while collecting Town / City", () => {
     renderStep();
 
     expect(screen.queryByLabelText(/full name/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/gender/i)).not.toBeInTheDocument();
-    expect(screen.queryByLabelText(/^city/i)).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/^town \/ city/i)).toBeInTheDocument();
   });
 
   it("lays the fields out as a two-column grid that collapses to one column on mobile", () => {
@@ -80,10 +81,10 @@ describe("PersonalInformationStep", () => {
     });
 
     const asterisks = screen.getAllByText("*");
-    expect(asterisks).toHaveLength(7);
+    expect(asterisks).toHaveLength(8);
     asterisks.forEach((mark) => expect(mark).toHaveAttribute("aria-hidden", "true"));
 
-    expect(screen.getByText(/all seven fields are required/i)).toBeInTheDocument();
+    expect(screen.getByText(/all eight fields are required/i)).toBeInTheDocument();
   });
 
   it("derives every field id from the step id prefix", () => {
@@ -115,6 +116,7 @@ describe("PersonalInformationStep", () => {
     expect(screen.getByLabelText(/^last name/i)).toHaveAttribute("autocomplete", "family-name");
     expect(screen.getByLabelText(/^country/i)).toHaveAttribute("autocomplete", "country-name");
     expect(screen.getByLabelText(/^state/i)).toHaveAttribute("autocomplete", "address-level1");
+    expect(screen.getByLabelText(/^town \/ city/i)).toHaveAttribute("autocomplete", "address-level2");
   });
 
   it("keeps the native date input without rendering the custom calendar icon", () => {

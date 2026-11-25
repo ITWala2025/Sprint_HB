@@ -122,7 +122,7 @@ export default function StudentLoginPage() {
 
         const { data: profile } = await supabase
           .from("profiles")
-          .select("role, status, is_active, email")
+          .select("role, status, is_active, onboarding_completed, email")
           .eq("id", user.id)
           .maybeSingle();
 
@@ -160,7 +160,20 @@ export default function StudentLoginPage() {
         }
 
         if (profile?.role === "student" && profile?.status === "active" && profile?.is_active !== false) {
-          window.location.href = getEnrollmentReturnPath();
+          window.location.assign(
+            profile.onboarding_completed === false
+              ? getEnrollmentPath()
+              : getEnrollmentReturnPath(),
+          );
+          return;
+        }
+
+        if (
+          profile?.role === "student" &&
+          profile?.onboarding_completed === false &&
+          profile?.is_active !== false
+        ) {
+          window.location.assign(getEnrollmentPath());
           return;
         }
 
@@ -200,14 +213,29 @@ export default function StudentLoginPage() {
 
     setLoading(true);
 
+    let authTimeout;
     try {
       const supabase = createClient();
-
-      const { data, error: signInError } =
-        await supabase.auth.signInWithPassword({
+      const authPromise = supabase.auth.signInWithPassword({
           email: trimmedEmail,
           password,
         });
+      const timeoutPromise = new Promise((_, reject) => {
+        authTimeout = window.setTimeout(
+          () =>
+            reject(
+              new Error(
+                "Authentication request timed out (8s limit). Please check your network connection.",
+              ),
+            ),
+          8000,
+        );
+      });
+      const { data, error: signInError } = await Promise.race([
+        authPromise,
+        timeoutPromise,
+      ]);
+      window.clearTimeout(authTimeout);
 
       if (signInError) {
         const message = `${signInError.message}`.toLowerCase();
@@ -239,7 +267,7 @@ export default function StudentLoginPage() {
        */
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("role, status, is_active, email")
+        .select("role, status, is_active, onboarding_completed, email")
         .eq("id", userId)
         .maybeSingle();
 
@@ -306,14 +334,28 @@ export default function StudentLoginPage() {
         return;
       }
 
-      window.location.href = getEnrollmentReturnPath();
-    } catch {
-      setError("Something went wrong. Please try again.");
+      if (profile.onboarding_completed === false) {
+        window.location.assign(getEnrollmentPath());
+        return;
+      }
+
+      window.location.assign(getEnrollmentReturnPath());
+    } catch (caught) {
+      setError(
+        caught instanceof Error && caught.message.includes("timed out")
+          ? caught.message
+          : "Something went wrong. Please try again.",
+      );
     } finally {
+      if (authTimeout) window.clearTimeout(authTimeout);
       setLoading(false);
     }
   };
 
+  const getEnrollmentPath = () =>
+    nextPath === "/student/dashboard"
+      ? "/student/enroll"
+      : `/student/enroll?${new URLSearchParams({ next: nextPath })}`;
   return (
     <main className="student-login-page">
       <section
@@ -339,32 +381,6 @@ export default function StudentLoginPage() {
         ========================== */}
         <section className="student-login-form-panel">
           <div className="student-login-form-wrapper">
-            {/* Mobile-only logo */}
-            <div className="student-login-mobile-logo">
-              <Link href="/" aria-label="SPRINT Home">
-                <Image
-                  src="/images/student/sprint-full-logo.webp"
-                  alt="SPRINT - School of Professional Studies & Information Technology"
-                  width={500}
-                  height={130}
-                  priority
-                />
-              </Link>
-            </div>
-
-            {/* Top account link */}
-            <div className="student-login-top-link">
-              <span>Don't have an account?</span>
-
-              <a
-                href="/student/enroll"
-                className="student-login-top-enroll"
-              >
-                Enroll Now
-                <ArrowRight size={14} strokeWidth={2} />
-              </a>
-            </div>
-
             {/* Heading */}
             <header className="student-login-heading">
               <span className="student-login-eyebrow">
@@ -542,23 +558,6 @@ export default function StudentLoginPage() {
               </button>
             </form>
 
-            {/* Divider */}
-            <div className="student-login-divider">
-              <span>OR</span>
-            </div>
-
-            {/* Enrollment */}
-            <p className="student-login-enroll">
-              Don't have a SPRINT account?
-
-              <a
-                href="/student/enroll"
-                className="student-login-enroll-btn"
-              >
-                Enroll Now
-              </a>
-            </p>
-
             {/* Security */}
             <div className="student-login-security">
               <LockKeyhole
@@ -573,10 +572,6 @@ export default function StudentLoginPage() {
               </span>
             </div>
 
-            {/* Footer */}
-            <footer className="student-login-footer">
-              © {new Date().getFullYear()} SPRINT. All rights reserved.
-            </footer>
           </div>
         </section>
       </section>

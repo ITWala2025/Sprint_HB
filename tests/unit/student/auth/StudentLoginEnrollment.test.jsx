@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 const mocks = vi.hoisted(() => ({
@@ -38,15 +38,10 @@ describe("StudentLoginPage enrollment actions", () => {
     mocks.profileResult = { data: null, error: null };
   });
 
-  it("links to enrollment as a regular student route", () => {
+  it("leaves the contextual enrollment link to the focused public shell", () => {
     render(<StudentLoginPage />);
 
-    const enrollLinks = screen.getAllByRole("link", { name: /enroll now/i });
-    expect(enrollLinks).toHaveLength(2);
-    enrollLinks.forEach((link) => {
-      expect(link).toHaveAttribute("href", "/student/enroll");
-      expect(link.tagName).toBe("A");
-    });
+    expect(screen.queryByRole("link", { name: /enroll now/i })).not.toBeInTheDocument();
   });
 
   it("does not render the removed account creation form", () => {
@@ -78,7 +73,7 @@ describe("StudentLoginPage enrollment actions", () => {
       error: null,
     });
     mocks.profileResult = {
-      data: { role: "student", status: "active" },
+      data: { role: "student", status: "active", onboarding_completed: true },
       error: null,
     };
     render(<StudentLoginPage />);
@@ -93,6 +88,31 @@ describe("StudentLoginPage enrollment actions", () => {
     });
     expect(await screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
+  it("keeps incomplete students signed in and returns them to enrollment", async () => {
+    const user = userEvent.setup();
+    mocks.signInWithPassword.mockResolvedValue({
+      data: { user: { id: "student-user-id" } },
+      error: null,
+    });
+    mocks.profileResult = {
+      data: {
+        role: "student",
+        status: "active",
+        onboarding_completed: false,
+        is_active: true,
+      },
+      error: null,
+    };
+    render(<StudentLoginPage />);
+
+    await user.type(screen.getByLabelText(/email address/i), "student@example.com");
+    await user.type(screen.getByLabelText(/^password/i), "ValidPass123!");
+    await user.click(screen.getByRole("button", { name: /sign in/i }));
+
+    await waitFor(() => expect(mocks.signOut).not.toHaveBeenCalled());
+    expect(await screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
   it("explains what to do when a student profile is missing", async () => {

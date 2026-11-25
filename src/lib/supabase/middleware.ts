@@ -67,9 +67,11 @@ export async function updateSession(request: NextRequest) {
   const isStaffWorkspaceRoute = pathname.startsWith("/staff/") && !isStaffLogin && !isStaffInvitation;
 
   const isStudentLogin = pathname === "/student/login";
+  const isStudentEnroll = pathname === "/student/enroll";
   const isStudentPortalRoute = PORTAL_ROUTE_PREFIXES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
+
   const redirectTo = (targetPath: string, clearAdminSession = false) => {
     const url = request.nextUrl.clone();
     url.pathname = targetPath;
@@ -82,7 +84,11 @@ export async function updateSession(request: NextRequest) {
   const existingStudentSession = request.cookies.get(STUDENT_SESSION_COOKIE)?.value;
   if (existingStudentSession && isStudentPortalRoute) {
     const verifiedSession = await verifyStudentSessionToken(existingStudentSession);
-    if (verifiedSession && verifiedSession.isActive) {
+    if (
+      verifiedSession &&
+      verifiedSession.isActive &&
+      verifiedSession.onboardingCompleted === true
+    ) {
       // If user is accessing protected student portal routes and has verified session, pass through immediately!
       return supabaseResponse;
     }
@@ -140,6 +146,10 @@ export async function updateSession(request: NextRequest) {
   if (!user && isStudentPortalRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/student/login";
+    url.searchParams.set(
+      "next",
+      `${pathname}${request.nextUrl.search}`,
+    );
     return NextResponse.redirect(url);
   }
 
@@ -147,7 +157,26 @@ export async function updateSession(request: NextRequest) {
   if (user) {
     let profile: (StaffDirectoryRecord & { role: string }) | null = null;
     if (!serviceClient) {
-      console.error("[SPRINT Middleware] Server-side Supabase service role is not configured.");
+      const { data: fallbackProfile, error } = await supabase
+        .from("profiles")
+        .select("role, status, is_active, onboarding_completed, first_login, must_change_password, full_name, email")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (error) {
+        console.error("[SPRINT Middleware] Could not load the account profile:", error.message);
+      }
+      if (fallbackProfile?.role === "student") {
+        profile = {
+          ...fallbackProfile,
+          account_type: "student",
+          role_name: null,
+          created_at: "",
+          updated_at: "",
+          roles: null,
+        } as unknown as StaffDirectoryRecord & { role: string };
+      } else {
+        console.error("[SPRINT Middleware] Server-side Supabase service role is not configured.");
+      }
     } else {
       const { record, error } = await getUserAccountRecord(user.id, serviceClient);
       if (error) {
@@ -174,15 +203,19 @@ export async function updateSession(request: NextRequest) {
         .select("registration_number, status")
         .eq("id", user.id)
         .maybeSingle()
-      : { data: null, error: null };
+      : { data: null };
     if (studentError) {
       console.error("[SPRINT Middleware] Could not revalidate the student record:", studentError.message);
     }
-    const isActiveStudent =
+    const isDeactivatedStudent =
+      profile?.role === "student" &&
+      (profile?.is_active === false || studentRecord?.status === "deactivated");
+    const isOnboardedStudent =
       profile?.role === "student" &&
       profile?.status === "active" &&
       profile?.is_active !== false &&
-      studentRecord?.status !== "deactivated";
+      profile?.onboarding_completed === true &&
+      !isDeactivatedStudent;
 
     // Keep the client session snapshot current; protected server checks re-read the database.
     if ((isAdmin || isActiveStaff) && profile?.is_active === true) {
@@ -216,7 +249,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Issue/refresh verified student session cookie for fast subsequent navigations
-    if (isActiveStudent) {
+    if (isOnboardedStudent) {
       try {
         const sessionToken = await createStudentSessionToken({
           userId: user.id,
@@ -224,6 +257,7 @@ export async function updateSession(request: NextRequest) {
           fullName: profile.full_name ?? null,
           registrationNumber: studentRecord?.registration_number ?? null,
           isActive: true,
+          onboardingCompleted: true,
         });
 
         supabaseResponse.cookies.set(STUDENT_SESSION_COOKIE, sessionToken, {
@@ -275,18 +309,53 @@ export async function updateSession(request: NextRequest) {
 
     /*
      * Student portal protection:
-     * - An authenticated user without an active student profile cannot stay on
-     *   any portal page (the Sign In screen clears the stale session).
-     * - An already-signed-in active student who opens /student/login is sent
-     *   straight to the dashboard — a seamless "Student Portal" entry.
+     * - Deactivated students are sent to sign-in with an explicit notice.
+     * - Incomplete registrations resume at enrollment.
+     * - Onboarded students entering auth routes continue to the dashboard.
      */
-    if (isStudentPortalRoute && !isActiveStudent) {
+    if (
+      isDeactivatedStudent &&
+      (isStudentPortalRoute || isStudentEnroll)
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/student/login";
+      url.search = "?deactivated=1";
+      return NextResponse.redirect(url);
+    }
+
+    if (isStudentPortalRoute && profile?.role !== "student") {
       const url = request.nextUrl.clone();
       url.pathname = "/student/login";
       return NextResponse.redirect(url);
     }
 
-    if (isStudentLogin && isActiveStudent) {
+    if (
+      profile?.role === "student" &&
+      !isDeactivatedStudent &&
+      profile.onboarding_completed !== true &&
+      (isStudentPortalRoute || isStudentLogin)
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/student/enroll";
+      if (isStudentPortalRoute && !url.searchParams.has("next")) {
+        url.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
+      }
+      return NextResponse.redirect(url);
+    }
+
+    if (
+      isStudentPortalRoute &&
+      profile?.role === "student" &&
+      !isOnboardedStudent &&
+      !isDeactivatedStudent &&
+      profile.onboarding_completed === true
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/student/login";
+      return NextResponse.redirect(url);
+    }
+
+    if ((isStudentLogin || isStudentEnroll) && isOnboardedStudent) {
       const url = request.nextUrl.clone();
       url.pathname = "/student/dashboard";
       return NextResponse.redirect(url);

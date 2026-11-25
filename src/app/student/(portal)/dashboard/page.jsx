@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { formatApplicationId } from "@/lib/id-utils";
+import { resolveStudentLoginNextPath } from "@/lib/student-login-redirect";
 import { createServiceClient } from "@/lib/supabase/service";
 import {
   filterAssessmentsByCourseAccess,
@@ -40,11 +41,55 @@ function escapeIlike(value) {
   return value.replace(/[\\%_]/g, "\\$&");
 }
 
+function getSocialLinks(bio) {
+  try {
+    const parsed = JSON.parse(bio || "{}");
+    return {
+      github: typeof parsed.github === "string" ? parsed.github : "",
+      linkedin: typeof parsed.linkedin === "string" ? parsed.linkedin : "",
+    };
+  } catch {
+    return { github: "", linkedin: "" };
+  }
+}
+
+function calculateProfileCompletion(profile, registration, student) {
+  const socialLinks = getSocialLinks(profile.bio);
+  const personalDetails = [
+    profile.full_name || registration?.full_name,
+    profile.email || registration?.email,
+    profile.phone || registration?.phone || student?.phone,
+    student?.dob || registration?.date_of_birth,
+    registration?.city || student?.city,
+    registration?.state || student?.state,
+    registration?.country,
+  ];
+  const educationDetails = [
+    student?.college_institution || registration?.college_institution,
+    student?.course_degree || registration?.course_degree,
+    student?.specialization_branch || registration?.specialization_branch,
+    student?.current_semester || registration?.year_semester,
+  ];
+  const careerDetails = [
+    student?.employment_status || registration?.employment_status,
+    student?.organization_name || registration?.organization_name,
+    socialLinks.linkedin,
+    socialLinks.github,
+  ];
+  const completion =
+    (personalDetails.filter(Boolean).length / personalDetails.length) * 50 +
+    (educationDetails.filter(Boolean).length / educationDetails.length) * 30 +
+    (careerDetails.filter(Boolean).length / careerDetails.length) * 20;
+  return Math.round(completion);
+}
+
 async function fetchDashboardData(userId) {
   const db = createServiceClient();
   if (!db) {
     return {
       student: { id: "", fullName: "Student", firstName: "Student", initials: "S", email: "" },
+      profileCompletion: 0,
+      hasApplicationsOrEnrollments: false,
       enrollment: null,
       applications: [],
       progress: null,
@@ -59,13 +104,15 @@ async function fetchDashboardData(userId) {
 
   const { data: profile } = await db
     .from("profiles")
-    .select("id, full_name, email")
+    .select("id, full_name, email, phone, bio")
     .eq("id", userId)
     .maybeSingle();
 
   if (!profile) {
     return {
       student: { id: "", fullName: "Student", firstName: "Student", initials: "S", email: "" },
+      profileCompletion: 0,
+      hasApplicationsOrEnrollments: false,
       enrollment: null,
       applications: [],
       progress: null,
@@ -97,11 +144,13 @@ async function fetchDashboardData(userId) {
 
   const [
     { data: studentRecord, error: studentRecordError },
+    { data: registrationRecord, error: registrationError },
     { data: applicationRecords, error: applicationsError },
     { data: enrollmentsData, error: enrollmentsError },
     { data: studentCoursesData, error: studentCoursesError },
   ] = await Promise.all([
-    db.from("students").select("id, registration_number").eq("id", profile.id).maybeSingle(),
+    db.from("students").select("id, registration_number, college_institution, course_degree, specialization_branch, current_semester, dob, phone, employment_status, organization_name, city, state").eq("id", profile.id).maybeSingle(),
+    db.from("registrations").select("full_name, email, phone, date_of_birth, country, city, state, college_institution, course_degree, specialization_branch, year_semester, employment_status, organization_name").eq("user_id", profile.id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
     db.from("enrollments").select("id, application_number, status, created_at, course_id, bundle_id").or(`applicant_user_id.eq.${userId},student_id.eq.${userId}`).order("created_at", { ascending: false }),
     db.from("student_course_enrollments").select("id, status, progress_percentage, enrolled_at, course_id, batch_id, courses:course_id(title, category), batches:batch_id(batch_name, start_date, end_date, mode, status)").eq("student_id", profile.id).order("enrolled_at", { ascending: false }),
     db.from("student_courses").select("id, status, enrolled_at, course_id, bundle_id, courses:course_id(title, category), course_bundles:bundle_id(title, category)").eq("student_id", profile.id).eq("status", "active"),
@@ -140,6 +189,14 @@ async function fetchDashboardData(userId) {
   if (studentRecordError) {
     console.warn("[StudentDashboard] Could not load student record:", studentRecordError.message);
   }
+  if (registrationError) {
+    console.warn("[StudentDashboard] Could not load registration profile:", registrationError.message);
+  }
+  const profileCompletion = calculateProfileCompletion(
+    profile,
+    registrationRecord,
+    studentRecord,
+  );
 
   let applications = [];
   if (applicationsError) {
@@ -274,6 +331,11 @@ async function fetchDashboardData(userId) {
       ...student,
       registrationNumber: studentRecord?.registration_number ?? null,
     },
+    profileCompletion,
+    hasApplicationsOrEnrollments:
+      applications.length > 0 ||
+      enrollments.length > 0 ||
+      studentCourses.length > 0,
     enrollment,
     applications,
     progress,
@@ -295,7 +357,9 @@ const getCachedDashboardData = unstable_cache(
   }
 );
 
-export default async function StudentDashboardPage() {
+export default async function StudentDashboardPage({ searchParams }) {
+  const query = await searchParams;
+  const requestedNext = typeof query?.next === "string" ? query.next : "";
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey =
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
@@ -374,6 +438,13 @@ export default async function StudentDashboardPage() {
     redirect("/student/login?deactivated=1");
   }
 
+  const nextPath = resolveStudentLoginNextPath(
+    requestedNext ? new URLSearchParams({ next: requestedNext }).toString() : "",
+  );
+  if (nextPath !== "/student/dashboard") {
+    redirect(nextPath);
+  }
+
   const {
     student,
     enrollment,
@@ -385,6 +456,8 @@ export default async function StudentDashboardPage() {
     pendingAssignmentCount,
     liveClasses,
     certificateCount,
+    profileCompletion,
+    hasApplicationsOrEnrollments,
   } = await getCachedDashboardData(user.id);
 
   return (
@@ -399,6 +472,9 @@ export default async function StudentDashboardPage() {
       applications={applications}
       liveClasses={liveClasses}
       announcements={announcements}
+      profileCompletion={profileCompletion}
+      hasApplicationsOrEnrollments={hasApplicationsOrEnrollments}
+      showWelcome={query?.welcome === "1"}
     />
   );
 }

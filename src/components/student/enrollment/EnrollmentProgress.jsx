@@ -4,10 +4,9 @@ import { Check } from "lucide-react";
  * Progress indicator for the enrollment wizard.
  *
  * Two presentations, one source of truth (`currentIndex`):
- * - below `md`: a compact "Step 2 of 3" counter with a progress bar, because
- *   three labels do not fit next to each other on a phone;
+ * - below `md`: a compact "Step 2 of 2" counter with a progress bar;
  * - from `md` up: a full numbered stepper with the completed steps as a check
- *   mark. Completed steps are buttons — a student who is on step 3 can jump
+ *   mark. Completed steps are buttons — a student on the password step can jump
  *   back to step 1 without losing anything. Steps that have not been reached
  *   are disabled, so nobody can skip ahead into an empty form.
  *

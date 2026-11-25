@@ -18,22 +18,21 @@ describe("EnrollmentProgress", () => {
   it("shows the compact counter and the active step on small screens", () => {
     renderProgress({ currentIndex: 1 });
 
-    const counter = screen.getByText("Step 2 of 3");
+    const counter = screen.getByText("Step 2 of 2");
     expect(within(counter.closest("div")).getByText("Password")).toBeInTheDocument();
   });
 
   it("lists every step in order and marks the active one", () => {
-    renderProgress({ currentIndex: 2 });
+    renderProgress({ currentIndex: 1 });
 
     const items = screen.getAllByRole("listitem");
-    expect(items).toHaveLength(3);
+    expect(items).toHaveLength(2);
     expect(items.map((item) => item.textContent)).toEqual([
       expect.stringContaining("Personal"),
       expect.stringContaining("Password"),
-      expect.stringContaining("Education"),
     ]);
 
-    expect(screen.getByRole("button", { name: /education/i })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: /password/i })).toHaveAttribute(
       "aria-current",
       "step",
     );
@@ -44,18 +43,16 @@ describe("EnrollmentProgress", () => {
 
     expect(screen.getAllByText(/— completed/)).toHaveLength(1);
     expect(screen.getAllByText(/— current step/)).toHaveLength(1);
-    expect(screen.getAllByText(/— not started yet/)).toHaveLength(1);
+    expect(screen.queryByText(/— not started yet/)).not.toBeInTheDocument();
   });
 
   it("lets a completed step be revisited but never skips ahead", async () => {
     const user = userEvent.setup();
     const onStepSelect = vi.fn();
-    renderProgress({ currentIndex: 2, onStepSelect });
+    renderProgress({ currentIndex: 1, onStepSelect });
 
     expect(screen.getByRole("button", { name: /personal/i })).toBeEnabled();
-    expect(screen.getByRole("button", { name: /password/i })).toBeEnabled();
-    expect(screen.getByRole("button", { name: /education/i })).toBeDisabled();
-
+    expect(screen.getByRole("button", { name: /password/i })).toBeDisabled();
     await user.click(screen.getByRole("button", { name: /personal/i }));
     expect(onStepSelect).toHaveBeenCalledWith(0);
   });
@@ -71,9 +68,9 @@ describe("EnrollmentProgress", () => {
   });
 
   it("reports a finished wizard with every step complete", () => {
-    renderProgress({ currentIndex: 2, isComplete: true });
+    renderProgress({ currentIndex: 1, isComplete: true });
 
-    expect(screen.getByText("All 3 steps complete")).toBeInTheDocument();
+    expect(screen.getByText("All 2 steps complete")).toBeInTheDocument();
     ENROLLMENT_STEPS.forEach((step) => {
       expect(screen.getByRole("button", { name: new RegExp(step.label, "i") })).toBeEnabled();
     });

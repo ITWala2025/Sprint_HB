@@ -4,5 +4,6 @@ export type StudentSessionPayload = {
     fullName: string | null;
     registrationNumber: string | null;
     isActive: boolean;
+    onboardingCompleted: boolean;
     exp: number; // Unix timestamp (ms)
 };
