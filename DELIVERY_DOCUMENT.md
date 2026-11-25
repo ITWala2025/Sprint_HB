@@ -1,7 +1,7 @@
 # SPRINT Institutional Training Hub — Project Delivery Document
 
-**Version:** 1.0  
-**Date:** 2026-11-23  
+**Version:** 1.1  
+**Date:** 2026-11-25  
 **Prepared for:** SPRINT Institutional Training Hub, Hazaribagh, Jharkhand  
 **Repository:** `sprint-hb` (Next.js 16, React 19, Supabase)
 
@@ -21,6 +21,7 @@ The codebase implements:
 - **Staff workspace** with first-time setup, invitation flow, and password management
 - **AI chatbot** with verified Q&A, local Ollama integration, and fallback deterministic responses
 - **Transactional email system** with branded templates for verification, password setup/reset, staff invites, and enrollment approvals
+- **Three-role authentication system** (Student, Admin, Staff) with Supabase Auth, profile-based authorization, middleware session protection, and cryptographic session cookies
 - **Comprehensive test suite** (200+ unit tests) and CI-ready build configuration
 
 All code has been validated: `npx tsc --noEmit` passes with zero errors; `npm run build` succeeds generating 65 routes (static + dynamic); `git diff --check` passes.
@@ -308,7 +309,99 @@ Route prefixes protected:
 
 ---
 
-## 4. Environment & Configuration Requirements
+## 4. Authentication & Login Flows
+
+### 4.1 Overview
+
+The platform supports three distinct login flows: **Student**, **Admin**, and **Staff**. All use Supabase Auth (`signInWithPassword`) as the identity provider, followed by profile-based role and authorization checks against `public.profiles` and related tables. Edge middleware (`src/lib/supabase/middleware.ts`) enforces route protection and issues cryptographically signed session cookies for fast subsequent navigations.
+
+### 4.2 Student Login — `/student/login`
+
+**Entry points:** Header "Student Portal" action, direct URL, or middleware redirect from portal routes when unauthenticated.
+
+**Flow:**
+
+1. **Page loads** — `StudentLoginPage` (client component). Checks `window.location.search` for `deactivated=1`; if present, signs the user out and shows "Your account is deactivated."
+2. **Pre-existing session check** — Calls `supabase.auth.getUser()` to detect an already-signed-in user:
+   - Active student profile (`role = "student"`, `status = "active"`, `is_active = true`) → hard redirect to `/student/dashboard` (or `/student/enroll?next=/courses/<slug>` if arriving from course pre-selection).
+   - Deactivated account → signs out and shows deactivation message.
+   - Wrong role or inactive → signs out and shows error.
+3. **Form submission** — User enters email + password → `supabase.auth.signInWithPassword()`.
+4. **Post-auth validation** (sequential; any failure signs the user out and returns an error):
+   - Fetch `public.profiles` row for the user.
+   - If `profile.is_active === false` → sign out, show "Your account is deactivated."
+   - Fetch `public.students` row; if `student.status === "deactivated"` → sign out, show deactivated message.
+   - If no student record exists, check `public.registrations` for a deactivated registration matching `user_id` or email → sign out if found.
+   - Require `profile.role === "student"` → otherwise sign out ("This account does not have Student Portal access").
+   - Require `profile.status === "active"` and `profile.is_active !== false` → otherwise sign out ("account is currently inactive").
+5. **Redirect** — On success, hard navigate (`window.location.href`) to `/student/dashboard` (or the `?next=` course path).
+
+**Session management:** Middleware issues a signed `sprint_student_session` cookie (HMAC-SHA256, 7-day max age) for zero-latency subsequent navigations. Logout (`LogoutButton` + `student-session.js`) calls `supabase.auth.signOut()`, clears `student_recovery_email` from storage, writes a one-shot `student_signed_out` flag, and hard-navigates to `/student/login` where `consumeStudentSignOutFlag()` displays "You have been signed out."
+
+**Registration:** "Don't have an account?" links to `/student/enroll` (multi-step wizard).
+
+### 4.3 Admin Login — `/admin` (rewritten from `/admin/login`)
+
+**Entry points:** Header "Admin Dashboard" action (when signed in as admin), direct URL, or middleware redirect from `/admin/*` when unauthenticated.
+
+**Flow:**
+
+1. **Page loads** — `AdminLoginPage` (client component). Listens to `supabase.auth.onAuthStateChange` for `PASSWORD_RECOVERY` events and checks query params:
+   - `?password_reset=success` → shows success notice.
+   - `?reset=true` → verifies recovery session via `supabase.auth.getSession()` and opens password reset modal.
+2. **Form submission** — User enters admin email + password → `supabase.auth.signInWithPassword()` wrapped in an **8-second timeout** (`Promise.race`).
+3. **Validation** (3 steps):
+   - Step 1: Authenticate via Supabase Auth. On error → sign out, show "Invalid Admin ID or Password" or specific message (email not confirmed, rate limit).
+   - Step 2: Fetch `public.profiles` (`role`, `is_active`, `roles(name, is_active)`).
+   - Step 3: Authorize — access granted if `profile.role === "admin"` OR (`profile.is_active` AND assigned role `name` exists AND `assignedRole.is_active !== false`). On denial → sign out, show "Access denied."
+4. **Redirect** — Hard navigate (`window.location.assign`) to `/admin/dashboard` so edge middleware refreshes Supabase SSR cookies.
+
+**Forgot password:** `supabase.auth.resetPasswordForEmail()` sends a reset link redirecting to `/admin?reset=true`, which opens `ForcePasswordChangeModal` (mode: `password_reset`).
+
+**Session cookie:** Middleware issues `sprint_admin_session` (HMAC-SHA256, 8-hour max age) containing role, permissions, `must_change_password`, etc., for fast-path admin routes.
+
+### 4.4 Staff Login — `/staff/login` (rewritten from `/staff/*` except login/invitation)
+
+**Entry points:** Staff invitation email link (`/staff/invitation/[token]`), direct URL, or middleware redirect from `/staff/*` when unauthenticated.
+
+**Flow:**
+
+1. **Page loads** — `StaffLoginPage` (server component) reads `?email` and `?invitation` search params, passes them to `StaffLoginForm` (client component).
+2. **Form submission** — User enters email + password → `supabase.auth.signInWithPassword()`.
+3. **Validation:**
+   - Fetch `public.profiles` (`first_login`, `must_change_password`, `is_active`).
+   - If `is_active !== true` → sign out, show "inactive or unavailable."
+   - If `must_change_password || first_login` → open `FirstTimePasswordModal` instead of dashboard.
+   - Otherwise → hard navigate to `/staff/dashboard` (rewritten to `/admin/dashboard` by `next.config.mjs`).
+4. **First-time setup** — `completeFirstTimeStaffSetupAction` (server action): verifies session via `supabase.auth.getUser()`, updates `public.profiles` (`must_change_password: false`, `first_login: false`, `is_active: true`) using the service-role client, optionally marks the invitation token as "used", and revalidates `/staff/dashboard`.
+
+### 4.5 Comparison Table
+
+| Aspect | Student | Admin | Staff |
+|--------|---------|-------|-------|
+| Auth provider | Supabase Auth (`signInWithPassword`) | Supabase Auth (`signInWithPassword`) | Supabase Auth (`signInWithPassword`) |
+| Profile table | `public.profiles` + `public.students` | `public.profiles` + `public.roles` | `public.profiles` |
+| Required state | `role='student'`, `status='active'`, `is_active=true` | `role='admin'` OR active custom role | `is_active=true` |
+| Session cookie | `sprint_student_session` (7 days) | `sprint_admin_session` (8 hours) | Supabase SSR cookies |
+| Middleware guard | Yes (`PORTAL_ROUTE_PREFIXES`) | Yes (`isAdminSubRoute`) | Yes (`isStaffWorkspaceRoute`) |
+| Timeout guard | No | 8-second auth timeout | No |
+| Forgot password | `/student/forgot-password` → check-email | Inline reset dialog (`resetPasswordForEmail`) | Not implemented in UI |
+
+### 4.6 Key Files
+
+| File | Purpose |
+|------|---------|
+| `src/app/student/login/page.jsx` | Student login form + validation |
+| `src/app/admin/page.tsx` | Admin login + 8s timeout + 3-step validation |
+| `src/app/staff/login/page.tsx` / `StaffLoginForm.tsx` | Staff login + first-time setup modal |
+| `src/app/staff/login/actions.ts` | `completeFirstTimeStaffSetupAction` (server action) |
+| `src/lib/supabase/middleware.ts` | Edge middleware for all three role families |
+| `src/lib/auth/student-session.ts` / `admin-session.ts` | HMAC-SHA256 signed session tokens |
+| `src/lib/student-login-redirect.js` | Resolves `?next=` course path for student post-login redirect |
+
+---
+
+## 5. Environment & Configuration Requirements
 
 ### 4.1 Required Environment Variables
 
@@ -371,7 +464,7 @@ OLLAMA_MODEL=llama3.2:3b
 
 ---
 
-## 5. Setup & Deployment Steps
+## 6. Setup & Deployment Steps
 
 ### 5.1 Local Development
 
@@ -446,12 +539,13 @@ CMD ["npm", "start"]
 | Contact form | Submit test enquiry → verify email received at `SMTP_TO` |
 | Student auth | `/student/login` → sign in → `/student/dashboard` loads data |
 | Admin auth | `/admin` → sign in as admin → `/admin/dashboard`, `/admin/courses`, `/admin/users` accessible |
+| Staff auth | `/staff/login` → sign in → `/staff/dashboard` (rewritten to `/admin/dashboard`) |
 | Chatbot | Floating widget → type "courses" → suggestions + reply |
 | Announcements | `/admin/updates` → create announcement → public ticker shows within seconds (cache invalidation) |
 
 ---
 
-## 6. External Dependencies
+## 7. External Dependencies
 
 ### 6.1 Runtime Dependencies (Production)
 
@@ -493,7 +587,7 @@ CMD ["npm", "start"]
 
 ---
 
-## 7. Known Limitations & Outstanding Items
+## 8. Known Limitations & Outstanding Items
 
 ### 7.1 Pre-Existing Test Failures (Not Blocking)
 
@@ -570,7 +664,7 @@ The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **d
 
 ---
 
-## 8. Recommended Next Steps
+## 9. Recommended Next Steps
 
 ### 8.1 Immediate (Pre-Launch)
 
@@ -615,7 +709,7 @@ The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **d
 
 ---
 
-## 9. Support & Handover Notes
+## 10. Support & Handover Notes
 
 ### 9.1 Key Files for Ongoing Maintenance
 
@@ -624,6 +718,7 @@ The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **d
 | **Public SEO changes** | `src/app/layout.jsx`, `src/app/sitemap.ts`, `src/app/robots.ts`, `src/config/site.config.json` |
 | **Contact form / SMTP** | `src/app/api/contact/route.js`, `src/lib/email/mailer.ts` |
 | **Student auth flows** | `src/app/student/*/page.jsx`, `src/app/student/enroll/actions.ts`, `src/components/student/enrollment/*` |
+| **Login flows (all roles)** | `src/app/student/login/page.jsx`, `src/app/admin/page.tsx`, `src/app/staff/login/page.tsx`, `src/app/staff/login/StaffLoginForm.tsx`, `src/app/staff/login/actions.ts`, `src/lib/supabase/middleware.ts`, `src/lib/auth/student-session.ts`, `src/lib/auth/admin-session.ts`, `src/lib/student-login-redirect.js`, `src/components/student/student-session.js` |
 | **Student portal data** | `src/app/student/(portal)/dashboard/page.jsx`, `src/lib/student-assessment-access.ts` |
 | **Admin RBAC / permissions** | `src/app/admin/auth-types.ts`, `src/app/admin/authorization.ts`, `src/app/admin/roles/*` |
 | **Course/bundle/learning path admin** | `src/app/admin/courses/*`, `src/lib/course-utils.ts` |
@@ -657,7 +752,7 @@ The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **d
 
 ---
 
-## 10. Appendix: Route Inventory (Current as of 2026-11-21)
+## 11. Appendix: Route Inventory (Current as of 2026-11-25)
 
 ### Public Routes (65 total at build)
 
@@ -744,4 +839,4 @@ The admin navigation (`AdminLayoutClient.tsx`) lists these groups/items that **d
 ---
 
 **End of Delivery Document**  
-*This document reflects the codebase state as of commit dated 2026-11-23. All statements are based on actual project files; items marked as missing, incomplete, or ambiguous are explicitly flagged.*
+*This document reflects the codebase state as of commit dated 2026-11-25. All statements are based on actual project files; items marked as missing, incomplete, or ambiguous are explicitly flagged.*
