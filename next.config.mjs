@@ -4,6 +4,8 @@ const nextConfig = {
   devIndicators: false,
   experimental: {
     turbopackPluginRuntimeStrategy: "childProcesses",
+    workerThreads: false,
+    cpus: 2,
   },
   images: {
     remotePatterns: [
