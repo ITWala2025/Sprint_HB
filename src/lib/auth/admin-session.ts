@@ -13,6 +13,7 @@ export type AdminSessionPayload = {
     isActive: boolean;
     isAdmin: boolean;
     mustChangePassword: boolean;
+    firstLogin?: boolean;
     permissions: AdminPermissionMap | null;
     exp: number; // Unix timestamp (ms)
 };

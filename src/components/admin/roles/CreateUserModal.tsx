@@ -27,6 +27,8 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
         email: string;
         tempPassword: string;
         inviteUrl: string;
+        emailSent: boolean;
+        emailWarning?: string;
     } | null>(null);
     const [copiedPassword, setCopiedPassword] = useState(false);
     const [copiedLink, setCopiedLink] = useState(false);
@@ -71,6 +73,8 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
                 email: result.email,
                 tempPassword: result.tempPassword,
                 inviteUrl: result.inviteUrl,
+                emailSent: result.emailSent,
+                emailWarning: result.emailWarning,
             });
             onCreated();
         } catch {
@@ -95,7 +99,13 @@ export default function CreateUserModal({ roles, onClose, onCreated }: CreateUse
                 <section className="w-full max-w-md rounded-xl border border-white/60 bg-white p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="created-user-title">
                     <div className="flex size-11 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><Check className="size-5" aria-hidden="true" /></div>
                     <h2 id="created-user-title" className="mt-4 font-display text-xl font-bold text-brand-navy">Staff account created</h2>
-                    <p className="mt-1 text-sm leading-6 text-brand-text-secondary">An invitation email has been sent via Supabase. The invitation link is valid for 1 hour.</p>
+                    {createdAccount.emailSent ? (
+                        <p className="mt-1 text-sm leading-6 text-brand-text-secondary">The invitation email was sent. The invitation link is valid for 1 hour.</p>
+                    ) : (
+                        <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2.5 text-sm leading-5 text-amber-900" role="status">
+                            {createdAccount.emailWarning ?? "The account was created, but the invitation email was not sent. Share the temporary password and invitation link with the staff member."}
+                        </p>
+                    )}
                     <div className="mt-5 space-y-3 rounded-lg border border-brand-border bg-brand-off-white p-4 font-body text-sm">
                         <p><span className="text-xs font-bold text-brand-text-muted">EMAIL</span><br />{createdAccount.email}</p>
                         <div>

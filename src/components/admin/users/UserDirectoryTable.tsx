@@ -48,6 +48,7 @@ export default function UserDirectoryTable({ users, roles, canInvite, canDelete 
         tempPassword: string;
         inviteUrl: string;
         emailSent: boolean;
+        emailWarning?: string;
     } | null>(null);
     const [copyError, setCopyError] = useState("");
     const [copiedValue, setCopiedValue] = useState<"password" | "link" | null>(null);
@@ -266,11 +267,13 @@ export default function UserDirectoryTable({ users, roles, canInvite, canDelete 
                         <div className="flex items-start justify-between gap-4">
                             <div>
                                 <h2 id="resend-invitation-title" className="font-display text-xl font-bold text-brand-navy">New credentials ready</h2>
-                                <p className="mt-1 text-sm leading-6 text-brand-text-secondary">
-                                    {resendResult.emailSent
-                                        ? "A new Supabase invitation email has been sent. The invitation link is valid for 1 hour."
-                                        : "This email is already confirmed, so no invitation email was sent. Share the new temporary password and invitation link below."}
-                                </p>
+                                {resendResult.emailSent ? (
+                                    <p className="mt-1 text-sm leading-6 text-brand-text-secondary">A new invitation email was sent. The invitation link is valid for 1 hour.</p>
+                                ) : (
+                                    <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2.5 text-sm leading-5 text-amber-900" role="status">
+                                        {resendResult.emailWarning ?? "The credentials were reset, but the invitation email was not sent. Share the new temporary password and invitation link below."}
+                                    </p>
+                                )}
                             </div>
                             <button type="button" onClick={() => setResendResult(null)} aria-label="Close resend confirmation" className="rounded-md p-1 text-brand-text-muted hover:bg-slate-100"><X className="size-5" aria-hidden="true" /></button>
                         </div>

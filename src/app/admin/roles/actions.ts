@@ -1,35 +1,12 @@
 "use server";
 
 import "server-only";
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { createServerClient } from "@supabase/ssr";
 import { assertModuleAccess } from "@/app/admin/authorization";
+import { deleteStaffUserAction } from "@/app/admin/users/actions";
 import { createServiceClient } from "@/lib/supabase/service";
+import { getStaffDirectoryRecords } from "@/lib/supabase/staff";
 import type { Role, StaffProfile } from "@/components/admin/roles/types";
-
-async function createAuthenticatedServerClient() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-        ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!supabaseUrl || !publishableKey) {
-        throw new Error("Supabase public environment variables are not configured.");
-    }
-
-    const cookieStore = await cookies();
-    return createServerClient(supabaseUrl, publishableKey, {
-        cookies: {
-            getAll: () => cookieStore.getAll(),
-            setAll: (cookiesToSet) => {
-                try {
-                    cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-                } catch {
-                    // Server Components cannot write refreshed auth cookies.
-                }
-            },
-        },
-    });
-}
 
 function requireServiceClient() {
     const serviceClient = createServiceClient();
@@ -48,42 +25,36 @@ export type RolesDataResult = {
 export async function getRolesAndStaffProfiles(): Promise<RolesDataResult> {
     await assertModuleAccess("access_control");
     try {
-        const serviceClient = createServiceClient();
-        const supabase = serviceClient ?? await createAuthenticatedServerClient();
-
-        const [{ data: roleData, error: roleError }, { data: profileData, error: profileError }] = await Promise.all([
-            supabase.from("roles").select("*").order("name"),
-            supabase
-                .from("profiles")
-                .select("id, full_name, email, role_id, is_active, role, roles(id, name, color)")
-                .neq("role", "student")
-                .order("full_name"),
+        const serviceClient = requireServiceClient();
+        const [staffRecords, { data: roleData, error: roleError }] = await Promise.all([
+            getStaffDirectoryRecords(serviceClient),
+            serviceClient.from("roles").select("*").order("name"),
         ]);
 
         if (roleError) {
             console.error("[SPRINT Admin Roles] Failed to load roles:", roleError);
             return { roles: [], users: [], error: roleError.message };
         }
-        if (profileError) {
-            console.error("[SPRINT Admin Roles] Failed to load staff profiles:", profileError);
-            return { roles: [], users: [], error: profileError.message };
-        }
 
-        const profiles = profileData ?? [];
         const roles: Role[] = (roleData ?? []).map((role: any) => ({
             ...role,
             permissions: role.permissions ?? {},
-            assigned_count: profiles.filter((profile: any) => profile.role_id === role.id).length,
+            assigned_count: staffRecords.filter((staff) => staff.role_id === role.id).length,
         }));
 
-        const users: StaffProfile[] = profiles.map((profile: any) => ({
-            id: profile.id,
-            full_name: profile.full_name || "Unnamed staff",
-            email: profile.email,
-            role_id: profile.role_id ?? null,
-            is_active: profile.is_active,
-            roles: Array.isArray(profile.roles) ? profile.roles[0] ?? null : profile.roles ?? null,
-        }));
+        const users: StaffProfile[] = staffRecords.map((record) => {
+            const role = Array.isArray(record.roles) ? record.roles[0] : record.roles;
+            return {
+                id: record.id,
+                full_name: record.full_name || "Unnamed staff",
+                email: record.email,
+                role_id: record.role_id ?? null,
+                is_active: record.is_active,
+                roles: role?.id && role.name
+                    ? { id: role.id, name: role.name, color: role.color ?? "navy" }
+                    : null,
+            };
+        });
 
         return { roles, users };
     } catch (error) {
@@ -120,6 +91,14 @@ export async function saveRoleAction(
             return { success: false, error: error?.message ?? "Unable to save this role." };
         }
 
+        const { error: staffSyncError } = await supabase
+            .from("staff")
+            .update({ role_name: data.name })
+            .eq("role_id", data.id);
+        if (staffSyncError) {
+            return { success: false, error: `The role was saved, but staff records could not be synchronized: ${staffSyncError.message}` };
+        }
+
         revalidatePath("/admin/roles");
         revalidatePath("/admin/users");
         return { success: true, data: data as Role };
@@ -136,13 +115,58 @@ export async function updateUserRoleAction(
     try {
         const supabase = requireServiceClient();
         const targetRoleId = roleId === "" || roleId === "unassigned" ? null : roleId;
-        const { error } = await supabase
+        let roleName: string | null = null;
+        if (targetRoleId) {
+            const { data: role, error: roleError } = await supabase
+                .from("roles")
+                .select("name, is_active")
+                .eq("id", targetRoleId)
+                .maybeSingle();
+            if (roleError) return { success: false, error: roleError.message };
+            if (!role || role.is_active !== true) {
+                return { success: false, error: "The selected role is inactive or unavailable." };
+            }
+            roleName = role.name;
+        }
+
+        const { data: targetProfile, error: targetProfileError } = await supabase
+            .from("profiles")
+            .select("id, full_name, email, role, is_active, status, first_login, must_change_password")
+            .eq("id", userId)
+            .maybeSingle();
+        if (targetProfileError) return { success: false, error: targetProfileError.message };
+        if (!targetProfile || targetProfile.role === "student") {
+            return { success: false, error: "The staff profile could not be found." };
+        }
+
+        const { data: updatedProfile, error } = await supabase
             .from("profiles")
             .update({ role_id: targetRoleId })
-            .eq("id", userId);
+            .eq("id", userId)
+            .select("id")
+            .maybeSingle();
 
         if (error) {
             return { success: false, error: error.message };
+        }
+        if (!updatedProfile) {
+            return { success: false, error: "The staff profile could not be found." };
+        }
+
+        const { error: staffSyncError } = await supabase.from("staff").upsert({
+            id: userId,
+            full_name: targetProfile.full_name,
+            email: targetProfile.email,
+            account_type: targetProfile.role,
+            role_id: targetRoleId,
+            role_name: roleName,
+            is_active: targetProfile.is_active,
+            status: targetProfile.status,
+            first_login: targetProfile.first_login,
+            must_change_password: targetProfile.must_change_password,
+        }, { onConflict: "id" });
+        if (staffSyncError) {
+            return { success: false, error: `The profile role was updated, but the staff mirror could not be synchronized: ${staffSyncError.message}` };
         }
 
         revalidatePath("/admin/roles");
@@ -172,11 +196,18 @@ export async function deleteRoleAction(
             return { success: false, error: "System roles cannot be deleted." };
         }
 
-        // 2. Unassign users
-        await supabase
+        // 2. Unassign users and keep the staff mirror in sync
+        const { error: unassignProfileError } = await supabase
             .from("profiles")
             .update({ role_id: null })
             .eq("role_id", roleId);
+        if (unassignProfileError) return { success: false, error: unassignProfileError.message };
+
+        const { error: unassignStaffError } = await supabase
+            .from("staff")
+            .update({ role_id: null, role_name: null })
+            .eq("role_id", roleId);
+        if (unassignStaffError) return { success: false, error: unassignStaffError.message };
 
         // 3. Delete the role
         const { error: deleteErr } = await supabase
@@ -198,19 +229,10 @@ export async function deleteStaffProfileAction(
     userId: string,
 ): Promise<{ success: boolean; error?: string }> {
     await assertModuleAccess("access_control", "delete");
-    try {
-        const supabase = requireServiceClient();
-        const { error } = await supabase
-            .from("profiles")
-            .delete()
-            .eq("id", userId);
+    const result = await deleteStaffUserAction(userId);
+    if (!result.success) return result;
 
-        if (error) return { success: false, error: error.message };
-
-        revalidatePath("/admin/roles");
-        revalidatePath("/admin/users");
-        return { success: true };
-    } catch (error) {
-        return { success: false, error: error instanceof Error ? error.message : "Unable to delete staff profile." };
-    }
+    revalidatePath("/admin/roles");
+    revalidatePath("/admin/users");
+    return { success: true };
 }

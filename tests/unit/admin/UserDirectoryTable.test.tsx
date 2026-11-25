@@ -96,7 +96,7 @@ describe("UserDirectoryTable", () => {
 
         await waitFor(() => expect(resendStaffInvitationAction).toHaveBeenCalledWith("user-1"));
         expect(await screen.findByRole("heading", { name: "New credentials ready" })).toBeInTheDocument();
-        expect(screen.getByText(/A new Supabase invitation email has been sent/)).toBeInTheDocument();
+        expect(screen.getByText(/A new invitation email was sent/)).toBeInTheDocument();
         expect(screen.getByText("new-temporary-password")).toBeInTheDocument();
         expect(screen.getByText("https://example.com/staff/invitation/new-token")).toBeInTheDocument();
     });
@@ -136,5 +136,24 @@ describe("UserDirectoryTable", () => {
             emailSent: true,
         });
         expect(await screen.findByRole("heading", { name: "New credentials ready" })).toBeInTheDocument();
+    });
+
+    it("shows a warning and keeps fresh credentials available when resend email fails", async () => {
+        vi.mocked(resendStaffInvitationAction).mockResolvedValueOnce({
+            success: true,
+            email: "asha@example.com",
+            tempPassword: "new-temporary-password",
+            inviteUrl: "https://example.com/staff/invitation/new-token",
+            emailSent: false,
+            emailWarning: "SMTP delivery failed. Share the password and link manually.",
+        });
+
+        const user = userEvent.setup();
+        render(<UserDirectoryTable users={users} roles={[]} canInvite={true} canDelete={false} />);
+        await user.click(screen.getByRole("button", { name: "Resend invitation to asha@example.com" }));
+
+        expect(await screen.findByRole("status")).toHaveTextContent("SMTP delivery failed.");
+        expect(screen.getByText("new-temporary-password")).toBeInTheDocument();
+        expect(screen.getByText("https://example.com/staff/invitation/new-token")).toBeInTheDocument();
     });
 });

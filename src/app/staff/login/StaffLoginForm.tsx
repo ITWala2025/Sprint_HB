@@ -18,6 +18,7 @@ export default function StaffLoginForm({ initialEmail, invitationToken }: StaffL
     const [error, setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPasswordSetup, setShowPasswordSetup] = useState(false);
+    const [passwordSetupDestination, setPasswordSetupDestination] = useState<"/staff/dashboard" | "/admin/dashboard">("/staff/dashboard");
     const supabase = useMemo(() => createClient({ detectSessionInUrl: false }), []);
 
     useEffect(() => {
@@ -44,17 +45,37 @@ export default function StaffLoginForm({ initialEmail, invitationToken }: StaffL
 
             const { data: profile, error: profileError } = await supabase
                 .from("profiles")
-                .select("first_login, must_change_password, is_active")
+                .select("role, first_login, must_change_password, is_active, roles(permissions)")
                 .eq("id", data.user.id)
                 .single();
 
-            if (profileError || !profile || profile.is_active !== true) {
+            if (profileError || !profile) {
                 await supabase.auth.signOut();
                 setError(profileError?.message ?? "This staff account is inactive or unavailable.");
                 return;
             }
 
+            if (profile.is_active !== true) {
+                await supabase.auth.signOut();
+                setError("This staff account is inactive. Contact your administrator.");
+                return;
+            }
+
+            if (profile.role !== "staff" && profile.role !== "admin") {
+                await supabase.auth.signOut();
+                setError(profile.role === "student"
+                    ? "This is a student account. Use the Student Portal to sign in."
+                    : "This portal is for staff accounts only.");
+                return;
+            }
+
             if (profile.must_change_password || profile.first_login) {
+                const assignedRole = Array.isArray(profile.roles) ? profile.roles[0] : profile.roles;
+                setPasswordSetupDestination(
+                    profile.role === "admin" || assignedRole?.permissions?.full_access === true
+                        ? "/admin/dashboard"
+                        : "/staff/dashboard",
+                );
                 setShowPasswordSetup(true);
                 return;
             }
@@ -107,7 +128,12 @@ export default function StaffLoginForm({ initialEmail, invitationToken }: StaffL
                     </form>
                 </section>
             </main>
-            {showPasswordSetup && <FirstTimePasswordModal invitationToken={invitationToken} />}
+            {showPasswordSetup && (
+                <FirstTimePasswordModal
+                    invitationToken={invitationToken}
+                    destination={passwordSetupDestination}
+                />
+            )}
         </>
     );
 }

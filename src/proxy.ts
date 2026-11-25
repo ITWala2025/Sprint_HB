@@ -1,8 +1,9 @@
 import { type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
-export async function proxy(request: NextRequest) {
-  return await updateSession(request);
+export function proxy(request: NextRequest) {
+  // Keep the original method and headers so login Server Actions can pass through.
+  return updateSession(request);
 }
 
 export const config = {

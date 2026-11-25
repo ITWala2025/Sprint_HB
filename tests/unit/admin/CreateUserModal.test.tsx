@@ -21,6 +21,7 @@ describe("CreateUserModal", () => {
             email: "asha@example.com",
             tempPassword: "TestTempPassword123",
             inviteUrl: "https://example.com/staff/invitation/secure-token",
+            emailSent: true,
         });
     });
 
@@ -47,7 +48,7 @@ describe("CreateUserModal", () => {
         expect(screen.getByText("asha@example.com")).toBeInTheDocument();
         expect(screen.getByText("TestTempPassword123")).toBeInTheDocument();
         expect(screen.getByText("https://example.com/staff/invitation/secure-token")).toBeInTheDocument();
-        expect(screen.getByText("An invitation email has been sent via Supabase. The invitation link is valid for 1 hour.")).toBeInTheDocument();
+        expect(screen.getByText("The invitation email was sent. The invitation link is valid for 1 hour.")).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Copy Password" })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Copy Link" })).toBeInTheDocument();
         expect(onCreated).toHaveBeenCalledOnce();
@@ -73,5 +74,27 @@ describe("CreateUserModal", () => {
         await user.click(screen.getByRole("button", { name: "Create user" }));
 
         expect(await screen.findByRole("alert")).toHaveTextContent("The staff account could not be created.");
+    });
+
+    it("keeps the created credentials visible and warns when email delivery fails", async () => {
+        const user = userEvent.setup();
+        mocks.provision.mockResolvedValue({
+            success: true,
+            userId: "user-1",
+            email: "asha@example.com",
+            tempPassword: "TestTempPassword123",
+            inviteUrl: "https://example.com/staff/invitation/secure-token",
+            emailSent: false,
+            emailWarning: "SMTP is not configured. Share the password and link manually.",
+        });
+        render(<CreateUserModal roles={roles} onClose={vi.fn()} onCreated={vi.fn()} />);
+
+        await user.type(screen.getByPlaceholderText("Staff member name"), "Asha Kumar");
+        await user.type(screen.getByPlaceholderText("name@sprint.institute"), "asha@example.com");
+        await user.click(screen.getByRole("button", { name: "Create user" }));
+
+        expect(await screen.findByRole("heading", { name: "Staff account created" })).toBeInTheDocument();
+        expect(screen.getByRole("status")).toHaveTextContent("SMTP is not configured.");
+        expect(screen.getByText("TestTempPassword123")).toBeInTheDocument();
     });
 });

@@ -4,27 +4,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
     updateUser: vi.fn(),
-    getUser: vi.fn(),
-    signOut: vi.fn(),
-    profileUpdate: vi.fn(),
-    rpc: vi.fn(),
-    refresh: vi.fn(),
+    completeSetup: vi.fn(),
 }));
 
 vi.mock("@/lib/supabase/client", () => ({
     createClient: () => ({
-        auth: {
-            updateUser: mocks.updateUser,
-            getUser: mocks.getUser,
-            signOut: mocks.signOut,
-        },
-        from: () => ({ update: mocks.profileUpdate }),
-        rpc: mocks.rpc,
+        auth: { updateUser: mocks.updateUser },
     }),
 }));
 
-vi.mock("next/navigation", () => ({
-    useRouter: () => ({ refresh: mocks.refresh }),
+vi.mock("@/app/staff/login/actions", () => ({
+    completeFirstTimeStaffSetupAction: mocks.completeSetup,
 }));
 
 import ForcePasswordChangeModal from "@/components/admin/auth/ForcePasswordChangeModal";
@@ -33,16 +23,7 @@ describe("ForcePasswordChangeModal", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mocks.updateUser.mockResolvedValue({ error: null });
-        mocks.getUser.mockResolvedValue({ data: { user: { id: "user-1" } }, error: null });
-        mocks.profileUpdate.mockReturnValue({
-            eq: () => ({
-                select: () => ({
-                    maybeSingle: () => Promise.resolve({ data: { id: "user-1" }, error: null }),
-                }),
-            }),
-        });
-        mocks.signOut.mockResolvedValue({ error: null });
-        mocks.rpc.mockResolvedValue({ data: true, error: null });
+        mocks.completeSetup.mockResolvedValue({ success: true });
     });
 
     it("does not dismiss on Escape or backdrop interaction", async () => {
@@ -67,29 +48,39 @@ describe("ForcePasswordChangeModal", () => {
         expect(mocks.updateUser).not.toHaveBeenCalled();
     });
 
-    it("updates Auth, verifies reset completion, and refreshes the admin shell", async () => {
+    it("submits first-time password changes to the server action", async () => {
         const user = userEvent.setup();
         const onSuccess = vi.fn();
+        const replace = vi.fn();
+        const originalLocation = window.location;
+        Object.defineProperty(window, "location", {
+            configurable: true,
+            value: { replace },
+        });
         render(<ForcePasswordChangeModal onSuccess={onSuccess} />);
 
         await user.type(screen.getByLabelText("New Password"), "Permanent9");
         await user.type(screen.getByLabelText("Confirm Password"), "Permanent9");
         await user.click(screen.getByRole("button", { name: "Set permanent password" }));
 
-        expect(mocks.updateUser).toHaveBeenCalledWith({ password: "Permanent9" });
-        expect(mocks.rpc).toHaveBeenCalledWith("complete_staff_password_reset");
-        expect(mocks.refresh).toHaveBeenCalledOnce();
+        expect(mocks.completeSetup).toHaveBeenCalledWith({
+            newPassword: "Permanent9",
+            invitationToken: undefined,
+        });
+        expect(mocks.updateUser).not.toHaveBeenCalled();
+        expect(replace).toHaveBeenCalledWith("/staff/dashboard");
         expect(onSuccess).toHaveBeenCalledOnce();
+        Object.defineProperty(window, "location", { configurable: true, value: originalLocation });
     });
 
     it("resets the password, clears profile flags, and signs out in password-reset mode", async () => {
         const user = userEvent.setup();
         const onSuccess = vi.fn();
-        const assign = vi.fn();
+        const replace = vi.fn();
         const originalLocation = window.location;
         Object.defineProperty(window, "location", {
             configurable: true,
-            value: { assign },
+            value: { replace },
         });
 
         render(<ForcePasswordChangeModal mode="password_reset" onSuccess={onSuccess} />);
@@ -100,11 +91,12 @@ describe("ForcePasswordChangeModal", () => {
         await user.type(screen.getByLabelText("Confirm Password"), "NewPermanent9");
         await user.click(screen.getByRole("button", { name: "Set permanent password" }));
 
-        expect(mocks.updateUser).toHaveBeenCalledWith({ password: "NewPermanent9" });
-        expect(mocks.getUser).toHaveBeenCalledOnce();
-        expect(mocks.profileUpdate).toHaveBeenCalledWith({ must_change_password: false, first_login: false });
-        expect(mocks.signOut).toHaveBeenCalledOnce();
-        expect(assign).toHaveBeenCalledWith("/admin?password_reset=success");
+        expect(mocks.completeSetup).toHaveBeenCalledWith({
+            newPassword: "NewPermanent9",
+            invitationToken: undefined,
+        });
+        expect(mocks.updateUser).not.toHaveBeenCalled();
+        expect(replace).toHaveBeenCalledWith("/admin/dashboard");
         expect(onSuccess).toHaveBeenCalledOnce();
 
         Object.defineProperty(window, "location", { configurable: true, value: originalLocation });

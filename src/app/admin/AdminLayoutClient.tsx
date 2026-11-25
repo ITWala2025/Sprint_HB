@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -190,7 +190,7 @@ function clearAdminSessionCookie() {
 
 function Sidebar({ pathname, onNavigate, permissionMap, brandSubtitle, displayName, email, isAdmin, isStaffWorkspace, isLoading, pendingRegistrationCount }: { pathname: string; onNavigate?: () => void; permissionMap: PermissionMap | null; brandSubtitle: string; displayName: string; email: string; isAdmin: boolean; isStaffWorkspace: boolean; isLoading: boolean; pendingRegistrationCount: number | null }) {
     const showStandardNavigation = isLoading || isAdmin;
-    const canNavigateToDashboard = isAdmin || roleHasPermission(permissionMap, "dashboard", "view");
+    const canNavigateToDashboard = isAdmin || isStaffWorkspace || roleHasPermission(permissionMap, "dashboard", "view");
     const visibleGroups = useMemo(() => showStandardNavigation ? navigationGroups : navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => canViewItem(item, permissionMap, isAdmin, isLoading)) })).filter((group) => group.items.length > 0), [isAdmin, isLoading, permissionMap, showStandardNavigation]);
     const visibleLegalGroup = showStandardNavigation ? legalGroup : { ...legalGroup, items: legalGroup.items.filter((item) => canViewItem(item, permissionMap, isAdmin, isLoading)) };
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
@@ -227,7 +227,7 @@ function Sidebar({ pathname, onNavigate, permissionMap, brandSubtitle, displayNa
             <div className="flex h-20 items-center border-b border-slate-200 px-6">{canNavigateToDashboard ? <Link href={isStaffWorkspace ? "/staff/dashboard" : "/admin/dashboard"} onClick={onNavigate} className="flex items-center gap-3"><span className="flex size-10 items-center justify-center rounded-xl bg-brand-navy font-display text-lg font-bold text-white">S</span><span><span className="block font-display text-lg font-bold leading-none text-brand-navy">SPRINT</span><span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.18em] text-brand-red">{brandSubtitle}</span></span></Link> : <div className="flex items-center gap-3"><span className="flex size-10 items-center justify-center rounded-xl bg-brand-navy font-display text-lg font-bold text-white">S</span><span><span className="block font-display text-lg font-bold leading-none text-brand-navy">SPRINT</span><span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.18em] text-brand-red">{brandSubtitle}</span></span></div>}</div>
             <nav aria-label={isAdmin ? "Admin navigation" : "Workspace navigation"} className="flex flex-1 flex-col space-y-1 overflow-y-auto px-4 py-5">
                 <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">Overview</p>
-                {directItems.filter((item) => showStandardNavigation || canViewItem(item, permissionMap, isAdmin, isLoading)).map((item) => renderLink(item))}
+                {directItems.filter((item) => showStandardNavigation || isStaffWorkspace || canViewItem(item, permissionMap, isAdmin, isLoading)).map((item) => renderLink(item))}
                 <p className="mb-3 mt-7 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">Management</p>
                 {visibleGroups.map(renderGroup)}
                 {(showStandardNavigation || canViewItem(updatesItem, permissionMap, isAdmin, isLoading)) && <div className="space-y-1 pt-1">{renderLink(updatesItem)}</div>}
@@ -253,6 +253,7 @@ export default function AdminLayoutClient({
     const pathname = usePathname();
     const router = useRouter();
     const supabase = useMemo(() => createClient(), []);
+    const signOutUrlRef = useRef<string | null>(null);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [permissionMap, setPermissionMap] = useState<PermissionMap | null>(initialProfile?.permissions ?? null);
     const [profileRole, setProfileRole] = useState<string | null>(initialProfile?.role ?? null);
@@ -349,7 +350,10 @@ export default function AdminLayoutClient({
                 setMustChangePassword(false);
                 setIsAuthorized(false);
                 setIsAccessLoading(false);
-                window.location.assign("/admin?signout=1");
+                const signOutUrl = signOutUrlRef.current ?? (pathname.startsWith("/staff") || profileRole === "staff"
+                    ? "/staff/login?signout=1"
+                    : "/admin?signout=1");
+                window.location.assign(signOutUrl);
             }
         });
 
@@ -357,9 +361,13 @@ export default function AdminLayoutClient({
             isMounted = false;
             subscription.unsubscribe();
         };
-    }, [hasInitialProfile, isLoginRoute]);
+    }, [hasInitialProfile, isLoginRoute, pathname, profileRole]);
 
     const handleSignOut = async () => {
+        const signOutUrl = pathname.startsWith("/staff") || profileRole === "staff"
+            ? "/staff/login?signout=1"
+            : "/admin?signout=1";
+        signOutUrlRef.current = signOutUrl;
         setPermissionMap(null);
         setProfileRole(null);
         setRoleName(null);
@@ -389,7 +397,8 @@ export default function AdminLayoutClient({
             setIsAuthorized(false);
             setIsAccessLoading(false);
             setAccessError("");
-            window.location.assign("/admin?signout=1");
+            window.location.assign(signOutUrl);
+            signOutUrlRef.current = null;
         }
     };
 
@@ -420,7 +429,7 @@ export default function AdminLayoutClient({
                         </div>
                     </section>
                 </main>
-                {mustChangePassword && <ForcePasswordChangeModal mode="first_login" onSuccess={() => { setMustChangePassword(false); router.refresh(); }} />}
+                {mustChangePassword && <ForcePasswordChangeModal mode="first_login" onSuccess={() => setMustChangePassword(false)} />}
             </>
         );
     }
@@ -527,7 +536,7 @@ export default function AdminLayoutClient({
                     </main>
                 </div>
             </div>
-            {mustChangePassword && <ForcePasswordChangeModal mode="first_login" onSuccess={() => { setMustChangePassword(false); router.refresh(); }} />}
+            {mustChangePassword && <ForcePasswordChangeModal mode="first_login" onSuccess={() => setMustChangePassword(false)} />}
         </>
     );
 }
