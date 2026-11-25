@@ -15,9 +15,29 @@ export function resolveStudentLoginNextPath(search) {
     return "/student/dashboard";
   }
 
-  if (!/^\/courses\/[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(destination.pathname)) {
+  const isProductPage =
+    /^\/(?:courses|bundles)\/[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(destination.pathname);
+  const studentRoutes = [
+    "/student/dashboard",
+    "/student/my-course",
+    "/student/apply-course",
+    "/student/assignments",
+    "/student/certificates",
+    "/student/profile",
+    "/student/resources",
+    "/student/result",
+    "/student/settings",
+    "/student/help-support",
+  ];
+  const isStudentPortalPage = studentRoutes.some(
+    (route) =>
+      destination.pathname === route ||
+      destination.pathname.startsWith(`${route}/`),
+  );
+
+  if (!isProductPage && !isStudentPortalPage) {
     return "/student/dashboard";
   }
 
-  return destination.pathname;
+  return `${destination.pathname}${destination.search}`;
 }

@@ -7,6 +7,7 @@ import {
   Globe,
   Mail,
   Map,
+  MapPin,
   Phone,
   User,
   UserRound,
@@ -18,7 +19,12 @@ import { createClient } from "@/lib/supabase/client";
 import { checkEnrollmentEmailAction } from "@/app/student/enroll/actions";
 
 import { DEFAULT_COUNTRY, COUNTRY_OPTIONS, getStatesForCountry } from "../enrollment-locations";
-import { normalizeMobile, EMAIL_PATTERN } from "../enrollment-validation";
+import {
+  compactErrors,
+  normalizeMobile,
+  EMAIL_PATTERN,
+  validatePersonalInformation,
+} from "../enrollment-validation";
 
 export default function PersonalInformationStep({
   idPrefix,
@@ -27,11 +33,15 @@ export default function PersonalInformationStep({
   onChange,
   onBeforeAuthRedirect,
   onVerificationChange,
+  onValidatePersonal,
+  nextPath = "/student/dashboard",
 }) {
   const router = useRouter();
   const country = values.country ?? DEFAULT_COUNTRY;
   const stateOptions = getStatesForCountry(country);
   const email = values.email?.trim().toLowerCase() ?? "";
+  const isPersonalValid =
+    Object.keys(compactErrors(validatePersonalInformation(values))).length === 0;
   const [emailStatus, setEmailStatus] = useState("idle");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -45,9 +55,9 @@ export default function PersonalInformationStep({
     setOtpSent(false);
     setVerificationError("");
 
-    if (!EMAIL_PATTERN.test(email)) {
+    if (!EMAIL_PATTERN.test(email) || !isPersonalValid) {
       setEmailStatus("idle");
-      onVerificationChange?.(false, false);
+      onVerificationChange?.(false);
       return () => {
         active = false;
       };
@@ -69,7 +79,7 @@ export default function PersonalInformationStep({
         ) {
           if (!active) return;
           setEmailStatus("verified");
-          onVerificationChange?.(true, false);
+          onVerificationChange?.(true);
           return;
         }
 
@@ -78,7 +88,7 @@ export default function PersonalInformationStep({
         if (!active) return;
 
         setEmailStatus(result.exists ? "existing" : "new");
-        onVerificationChange?.(false, false);
+        onVerificationChange?.(false);
       } catch (error) {
         if (!active) return;
         setEmailStatus("error");
@@ -87,7 +97,7 @@ export default function PersonalInformationStep({
             ? error.message
             : "We couldn't check this email. Please try again.",
         );
-        onVerificationChange?.(false, false);
+        onVerificationChange?.(false);
       }
     }, 350);
 
@@ -95,7 +105,7 @@ export default function PersonalInformationStep({
       active = false;
       window.clearTimeout(timer);
     };
-  }, [email, onVerificationChange]);
+  }, [email, isPersonalValid, onVerificationChange]);
 
   const handleCountryChange = (event) => {
     onChange("country")(event);
@@ -109,7 +119,8 @@ export default function PersonalInformationStep({
   };
 
   const handleSendOtp = async () => {
-    if (!email || isSendingOtp) return;
+    if (!email || isSendingOtp || !isPersonalValid) return;
+    if (onValidatePersonal && !onValidatePersonal()) return;
     setVerificationError("");
     setIsSendingOtp(true);
 
@@ -142,7 +153,8 @@ export default function PersonalInformationStep({
   };
 
   const handleVerifyOtp = async () => {
-    if (!/^\d{6}$/.test(otp) || isVerifyingOtp) return;
+    if (!/^\d{6}$/.test(otp) || isVerifyingOtp || !isPersonalValid) return;
+    if (onValidatePersonal && !onValidatePersonal()) return;
     setVerificationError("");
     setIsVerifyingOtp(true);
 
@@ -164,7 +176,7 @@ export default function PersonalInformationStep({
       }
 
       setEmailStatus("verified");
-      onVerificationChange?.(true, true);
+      onVerificationChange?.(true);
     } catch (error) {
       setVerificationError(
         error instanceof Error
@@ -181,7 +193,7 @@ export default function PersonalInformationStep({
     setOtpSent(false);
     setVerificationError("");
     setEmailStatus("new");
-    onVerificationChange?.(false, false);
+    onVerificationChange?.(false);
   };
 
   const routeToAccount = async (path) => {
@@ -201,7 +213,7 @@ export default function PersonalInformationStep({
   return (
     <div className="space-y-5">
       <p className="text-xs font-medium text-brand-text-muted">
-        All seven fields are required — they open your student file.
+        All eight fields are required before you can verify your email.
       </p>
 
       <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
@@ -252,6 +264,22 @@ export default function PersonalInformationStep({
           }
         />
         <AuthField
+          id={`${idPrefix}-phone`}
+          name="phone"
+          type="tel"
+          label="Phone Number"
+          value={values.phone ?? ""}
+          onChange={handlePhoneChange}
+          error={errors.phone}
+          placeholder="9876543210"
+          autoComplete="tel"
+          inputMode="tel"
+          prefix="+91"
+          icon={<Phone aria-hidden="true" className="size-4.5" />}
+          hint="Class reminders and mentor calls are made to this number."
+          required
+        />
+        <AuthField
           id={`${idPrefix}-dob`}
           name="dob"
           type="date"
@@ -265,16 +293,15 @@ export default function PersonalInformationStep({
           required
         />
         <AuthField
-          id={`${idPrefix}-country`}
-          name="country"
-          label="Country"
-          value={country}
-          onChange={handleCountryChange}
-          error={errors.country}
-          placeholder="Select a country"
-          autoComplete="country-name"
-          options={COUNTRY_OPTIONS}
-          icon={<Globe aria-hidden="true" className="size-4.5" />}
+          id={`${idPrefix}-city`}
+          name="city"
+          label="Town / City"
+          value={values.city ?? ""}
+          onChange={onChange("city")}
+          error={errors.city}
+          placeholder="Your town or city"
+          autoComplete="address-level2"
+          icon={<MapPin aria-hidden="true" className="size-4.5" />}
           required
         />
         <AuthField
@@ -297,19 +324,16 @@ export default function PersonalInformationStep({
           required
         />
         <AuthField
-          id={`${idPrefix}-phone`}
-          name="phone"
-          type="tel"
-          label="Phone Number"
-          value={values.phone ?? ""}
-          onChange={handlePhoneChange}
-          error={errors.phone}
-          placeholder="9876543210"
-          autoComplete="tel"
-          inputMode="tel"
-          prefix="+91"
-          icon={<Phone aria-hidden="true" className="size-4.5" />}
-          hint="Class reminders and mentor calls are made to this number."
+          id={`${idPrefix}-country`}
+          name="country"
+          label="Country"
+          value={country}
+          onChange={handleCountryChange}
+          error={errors.country}
+          placeholder="Select a country"
+          autoComplete="country-name"
+          options={COUNTRY_OPTIONS}
+          icon={<Globe aria-hidden="true" className="size-4.5" />}
           required
         />
       </div>
@@ -333,7 +357,9 @@ export default function PersonalInformationStep({
               <AuthButton
                 type="button"
                 onClick={() =>
-                  routeToAccount("/student/login?next=%2Fstudent%2Fdashboard")
+                  routeToAccount(
+                    `/student/login${nextPath !== "/student/dashboard" ? `?${new URLSearchParams({ next: nextPath })}` : ""}`,
+                  )
                 }
               >
                 Log In to Existing Account
@@ -343,7 +369,7 @@ export default function PersonalInformationStep({
                 variant="secondary"
                 onClick={() =>
                   routeToAccount(
-                    "/student/forgot-password?next=%2Fstudent%2Fdashboard",
+                    `/student/forgot-password${nextPath !== "/student/dashboard" ? `?${new URLSearchParams({ next: nextPath })}` : ""}`,
                   )
                 }
               >

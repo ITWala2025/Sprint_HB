@@ -10,6 +10,7 @@ describe("EnrollmentSuccessPanel", () => {
       firstName: "Ananya",
       lastName: "Sharma",
       email: "ananya@sprint.co.in",
+      city: "Ranchi",
       dob: "2004-06-15",
       country: "India",
       state: "Karnataka",
@@ -24,7 +25,6 @@ describe("EnrollmentSuccessPanel", () => {
       <EnrollmentSuccessPanel
         headingId="enrollment-success-heading"
         values={values}
-        onReviewDetails={vi.fn()}
         {...props}
       />,
     );
@@ -32,9 +32,9 @@ describe("EnrollmentSuccessPanel", () => {
   it("heads the panel as the end of the wizard", () => {
     renderPanel();
 
-    expect(screen.getByText("Enrollment complete")).toBeInTheDocument();
+    expect(screen.getByText("Registration complete")).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "Your enrollment details are ready" }),
+      screen.getByRole("heading", { level: 2, name: "Your registration is complete" }),
     ).toHaveAttribute("id", "enrollment-success-heading");
   });
 
@@ -55,7 +55,16 @@ describe("EnrollmentSuccessPanel", () => {
     renderPanel({
       values: {
         ...values,
-        personal: { firstName: "Ananya", lastName: "", email: "", dob: "", country: "India", state: "", phone: "" },
+        personal: {
+          firstName: "Ananya",
+          lastName: "",
+          email: "",
+          dob: "",
+          city: "",
+          country: "India",
+          state: "",
+          phone: "",
+        },
       },
     });
 
@@ -72,28 +81,35 @@ describe("EnrollmentSuccessPanel", () => {
     ).toBeInTheDocument();
   });
 
-  it("confirms course enrollment and links to the student dashboard", () => {
+  it("confirms course enrollment and offers an explicit dashboard action", () => {
     renderPanel({ hasCourseEnrollment: true });
 
     expect(
       screen.getByText(/registration and course enrollment have been submitted/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /go to student dashboard/i }),
-    ).toHaveAttribute("href", "/student/dashboard");
+      screen.getByRole("button", { name: /go to dashboard/i }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/password is set/i)).toHaveTextContent(
       "ananya@sprint.co.in",
     );
-    expect(screen.getByText(/taking you to your student dashboard/i)).toBeInTheDocument();
   });
 
-  it("offers a way back into the wizard", async () => {
-    const user = userEvent.setup();
-    const onReviewDetails = vi.fn();
-    renderPanel({ onReviewDetails });
+  it("offers a manual course continuation when a next path is present", () => {
+    renderPanel({ nextPath: "/courses/data-science" });
 
-    await user.click(screen.getByRole("button", { name: /review my details/i }));
-    expect(onReviewDetails).toHaveBeenCalledTimes(1);
+    expect(
+      screen.getByRole("button", { name: /continue to course/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("waits for an explicit button action before continuing", async () => {
+    const user = userEvent.setup();
+    const onContinue = vi.fn();
+    renderPanel({ onContinue });
+    expect(onContinue).not.toHaveBeenCalled();
+    await user.click(screen.getByRole("button", { name: /go to dashboard/i }));
+    expect(onContinue).toHaveBeenCalledTimes(1);
   });
 
   it("renders the application ID in SPR-APP-YYMM-XXXX format and does not leak UUID", () => {

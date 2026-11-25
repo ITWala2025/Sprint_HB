@@ -11,6 +11,7 @@ import {
   COURSE_STATUS,
   resolveCourseOptions,
 } from "@/components/student/enrollment/enrollment-course-options";
+import { ENROLLMENT_STEP_IDS } from "@/components/student/enrollment/enrollment-steps";
 import { catalogueItems } from "@/data/courses";
 
 // Same Supabase mock shape the Course page's tests use — the step queries the
@@ -110,27 +111,8 @@ describe("EducationStep", () => {
     await waitFor(() => expect(screen.getByLabelText(/^course$/i)).toBeEnabled());
   });
 
-  it("drops College / University, Graduation Year, City, State and the old education fields", () => {
-    renderStep();
-
-    [
-      /college \/ university/i,
-      /graduation year/i,
-      /^city/i,
-      /^state/i,
-      /current education level/i,
-      /degree \/ course/i,
-      /year \/ semester/i,
-      /choose your specialization/i,
-    ].forEach((label) => {
-      expect(screen.queryByLabelText(label), String(label)).not.toBeInTheDocument();
-    });
-
-    // The specialization picker is no longer part of this screen.
-    expect(
-      screen.queryByRole("group", { name: /choose your specialization/i }),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByRole("radio")).not.toBeInTheDocument();
+  it("is not registered as a student-enrollment step", () => {
+    expect(ENROLLMENT_STEP_IDS).not.toContain("education");
   });
 
   it("offers exactly the four agreed Current Role choices", () => {

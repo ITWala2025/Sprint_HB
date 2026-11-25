@@ -4,6 +4,9 @@ const mocks = vi.hoisted(() => ({
   getUser: vi.fn(),
   rpc: vi.fn(),
   maybeSingle: vi.fn(),
+  updateUserById: vi.fn(),
+  updates: [] as Array<{ table: string; values: Record<string, unknown> }>,
+  enrollmentRows: [] as Array<{ id: string; application_number: string }>,
   rpcCalls: [] as Array<{ name: string; args: Record<string, unknown> }>,
 }));
 
@@ -22,16 +25,33 @@ vi.mock("@supabase/ssr", () => ({
 
 vi.mock("@/lib/supabase/service", () => ({
   createServiceClient: () => ({
+    auth: { admin: { updateUserById: mocks.updateUserById } },
     rpc: (name: string, args: Record<string, unknown>) => {
       mocks.rpcCalls.push({ name, args });
       return mocks.rpc(name, args);
     },
-    from: () => ({
+    from: (table: string) => ({
       select: () => ({
-        eq: () => ({
+        eq: (field: string) => {
+          if (table === "enrollments" && field === "legacy_registration_id") {
+            return Promise.resolve({ data: mocks.enrollmentRows, error: null });
+          }
+          return ({
           eq: () => ({ maybeSingle: mocks.maybeSingle }),
-        }),
+          maybeSingle: mocks.maybeSingle,
+          });
+        },
       }),
+      update: (values: Record<string, unknown>) => {
+        mocks.updates.push({ table, values });
+        return ({
+        eq: () => ({
+          select: () => ({
+            maybeSingle: () => Promise.resolve({ data: { id: "updated-id" }, error: null }),
+          }),
+        }),
+        });
+      },
     }),
   }),
 }));
@@ -50,6 +70,7 @@ const input = {
     country: "India",
     state: "Jharkhand",
     phone: "9876543210",
+    city: "Ranchi",
   },
   education: {},
 };
@@ -80,7 +101,10 @@ describe("student enrollment actions", () => {
       data: { id: "resolved-course-id" },
       error: null,
     });
+    mocks.updateUserById.mockResolvedValue({ data: { user: { id: "student-auth-id" } }, error: null });
     mocks.rpcCalls = [];
+    mocks.updates = [];
+    mocks.enrollmentRows = [];
   });
 
   it("uses a server-only RPC to check whether the email is already registered", async () => {
@@ -113,11 +137,16 @@ describe("student enrollment actions", () => {
       p_college_institution: null,
       p_date_of_birth: "2004-06-15",
       p_country: "India",
+      p_state: "Jharkhand",
       p_products: [],
     });
   });
 
   it("resolves and submits multiple courses and bundles for transactional enrollment inserts", async () => {
+    mocks.enrollmentRows = [
+      { id: "enrollment-1", application_number: "SPR-APP-2611-0001" },
+      { id: "enrollment-2", application_number: "SPR-APP-2611-AB12" },
+    ];
     mocks.rpc.mockResolvedValue({
       data: {
         registration_id: "registration-id",
@@ -145,6 +174,34 @@ describe("student enrollment actions", () => {
       { course_id: null, bundle_id: "resolved-course-id" },
     ]);
     expect(mocks.rpcCalls[0].args.p_college_institution).toBe("SPRINT Test College");
+  });
+
+  it("uses the Step 1 city and completes the profile and auth name after intake", async () => {
+    const result = await submitStudentEnrollmentAction({
+      ...input,
+      personal: { ...input.personal, city: "" },
+      education: { city: "Legacy City" },
+    });
+
+    expect(result.success).toBe(true);
+    expect(mocks.updates).toContainEqual({
+      table: "registrations",
+      values: expect.objectContaining({ city: "Legacy City" }),
+    });
+    expect(mocks.updates).toContainEqual({
+      table: "profiles",
+      values: { onboarding_completed: true, full_name: "Ananya Sharma" },
+    });
+    expect(mocks.updateUserById).toHaveBeenCalledWith(
+      "student-auth-id",
+      {
+        user_metadata: {
+          full_name: "Ananya Sharma",
+          first_name: "Ananya",
+          last_name: "Sharma",
+        },
+      },
+    );
   });
 
   it("rejects unverified or mismatched email sessions before writing", async () => {

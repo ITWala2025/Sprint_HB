@@ -130,19 +130,6 @@ export default function ForgotPasswordPage() {
         ====================================================== */}
         <section className="student-forgot-form-panel">
           <div className="student-forgot-form-wrapper">
-            {/* Mobile-only logo */}
-            <div className="student-forgot-mobile-logo">
-              <Link href="/" aria-label="SPRINT Home">
-                <Image
-                  src="/images/student/sprint-full-logo.webp"
-                  alt="SPRINT - School of Professional Studies & Information Technology"
-                  width={500}
-                  height={130}
-                  priority
-                />
-              </Link>
-            </div>
-
             {/* Back to sign in */}
             <Link
               href="/student/login"

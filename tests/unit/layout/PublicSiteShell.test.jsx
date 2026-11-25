@@ -2,13 +2,15 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import PublicSiteShell from "@/components/layout/PublicSiteShell";
-const { pathnameRef, modalSegmentsRef } = vi.hoisted(() => ({
+const { pathnameRef, modalSegmentsRef, searchRef } = vi.hoisted(() => ({
   pathnameRef: { value: "/home" },
   modalSegmentsRef: { value: [] },
+  searchRef: { value: new URLSearchParams() },
 }));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => pathnameRef.value,
+  useSearchParams: () => searchRef.value,
   useSelectedLayoutSegments: () => modalSegmentsRef.value,
   useRouter: () => ({ push: vi.fn() }),
 }));
@@ -17,12 +19,13 @@ describe("PublicSiteShell", () => {
   beforeEach(() => {
     pathnameRef.value = "/home";
     modalSegmentsRef.value = [];
+    searchRef.value = new URLSearchParams();
   });
 
   const renderShell = (modal = null) =>
     render(
-      <PublicSiteShell modal={modal}>
-        <p>Page content</p>
+      <PublicSiteShell>
+        {modal ?? <p>Page content</p>}
       </PublicSiteShell>,
     );
 
@@ -46,15 +49,19 @@ describe("PublicSiteShell", () => {
     expect(screen.getByText("Page content")).toBeInTheDocument();
   });
 
-  it("shows public chrome behind a directly loaded student modal", () => {
+  it("uses a minimal auth header without public chrome on a student login route", () => {
     pathnameRef.value = "/student/login";
     renderShell();
 
     const chrome = publicChrome();
     expect(chrome.header).toBeInTheDocument();
-    expect(chrome.footer).toBeInTheDocument();
-    expect(chrome.whatsapp).toBeInTheDocument();
-    expect(chrome.chatbot).toBeInTheDocument();
+    expect(chrome.footer).not.toBeInTheDocument();
+    expect(chrome.whatsapp).not.toBeInTheDocument();
+    expect(chrome.chatbot).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /enroll now/i })).toHaveAttribute(
+      "href",
+      "/student/enroll",
+    );
     expect(screen.getByRole("main")).toHaveTextContent("Page content");
   });
 
@@ -66,7 +73,11 @@ describe("PublicSiteShell", () => {
       renderShell(<section>Student full page route</section>);
 
       expect(screen.getByRole("banner")).toBeInTheDocument();
-      expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+      if (pathname === "/student/dashboard") {
+        expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+      } else {
+        expect(screen.queryByRole("contentinfo")).not.toBeInTheDocument();
+      }
       expect(screen.getByRole("main")).toHaveTextContent(
         "Student full page route",
       );
@@ -79,7 +90,7 @@ describe("PublicSiteShell", () => {
     "renders direct %s page content with an empty default parallel slot",
     (pathname) => {
       pathnameRef.value = pathname;
-      renderShell(<></>);
+      renderShell();
 
       expect(screen.getByRole("main")).toHaveTextContent("Page content");
     },
@@ -91,21 +102,27 @@ describe("PublicSiteShell", () => {
     "/student/check-email",
     "/student/reset-password",
     "/student/password-reset-success",
-  ])("keeps public chrome behind directly loaded %s modal", (pathname) => {
+    "/student/enroll",
+  ])("renders a distraction-free auth shell for %s", (pathname) => {
     pathnameRef.value = pathname;
     renderShell();
 
     const chrome = publicChrome();
     expect(chrome.header).toBeInTheDocument();
-    expect(chrome.footer).toBeInTheDocument();
+    expect(chrome.footer).not.toBeInTheDocument();
+    expect(chrome.whatsapp).not.toBeInTheDocument();
+    expect(chrome.chatbot).not.toBeInTheDocument();
   });
 
-  it("keeps the public header and footer on the full-page enrollment route", () => {
+  it("keeps the contextual sign-in link on enrollment", () => {
     pathnameRef.value = "/student/enroll";
     renderShell();
 
     expect(screen.getByRole("banner")).toBeInTheDocument();
-    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /already enrolled/i })).toHaveAttribute(
+      "href",
+      "/student/login",
+    );
   });
 
   it("still shows the public chrome on portal dashboard routes", () => {
@@ -123,5 +140,16 @@ describe("PublicSiteShell", () => {
     const chrome = publicChrome();
     expect(chrome.header).not.toBeInTheDocument();
     expect(chrome.footer).not.toBeInTheDocument();
+  });
+
+  it("preserves the requested course on the enrollment context link", () => {
+    pathnameRef.value = "/student/login";
+    searchRef.value = new URLSearchParams({ next: "/courses/cloud-engineering" });
+    renderShell();
+
+    expect(screen.getByRole("link", { name: /enroll now/i })).toHaveAttribute(
+      "href",
+      "/student/enroll?next=%2Fcourses%2Fcloud-engineering",
+    );
   });
 });

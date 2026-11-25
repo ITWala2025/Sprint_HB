@@ -24,7 +24,11 @@ export const getStudentSession = cache(async (): Promise<StudentSessionPayload |
     const sessionToken = cookieStore.get(STUDENT_SESSION_COOKIE)?.value;
     if (sessionToken) {
         const verifiedSession = await verifyStudentSessionToken(sessionToken);
-        if (verifiedSession && verifiedSession.isActive) {
+        if (
+            verifiedSession &&
+            verifiedSession.isActive &&
+            verifiedSession.onboardingCompleted === true
+        ) {
             return verifiedSession;
         }
     }
@@ -62,7 +66,7 @@ export const getStudentSession = cache(async (): Promise<StudentSessionPayload |
     const [{ data: profile }, { data: student }] = await Promise.all([
         supabase
             .from("profiles")
-            .select("role, is_active, full_name, email")
+            .select("role, is_active, onboarding_completed, full_name, email")
             .eq("id", authData.user.id)
             .maybeSingle(),
         supabase
@@ -82,6 +86,7 @@ export const getStudentSession = cache(async (): Promise<StudentSessionPayload |
         fullName: profile.full_name ?? null,
         registrationNumber: student.registration_number ?? null,
         isActive: true,
+        onboardingCompleted: profile.onboarding_completed === true,
         exp: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
     };
 

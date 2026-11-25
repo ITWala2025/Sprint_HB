@@ -1,11 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { CircleCheck } from "lucide-react";
 
-import HeaderLogo from "@/components/header/HeaderLogo";
 import { submitStudentEnrollmentAction } from "@/app/student/enroll/actions";
 import { createClient } from "@/lib/supabase/client";
 
@@ -24,99 +21,49 @@ const STEP_HEADING_ID = "enrollment-step-heading";
 const SUCCESS_HEADING_ID = "enrollment-success-heading";
 const ENROLLMENT_DRAFT_KEY = "student_enrollment_draft";
 
-/**
- * Enrollment wizard shell.
- *
- * One state object holds every step's answers (`{ personal, password,
- * education }`) and the steps are controlled components reading from it. That is
- * what makes moving back and forth free: going forward merges the step's values
- * into that same object, going back just re-renders the step with the values it
- * left behind.
- *
- * The wizard owns everything generic — which step is active, validation on
- * submit, focus management, the progress indicator and the Back / Skip /
- * Continue bar. Each step only describes its own fields, through the contract
- * documented in `enrollment-steps.js`.
- *
- * A temporary session-storage draft preserves the answers while an existing
- * applicant visits the login or password-recovery page.
- */
-export default function EnrollmentWizard({ initialCourse, initialBundle }) {
-  const router = useRouter();
+export default function EnrollmentWizard({
+  nextPath = "/student/dashboard",
+}) {
   const [stepIndex, setStepIndex] = useState(0);
   const [values, setValues] = useState(createEmptyEnrollment);
   const [errors, setErrors] = useState({});
   const [isComplete, setIsComplete] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [needsPasswordSetup, setNeedsPasswordSetup] = useState(false);
-  const [isPasswordSet, setIsPasswordSet] = useState(false);
-  const [hasCourseEnrollment, setHasCourseEnrollment] = useState(false);
   const [submittedApplicationId, setSubmittedApplicationId] = useState("");
+  const [hasCourseEnrollment, setHasCourseEnrollment] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  // One-off message for a visible action (today: skipping an optional step).
-  // Cleared by the next navigation so it never lingers on the wrong screen.
-  const [statusNotice, setStatusNotice] = useState(null);
 
   useEffect(() => {
-    let draft;
     try {
       const saved = window.sessionStorage.getItem(ENROLLMENT_DRAFT_KEY);
       if (!saved) return;
-      draft = JSON.parse(saved);
+      const draft = JSON.parse(saved);
+      if (!draft.values?.personal) return;
+
+      const empty = createEmptyEnrollment();
+      setValues({
+        ...empty,
+        personal: { ...empty.personal, ...draft.values.personal },
+      });
     } catch {
       setSubmitError(
         "Your saved enrollment details could not be restored. Please review and re-enter them.",
       );
-      return;
     }
-
-    if (!draft.values?.personal || !draft.values?.education) {
-      return;
-    }
-
-    const empty = createEmptyEnrollment();
-    setValues({
-      ...empty,
-      ...draft.values,
-      personal: { ...empty.personal, ...draft.values.personal },
-      education: { ...empty.education, ...draft.values.education },
-      password: { ...empty.password },
-    });
-    setStatusNotice("Your saved enrollment details have been restored.");
   }, []);
-
-  // Pre-select a course or bundle from URL query params on first mount.
-  useEffect(() => {
-    if (initialBundle) {
-      setValues((previous) => ({
-        ...previous,
-        education: { ...previous.education, course: initialBundle },
-      }));
-    } else if (initialCourse) {
-      setValues((previous) => ({
-        ...previous,
-        education: { ...previous.education, course: initialCourse },
-      }));
-    }
-  }, [initialCourse, initialBundle]);
 
   const step = ENROLLMENT_STEPS[stepIndex];
   const isFirst = stepIndex === 0;
   const isLast = stepIndex === ENROLLMENT_STEP_COUNT - 1;
   const StepComponent = step.Component;
 
-  const goToStep = (index, notice = null) => {
+  const goToStep = (index) => {
     setErrors({});
     setSubmitError("");
-    setIsComplete(false);
-    setStatusNotice(notice);
     setStepIndex(index);
   };
 
-  // `handleChangeIn("personal")("phone")` writes into any slice of the shared
-  // state; for the active slice it reduces to the plain `handleChange("email")`
-  // the fields are wired to.
   const handleChangeIn = (sliceId) => (field) => (event) => {
     const { value } = event.target;
     setValues((previous) => ({
@@ -125,11 +72,8 @@ export default function EnrollmentWizard({ initialCourse, initialBundle }) {
     }));
     if (sliceId === "personal" && field === "email") {
       setIsEmailVerified(false);
-      setNeedsPasswordSetup(false);
-      setIsPasswordSet(false);
     }
     setSubmitError("");
-    // Clear this field's error as soon as the student starts fixing it.
     setErrors((previous) =>
       previous[field] ? { ...previous, [field]: "" } : previous,
     );
@@ -137,75 +81,78 @@ export default function EnrollmentWizard({ initialCourse, initialBundle }) {
 
   const handleChange = handleChangeIn(step.id);
 
+  const validatePersonal = useCallback(() => {
+    const nextErrors = compactErrors(
+      ENROLLMENT_STEPS[0].validate(values.personal ?? {}),
+    );
+    setErrors(nextErrors);
+    const firstInvalidField = Object.keys(nextErrors)[0];
+    if (firstInvalidField) {
+      document.getElementById(`personal-${firstInvalidField}`)?.focus();
+      return false;
+    }
+    return true;
+  }, [values.personal]);
+
   const saveDraftBeforeAuthRedirect = useCallback(() => {
     try {
       window.sessionStorage.setItem(
         ENROLLMENT_DRAFT_KEY,
-        JSON.stringify({
-          values: {
-            personal: values.personal,
-            education: values.education,
-          },
-        }),
+        JSON.stringify({ values: { personal: values.personal } }),
       );
     } catch {
       throw new Error(
         "Your enrollment details could not be saved before leaving this page. Please try again.",
       );
     }
-  }, [values]);
+  }, [values.personal]);
 
-  const clearSavedDraft = useCallback(() => {
+  const clearSavedDraft = () => {
     try {
       window.sessionStorage.removeItem(ENROLLMENT_DRAFT_KEY);
     } catch {
-      setSubmitError("Your submitted enrollment draft could not be cleared from this browser.");
+      setSubmitError(
+        "Your submitted enrollment draft could not be cleared from this browser.",
+      );
     }
-  }, []);
+  };
 
-  const handleVerificationChange = useCallback((verified, shouldSetPassword) => {
+  const handleVerificationChange = useCallback((verified) => {
     setIsEmailVerified(verified);
-    setNeedsPasswordSetup(Boolean(verified && shouldSetPassword));
   }, []);
 
-  const submitEnrollment = async ({ includeSelectedProducts = true } = {}) => {
+  const submitEnrollment = async () => {
     setSubmitError("");
     setIsSubmitting(true);
 
     try {
-      const education = values.education ?? {};
+      const supabase = createClient();
+      const { error: passwordError } = await supabase.auth.updateUser({
+        password: values.password.newPassword,
+      });
+      if (passwordError) {
+        throw new Error(`We couldn't set your password: ${passwordError.message}`);
+      }
+
       const result = await submitStudentEnrollmentAction({
         personal: values.personal,
-        education: {
-          ...education,
-          courseIds:
-            includeSelectedProducts && education.course
-              ? [education.course]
-              : [],
-          bundleIds:
-            includeSelectedProducts && Array.isArray(education.bundleIds)
-              ? education.bundleIds
-              : [],
-        },
+        education: {},
       });
-
       if (!result.success) {
         setSubmitError(result.error);
-        return false;
+        return;
       }
 
       clearSavedDraft();
       setSubmittedApplicationId(result.applicationId);
       setHasCourseEnrollment(result.hasCourseEnrollment);
       setIsComplete(true);
-      return true;
     } catch (error) {
       setSubmitError(
         error instanceof Error
           ? error.message
           : "The registration could not be submitted right now.",
       );
-      return false;
     } finally {
       setIsSubmitting(false);
     }
@@ -219,77 +166,27 @@ export default function EnrollmentWizard({ initialCourse, initialBundle }) {
 
     const firstInvalidField = Object.keys(nextErrors)[0];
     if (firstInvalidField) {
-      // Same convention the fields use for their ids: `${step.id}-${fieldName}`.
       document.getElementById(`${step.id}-${firstInvalidField}`)?.focus();
       return;
     }
 
     if (step.id === "personal") {
-      if (!isEmailVerified) return;
-      goToStep(needsPasswordSetup ? stepIndex + 1 : stepIndex + 2);
-      return;
-    }
-
-    if (step.id === "password") {
-      if (isPasswordSet) {
+      if (isEmailVerified) {
         goToStep(stepIndex + 1);
-        return;
-      }
-
-      setSubmitError("");
-      setIsSubmitting(true);
-
-      try {
-        const supabase = createClient();
-        const { error } = await supabase.auth.updateUser({
-          password: values.password.newPassword,
-        });
-        if (error) throw error;
-
-        setIsPasswordSet(true);
-        setNeedsPasswordSetup(false);
-        setValues((previous) => ({
-          ...previous,
-          password: { newPassword: "", confirmPassword: "" },
-        }));
-        goToStep(stepIndex + 1);
-      } catch (error) {
-        setSubmitError(
-          error instanceof Error
-            ? `We couldn't set your password: ${error.message}`
-            : "We couldn't set your password. Please try again.",
-        );
-      } finally {
-        setIsSubmitting(false);
+      } else {
+        setSubmitError("Verify your email address before continuing.");
       }
       return;
     }
 
-    if (isLast) {
-      await submitEnrollment({ includeSelectedProducts: true });
+    if (!isEmailVerified) {
+      setSubmitError("Verify your email address before creating your account.");
       return;
     }
 
-    goToStep(stepIndex + 1);
+    await submitEnrollment();
   };
 
-  // "Skip for now": an optional step must never block progress, so validation
-  // is deliberately bypassed. The typed answers stay in shared state (nothing
-  // is cleared) and the landing step shows the step's `skipNotice`, so skipping
-  // reads as a decision rather than a silent failure.
-  const handleSkip = () => {
-    const notice =
-      step.skipNotice ??
-      "You can complete this step later from your Student Dashboard.";
-    if (isLast) {
-      setStatusNotice(notice);
-      void submitEnrollment({ includeSelectedProducts: false });
-      return;
-    }
-    goToStep(stepIndex + 1, notice);
-  };
-
-  // Announce the swap: focus the new heading and return to the top of the page.
   const hasMounted = useRef(false);
   useEffect(() => {
     if (!hasMounted.current) {
@@ -297,10 +194,7 @@ export default function EnrollmentWizard({ initialCourse, initialBundle }) {
       return;
     }
 
-    if (
-      typeof window !== "undefined" &&
-      typeof window.scrollTo === "function"
-    ) {
+    if (typeof window !== "undefined" && typeof window.scrollTo === "function") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
     document
@@ -308,43 +202,19 @@ export default function EnrollmentWizard({ initialCourse, initialBundle }) {
       ?.focus();
   }, [stepIndex, isComplete]);
 
-  useEffect(() => {
-    if (!isComplete) return undefined;
-
-    const redirectTimer = window.setTimeout(() => {
-      router.push("/student/dashboard");
-    }, 2000);
-
-    return () => window.clearTimeout(redirectTimer);
-  }, [isComplete, router.push]);
-
   return (
     <div className="min-h-screen bg-brand-off-white">
-      <div
-        className={`mx-auto w-full max-w-2xl px-4 pt-6 sm:px-6 sm:pt-10 md:pb-12 ${
-          step.isOptional && !isComplete ? "pb-44" : "pb-28"
-        }`}
-      >
-        <div className="flex items-center justify-between gap-3">
-          <HeaderLogo />
-          <Link
-            href="/student/login"
-            className="sprint-focus rounded-lg text-xs font-semibold text-brand-navy hover:text-brand-red sm:text-sm"
-          >
-            Already enrolled? Sign in
-          </Link>
-        </div>
-
-        <div className="mt-7">
+      <div className="mx-auto w-full max-w-2xl px-4 pb-28 pt-6 sm:px-6 sm:pt-10 md:pb-12">
+        <div>
           <h1
             id="enrollment-heading"
             className="font-display text-2xl font-bold leading-tight text-brand-navy sm:text-3xl"
           >
-            Start your enrollment
+            Create your Student Portal account
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-brand-text-secondary">
-            Verify your email, create your account, then add optional education
-            and course details. You can move back and forth without losing an answer.
+            Share your personal details, verify your email, and create a
+            password. You can apply for courses from their course pages later.
           </p>
         </div>
 
@@ -355,21 +225,6 @@ export default function EnrollmentWizard({ initialCourse, initialBundle }) {
           onStepSelect={goToStep}
           className="mt-6"
         />
-
-        {statusNotice ? (
-          <div
-            role="status"
-            className="mt-4 flex items-start gap-2.5 rounded-xl border border-brand-border bg-brand-white px-4 py-3 shadow-brand-card sm:px-5"
-          >
-            <CircleCheck
-              aria-hidden="true"
-              className="mt-px size-4 shrink-0 text-brand-red"
-            />
-            <p className="text-xs leading-relaxed text-brand-text-secondary">
-              {statusNotice}
-            </p>
-          </div>
-        ) : null}
 
         {submitError ? (
           <div
@@ -386,7 +241,14 @@ export default function EnrollmentWizard({ initialCourse, initialBundle }) {
             values={values}
             applicationId={submittedApplicationId}
             hasCourseEnrollment={hasCourseEnrollment}
-            onReviewDetails={() => goToStep(0)}
+            nextPath={nextPath}
+            onContinue={() =>
+              window.location.assign(
+                nextPath === "/student/dashboard"
+                  ? nextPath
+                  : `/student/dashboard?${new URLSearchParams({ next: nextPath })}`,
+              )
+            }
             className="mt-6"
           />
         ) : (
@@ -396,6 +258,14 @@ export default function EnrollmentWizard({ initialCourse, initialBundle }) {
             aria-labelledby={STEP_HEADING_ID}
             className="mt-6"
           >
+            <input
+              type="email"
+              name="email"
+              autoComplete="username"
+              value={values.personal.email}
+              readOnly
+              hidden
+            />
             <EnrollmentStepPanel
               step={step}
               stepNumber={stepIndex + 1}
@@ -407,33 +277,36 @@ export default function EnrollmentWizard({ initialCourse, initialBundle }) {
                 values={values[step.id]}
                 errors={errors}
                 onChange={handleChange}
-                onChangeIn={handleChangeIn}
                 {...(step.id === "personal"
                   ? {
                       onBeforeAuthRedirect: saveDraftBeforeAuthRedirect,
                       onVerificationChange: handleVerificationChange,
+                      onValidatePersonal: validatePersonal,
+                      nextPath,
                     }
                   : {})}
-                {...(step.id === "password" ? { isPasswordSet } : {})}
               />
 
               <EnrollmentStepFooter
                 onBack={() => goToStep(stepIndex - 1)}
-                onSkip={step.isOptional ? handleSkip : undefined}
                 isFirst={isFirst}
                 isLast={isLast}
                 stepNumber={stepIndex + 1}
                 totalSteps={ENROLLMENT_STEP_COUNT}
                 isSubmitting={isSubmitting}
-                isSubmitDisabled={step.id === "personal" && !isEmailVerified}
+                submitLabel={isLast ? "Complete Registration" : undefined}
+                loadingLabel={
+                  isLast ? "Creating your account…" : undefined
+                }
               />
             </EnrollmentStepPanel>
           </form>
         )}
 
-        <p className="mt-6 text-center text-[11px] font-medium leading-relaxed text-brand-text-muted md:mt-8">
-          Your email must be verified before your registration is submitted
-          securely to SPRINT.
+        <p className="mt-6 flex items-start gap-2 text-center text-[11px] font-medium leading-relaxed text-brand-text-muted md:mt-8">
+          <CircleCheck aria-hidden="true" className="mx-auto size-4 shrink-0" />
+          Your email must be verified before registration is securely submitted
+          to SPRINT.
         </p>
       </div>
     </div>

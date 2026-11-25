@@ -25,6 +25,7 @@ export default function EnrollmentStepFooter({
   stepNumber,
   totalSteps,
   submitLabel,
+  loadingLabel,
   onSkip,
   skipLabel = "Skip for now",
   isSubmitting = false,
@@ -119,7 +120,7 @@ export default function EnrollmentStepFooter({
           icon={<ArrowRight aria-hidden="true" className="size-4" />}
           className="md:w-auto md:min-w-32"
           loading={isSubmitting}
-          loadingLabel={isLast ? "Submitting…" : "Please wait…"}
+          loadingLabel={loadingLabel ?? (isLast ? "Submitting…" : "Please wait…")}
           disabled={isSubmitting || isSubmitDisabled}
         >
           {label}

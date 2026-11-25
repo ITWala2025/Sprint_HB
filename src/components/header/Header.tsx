@@ -16,6 +16,7 @@ export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [studentInitials, setStudentInitials] = useState<string | null>(null);
   const [studentFullName, setStudentFullName] = useState<string | null>(null);
+  const [isOnboardedStudent, setIsOnboardedStudent] = useState(false);
 
   useEffect(() => {
     if (
@@ -33,13 +34,15 @@ export default function Header() {
         if (isMounted) {
           setIsAdmin(false);
           setStudentInitials(null);
+          setStudentFullName(null);
+          setIsOnboardedStudent(false);
         }
         return;
       }
 
       const { data: profile, error } = await supabase
         .from("profiles")
-        .select("role, full_name")
+        .select("role, full_name, onboarding_completed")
         .eq("id", userId)
         .maybeSingle();
 
@@ -49,7 +52,11 @@ export default function Header() {
 
       if (isMounted) {
         setIsAdmin(profile?.role === "admin");
-        if (profile?.role === "student" && profile?.full_name) {
+        const isOnboarded =
+          profile?.role === "student" &&
+          profile?.onboarding_completed === true;
+        setIsOnboardedStudent(isOnboarded);
+        if (isOnboarded && profile?.full_name) {
           const parts = profile.full_name.trim().split(/\s+/);
           const initials = (parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "");
           setStudentInitials(initials.toUpperCase() || null);
@@ -96,6 +103,7 @@ export default function Header() {
             isAdmin={isAdmin}
             studentInitials={studentInitials}
             studentFullName={studentFullName}
+            isOnboardedStudent={isOnboardedStudent}
             accessibleBrandRed={pathname === "/home"}
           />
           <MobileNavigation
@@ -106,6 +114,7 @@ export default function Header() {
             accessibleBrandRed={pathname === "/home"}
             studentInitials={studentInitials}
             studentFullName={studentFullName}
+            isOnboardedStudent={isOnboardedStudent}
           />
         </div>
       </header>

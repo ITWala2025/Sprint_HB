@@ -10,7 +10,6 @@ import {
   STUDENT_SESSION_COOKIE,
   STUDENT_SESSION_MAX_AGE_SECONDS,
   createStudentSessionToken,
-  verifyStudentSessionToken,
 } from "@/lib/auth/student-session";
 
 /**
@@ -59,6 +58,7 @@ export async function updateSession(request: NextRequest) {
   const isStaffWorkspaceRoute = pathname.startsWith("/staff/") && !isStaffLogin && !isStaffInvitation;
 
   const isStudentLogin = pathname === "/student/login";
+  const isStudentEnroll = pathname === "/student/enroll";
   const isStudentPortalRoute = PORTAL_ROUTE_PREFIXES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
@@ -93,16 +93,6 @@ export async function updateSession(request: NextRequest) {
       if (isStaffWorkspaceRoute) {
         return supabaseResponse;
       }
-    }
-  }
-
-  // Fast Path: Check cryptographically verified student session token (0ms network calls)
-  const existingStudentSession = request.cookies.get(STUDENT_SESSION_COOKIE)?.value;
-  if (existingStudentSession && isStudentPortalRoute) {
-    const verifiedSession = await verifyStudentSessionToken(existingStudentSession);
-    if (verifiedSession && verifiedSession.isActive) {
-      // If user is accessing protected student portal routes and has verified session, pass through immediately!
-      return supabaseResponse;
     }
   }
 
@@ -160,6 +150,10 @@ export async function updateSession(request: NextRequest) {
   if (!user && isStudentPortalRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/student/login";
+    url.searchParams.set(
+      "next",
+      `${pathname}${request.nextUrl.search}`,
+    );
     return NextResponse.redirect(url);
   }
 
@@ -167,7 +161,7 @@ export async function updateSession(request: NextRequest) {
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role, status, is_active, must_change_password, full_name, email, roles(name, permissions, is_active)")
+      .select("role, status, is_active, onboarding_completed, must_change_password, full_name, email, roles(name, permissions, is_active)")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -182,11 +176,15 @@ export async function updateSession(request: NextRequest) {
         .eq("id", user.id)
         .maybeSingle()
       : { data: null };
-    const isActiveStudent =
+    const isDeactivatedStudent =
+      profile?.role === "student" &&
+      (profile?.is_active === false || studentRecord?.status === "deactivated");
+    const isOnboardedStudent =
       profile?.role === "student" &&
       profile?.status === "active" &&
       profile?.is_active !== false &&
-      studentRecord?.status !== "deactivated";
+      profile?.onboarding_completed === true &&
+      !isDeactivatedStudent;
 
     // Issue/refresh verified admin session cookie for fast subsequent navigations
     if ((isAdmin || isActiveStaff) && profile?.is_active === true) {
@@ -218,7 +216,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Issue/refresh verified student session cookie for fast subsequent navigations
-    if (isActiveStudent) {
+    if (isOnboardedStudent) {
       try {
         const sessionToken = await createStudentSessionToken({
           userId: user.id,
@@ -226,6 +224,7 @@ export async function updateSession(request: NextRequest) {
           fullName: profile.full_name ?? null,
           registrationNumber: studentRecord?.registration_number ?? null,
           isActive: true,
+          onboardingCompleted: true,
         });
 
         supabaseResponse.cookies.set(STUDENT_SESSION_COOKIE, sessionToken, {
@@ -267,18 +266,47 @@ export async function updateSession(request: NextRequest) {
 
     /*
      * Student portal protection:
-     * - An authenticated user without an active student profile cannot stay on
-     *   any portal page (the Sign In screen clears the stale session).
-     * - An already-signed-in active student who opens /student/login is sent
-     *   straight to the dashboard — a seamless "Student Portal" entry.
+     * - Deactivated students are sent to sign-in with an explicit notice.
+     * - Incomplete registrations resume at enrollment.
+     * - Onboarded students entering auth routes continue to the dashboard.
      */
-    if (isStudentPortalRoute && !isActiveStudent) {
+    if (
+      isDeactivatedStudent &&
+      (isStudentPortalRoute || isStudentEnroll)
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/student/login";
+      url.search = "?deactivated=1";
+      return NextResponse.redirect(url);
+    }
+
+    if (
+      profile?.role === "student" &&
+      !isDeactivatedStudent &&
+      profile.onboarding_completed !== true &&
+      (isStudentPortalRoute || isStudentLogin)
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/student/enroll";
+      if (isStudentPortalRoute && !url.searchParams.has("next")) {
+        url.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
+      }
+      return NextResponse.redirect(url);
+    }
+
+    if (
+      isStudentPortalRoute &&
+      profile?.role === "student" &&
+      !isOnboardedStudent &&
+      !isDeactivatedStudent &&
+      profile.onboarding_completed === true
+    ) {
       const url = request.nextUrl.clone();
       url.pathname = "/student/login";
       return NextResponse.redirect(url);
     }
 
-    if (isStudentLogin && isActiveStudent) {
+    if ((isStudentLogin || isStudentEnroll) && isOnboardedStudent) {
       const url = request.nextUrl.clone();
       url.pathname = "/student/dashboard";
       return NextResponse.redirect(url);

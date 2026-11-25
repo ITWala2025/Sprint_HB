@@ -250,7 +250,15 @@ export default function DashboardBento({
   applications,
   liveClasses,
   announcements,
+  profileCompletion = 0,
+  hasApplicationsOrEnrollments = false,
+  showWelcome = false,
 }) {
+  const isNewStudent = showWelcome || !hasApplicationsOrEnrollments;
+  const completedProfile = Math.max(
+    0,
+    Math.min(100, Number(profileCompletion) || 0),
+  );
   const stats = [
     { label: "Active Courses", value: activeCourseCount, icon: BookOpen, note: "Current enrollments" },
     { label: "Pending Assignments", value: pendingAssignmentCount, icon: ClipboardList, note: "Awaiting submission" },
@@ -263,7 +271,11 @@ export default function DashboardBento({
       <section className="flex flex-col gap-5 rounded-2xl bg-brand-navy p-5 text-white shadow-brand-card sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-5">
         <div className="min-w-0">
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-rose-200">Student workspace</p>
-          <h1 className="mt-1 font-display text-2xl font-bold sm:text-3xl">Welcome back, {student.firstName}!</h1>
+          <h1 className="mt-1 font-display text-2xl font-bold sm:text-3xl">
+            {isNewStudent
+              ? `Welcome to SPRINT, ${student.firstName}!`
+              : `Welcome back, ${student.firstName}`}
+          </h1>
           <p className="mt-1 text-sm text-white/75">{enrollment?.courseTitle || "Your learning journey continues here."}</p>
           <Link href="/student/apply-course" className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-xl bg-brand-red px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-red-dark">
             Browse Courses <ArrowRight className="size-4" aria-hidden="true" />
@@ -277,6 +289,49 @@ export default function DashboardBento({
           </div>
         </div>
       </section>
+
+      {completedProfile < 100 ? (
+        <section
+          aria-labelledby="profile-completion-title"
+          className="rounded-2xl border border-brand-border bg-white p-5 shadow-sm sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-6"
+        >
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between gap-3">
+              <h2
+                id="profile-completion-title"
+                className="text-sm font-bold text-brand-navy"
+              >
+                Complete Your Profile
+              </h2>
+              <span className="text-sm font-bold text-brand-red">
+                {completedProfile}%
+              </span>
+            </div>
+            <div
+              role="progressbar"
+              aria-label="Profile completion"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={completedProfile}
+              className="mt-3 h-2 overflow-hidden rounded-full bg-brand-surface"
+            >
+              <div
+                className="h-full rounded-full bg-brand-red transition-[width]"
+                style={{ width: `${completedProfile}%` }}
+              />
+            </div>
+            <p className="mt-2 text-xs text-brand-text-secondary">
+              Add your education, career details, and links to finish your profile.
+            </p>
+          </div>
+          <Link
+            href="/student/profile"
+            className="mt-4 inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-brand-navy px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-navy-dark sm:mt-0"
+          >
+            Complete Profile <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+        </section>
+      ) : null}
 
       <section aria-label="Student overview" className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {stats.map(({ label, value, icon: Icon, note }) => (

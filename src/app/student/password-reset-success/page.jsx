@@ -45,19 +45,6 @@ export default function PasswordResetSuccessPage() {
         ====================================================== */}
         <section className="student-reset-success-panel">
           <div className="student-reset-success-wrapper">
-            {/* Mobile-only logo */}
-            <div className="student-reset-success-mobile-logo">
-              <Link href="/" aria-label="SPRINT Home">
-                <Image
-                  src="/images/student/sprint-full-logo.webp"
-                  alt="SPRINT - School of Professional Studies & Information Technology"
-                  width={500}
-                  height={130}
-                  priority
-                />
-              </Link>
-            </div>
-
             {/* Success Icon */}
             <div
               className="student-reset-success-icon"

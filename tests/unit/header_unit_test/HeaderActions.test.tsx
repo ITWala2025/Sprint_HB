@@ -40,4 +40,14 @@ describe("HeaderActions", () => {
     expect(wrapper).not.toBeNull();
     expect(wrapper).toHaveClass("lg:flex");
   });
+
+  it("does not show a student avatar until onboarding is complete", () => {
+    const props = { studentInitials: "AS", studentFullName: "Ananya Sharma" };
+
+    const { rerender } = render(<HeaderActions {...props} />);
+    expect(screen.queryByRole("button", { name: /student account menu/i })).not.toBeInTheDocument();
+
+    rerender(<HeaderActions {...props} isOnboardedStudent />);
+    expect(screen.getByRole("button", { name: /student account menu/i })).toHaveTextContent("AS");
+  });
 });

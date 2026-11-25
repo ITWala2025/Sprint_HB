@@ -8,9 +8,9 @@ import {
 } from "@/components/student/enrollment/enrollment-steps";
 
 describe("Enrollment step registry", () => {
-  it("keeps email verification, password setup, and optional education in order", () => {
-    expect(ENROLLMENT_STEP_IDS).toEqual(["personal", "password", "education"]);
-    expect(ENROLLMENT_STEP_COUNT).toBe(3);
+  it("keeps personal details and password setup as the only registration steps", () => {
+    expect(ENROLLMENT_STEP_IDS).toEqual(["personal", "password"]);
+    expect(ENROLLMENT_STEP_COUNT).toBe(2);
   });
 
   it("gives every step a unique label and its own copy", () => {
@@ -38,20 +38,9 @@ describe("Enrollment step registry", () => {
     expect(scaffolded).toEqual([]);
   });
 
-  it("marks only the education step optional and hands it the agreed skip notice", () => {
-    const optional = ENROLLMENT_STEPS.filter((step) => step.isOptional);
-
-    expect(optional.map((step) => step.id)).toEqual(["education"]);
-    expect(optional[0].skipNotice).toBe(
-      "You can complete your education & career profile later from your Student Dashboard.",
-    );
-    expect(optional[0].description).toMatch(
-      /You can skip this step and complete it later from your Student Dashboard\./,
-    );
-
-    ENROLLMENT_STEPS.filter((step) => !step.isOptional).forEach((step) => {
-      expect(step.skipNotice, step.id).toBeUndefined();
-    });
+  it("does not include education or course selection in registration", () => {
+    expect(ENROLLMENT_STEP_IDS).not.toContain("education");
+    expect(ENROLLMENT_STEPS.some((step) => step.isOptional)).toBe(false);
   });
 
   it("seeds every step's slice of the shared state", () => {
@@ -61,6 +50,7 @@ describe("Enrollment step registry", () => {
         lastName: "",
         email: "",
         dob: "",
+        city: "",
         country: "India",
         state: "",
         phone: "",
@@ -68,13 +58,6 @@ describe("Enrollment step registry", () => {
       password: {
         newPassword: "",
         confirmPassword: "",
-      },
-      education: {
-        collegeInstitution: "",
-        courseDegree: "",
-        semesterYear: "",
-        currentRole: "",
-        course: "",
       },
     });
   });
@@ -97,8 +80,9 @@ describe("Enrollment step registry", () => {
       lastName: "Please enter your last name.",
       email: "Please enter a valid email address.",
       dob: "Please enter your date of birth.",
-      country: "",
+      city: "Please enter your town or city.",
       state: "Please select your state.",
+      country: "",
       phone: "Please enter a valid 10-digit mobile number.",
     });
   });

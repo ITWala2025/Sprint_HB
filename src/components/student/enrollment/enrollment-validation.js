@@ -72,16 +72,33 @@ export function validateMobileField(value = "") {
   return "";
 }
 
-/** Date of birth — presence is the only rule; the input already restricts shape. */
+/** Date of birth must be a real calendar date that is not in the future. */
 export function validateDateOfBirthField(value = "") {
-  if (!String(value).trim()) return "Please enter your date of birth.";
+  const date = String(value).trim();
+  if (!date) return "Please enter your date of birth.";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return "Please enter a valid date of birth.";
+  }
+
+  const [year, month, day] = date.split("-").map(Number);
+  const parsedDate = new Date(Date.UTC(year, month - 1, day));
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  if (
+    parsedDate.getUTCFullYear() !== year ||
+    parsedDate.getUTCMonth() !== month - 1 ||
+    parsedDate.getUTCDate() !== day ||
+    parsedDate.getTime() > today.getTime()
+  ) {
+    return "Please enter a valid date of birth.";
+  }
   return "";
 }
 
 /**
  * Step 1 — Personal Information.
  *
- * Seven required fields in the order they appear on the page, so the wizard's
+ * Eight required fields in the order they appear on the page, so the wizard's
  * "focus the first invalid field" walk matches the visual left-to-right,
  * top-to-bottom reading order.
  */
@@ -90,10 +107,11 @@ export function validatePersonalInformation(values = {}) {
     firstName: validateNameField(values.firstName ?? "", "Please enter your first name."),
     lastName: validateNameField(values.lastName ?? "", "Please enter your last name."),
     email: validateAuthEmailField(values.email ?? ""),
-    dob: validateDateOfBirthField(values.dob ?? ""),
-    country: validateRequiredField(values.country ?? "", "Please select your country."),
-    state: validateRequiredField(values.state ?? "", "Please select your state."),
     phone: validateMobileField(values.phone ?? ""),
+    dob: validateDateOfBirthField(values.dob ?? ""),
+    city: validateRequiredField(values.city ?? "", "Please enter your town or city."),
+    state: validateRequiredField(values.state ?? "", "Please select your state."),
+    country: validateRequiredField(values.country ?? "", "Please select your country."),
   };
 }
 

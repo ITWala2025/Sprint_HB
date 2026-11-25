@@ -67,8 +67,10 @@ describe("Enrollment validation", () => {
       expect(validateDateOfBirthField("   ")).toBe("Please enter your date of birth.");
     });
 
-    it("accepts any date the picker produced", () => {
+    it("accepts a real past date and rejects invalid or future dates", () => {
       expect(validateDateOfBirthField("2004-06-15")).toBe("");
+      expect(validateDateOfBirthField("2004-02-31")).toMatch(/valid date/);
+      expect(validateDateOfBirthField("2999-01-01")).toMatch(/valid date/);
     });
   });
 
@@ -97,10 +99,11 @@ describe("Enrollment validation", () => {
         firstName: "Please enter your first name.",
         lastName: "Please enter your last name.",
         email: "Please enter your email.",
-        dob: "Please enter your date of birth.",
-        country: "Please select your country.",
-        state: "Please select your state.",
         phone: "Please enter your mobile number.",
+        dob: "Please enter your date of birth.",
+        city: "Please enter your town or city.",
+        state: "Please select your state.",
+        country: "Please select your country.",
       });
     });
 
@@ -121,10 +124,11 @@ describe("Enrollment validation", () => {
             firstName: "Ananya",
             lastName: "Sharma",
             email: "ananya@sprint.co.in",
+            phone: "9876543210",
             dob: "2004-06-15",
-            country: "India",
+            city: "Ranchi",
             state: "Karnataka",
-            phone: "98765 43210",
+            country: "India",
           }),
         ),
       ).toEqual({});
@@ -135,10 +139,11 @@ describe("Enrollment validation", () => {
         "firstName",
         "lastName",
         "email",
-        "dob",
-        "country",
-        "state",
         "phone",
+        "dob",
+        "city",
+        "state",
+        "country",
       ]);
     });
   });

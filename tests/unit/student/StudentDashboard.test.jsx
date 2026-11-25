@@ -51,6 +51,8 @@ const dashboardProps = {
       date: "2026-11-18",
     },
   ],
+  profileCompletion: 50,
+  hasApplicationsOrEnrollments: true,
 };
 
 describe("Student dashboard", () => {
@@ -97,7 +99,7 @@ describe("Student dashboard", () => {
   it("renders the welcome banner and four KPI cards", () => {
     render(<DashboardBento {...dashboardProps} />);
 
-    expect(screen.getByRole("heading", { name: /welcome back, ananya/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Welcome back, Ananya" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /browse courses/i })).toHaveAttribute(
       "href",
       "/student/apply-course",
@@ -110,6 +112,36 @@ describe("Student dashboard", () => {
     expect(within(stats).getByText("Pending Assignments")).toBeInTheDocument();
     expect(within(stats).getByText("Overall Progress")).toBeInTheDocument();
     expect(within(stats).getByText("Certificates")).toBeInTheDocument();
+  });
+
+  it("shows a profile completion card at 50% and hides it when complete", () => {
+    const { rerender } = render(<DashboardBento {...dashboardProps} />);
+
+    expect(screen.getByRole("heading", { name: "Complete Your Profile" })).toBeInTheDocument();
+    expect(screen.getByRole("progressbar", { name: "Profile completion" })).toHaveAttribute(
+      "aria-valuenow",
+      "50",
+    );
+    expect(screen.getByRole("link", { name: /complete profile/i })).toHaveAttribute(
+      "href",
+      "/student/profile",
+    );
+
+    rerender(<DashboardBento {...dashboardProps} profileCompletion={100} />);
+    expect(screen.queryByRole("heading", { name: "Complete Your Profile" })).not.toBeInTheDocument();
+  });
+
+  it("welcomes students to SPRINT when they have no applications or enrollments", () => {
+    render(
+      <DashboardBento
+        {...dashboardProps}
+        hasApplicationsOrEnrollments={false}
+      />,
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "Welcome to SPRINT, Ananya!" }),
+    ).toBeInTheDocument();
   });
 
   it("switches between pending assignments and course applications", () => {

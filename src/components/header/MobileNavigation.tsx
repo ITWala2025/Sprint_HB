@@ -13,6 +13,7 @@ interface MobileNavigationProps {
   accessibleBrandRed?: boolean;
   studentInitials?: string | null;
   studentFullName?: string | null;
+  isOnboardedStudent?: boolean;
 }
 
 const navigation = [
@@ -30,6 +31,7 @@ export default function MobileNavigation({
   accessibleBrandRed = false,
   studentInitials = null,
   studentFullName = null,
+  isOnboardedStudent = false,
 }: MobileNavigationProps) {
   useEffect(() => {
     setIsOpen(false);
@@ -66,7 +68,7 @@ export default function MobileNavigation({
           >
             Admin
           </Link>
-        ) : studentInitials ? (
+        ) : isOnboardedStudent && studentInitials ? (
           <StudentAvatarDropdown
             initials={studentInitials}
             fullName={studentFullName || "Student"}
@@ -129,7 +131,7 @@ export default function MobileNavigation({
               })}
             </div>
             <div className="mt-4 border-t border-brand-border pt-4">
-              {studentInitials ? (
+              {isOnboardedStudent && studentInitials ? (
                 <StudentAvatarDropdown
                   initials={studentInitials}
                   fullName={studentFullName || "Student"}
