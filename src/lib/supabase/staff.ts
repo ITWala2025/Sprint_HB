@@ -23,6 +23,7 @@ export type StaffDirectoryRecord = {
     status: string | null;
     first_login: boolean;
     must_change_password: boolean;
+    onboarding_completed?: boolean;
     created_at: string;
     updated_at: string;
     roles: StaffRoleRecord | StaffRoleRecord[] | null;
@@ -76,7 +77,7 @@ export async function getUserAccountRecord(
 
     const { data: profile, error: profileError } = await serviceClient
         .from("profiles")
-        .select("id, full_name, email, role, role_id, is_active, status, first_login, must_change_password, roles(name, permissions, is_active)")
+        .select("id, full_name, email, role, role_id, is_active, status, first_login, must_change_password, onboarding_completed, roles(name, permissions, is_active)")
         .eq("id", userId)
         .maybeSingle();
 

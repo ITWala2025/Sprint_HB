@@ -31,6 +31,29 @@ vi.mock("@supabase/ssr", () => ({
   createServerClient: () => serverClientMock,
 }));
 
+vi.mock("@/lib/supabase/service", () => ({
+  createServiceClient: () => null,
+}));
+
+vi.mock("@/lib/supabase/staff", () => ({
+  getUserAccountRecord: async () => {
+    const { data, error } = await profileMock();
+    return {
+      record: data
+        ? {
+            ...data,
+            account_type: data.role,
+            role_name: null,
+            created_at: "",
+            updated_at: "",
+            roles: null,
+          }
+        : null,
+      error: error?.message ?? null,
+    };
+  },
+}));
+
 import { updateSession } from "@/lib/supabase/middleware";
 
 /* Must mirror PORTAL_ROUTE_PREFIXES in src/lib/supabase/middleware.ts. */
